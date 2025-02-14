@@ -29,7 +29,7 @@ tasks:
   gen:
     desc: Generate API code
     cmds:
-      - task: helm:gen
+      - task: server:gen
 
   pull:
     desc: Pull images for all components
@@ -66,8 +66,7 @@ tasks:
   test:
     desc: Run test suite
     cmds:
-      # TODO: check if chart can be deployed
-      - echo "Success"
+      - task: server:test
 
   ##
   ## Server
@@ -84,11 +83,8 @@ tasks:
     cmds:
       - docker run -p 8080:8080 -p 8443:8443 {{.IMAGE_REPO}}/oasf-server:{{.IMAGE_TAG}}
 
-  ##
-  ## Helm
-  ##
-  helm:gen:
-    desc: Update Helm dependencies for chart and subcharts
+  server:gen:
+    desc: Update server dependencies for chart and subcharts
     internal: true
     deps:
       - deps:helm
@@ -98,6 +94,78 @@ tasks:
     cmds:
       - for: { var: HELM_ALL_CHART_PATHS }
         cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
+
+  server:test:
+    desc: Run tests against server
+    cmds:
+      - defer: { task: server:test:cleanup }
+      # Bootstrap
+      # NOTE: Run as a dedicated task instead of dependency, otherwise the port forwarding won't work
+      - task: server:test:bootstrap
+
+  server:test:bootstrap:
+    internal: true
+    desc: Bootstrap Kubernetes test environment
+    deps:
+      - deps:helm
+      - deps:kubectl
+      - deps:kind
+      - server:gen
+    vars:
+      # Kind args
+      KIND_CLUSTER_NAME:  '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
+      KIND_CREATE_OPTS:   '{{ .KIND_CREATE_OPTS | default "" }}'
+      # Helm args
+      HELM_NAMESPACE:   '{{ .HELM_NAMESPACE | default "default" }}'
+      HELM_CHART_PATH:  '{{ .ROOT_DIR }}/install/charts/oasf'
+      HELM_VALUES_PATH: '{{ .ROOT_DIR }}/install/charts/oasf/values-test.yaml'
+    cmds:
+      # TODO: make logic idempotent so that running functional tests does not change previous contexts
+
+      # Create ephemeral cluster
+      - '{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }}'
+      - '{{ .KIND_BIN }} export kubeconfig --name {{ .KIND_CLUSTER_NAME }}'
+
+      # Check cluster status
+      - '{{ .KUBECTL_BIN }} cluster-info'
+
+      # Import images
+      - |
+        images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
+        echo "$images" | while read image; do
+          {{ .KIND_BIN }} load docker-image $image --name {{ .KIND_CLUSTER_NAME }}
+        done
+
+      # Deploy chart
+      - |
+        {{ .HELM_BIN }} upgrade oasf \
+          {{ .HELM_CHART_PATH }} \
+          -f {{ .HELM_VALUES_PATH }} \
+          --set image.tag="{{ .IMAGE_TAG }}" \
+          --namespace {{ .HELM_NAMESPACE }} \
+          --create-namespace \
+          --install \
+          --wait \
+          --wait-for-jobs \
+          --timeout "15m"
+
+      # Port-forward dependency services
+      - |
+        {{ .KUBECTL_BIN }} port-forward service/oasf 8080:8080 -n {{ .HELM_NAMESPACE }} &
+
+      # Delay to ensure services are online
+      - sleep 10
+
+  server:test:cleanup:
+    internal: true
+    desc: Cleanup Kubernetes test environment
+    deps:
+      - deps:kind
+    vars:
+      # Kind args
+      KIND_CLUSTER_NAME:  '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
+    cmds:
+      - '{{ .KIND_BIN }} delete cluster --name {{ .KIND_CLUSTER_NAME }}'
 
   ##
   ## Dependencies
