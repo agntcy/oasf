@@ -7,22 +7,16 @@ You can access the OASF schema server, which is running the latest released sche
 
 The schema server can be also used locally. To do that clone the `oasf-server` and `oasf-schema` repositories and follow the instruction below to build and run the schema server.
 
-## Clone the OCFS schema (`oasf-schema`) repository
+## Clone the OAFS schema (`oasf-schema`) repository
 
 ```shell
-git clone https://github.com/oasf/oasf-schema.git
-```
-
-## Clone the OCFS schema server (`oasf-server`) repository
-
-```shell
-git clone https://github.com/oasf/oasf-server.git
+git clone https://github.com/agntcy/oasf.git
 ```
 
 ## Build a server docker image
 
 ```shell
-cd oasf-server
+cd oasf/server
 docker build -t oasf-server .
 ```
 
@@ -31,24 +25,18 @@ docker build -t oasf-server .
 Change the `/path/to` to your local OASF schema directory (use an absolute path). Note, the `-p 8443:8443` parameter enables HTTPS with a self-signed SSL certificate.
 
 ```shell
-docker run -it --rm --volume /path/to/oasf-schema:/app/schema -p 8080:8080 -p 8443:8443 oasf-server
+docker run -it --rm --volume /path/to/oasf/schema:/app/schema -p 8080:8080 -p 8443:8443 oasf-server
 ```
 
 For example, if the `oasf-schema` and `oasf-server` repos were cloned to the local directory `~/github-projects`, this would be the proper replacement for `/path/to`:
 
 ```shell
-docker run -it --rm --volume ~/github-projects/oasf/oasf-schema:/app/schema -p 8080:8080 -p 8443:8443 oasf-server
+docker run -it --rm --volume ~/github-projects/oasf/schema:/app/schema -p 8080:8080 -p 8443:8443 oasf-server
 ```
 
 (Note that paths used for volume mounts with `docker run` cannot be relative.)
 
 To access the schema server, open [`localhost:8080`](http://localhost:8080) or [`localhost:8443`](https://localhost:8443) in your Web browser.
-
-## Run the server docker image with a local schema extension:
-
-```shell
-docker run -it --rm --volume /path/to/oasf-schema:/app/schema --volume /path/to/oasf-schema:/app/extension -e SCHEMA_EXTENSION="/app/extension" -p 8080:8080 -p 8443:8443 oasf-server
-```
 
 ## Development with docker-compose
 
