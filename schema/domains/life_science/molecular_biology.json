@@ -5,10 +5,5 @@
   "extends": "life_science",
   "name": "molecular_biology",
   "main_domain_name": "life_science",
-  "attributes": {
-    "status_code": {
-      "group": "primary",
-      "requirement": "recommended"
-    }
-  }
+  "attributes": {}
 }

@@ -29,10 +29,6 @@
           "caption": "Base Domain"
         }
       }
-    },
-    "count": {
-      "group": "occurrence",
-      "requirement": "optional"
     }
   }
 }
