@@ -1,8 +1,9 @@
 {
-  "uid": 22,
+  "uid": 3,
   "caption": "Investment Services",
   "description": "Managing financial assets, investment portfolios, and providing advisory services to clients. Subdomains: Asset Management, Hedge Funds, Private Equity, Mutual Funds, Financial Planning",
   "extends": "finance_and_business",
   "name": "investment_services",
+  "main_domain_name": "finance_and_business",
   "attributes": {}
 }

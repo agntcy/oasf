@@ -1,8 +1,8 @@
 {
-  "uid": 10,
+  "_uid": 10,
   "caption": "Healthcare",
   "description": "Management, delivery, and innovation of medical services, treatments, and technologies aimed at improving the health and well-being of individuals and populations.",
-  "extends": "domain_of_application",
+  "extends": "base_domain",
   "name": "healthcare",
   "attributes": {}
 }

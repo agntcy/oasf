@@ -3,6 +3,7 @@
   "caption": "Software Engineering",
   "description": "Designing, developing, and maintaining software applications and systems. Subdomains: Front-end Development, Back-end Development, Full-stack Development, DevOps, Quality Assurance",
   "extends": "technology",
+  "main_domain_name": "technology",
   "name": "software_engineering",
   "attributes": {}
 }

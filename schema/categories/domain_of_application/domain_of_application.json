@@ -1,7 +1,0 @@
-{
-  "caption": "Domain of Application",
-  "category": "domain_of_application",
-  "extends": "base_event",
-  "name": "domain_of_application",
-  "attributes": {}
-}

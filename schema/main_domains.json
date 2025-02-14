@@ -1,0 +1,52 @@
+{
+  "caption": "Domain of Application",
+  "description": "The OASF categories organize attribute classes, each aligned with a specific domain or area of focus.",
+  "name": "main_domains",
+  "attributes": {
+    "technology": {
+      "uid": 1,
+      "caption": "Technology",
+      "description": "Development, management, and use of systems, devices, and software to solve problems and enhance human capabilities."
+    },
+    "healthcare": {
+      "uid": 2,
+      "caption": "Healthcare",
+      "description": "Management, delivery, and innovation of medical services, treatments, and technologies aimed at improving the health and well-being of individuals and populations."
+    },
+    "life_science": {
+      "uid": 3,
+      "caption": "Life Science",
+      "description": "cientific research and innovations in biology, genetics, biotechnology, and other related fields, with the goal of understanding life processes and advancing medical and environmental solutions. Subdomains: Biotechnology, Pharmaceutical Research, Genomics, Bioinformatics, Molecular Biology"
+    },
+    "trust_and_safety": {
+      "uid": 4,
+      "caption": "Trust and Safety",
+      "description": "Maintaining a secure and reliable environment, primarily online, by managing risks, preventing harm, and ensuring safety and privacy. Subdomains: Online Safety, Content Moderation, Fraud Prevention, Data Privacy, Risk Management"
+    },
+    "human_resources": {
+      "uid": 5,
+      "caption": "Human Resources",
+      "description": "Managing and optimizing the workforce of an organization, focusing on recruitment, employee development, and workplace culture. Subdomains: Recruitment, Employee Relations, Training and Development, Compensation and Benefits, HR Analytics"
+    },
+    "education": {
+      "uid": 6,
+      "caption": "Education",
+      "description": "Systems, methods, and technologies used to teach, learn, and foster knowledge development in individuals and communities. Subdomains: E-Learning, Curriculum Design, Learning Management Systems, Educational Technology, Pedagogy"
+    },
+    "industrial_manufacturing": {
+      "uid": 7,
+      "caption": "Industrial Manufacturing",
+      "description": "Production of goods, use of automation and technology in manufacturing, and industrial processes to create products on a large scale. Subdomains: Automation, Robotics, Supply Chain Management, Lean Manufacturing, Process Engineering"
+    },
+    "transportation": {
+      "uid": 8,
+      "caption": "Transportation",
+      "description": "Systems and processes involved in the movement of goods and people, as well as the physical infrastructure supporting them. Subdomains: Logistics, Automotive, Public Transit, Supply Chain, Freight, Autonomous Vehicles"
+    },
+    "finance_and_business": {
+      "uid": 9,
+      "caption": "Finance and Business",
+      "description": "Managing money, investments, and financial risks within businesses or for individuals. Subdomains: Corporate Finance, Personal Finance, Risk Management, Accounting, Financial Analysis"
+    }
+  }
+}

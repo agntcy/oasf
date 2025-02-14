@@ -1,8 +1,8 @@
 {
-  "uid": 12,
   "caption": "Trust and Safety",
   "description": "Maintaining a secure and reliable environment, primarily online, by managing risks, preventing harm, and ensuring safety and privacy. Subdomains: Online Safety, Content Moderation, Fraud Prevention, Data Privacy, Risk Management",
-  "extends": "domain_of_application",
+  "extends": "base_domain",
   "name": "trust_and_safety",
+  "main_domain_name": "trust_and_safety",
   "attributes": {}
 }

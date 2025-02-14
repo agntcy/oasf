@@ -19,6 +19,7 @@ defmodule Schema.JsonReader do
 
   # The default location of the schema file"schema"
   @categories_dir "categories"
+  @domains_dir "domains"
   @objects_dir "objects"
   @profiles_dir "profiles"
 
@@ -29,6 +30,7 @@ defmodule Schema.JsonReader do
   @version_file "version.json"
 
   @categories_file "categories.json"
+  @main_domains_file "main_domains.json"
   @dictionary_file "dictionary.json"
 
   # The Schema extension file
@@ -51,6 +53,11 @@ defmodule Schema.JsonReader do
     GenServer.call(__MODULE__, :read_categories)
   end
 
+  @spec read_main_domains() :: map()
+  def read_main_domains() do
+    GenServer.call(__MODULE__, :read_main_domains)
+  end
+
   @spec read_dictionary() :: map()
   def read_dictionary() do
     GenServer.call(__MODULE__, :read_dictionary)
@@ -64,6 +71,11 @@ defmodule Schema.JsonReader do
   @spec read_classes() :: map()
   def read_classes() do
     GenServer.call(__MODULE__, :read_classes)
+  end
+
+  @spec read_domains() :: map()
+  def read_domains() do
+    GenServer.call(__MODULE__, :read_domains)
   end
 
   @spec read_profiles() :: map()
@@ -122,6 +134,11 @@ defmodule Schema.JsonReader do
   end
 
   @impl true
+  def handle_call(:read_main_domains, _from, {home, ext} = state) do
+    {:reply, read_main_domains(home, ext), state}
+  end
+
+  @impl true
   def handle_call(:read_dictionary, _from, {home, ext} = state) do
     {:reply, read_dictionary(home, ext), state}
   end
@@ -139,6 +156,11 @@ defmodule Schema.JsonReader do
   @impl true
   def handle_call(:read_classes, _from, {home, ext} = state) do
     {:reply, read_classes(home, ext), state}
+  end
+
+  @impl true
+  def handle_call(:read_domains, _from, {home, ext} = state) do
+    {:reply, read_domains(home, ext), state}
   end
 
   @impl true
@@ -182,6 +204,18 @@ defmodule Schema.JsonReader do
 
     Enum.reduce(extensions, categories, fn ext, acc ->
       merge_ext_file(acc, ext, @categories_file)
+    end)
+  end
+
+  defp read_main_domains(home, []) do
+    Path.join(home, @main_domains_file) |> read_json_file()
+  end
+
+  defp read_main_domains(home, extensions) do
+    main_domains = Path.join(home, @main_domains_file) |> read_json_file()
+
+    Enum.reduce(extensions, main_domains, fn ext, acc ->
+      merge_ext_file(acc, ext, @main_domains_file)
     end)
   end
 
@@ -232,6 +266,18 @@ defmodule Schema.JsonReader do
 
     Enum.reduce(extensions, events, fn ext, acc ->
       read_extension_dir(acc, home, ext, @categories_dir)
+    end)
+  end
+
+  defp read_domains(home, []) do
+    read_schema_dir(Map.new(), home, Path.join(home, @domains_dir))
+  end
+
+  defp read_domains(home, extensions) do
+    events = read_schema_dir(Map.new(), home, Path.join(home, @domains_dir))
+
+    Enum.reduce(extensions, events, fn ext, acc ->
+      read_extension_dir(acc, home, ext, @domains_dir)
     end)
   end
 
