@@ -31,6 +31,11 @@ tasks:
     cmds:
       - task: server:gen
 
+  build:
+    desc: Build images for all components
+    cmds:
+      - docker buildx bake {{.IMAGE_BAKE_OPTS}}
+
   pull:
     desc: Pull images for all components
     cmds:
@@ -110,7 +115,6 @@ tasks:
       - deps:helm
       - deps:kubectl
       - deps:kind
-      - server:gen
     vars:
       # Kind args
       KIND_CLUSTER_NAME:  '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'

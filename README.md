@@ -3,6 +3,17 @@
 
 ##
 
+## Development
+
+Use `Taskfile` for all related development operations such as testing, validating, deploying, and working with the project.
+
+To execute the test suite locally, run:
+
+```bash
+task gen
+task build
+task test
+```
 
 ## Copyright Notice
 
