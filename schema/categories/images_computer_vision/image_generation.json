@@ -1,0 +1,8 @@
+{
+    "uid": 6,
+    "caption": "Image Generation",
+    "description": "Image generation is the process of creating new images from learned patterns or data using machine learning models.",
+    "extends": "images_computer_vision",
+    "name": "image_generation",
+    "attributes": {}
+  }

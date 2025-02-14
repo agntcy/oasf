@@ -1,0 +1,13 @@
+{
+  "caption": "Ghost",
+  "category": "network",
+  "description": "The hidden Ghost example event class.",
+  "name": "ghost",
+  "extends": "base_event",
+  "profiles": [],
+  "attributes": {
+    "hidden_thing": {
+      "requirement": "required"
+    }
+  }
+}

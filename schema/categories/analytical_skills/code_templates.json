@@ -1,0 +1,8 @@
+{
+    "uid": 9,
+    "caption": "Code Template Filling",
+    "description": "Automatically filling in code templates with appropriate content.",
+    "extends": "coding_skills",
+    "name": "code_templates",
+    "attributes": {}
+}

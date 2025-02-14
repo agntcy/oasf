@@ -1,0 +1,26 @@
+{
+  "caption": "Service",
+  "description": "The Service object describes characteristics of a service, <code> e.g. AWS EC2. </code>",
+  "extends": "_entity",
+  "name": "service",
+  "attributes": {
+    "labels": {
+      "description": "The list of labels associated with the service.",
+      "requirement": "optional"
+    },
+    "name": {
+      "description": "The name of the service."
+    },
+    "tags": {
+      "description": "The list of tags; <code>{key:value}</code> pairs associated to the service.",
+      "requirement": "optional"
+    },
+    "uid": {
+      "description": "The unique identifier of the service."
+    },
+    "version": {
+      "description": "The version of the service.",
+      "requirement": "recommended"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "caption": "RPG Device",
+  "description": "Patch extends of Device for the RPG extension.",
+  "extends": "device",
+  "attributes": {
+    "mana": {
+      "description": "The device's magical reserves.",
+      "requirement": "optional"
+    },
+    "uid": {
+      "description": "The RPG Device's unique identifier.",
+      "requirement": "recommended"
+    }
+  }
+}

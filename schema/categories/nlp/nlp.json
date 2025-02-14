@@ -1,0 +1,7 @@
+{
+  "caption": "Natural Language Processing",
+  "category": "nlp",
+  "extends": "base_event",
+  "name": "nlp",
+  "attributes": {}
+}

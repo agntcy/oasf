@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Communication Systems",
+  "description": "Technologies for transmitting and receiving information over various media. Subdomains: Telecommunication, Wireless Communication, Signal Processing, Broadcasting Systems",
+  "extends": "technology",
+  "name": "communication_systems",
+  "attributes": {}
+}

@@ -1,0 +1,62 @@
+{
+  "caption": "Scan",
+  "description": "The Scan object describes characteristics of a proactive scan.",
+  "extends": "_entity",
+  "name": "scan",
+  "attributes": {
+    "name": {
+      "description": "The administrator-supplied or application-generated name of the scan. For example: \"Home office weekly user database scan\", \"Scan folders for viruses\", \"Full system virus scan\""
+    },
+    "type": {
+      "description": "The type of scan.",
+      "requirement": "optional"
+    },
+    "type_id": {
+      "description": "The type id of the scan.",
+      "enum": {
+        "0": {
+          "caption": "Unknown"
+        },
+        "1": {
+          "caption": "Manual",
+          "description": "The scan was manually initiated by the user or administrator."
+        },
+        "2": {
+          "caption": "Scheduled",
+          "description": "The scan was started based on scheduler."
+        },
+        "3": {
+          "caption": "Updated Content",
+          "description": "The scan was triggered by a content update."
+        },
+        "4": {
+          "caption": "Quarantined Items",
+          "description": "The scan was triggered by newly quarantined items."
+        },
+        "5": {
+          "caption": "Attached Media",
+          "description": "The scan was triggered by the attachment of removable media."
+        },
+        "6": {
+          "caption": "User Logon",
+          "description": "The scan was started due to a user logon."
+        },
+        "7": {
+          "caption": "ELAM",
+          "description": "The scan was triggered by an Early Launch Anti-Malware (ELAM) detection."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "The scan type id is not mapped. See the <code>type</code> attribute, which contains a data source specific value."
+        }
+      },
+      "requirement": "required",
+      "sibling": "type",
+      "type": "integer_t"
+    },
+    "uid": {
+      "caption": "Scan UID",
+      "description": "The application-defined unique identifier assigned to an instance of a scan."
+    }
+  }
+}

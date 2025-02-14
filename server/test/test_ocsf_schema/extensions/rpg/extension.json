@@ -1,0 +1,7 @@
+{
+  "caption": "RPG",
+  "description": "The RPG extension defines role-playing game (RPG) specific attributes, objects and classes.",
+  "name": "rpg",
+  "uid": 42,
+  "version": "0.1.1-rpg-test"
+}

@@ -1,0 +1,31 @@
+{
+  "caption": "API",
+  "description": "The API, or Application Programming Interface, object represents  information pertaining to an API request and response.",
+  "extends": "object",
+  "name": "api",
+  "attributes": {
+    "group": {
+      "description": "The information pertaining to the API group.",
+      "requirement": "optional"
+    },
+    "operation": {
+      "requirement": "required"
+    },
+    "request": {
+      "description": "Details pertaining to the API request.",
+      "requirement": "recommended"
+    },
+    "response": {
+      "description": "Details pertaining to the API response.",
+      "requirement": "recommended"
+    },
+    "service": {
+      "description": "The information pertaining to the API service.",
+      "requirement": "optional"
+    },
+    "version": {
+      "description": "The version of the API service.",
+      "requirement": "optional"
+    }
+  }
+}

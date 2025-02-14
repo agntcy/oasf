@@ -1,0 +1,13 @@
+{
+  "caption": "Network Proxy Endpoint",
+  "description": "The network proxy endpoint object describes a proxy server, which acts as an intermediary between a client requesting a resource and the server providing that resource.",
+  "extends": "network_endpoint",
+  "name": "network_proxy",
+  "attributes": {},
+  "references": [
+    {
+      "description": "D3FEND™ Ontology d3f:ProxyServer",
+      "url": "https://d3fend.mitre.org/dao/artifact/d3f:ProxyServer/"
+    }
+  ]
+}

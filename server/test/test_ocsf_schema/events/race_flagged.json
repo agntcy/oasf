@@ -1,0 +1,61 @@
+{
+  "caption": "Race Flagged",
+  "category": "system",
+  "description": "Occurs when a driver or entire race is flagged.",
+  "name": "race_flagged",
+  "extends": "base_event",
+  "uid": 5,
+  "profiles": [],
+  "attributes": {
+    "flag_ids": {
+      "caption": "Racing Flag IDs",
+      "description": "The list of racing flag IDs.",
+      "enum": {
+        "1": {
+          "caption": "Green Flag"
+        },
+        "2": {
+          "caption": "Yellow Flag"
+        },
+        "3": {
+          "caption": "Full Track Yellow Flag"
+        },
+        "4": {
+          "caption": "Surface Flag"
+        },
+        "5": {
+          "caption": "White Flag"
+        },
+        "6": {
+          "caption": "Red Flag"
+        },
+        "7": {
+          "caption": "Black Flag"
+        },
+        "8": {
+          "caption": "Black with Orange Circle Flag"
+        },
+        "9": {
+          "caption": "Checkered Flag"
+        },
+        "10": {
+          "caption": "Grey Flag",
+          "@deprecated": {
+            "message": "Grey is confusing. Use 5 (White) or 7 (Black) instead.",
+            "since": "0.1.0-test"
+          }
+        }
+      },
+      "requirement": "required"
+    },
+    "flags": {
+      "caption": "Racing Flags",
+      "description": "The list of racing flags.",
+      "requirement": "optional"
+    },
+    "car_number": {
+      "description": "When applicable, the individual car that was flagged.",
+      "requirement": "optional"
+    }
+  }
+}

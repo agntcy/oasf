@@ -1,0 +1,20 @@
+{
+  "caption": "RPG Alpha",
+  "description": "Patch extends of the Alpha example event class.",
+  "extends": "alpha",
+  "profiles": [],
+  "references": [
+    {
+      "url": "https://example.com/alpha?patched=1",
+      "description": "Alpha (patch) at example.com <patched class>"
+    }
+  ],
+  "attributes": {
+    "alpha_extra": {
+      "requirement": "required"
+    },
+    "epsilon": {
+      "requirement": "recommended"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "caption": "Analytical Skills",
+  "category": "analytical_skills",
+  "extends": "base_event",
+  "name": "analytical_skills",
+  "attributes": {}
+}

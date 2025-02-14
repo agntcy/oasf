@@ -1,0 +1,8 @@
+{
+    "uid": 1,
+    "caption": "Audio Classification",
+    "description": "Assigning labels or classes to audio content based on its characteristics.",
+    "extends": "audio",
+    "name": "audio_classification",
+    "attributes": {}
+}

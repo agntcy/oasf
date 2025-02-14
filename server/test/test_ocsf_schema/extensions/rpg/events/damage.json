@@ -1,0 +1,34 @@
+{
+  "caption": "Damage",
+  "category": "battle",
+  "description": "The Damage event represents an instance of damage taken.",
+  "name": "damage",
+  "extends": "base_event",
+  "uid": 1,
+  "attributes": {
+    "damage": {
+      "requirement": "required"
+    },
+    "hp": {
+      "description": "Hit points after taking damage.",
+      "requirement": "required"
+    },
+    "mana": {
+      "description": "Mana after taking damage.",
+      "requirement": "recommended"
+    },
+    "max_hp": {
+      "requirement": "recommended"
+    },
+    "max_mana": {
+      "requirement": "recommended"
+    },
+    "hammer": {
+      "requirement": "optional"
+    }
+  },
+  "observables": {
+    "damage": 42101,
+    "hammer.damage_range": 42102
+  }
+}

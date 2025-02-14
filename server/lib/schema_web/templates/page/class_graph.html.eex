@@ -1,0 +1,94 @@
+<%!--
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--%>
+<% class = @data[:class] %>
+<% category = class[:category] %>
+<% extension = class[:extension] %>
+
+<div class="row">
+  <div class="col-md move-up">
+    <% path = Routes.static_path(@conn, "/categories/" <> category) %>
+    <h3 class="extensions">
+      <%= class[:caption] %>
+      <span class="text-secondary">[<a href="<%= class_path(@conn, class)  %>"><%= class[:uid] %></a>]<sup><%= extension || "" %></sup>
+        Class
+      </span>
+    </h3>
+
+    <h4 class="extensions">
+      <a href="<%= path %>"><%= class[:category_name] %> Category</a>
+    </h4>
+
+    <div class="text-secondary">
+      <%= raw class[:description] %>
+    </div>
+  </div>
+  <div class="col-md-auto fixed-right mt-2">
+    <div class="navbar-expand-md">
+      <div class="form-inline">
+        <ul class="navbar-nav">
+          <li class="nav-item mr-2">
+            <select multiple
+              id="attributes-select"
+              class="selectpicker"
+              data-style="btn-outline-secondary"
+              data-selected-text-format="count > 3"
+              data-actions-box="true"
+              data-width="auto">
+              <option selected id="base-event-select" class="base-event" value="base-event" title="Base Event">Base
+                Event Attributes
+              </option>
+              <option value="deprecated" title="Deprecated">Deprecated Attributes</option>
+              <optgroup id="groups-select" label="Groups">
+                <option selected value="classification">Classification</option>
+                <option selected value="context">Context</option>
+                <option selected value="occurrence">Occurrence</option>
+                <option selected value="primary">Primary</option>
+              </optgroup>
+              <optgroup id="requirements-select" label="Requirements">
+                <option class="optional" value="optional" title="Optional">Optional Attributes</option>
+                <option class="recommended" value="recommended" title="Recommended">Recommended Attributes</option>
+              </optgroup>
+            </select>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="network"></div>
+<script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/vis-network.min.js") %>'></script>
+<script type="text/javascript">
+  init_class_profiles();
+
+  let container = document.getElementById("network");
+  let data = <%= raw Jason.encode!(@data) %>;
+  let options = {
+    edges:{
+     arrows: 'to',
+     font: {face: 'mono'}
+   },
+   nodes: {
+     "color": "#D7E2FF",
+     shape: 'box',
+     font: {face: 'mono'}
+   },
+   physics: {
+     enabled: true,
+     timestep: 0.4,
+     solver: 'forceAtlas2Based',
+     solver: 'repulsion',
+   },
+  };
+
+  new vis.Network(container, data, options);
+</script>

@@ -1,0 +1,8 @@
+{
+    "uid": 18,
+    "caption": "Document and Passage Retrieval",
+    "description": "Capability to identify and retrieve relevant documents or text passages based on specific criteria or queries from a larger collection of texts.",
+    "extends": "information_retrieval_synthesis",
+    "name": "document_passage_retrieval",
+    "attributes": {}
+}

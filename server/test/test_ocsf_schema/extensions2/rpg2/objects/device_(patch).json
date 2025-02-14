@@ -1,0 +1,10 @@
+{
+  "caption": "RPG 2 Device",
+  "description": "Patch extends of Device for the RPG 2 extension.",
+  "extends": "device",
+  "attributes": {
+    "rpg/hp": {
+      "requirement": "optional"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "description": "The attributes that identify host/device attributes.",
+  "meta": "profile",
+  "caption": "Host",
+  "name": "host",
+  "annotations": {
+    "group": "primary"
+  },
+  "attributes": {
+    "device": {
+      "requirement": "recommended",
+      "references": [
+        {
+          "url": "https://example.com/device?profile=host",
+          "description": "Device from host profile on example.com <profile>"
+        }
+      ]
+    }
+  }
+}

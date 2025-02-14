@@ -1,0 +1,8 @@
+{
+    "uid": 22,
+    "caption": "Personalisation and Adaptation",
+    "description": "Capabilities for adapting and personalizing content based on user context and preferences.",
+    "extends": "nlp",
+    "name": "personalization",
+    "attributes": {}
+}

@@ -1,0 +1,7 @@
+{
+  "caption": "Images / Computer Vision",
+  "category": "images_computer_vision",
+  "extends": "base_event",
+  "name": "images_computer_vision",
+  "attributes": {}
+}

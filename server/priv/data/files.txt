@@ -1,0 +1,179 @@
+.3DM	Rhino 3D Model
+.3DS	3D Studio Scene
+.3G2	3GPP2 Multimedia File
+.3GP	3GPP Multimedia File
+.7Z	7-Zip Compressed File
+.ACCDB	Access 2007 Database File
+.AI	Adobe Illustrator File
+.AIF	Audio Interchange File Format
+.APK	Android Package File
+.APP	macOS Application
+.ASF	Advanced Systems Format File
+.ASP	Active Server Page
+.ASPX	Active Server Page Extended File
+.AVI	Audio Video Interleave File
+.B	Grand Theft Auto 3 Saved Game File
+.BAK	Backup File
+.BAT	DOS Batch File
+.BIN	Binary Disc Image
+.BMP	Bitmap Image File
+.C	C/C++ Source Code File
+.CAB	Windows Cabinet File
+.CBR	Comic Book RAR Archive
+.CER	Internet Security Certificate
+.CFG	Configuration File
+.CFM	ColdFusion Markup File
+.CGI	Common Gateway Interface Script
+.CLASS	Java Class File
+.COM	DOS Command File
+.CPL	Windows Control Panel Item
+.CPP	C++ Source Code File
+.CRDOWNLOAD	Chrome Partially Downloaded File
+.CRX	Chrome Extension
+.CS	C# Source Code File
+.CSR	Certificate Signing Request File
+.CSS	Cascading Style Sheet
+.CSV	Comma Separated Values File
+.CUE	Cue Sheet File
+.CUR	Windows Cursor
+.DAT	Data File
+.DB	Database File
+.DBF	Database File
+.DCR	Shockwave Media File
+.DDS	DirectDraw Surface Image
+.DEB	Debian Software Package
+.DEM	Video Game Demo File
+.DESKTHEMEPACK	Windows 8 Desktop Theme Pack File
+.DLL	Dynamic Link Library
+.DMG	Apple Disk Image
+.DMP	Windows Memory Dump
+.DOC	Microsoft Word Document (Legacy)
+.DOCX	Microsoft Word Document
+.DRV	Device Driver
+.DTD	Document Type Definition File
+.DWG	AutoCAD Drawing Database File
+.DXF	Drawing Exchange Format File
+.EPS	Encapsulated PostScript File
+.EXE	Windows Executable File
+.FLA	Adobe Animate Animation
+.FLV	Flash Video File
+.FNT	Windows Font File
+.FON	Windows Font Library
+.GADGET	Windows Gadget
+.GAM	Saved Game File
+.GED	GEDCOM Genealogy Data File
+.GIF	Graphical Interchange Format File
+.GPX	GPS Exchange File
+.GZ	Gnu Zipped Archive
+.H	C/C++/Objective-C Header File
+.HEIC	High Efficiency Image Format
+.HQX	BinHex 4.0 Encoded File
+.HTM	Hypertext Markup Language File
+.HTML	Hypertext Markup Language File
+.ICNS	macOS Icon Resource File
+.ICO	Icon File
+.ICS	Calendar File
+.IFF	Interchange File Format
+.INDD	Adobe InDesign Document
+.INI	Windows Initialization File
+.ISO	Disc Image File
+.JAR	Java Archive File
+.JAVA	Java Source Code File
+.JPG	JPEG Image
+.JS	JavaScript File
+.JSP	Java Server Page
+.KEY	Apple Keynote Presentation
+.KEYCHAIN	Mac OS X Keychain File
+.KML	Keyhole Markup Language File
+.KMZ	Google Earth Placemark File
+.LNK	Windows Shortcut
+.LOG	Log File
+.LUA	Lua Source File
+.M	Objective-C Implementation File
+.M3U	Media Playlist File
+.M4A	MPEG-4 Audio File
+.M4V	iTunes Video File
+.MAX	3ds Max Scene File
+.MDB	Microsoft Access Database
+.MDF	Media Disc Image File
+.MID	MIDI File
+.MIM	Multi-Purpose Internet Mail Message File
+.MOV	Apple QuickTime Movie
+.MP3	MP3 Audio File
+.MP4	MPEG-4 Video File
+.MPA	MPEG-2 Audio File
+.MPG	MPEG Video File
+.MSG	Outlook Mail Message
+.MSI	Windows Installer Package
+.NES	Nintendo (NES) ROM File
+.OBJ	Wavefront 3D Object File
+.ODT	OpenDocument Text Document
+.OTF	OpenType Font
+.PAGES	Apple Pages Document
+.PART	Partially Downloaded File
+.PCT	Picture File
+.PDB	Program Database
+.PDF	Portable Document Format File
+.PHP	PHP Source Code File
+.PKG	Mac OS X Installer Package
+.PL	Perl Script
+.PLUGIN	Mac OS X Plugin
+.PNG	Portable Network Graphic
+.PPT	Microsoft PowerPoint Presentation (Legacy)
+.PPTX	Microsoft PowerPoint Presentation
+.PRF	Outlook Profile File
+.PSD	Adobe Photoshop Document
+.PSPIMAGE	PaintShop Pro Image
+.PY	Python Script
+.RAR	WinRAR Compressed Archive
+.RM	RealMedia File
+.ROM	N64 Game ROM File
+.RPM	Red Hat Package Manager File
+.RSS	Rich Site Summary
+.RTF	Rich Text Format File
+.SAV	Saved Game
+.SDF	Standard Data File
+.SH	Bash Shell Script
+.SITX	StuffIt X Archive
+.SLN	Visual Studio Solution File
+.SQL	Structured Query Language Data File
+.SRT	SubRip Subtitle File
+.SVG	Scalable Vector Graphics File
+.SWF	Shockwave Flash Movie
+.SWIFT	Swift Source Code File
+.SYS	Windows System File
+.TAR	Consolidated Unix File Archive
+.TAR.GZ	Compressed Tarball File
+.TAX2016	TurboTax 2016 Tax Return
+.TAX2020	TurboTax 2020 Tax Return
+.TEX	LaTeX Source Document
+.TGA	Targa Graphic
+.THM	Thumbnail Image File
+.TIF	Tagged Image File
+.TIFF	Tagged Image File Format
+.TMP	Temporary File
+.TOAST	Toast Disc Image
+.TORRENT	BitTorrent File
+.TTF	TrueType Font
+.TXT	Plain Text File
+.UUE	Uuencoded File
+.VB	Visual Basic Project Item File
+.VCD	Virtual CD
+.VCF	vCard File
+.VCXPROJ	Visual C++ Project
+.VOB	DVD Video Object File
+.WAV	WAVE Audio File
+.WMA	Windows Media Audio File
+.WMV	Windows Media Video
+.WPD	WordPerfect Document
+.WPS	Microsoft Works Word Processor Document
+.WSF	Windows Script File
+.XCODEPROJ	Xcode Project
+.XHTML	Extensible Hypertext Markup Language File
+.XLR	Works Spreadsheet
+.XLS	Microsoft Excel Spreadsheet (Legacy)
+.XLSX	Microsoft Excel Spreadsheet
+.XML	XML File
+.YUV	YUV Encoded Image File
+.ZIP	Zipped File
+.ZIPX	Extended Zip Archive

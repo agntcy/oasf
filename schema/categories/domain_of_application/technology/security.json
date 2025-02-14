@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Security",
+  "description": "Protecting systems, data, and networks from cyber threats and vulnerabilities. Subdomains: Cybersecurity, Data Security, Application Security, Network Security, Identity Management",
+  "extends": "technology",
+  "name": "security",
+  "attributes": {}
+}

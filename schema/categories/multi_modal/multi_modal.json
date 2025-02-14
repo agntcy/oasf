@@ -1,0 +1,7 @@
+{
+  "caption": "Multi Modal",
+  "category": "multi_modal",
+  "extends": "base_event",
+  "name": "multi_modal",
+  "attributes": {}
+}

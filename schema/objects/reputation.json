@@ -1,0 +1,23 @@
+{
+  "caption": "Reputation",
+  "description": "The Reputation object describes the reputation/risk score of an entity (e.g. device, user, domain).",
+  "extends": "object",
+  "name": "reputation",
+  "attributes": {
+    "base_score": {
+      "caption": "Reputation Score",
+      "description": "The reputation score as reported by the event source.",
+      "requirement": "required"
+    },
+    "provider": {
+      "description": "The provider of the reputation information.",
+      "requirement": "recommended"
+    },
+    "score": {
+      "requirement": "optional"
+    },
+    "score_id": {
+      "requirement": "required"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "uid": 9,
+    "caption": "Dialogue Generation",
+    "description": "Producing conversational responses that are contextually relevant and engaging within a dialogue context.",
+    "extends": "natural_language_generation",
+    "name": "dialogue_generation",
+    "attributes": {}
+}

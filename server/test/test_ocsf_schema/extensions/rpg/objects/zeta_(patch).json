@@ -1,0 +1,20 @@
+{
+  "caption": "RPG Zeta",
+  "description": "Patch extends of Zeta for the RPG extension.",
+  "extends": "zeta",
+  "observable": 42202,
+  "attributes": {
+    "name": {
+      "description": "Patched name.",
+      "observable": 42203
+    },
+    "numeric_value": {
+      "description": "Patched numeric value.",
+      "observable": 42204
+    },
+    "kind": {
+      "requirement": "recommended",
+      "observable": 42205
+    }
+  }
+}

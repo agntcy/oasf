@@ -1,0 +1,9 @@
+{
+  "caption": "RPG 2 Hammer Patch",
+  "extends": "rpg/hammer",
+  "attributes": {
+    "rpg/hp": {
+      "requirement": "optional"
+    }
+  }
+}

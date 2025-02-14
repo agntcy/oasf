@@ -1,0 +1,16 @@
+{
+  "caption": "Container",
+  "description": "The container context for a process.",
+  "meta": "profile",
+  "name": "container",
+  "attributes": {
+    "container": {
+      "group": "context",
+      "requirement": "recommended"
+    },
+    "namespace_pid": {
+      "group": "context",
+      "requirement": "recommended"
+    }
+  }
+}

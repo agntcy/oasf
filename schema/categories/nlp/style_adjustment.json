@@ -1,0 +1,8 @@
+{
+    "uid": 33,
+    "caption": "Tone and Style Adjustment",
+    "description": "Modifying the tone or style of generated text to suit specific audiences or purposes.",
+    "extends": "personalization",
+    "name": "style_adjustment",
+    "attributes": {}
+}

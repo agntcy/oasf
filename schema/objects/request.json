@@ -1,0 +1,23 @@
+{
+  "caption": "Request Elements",
+  "description": "The Request Elements object describes characteristics of an API request.",
+  "extends": "object",
+  "name": "request",
+  "attributes": {
+    "containers": {
+      "requirement": "optional"
+    },
+    "data": {
+      "description": "The additional data that is associated with the api request.",
+      "requirement": "optional"
+    },
+    "flags": {
+      "description": "The communication flags that are associated with the api request.",
+      "requirement": "optional"
+    },
+    "uid": {
+      "description": "The unique request identifier.",
+      "requirement": "required"
+    }
+  }
+}

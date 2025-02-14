@@ -1,0 +1,31 @@
+{
+  "caption": "Response Elements",
+  "description": "The Response Elements object describes characteristics of an API response.",
+  "extends": "object",
+  "name": "response",
+  "attributes": {
+    "code": {
+      "requirement": "recommended"
+    },
+    "containers": {
+      "requirement": "optional"
+    },
+    "data": {
+      "description": "The additional data that is associated with the api response.",
+      "requirement": "optional"
+    },
+    "error": {
+      "requirement": "recommended"
+    },
+    "error_message": {
+      "requirement": "recommended"
+    },
+    "flags": {
+      "description": "The communication flags that are associated with the api response.",
+      "requirement": "optional"
+    },
+    "message": {
+      "requirement": "recommended"
+    }
+  }
+}

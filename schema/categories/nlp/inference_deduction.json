@@ -1,0 +1,8 @@
+{
+    "uid": 34,
+    "caption": "Inference and Deduction",
+    "description": "Making logical inferences based on provided information.",
+    "extends": "analytical_reasoning",
+    "name": "inference_deduction",
+    "attributes": {}
+}

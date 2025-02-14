@@ -1,0 +1,8 @@
+{
+    "uid": 11,
+    "caption": "Image-to-3D",
+    "description": "Image-to-3D in AI refers to the process of converting a 2D image into a 3D representation or model, often by inferring depth and spatial relationships.",
+    "extends": "images_computer_vision",
+    "name": "image_to_3d",
+    "attributes": {}
+  }

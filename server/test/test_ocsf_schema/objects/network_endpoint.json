@@ -1,0 +1,14 @@
+{
+  "caption": "Network Endpoint",
+  "description": "The Network Endpoint object describes characteristics of a network endpoint. These can be a source or destination of a network connection.",
+  "extends": "endpoint",
+  "name": "network_endpoint",
+  "attributes": {
+    "port": {
+      "requirement": "recommended"
+    },
+    "service": {
+      "requirement": "recommended"
+    }
+  }
+}

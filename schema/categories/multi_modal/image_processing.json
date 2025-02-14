@@ -1,0 +1,8 @@
+{
+    "uid": 1,
+    "caption": "Image Processing",
+    "description": "Capabilities for processing and generating images from various inputs and generating textual descriptions of visual content.",
+    "extends": "multi_modal",
+    "name": "image_processing",
+    "attributes": {}
+}

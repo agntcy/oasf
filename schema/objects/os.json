@@ -1,0 +1,96 @@
+{
+  "caption": "Operating System (OS)",
+  "description": "The Operating System (OS) object describes characteristics of an OS, such as Linux or Windows.",
+  "extends": "object",
+  "name": "os",
+  "attributes": {
+    "build": {
+      "requirement": "optional"
+    },
+    "country": {
+      "description": "The operating system country code, as defined by the ISO 3166-1 standard (Alpha-2 code).<p><b>Note:</b> The two letter country code should be capitalized. For example: <code>US</code> or <code>CA</code>.</p>",
+      "references": [
+        {
+          "description": "ISO 3166-1 alpha-2 codes",
+          "url": "https://www.iso.org/obp/ui/#iso:pub:PUB500001:en"
+        }
+      ],
+      "requirement": "optional"
+    },
+    "cpe_name": {
+      "requirement": "optional"
+    },
+    "cpu_bits": {
+      "requirement": "optional"
+    },
+    "edition": {
+      "requirement": "optional"
+    },
+    "kernel_release": {
+      "requirement": "optional"
+    },
+    "lang": {
+      "requirement": "optional"
+    },
+    "name": {
+      "description": "The operating system name.",
+      "requirement": "required"
+    },
+    "sp_name": {
+      "requirement": "optional"
+    },
+    "sp_ver": {
+      "requirement": "optional"
+    },
+    "type": {
+      "description": "The type of the operating system.",
+      "requirement": "optional"
+    },
+    "type_id": {
+      "description": "The type identifier of the operating system.",
+      "enum": {
+        "100": {
+          "caption": "Windows"
+        },
+        "101": {
+          "caption": "Windows Mobile"
+        },
+        "200": {
+          "caption": "Linux"
+        },
+        "201": {
+          "caption": "Android"
+        },
+        "300": {
+          "caption": "macOS"
+        },
+        "301": {
+          "caption": "iOS"
+        },
+        "302": {
+          "caption": "iPadOS"
+        },
+        "400": {
+          "caption": "Solaris"
+        },
+        "401": {
+          "caption": "AIX"
+        },
+        "402": {
+          "caption": "HP-UX"
+        }
+      },
+      "requirement": "required"
+    },
+    "version": {
+      "description": "The version of the OS running on the device that originated the event. For example: \"Windows 10\", \"OS X 10.7\", or \"iOS 9\".",
+      "requirement": "optional"
+    }
+  },
+  "references": [
+    {
+      "description": "D3FEND™ Ontology d3f:OperatingSystem",
+      "url": "https://d3fend.mitre.org/dao/artifact/d3f:OperatingSystem/"
+    }
+  ]
+}

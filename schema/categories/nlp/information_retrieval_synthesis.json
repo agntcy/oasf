@@ -1,0 +1,8 @@
+{
+    "uid": 13,
+    "caption": "Information Retrieval and Synthesis",
+    "description": "Capabilities for retrieving relevant information from various sources and synthesizing it into coherent, contextually appropriate responses. This includes searching, extracting, combining, and presenting information in a meaningful way.",
+    "extends": "nlp",
+    "name": "information_retrieval_synthesis",
+    "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+    "uid": 16,
+    "caption": "Knowledge Synthesis",
+    "description": "Capability to aggregate and combine information from multiple sources, creating comprehensive and coherent responses while maintaining context and relevance.",
+    "extends": "information_retrieval_synthesis",
+    "name": "knowledge_synthesis",
+    "attributes": {}
+}

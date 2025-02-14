@@ -1,0 +1,8 @@
+{
+    "uid": 2,
+    "caption": "Audio to Audio",
+    "description": "Transforming audio through various manipulations including cutting, filtering, and mixing.",
+    "extends": "audio",
+    "name": "audio_to_audio",
+    "attributes": {}
+}

@@ -1,0 +1,23 @@
+{
+  "caption": "Keyboard Information",
+  "description": "The Keyboard Information object contains details and attributes related to a computer or device keyboard. It encompasses information that describes the characteristics, capabilities, and configuration of the keyboard.",
+  "extends": "object",
+  "name": "keyboard_info",
+  "attributes": {
+    "function_keys": {
+      "requirement": "optional"
+    },
+    "ime": {
+      "requirement": "optional"
+    },
+    "keyboard_layout": {
+      "requirement": "optional"
+    },
+    "keyboard_subtype": {
+      "requirement": "optional"
+    },
+    "keyboard_type": {
+      "requirement": "optional"
+    }
+  }
+}

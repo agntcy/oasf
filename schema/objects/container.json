@@ -1,0 +1,65 @@
+{
+  "observable": 27,
+  "caption": "Container",
+  "description": "The Container object describes an instance of a specific container. A container is a prepackaged, portable system image that runs isolated on an existing system using a container runtime like containerd.",
+  "extends": "object",
+  "name": "container",
+  "attributes": {
+    "hash": {
+      "description": "Commit hash of image created for docker or the SHA256 hash of the container. For example: <code>13550340a8681c84c861aac2e5b440161c2b33a3e4f302ac680ca5b686de48de</code>.",
+      "requirement": "recommended"
+    },
+    "image": {
+      "description": "The container image used as a template to run the container.",
+      "requirement": "recommended"
+    },
+    "labels": {
+      "description": "The list of labels associated to the container.",
+      "requirement": "optional"
+    },
+    "name": {
+      "description": "The container name.",
+      "requirement": "recommended"
+    },
+    "network_driver": {
+      "requirement": "optional"
+    },
+    "orchestrator": {
+      "requirement": "optional"
+    },
+    "pod_uuid": {
+      "requirement": "optional"
+    },
+    "runtime": {
+      "requirement": "optional"
+    },
+    "size": {
+      "description": "The size of the container image.",
+      "requirement": "recommended"
+    },
+    "tag": {
+      "description": "The tag used by the container. It can indicate version, format, OS.",
+      "requirement": "optional"
+    },
+    "tags": {
+      "description": "The list of tags; <code>{key:value}</code> pairs associated to the container.",
+      "requirement": "optional"
+    },
+    "uid": {
+      "description": "The full container unique identifier for this instantiation of the container. For example: <code>ac2ea168264a08f9aaca0dfc82ff3551418dfd22d02b713142a6843caa2f61bf</code>.",
+      "requirement": "recommended"
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "uid",
+      "name"
+    ]
+  },
+  "references": [
+    {
+      "description": "D3FEND™ Ontology d3f:ContainerProcess.",
+      "url": "https://d3fend.mitre.org/dao/artifact/d3f:ContainerProcess/"
+    }
+  ]
+}

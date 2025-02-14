@@ -1,0 +1,8 @@
+{
+  "uid": 18,
+  "caption": "Banking",
+  "description": "Operations of financial institutions involved in accepting deposits, lending money, and other financial services. Subdomains: Retail Banking, Investment Banking, Corporate Banking, Digital Banking",
+  "extends": "finance_and_business",
+  "name": "banking",
+  "attributes": {}
+}

@@ -1,0 +1,17 @@
+{
+  "caption": "Host",
+  "description": "The attributes that identify host/device attributes.",
+  "meta": "profile",
+  "name": "host",
+  "annotations": {
+    "group": "primary"
+  },
+  "attributes": {
+    "actor": {
+      "requirement": "optional"
+    },
+    "device": {
+      "requirement": "recommended"
+    }
+  }
+}

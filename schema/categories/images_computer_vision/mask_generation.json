@@ -1,0 +1,8 @@
+{
+    "uid": 9,
+    "caption": "Mask Generation",
+    "description": "Mask generation is the task of producing segmented regions in an image to highlight specific areas or objects, typically represented as separate layers or overlays.",
+    "extends": "images_computer_vision",
+    "name": "mask_generation",
+    "attributes": {}
+  }

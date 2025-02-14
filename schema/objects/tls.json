@@ -1,0 +1,58 @@
+{
+  "caption": "Transport Layer Security (TLS)",
+  "description": "The Transport Layer Security (TLS) object describes the negotiated TLS protocol used for secure communications over an establish network connection.",
+  "extends": "object",
+  "name": "tls",
+  "attributes": {
+    "alert": {
+      "requirement": "optional"
+    },
+    "certificate": {
+      "requirement": "recommended"
+    },
+    "certificate_chain": {
+      "requirement": "recommended"
+    },
+    "cipher": {
+      "requirement": "recommended"
+    },
+    "client_ciphers": {
+      "requirement": "recommended"
+    },
+    "extension_list": {
+      "requirement": "optional"
+    },
+    "handshake_dur": {
+      "requirement": "optional"
+    },
+    "ja3_hash": {
+      "requirement": "recommended"
+    },
+    "ja3s_hash": {
+      "requirement": "recommended"
+    },
+    "key_length": {
+      "requirement": "optional"
+    },
+    "sans": {
+      "@deprecated": {
+        "message": "Use <code>tls.certificate.sans</code> attribute instead.",
+        "since": "1.4.0"
+      },
+      "requirement": "optional"
+    },
+    "server_ciphers": {
+      "requirement": "optional"
+    },
+    "sni": {
+      "requirement": "recommended"
+    },
+    "tls_extension_list": {
+      "requirement": "optional"
+    },
+    "version": {
+      "description": "The TLS protocol version.",
+      "requirement": "required"
+    }
+  }
+}

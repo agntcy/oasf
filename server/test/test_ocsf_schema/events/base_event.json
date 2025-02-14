@@ -1,0 +1,69 @@
+{
+  "caption": "Base Event",
+  "category": "other",
+  "description": "The base event is a generic and concrete event. It also defines a set of attributes available in most event classes. As a generic event that does not belong to any event category, it could be used to log events that are not otherwise defined by the schema.",
+  "name": "base_event",
+  "profiles": ["datetime"],
+  "attributes": {
+    "$include": [
+      "profiles/datetime.json"
+    ],
+    "activity_name": {
+      "requirement": "optional"
+    },
+    "activity_id": {
+      "enum": {
+        "0": {
+          "caption": "Unknown"
+        },
+        "99": {
+          "caption": "Other"
+        }
+      },
+      "requirement": "required"
+    },
+    "category_name": {
+      "requirement": "optional"
+    },
+    "category_uid": {
+      "enum": {
+        "0": {
+          "caption": "Uncategorized"
+        }
+      },
+      "requirement": "required"
+    },
+    "class_name": {
+      "requirement": "optional"
+    },
+    "class_uid": {
+      "enum": {
+        "0": {
+          "caption": "Base Event"
+        }
+      },
+      "requirement": "required"
+    },
+    "message": {
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "metadata": {
+      "group": "context",
+      "requirement": "required"
+    },
+    "observables": {
+      "group": "primary",
+      "requirement": "recommended"
+    },
+    "time": {
+      "requirement": "required"
+    },
+    "type_name": {
+      "requirement": "optional"
+    },
+    "type_uid": {
+      "requirement": "required"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Document or Database Question Answering",
+  "description": "Document or database question answering is the process of retrieving and using information from a document or database to answer a specific question.",
+  "extends": "retrival_augmented_generation",
+  "name": "document_or_database_question_answering",
+  "attributes": {}
+}

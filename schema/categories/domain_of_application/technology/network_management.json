@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Network Management",
+  "description": "Tasks like monitoring, configuring, and optimizing networks. Subdomains: Network Configuration, Network Optimization, Network Troubleshooting, Wireless Networks, Network Protocols, Network Architecture, Network Security",
+  "extends": "technology",
+  "name": "network_management",
+  "attributes": {}
+}

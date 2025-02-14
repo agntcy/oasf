@@ -1,0 +1,22 @@
+{
+  "caption": "Eta",
+  "category": "system",
+  "description": "The Eta example event class.",
+  "name": "eta",
+  "extends": "base_event",
+  "uid": 3,
+  "profiles": [],
+  "attributes": {
+    "name": {
+      "description": "The name of this eta.",
+      "requirement": "required",
+      "observable": 104
+    },
+    "service": {
+      "requirement": "recommended"
+    }
+  },
+  "observables": {
+    "service.name": 105
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "Life Science",
+  "description": "Scientific research and innovations in biology, genetics, biotechnology, and other related fields, with the goal of understanding life processes and advancing medical and environmental solutions. Subdomains: Biotechnology, Pharmaceutical Research, Genomics, Bioinformatics, Molecular Biology",
+  "extends": "domain_of_application",
+  "name": "life_science",
+  "attributes": {}
+}

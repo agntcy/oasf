@@ -1,0 +1,19 @@
+{
+  "caption": "Metadata",
+  "description": "The Metadata object describes the metadata associated with the event. Defined by D3FEND <a target='_blank' href='https://d3fend.mitre.org/dao/artifact/d3f:Metadata/'>d3f:Metadata</a>.",
+  "name": "metadata",
+  "attributes": {
+    "correlation_uid": {
+      "requirement": "optional"
+    },
+    "uid": {
+      "caption": "Event UID",
+      "description": "The logging system-assigned unique identifier of an event instance.",
+      "requirement": "optional"
+    },
+    "version": {
+      "description": "The version of the OASF schema, using Semantic Versioning Specification (<a target='_blank' href='https://semver.org'>SemVer</a>). For example: 1.0.0. Event consumers use the version to determine the available event attributes.",
+      "requirement": "required"
+    }
+  }
+}

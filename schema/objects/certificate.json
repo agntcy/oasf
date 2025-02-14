@@ -1,0 +1,57 @@
+{
+  "caption": "Digital Certificate",
+  "description": "The Digital Certificate, also known as a Public Key Certificate, object contains information about the ownership and usage of a public key. It serves as a means to establish trust in the authenticity and integrity of the public key and the associated entity.",
+  "extends": "object",
+  "name": "certificate",
+  "attributes": {
+    "created_time": {
+      "description": "The time when the certificate was created.",
+      "requirement": "recommended"
+    },
+    "expiration_time": {
+      "description": "The expiration time of the certificate.",
+      "requirement": "recommended"
+    },
+    "fingerprints": {
+      "description": "The fingerprint list of the certificate.",
+      "requirement": "recommended"
+    },
+    "is_self_signed": {
+      "requirement": "recommended"
+    },
+    "issuer": {
+      "caption": "Issuer Distinguished Name",
+      "description": "The certificate issuer distinguished name.",
+      "requirement": "required"
+    },
+    "sans": {
+      "caption": "Subject Alternative Names",
+      "description": "The list of subject alternative names that are secured by a specific certificate.",
+      "requirement": "optional"
+    },
+    "serial_number": {
+      "caption": "Certificate Serial Number",
+      "description": "The serial number of the certificate used to create the digital signature.",
+      "requirement": "required"
+    },
+    "subject": {
+      "caption": "Subject Distinguished Name",
+      "description": "The certificate subject distinguished name.",
+      "requirement": "recommended"
+    },
+    "uid": {
+      "description": "The unique identifier of the certificate.",
+      "requirement": "optional"
+    },
+    "version": {
+      "description": "The certificate version.",
+      "requirement": "recommended"
+    }
+  },
+  "references": [
+    {
+      "description": "D3FEND™ Ontology d3f:Certificate.",
+      "url": "https://d3fend.mitre.org/dao/artifact/d3f:Certificate/"
+    }
+  ]
+}

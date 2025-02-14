@@ -1,0 +1,13 @@
+{
+  "extends": "eta",
+  "attributes": {
+    "service": {
+      "requirement": "recommended",
+      "observable": 42103
+    }
+  },
+  "observables": {
+    "name": 42104,
+    "service.name": 42105
+  }
+}

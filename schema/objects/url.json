@@ -1,0 +1,64 @@
+{
+  "observable": 23,
+  "caption": "Uniform Resource Locator",
+  "description": "The Uniform Resource Locator (URL) object describes the characteristics of a URL.",
+  "extends": "object",
+  "name": "url",
+  "attributes": {
+    "categories": {
+      "requirement": "optional"
+    },
+    "category_ids": {
+      "requirement": "recommended"
+    },
+    "domain": {
+      "description": "The domain portion of the URL. For example: <code>example.com</code> in <code>https://sub.example.com</code>.",
+      "requirement": "optional"
+    },
+    "hostname": {
+      "description": "The URL host as extracted from the URL. For example: <code>www.example.com</code> from <code>www.example.com/download/trouble</code>.",
+      "requirement": "recommended"
+    },
+    "path": {
+      "description": "The URL path as extracted from the URL. For example: <code>/download/trouble</code> from <code>www.example.com/download/trouble</code>.",
+      "requirement": "recommended"
+    },
+    "port": {
+      "description": "The URL port. For example: <code>80</code>.",
+      "requirement": "recommended"
+    },
+    "query_string": {
+      "requirement": "recommended"
+    },
+    "resource_type": {
+      "description": "The context in which a resource was retrieved in a web request.",
+      "requirement": "optional"
+    },
+    "scheme": {
+      "requirement": "recommended"
+    },
+    "subdomain": {
+      "requirement": "optional"
+    },
+    "url_string": {
+      "description": "The URL string. See RFC 1738. For example: <code>http://www.example.com/download/trouble.exe</code>. Note: The URL path should not populate the URL string.",
+      "requirement": "recommended"
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "url_string",
+      "path"
+    ]
+  },
+  "references": [
+    {
+      "description": "Defined in RFC 1738",
+      "url": "https://datatracker.ietf.org/doc/html/rfc1738"
+    },
+    {
+      "description": "D3FEND™ Ontology d3f:URL",
+      "url": "https://d3fend.mitre.org/dao/artifact/d3f:URL/"
+    }
+  ]
+}

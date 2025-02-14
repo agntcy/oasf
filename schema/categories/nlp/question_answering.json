@@ -1,0 +1,8 @@
+{
+    "uid": 15,
+    "caption": "Question Answering",
+    "description": "System capability to understand questions and provide accurate, relevant answers by analyzing available information sources.",
+    "extends": "information_retrieval_synthesis",
+    "name": "question_answering",
+    "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+    "uid": 30,
+    "caption": "Translation",
+    "description": "Converting text from one language to another while maintaining meaning and context.",
+    "extends": "language_translation",
+    "name": "translation",
+    "attributes": {}
+}

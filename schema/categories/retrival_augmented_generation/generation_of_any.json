@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Generation of Any",
+  "description": "Generation of any is augmenting the creation of text, images, audio, or other media by incorporating retrieved information to improve or guide the generation process.",
+  "extends": "retrival_augmented_generation",
+  "name": "generation_of_any",
+  "attributes": {}
+}

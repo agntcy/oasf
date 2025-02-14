@@ -1,0 +1,12 @@
+{
+  "caption": "War Hammer",
+  "description": "The War Hammer object is a big hammer for, like, war stuff.",
+  "name": "war_hammer",
+  "extends": "hammer",
+  "attributes": {
+    "style": {
+      "description": "The style of this war hammer.",
+      "requirement": "recommended"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "uid": 8,
+    "caption": "Code to Docstrings",
+    "description": "Generating natural language documentation for code segments.",
+    "extends": "coding_skills",
+    "name": "code_to_docstrings",
+    "attributes": {}
+}

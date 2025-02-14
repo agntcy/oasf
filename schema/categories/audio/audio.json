@@ -1,0 +1,7 @@
+{
+    "caption": "Audio Processing",
+    "category": "audio",
+    "extends": "base_event",
+    "name": "audio",
+    "attributes": {}
+}

@@ -1,0 +1,14 @@
+{
+  "caption": "Zeta Base",
+  "description": "A zeta base.",
+  "name": "_zeta_base",
+  "attributes": {
+    "name": {
+      "description": "The zeta base's human-friendly name",
+      "requirement": "recommended"
+    },
+    "numeric_value": {
+      "requirement": "required"
+    }
+  }
+}

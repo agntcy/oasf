@@ -1,0 +1,11 @@
+{
+  "caption": "Service",
+  "description": "A service.",
+  "name": "service",
+  "attributes": {
+    "name": {
+      "description": "The service's human-friendly name",
+      "requirement": "recommended"
+    }
+  }
+}
