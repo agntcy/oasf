@@ -1,0 +1,129 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*.*.*"
+  pull_request:
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-gen:
+    name: Verify generated files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+  
+      - name: Generate api
+        run: |
+          task gen
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "There are uncommitted changes after running 'task gen'. Please commit these changes."
+            exit 1
+          fi
+
+  prepare-build:
+    name: Prepare Build
+    needs:
+      - verify-gen
+    outputs:
+      targets: ${{ steps.targets.outputs.targets }}
+      image_tag: ${{ steps.resolve.outputs.image_tag }}
+      release_tag: ${{ steps.resolve.outputs.release_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Resolve build details
+        id: resolve
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # For push from PR, resolve to <PR number>-<commit sha>
+            image_tag="${{ format('pr{0}-{1}', github.event.pull_request.number, github.sha) }}"
+          else
+            # For push, resolve to <commit sha>
+            image_tag="${{ format('{0}', github.sha) }}"
+          fi
+
+          # Export vars
+          echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
+          echo "release_tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: List targets
+        id: targets
+        uses: docker/bake-action/subaction/list-targets@a4d7f0b5b91c14a296d792d4ec53a9db17f02e67 # v5.5.0
+
+  build-push:
+    name: ${{ matrix.targets }}
+    needs:
+      - prepare-build
+    strategy:
+      fail-fast: false
+      matrix:
+        targets: ${{ fromJson(needs.prepare-build.outputs.targets) }}
+    uses: ./.github/workflows/reusable-build-push.yaml
+    with:
+      bake_target: ${{ matrix.targets }}
+      image_repo: ghcr.io/agntcy
+      image_tag: ${{ needs.prepare-build.outputs.image_tag }}
+
+  test:
+    name: Test
+    needs:
+      - prepare-build
+      - build-push
+    uses: ./.github/workflows/reusable-test.yaml
+    with:
+      image_repo: ghcr.io/agntcy
+      image_tag: ${{ needs.prepare-build.outputs.image_tag }}
+
+  release:
+    name: Release
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    needs:
+      - prepare-build
+      - build-push
+      - test
+    uses: ./.github/workflows/reusable-release.yaml
+    with:
+      image_repo: ghcr.io/agntcy
+      image_tag: ${{ needs.prepare-build.outputs.image_tag }}
+      release_tag: ${{ needs.prepare-build.outputs.release_tag }}
+
+  success:
+    name: Success
+    # https://github.com/actions/runner/issues/2566
+    # https://github.com/actions/toolkit/issues/581
+    if: ${{ !cancelled() && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure') }}
+    needs:
+      - prepare-build
+      - build-push
+      - test
+      - release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo Success
+        run: echo "::notice Success!"

@@ -14,6 +14,11 @@ RUN mix local.hex --force && \
 # set build ENV
 ENV MIX_ENV="prod"
 
+# Cross-/multiplatform images of OTP languages is unsupported since the introduction of the JIT compiler in OTP24.
+# Set flags to bypass JIT in order to allow multiplatform image compilation.
+# TODO(ramizpolic): make this bake-configurable
+ENV ERL_AFLAGS="+JMsingle true"
+
 # install mix dependencies
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
@@ -63,6 +68,9 @@ ENV PHX_SERVER=true
 
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/schema_server ./
+
+# Copy the things that need to be displayed
+COPY --from=schema . /app/schema
 
 USER nobody
 

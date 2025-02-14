@@ -1,0 +1,161 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+version: "3"
+
+vars:
+  ## Image config
+  IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
+  IMAGE_TAG: '{{ .IMAGE_TAG | default "v0.1.0-rc" }}'
+  IMAGE_BAKE_OPTS: '{{ .IMAGE_BAKE_OPTS | default "--set *.platform=linux/amd64,linux/arm64" }}'
+
+  ## Dependency config
+  BIN_DIR: '{{ .ROOT_DIR }}/bin'
+  HELM_VERSION: '3.16.3'
+  HELM_BIN: '{{ .BIN_DIR }}/helm-{{.HELM_VERSION}}'
+  KUBECTL_VERSION: '1.31.3'
+  KUBECTL_BIN: '{{ .BIN_DIR }}/kubectl-{{.KUBECTL_VERSION}}'
+  KIND_VERSION: '0.25.0'
+  KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
+
+tasks:
+  ##
+  ## General
+  ##
+  default:
+    cmds:
+      - task -l
+
+  gen:
+    desc: Generate API code
+    cmds:
+      - task: helm:gen
+
+  pull:
+    desc: Pull images for all components
+    cmds:
+      - |
+        images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
+        echo "$images" | while read image; do
+          echo "Pulling image: $image"
+          docker pull $image
+        done
+
+  push:
+    desc: Build and push images for all components
+    prompt:
+      - Are you sure you want to push the images to remote registry?
+    cmds:
+      - docker buildx bake {{.IMAGE_BAKE_OPTS}} --set=*.output=type=registry
+
+  release:
+    desc: Release images for all components with release tag tag
+    prompt:
+      - Are you sure you want to push the images to remote registry?
+    vars:
+      RELEASE_TAG: '{{ .RELEASE_TAG | default "v0.0.0-dev" }}'
+    cmds:
+      # TODO: use buildx to simplify
+      - |
+        images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
+        echo "$images" | while read image; do
+          release_image="${image%%:*}:{{.RELEASE_TAG}}"
+          skopeo copy --multi-arch all docker://$image docker://$release_image
+        done
+
+  test:
+    desc: Run test suite
+    cmds:
+      # TODO: check if chart can be deployed
+      - echo "Success"
+
+  ##
+  ## Server
+  ##
+  server:build:
+    desc: Build server image
+    cmds:
+      - docker buildx bake {{.IMAGE_BAKE_OPTS}} oasf-server
+
+  server:run:
+    desc: Run server as a container
+    deps:
+      - task: server:build
+    cmds:
+      - docker run -p 8080:8080 -p 8443:8443 {{.IMAGE_REPO}}/oasf-server:{{.IMAGE_TAG}}
+
+  ##
+  ## Helm
+  ##
+  helm:gen:
+    desc: Update Helm dependencies for chart and subcharts
+    internal: true
+    deps:
+      - deps:helm
+    vars:
+      HELM_ALL_CHART_PATHS:
+        sh: find . -name Chart.yaml -exec dirname {} \;
+    cmds:
+      - for: { var: HELM_ALL_CHART_PATHS }
+        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
+
+  ##
+  ## Dependencies
+  ##
+  deps:
+    desc: Install dependencies
+    cmds:
+      - task: deps:helm
+      - task: deps:kubectl
+      - task: deps:kind
+
+  deps:bin-dir:
+    desc: Create bin directory
+    internal: true
+    run: once
+    cmd: mkdir -p {{.BIN_DIR}}
+    status:
+      - test -d {{.BIN_DIR}}
+
+  deps:helm:
+    desc: Ensure supported Helm version is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which curl
+      - which tar
+    cmds:
+      - cmd: echo "Downloading Helm v{{.HELM_VERSION}}..."
+      - cmd: curl -sSfL 'https://get.helm.sh/helm-v{{.HELM_VERSION}}-{{OS}}-{{ARCH}}.tar.gz' --output - | tar xzvOf - '{{OS}}-{{ARCH}}/helm' > {{.HELM_BIN}}
+      - cmd: chmod +x {{.HELM_BIN}}
+    status:
+      - test -x {{.HELM_BIN}}
+
+  deps:kubectl:
+    desc: Ensure supported kubectl version is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which curl
+    cmds:
+      - cmd: echo "Downloading Kubectl v{{.KUBECTL_VERSION}}..."
+      - cmd: curl -L "https://dl.k8s.io/release/v{{.KUBECTL_VERSION}}/bin/{{OS}}/{{ARCH}}/kubectl" -o {{.KUBECTL_BIN}}
+      - cmd: chmod +x {{.KUBECTL_BIN}}
+    status:
+      - test -x {{.KUBECTL_BIN}}
+
+  deps:kind:
+    desc: Ensure supported kind version is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which go
+    cmds:
+      - cmd: echo "Downloading Kind v{{.KIND_VERSION}}..."
+      - cmd: GOBIN={{.BIN_DIR}} go install sigs.k8s.io/kind@v{{.KIND_VERSION}}
+      - cmd: mv {{.BIN_DIR}}/kind {{.KIND_BIN}}
+    status:
+      - test -x {{.KIND_BIN}}

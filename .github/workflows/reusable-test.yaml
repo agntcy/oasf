@@ -1,0 +1,108 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 Cisco and/or its affiliates.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Test
+
+on:
+  workflow_call:
+    inputs:
+      image_repo:
+        required: true
+        type: string
+        description: 'Image repo to use.'
+      image_tag:
+        required: true
+        type: string
+        description: 'Image tag to use.'
+      helm-version:
+        required: false
+        default: "3.12.1"
+        type: string
+        description: 'Helm version'
+      # helm-ct-version:
+      #   required: false
+      #   default: "3.11.0"
+      #   type: string
+      #   description: 'Helm chart-testing version'
+      kind-version:
+        required: false
+        default: "0.24.0"
+        type: string
+        description: 'Kind version'
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: notused
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      #
+      # Install kubernetes tools
+      #
+      - name: Setup Helm
+        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
+        with:
+          version: ${{ inputs.helm-version }}
+
+      # - name: Set up Helm chart-testing
+      #   uses: helm/chart-testing-action@e6669bcd63d7cb57cb4380c33043eebe5d111992 # v2.6.1
+      #   with:
+      #     version: ${{ inputs.helm-ct-version }}
+
+      - name: Setup kind
+        uses: helm/kind-action@0025e74a8c7512023d06dc019c617aa3cf561fde # v1.10.0
+        with:
+          version: v${{ inputs.kind-version }}
+          install_only: true
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@3e0aec4d80787158d308d7b364cb1b702e7feb7f # v4.0.0
+
+      #
+      # Setup cluster
+      #
+      - name: Setup Kind cluster
+        shell: bash
+        run: |
+          # Create cluster config
+          KIND_CONFIG_FILE=$(mktemp -p /tmp)
+          cat <<EOF > $KIND_CONFIG_FILE
+          kind: Cluster
+          apiVersion: kind.x-k8s.io/v1alpha4
+          networking:
+            apiServerAddress: "127.0.0.1"
+            apiServerPort: 6443
+          EOF
+
+          # Create cluster
+          kind create cluster --config $KIND_CONFIG_FILE --name kind
+          kubectl cluster-info
+
+      - name: Pull images
+        env:
+          IMAGE_REPO: ${{ inputs.image_repo }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          task pull
+
+      - name: Run tests
+        env:
+          IMAGE_REPO: ${{ inputs.image_repo }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          task test
