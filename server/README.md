@@ -1,4 +1,4 @@
-# Open Agents Schema Framework Server
+# Open Agentic Schema Framework Server
 
 This directory contains the Open Agents Schema Framework (OASF) Schema Server source code.
 The schema server is an HTTP server that provides a convenient way to browse and use the OASF schema.
