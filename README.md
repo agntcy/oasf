@@ -1,5 +1,5 @@
 
-# Open Schema Framework
+# Open Agentic Schema Framework
 
 ##
 
