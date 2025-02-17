@@ -192,6 +192,12 @@
       "type": "process_entity",
       "is_array": true
     },
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Provides additional metadata associated with this release manifest",
+      "type": "key_value_object",
+      "is_array": true
+    },
     "answers": {
       "caption": "DNS Answer",
       "description": "The Domain Name System (DNS) answers.",
