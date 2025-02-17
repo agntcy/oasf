@@ -112,7 +112,7 @@ limitations under the License.
             <td>authors</td>
             <td class="capitalize">classification</td>
             <td>Required</td>
-            <td class="extensions">Array[String]</td>
+            <td class="extensions">String Array</td>
             <td>List of agent’s authors</td>
         </tr>
 
@@ -121,7 +121,7 @@ limitations under the License.
             <td>annotations</td>
             <td class="capitalize">context</td>
             <td>Optional</td>
-            <td class="extensions">Map[string, string]</td>
+            <td class="extensions"><a href="http://localhost:8081/objects/key_value_object?extensions=">Key:Value object</a> Array</td>
             <td>Additional metadata associated with this agent</td>
         </tr>
 
