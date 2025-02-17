@@ -1,0 +1,141 @@
+<%!--
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+  http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+--%>
+<script>
+  show("#sample-data");
+  show("#json-schema");
+  show("#schema");
+</script>
+<div class="row">
+  <div class="col-md move-up">
+    <h3 class="extensions">
+      Agent Locator
+      <span class="text-secondary">
+        Model
+      </span>
+    </h3>
+
+    <div class="text-secondary">
+      Specifies the list of related release manifests associated with one agent.
+    </div>
+    <div class="text-secondary mt-2">
+    </div>
+  </div>
+  <div class="col-md-auto fixed-right mt-2">
+    <div class="navbar-expand-md">
+      <div class="form-inline">
+        <ul class="navbar-nav">
+          <li class="nav-item mr-2">
+            <select multiple
+              id="attributes-select"
+              class="selectpicker"
+              data-style="btn-outline-secondary"
+              data-selected-text-format="count > 3"
+              data-actions-box="true"
+              data-width="auto">
+              <option selected id="base-event-select" class="base-event" value="base-event" title="Base Event">Base
+                Event Attributes
+              </option>
+              <option value="deprecated" title="Deprecated">Deprecated Attributes</option>
+              <optgroup id="groups-select" label="Groups">
+                <option selected value="classification">Classification</option>
+                <option selected value="context">Context</option>
+                <option selected value="occurrence">Occurrence</option>
+                <option selected value="primary">Primary</option>
+              </optgroup>
+              <optgroup id="requirements-select" label="Requirements">
+                <option class="optional" value="optional" title="Optional">Optional Attributes</option>
+                <option class="recommended" value="recommended" title="Recommended">Recommended Attributes</option>
+              </optgroup>
+            </select>
+          </li>
+          <li class="nav-item">
+            <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <table id="data-table" class="table table-bordered sortable">
+    <thead >
+    <tr class="thead-color">
+      <th style="width: 10%">Caption</th>
+      <th style="width: 10%">Name</th>
+      <th style="width: 10%">Group</th>
+      <th style="width: 10%">Requirement</th>
+      <th style="width: 10%">Type</th>
+      <th style="width: 50%">Description</th>
+    </tr>
+    </thead>
+    <tbody class="searchable">
+    <tr class="event not-deprecated required classification no-profile">
+            <td class="name">Name</td>
+            <td>name</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>Name of the agent</td>
+        </tr>
+
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Annotations</td>
+            <td>annotations</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions"><a href="http://localhost:8081/objects/key_value_object?extensions=">Key:Value object</a> Array</td>
+            <td>Additional metadata associated with this agent</td>
+        </tr>
+
+        <tr class="event not-deprecated required classification no-profile">
+            <td class="name">Type</td>
+            <td>type</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>Describes the type of the release manifest pointed by its URI, e.g. oci-image, docker-image, py-package, binary. Allowed values MAY be defined for common manifest types.</td>
+        </tr>
+
+        <tr class="event not-deprecated required classification no-profile">
+            <td class="name">URL</td>
+            <td>url</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.</td>
+        </tr>
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Size</td>
+            <td>size</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions">uint64</td>
+            <td>Specifies the size of the release manifest in bytes.</td>
+        </tr>
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Digest</td>
+            <td>digest</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions">string</td>
+            <td>Specifies the digest of the release manifest contents.</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+  init_schema_buttons();
+  init_class_profiles();
+</script>

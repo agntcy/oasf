@@ -80,7 +80,7 @@ limitations under the License.
         </thead>
         <tbody class="searchable">
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Name</td>
             <td>name</td>
             <td class="capitalize">classification</td>
@@ -89,7 +89,7 @@ limitations under the License.
             <td>Name of the agent</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Version</td>
             <td>version</td>
             <td class="capitalize">classification</td>
@@ -98,7 +98,7 @@ limitations under the License.
             <td>Name of the agent</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Creation Time</td>
             <td>created_at</td>
             <td class="capitalize">classification</td>
@@ -107,7 +107,7 @@ limitations under the License.
             <td>Timestamp of the agent creation time</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Authors</td>
             <td>authors</td>
             <td class="capitalize">classification</td>
@@ -125,7 +125,7 @@ limitations under the License.
             <td>Additional metadata associated with this agent</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Locators</td>
             <td>locators</td>
             <td class="capitalize">classification</td>
@@ -134,7 +134,7 @@ limitations under the License.
             <td>List of source locators where this agent can be found or used from</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Extensions</td>
             <td>extensions</td>
             <td class="capitalize">classification</td>
@@ -143,7 +143,7 @@ limitations under the License.
             <td>List of extension models that describe this agent and its capabilities more in depth</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Digest</td>
             <td>digest</td>
             <td class="capitalize">classification</td>
@@ -186,7 +186,7 @@ limitations under the License.
     </tr>
     </thead>
     <tbody class="searchable">
-    <tr class="event not-deprecated optional classification no-profile">
+    <tr class="event not-deprecated required classification no-profile">
             <td class="name">Name</td>
             <td>name</td>
             <td class="capitalize">classification</td>
@@ -195,7 +195,7 @@ limitations under the License.
             <td>Name of the agent</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Version</td>
             <td>version</td>
             <td class="capitalize">classification</td>
@@ -209,17 +209,101 @@ limitations under the License.
             <td>annotations</td>
             <td class="capitalize">context</td>
             <td>Optional</td>
-            <td class="extensions">Map[string, string]</td>
+            <td class="extensions">Map[String, String]</td>
             <td>Additional metadata associated with this agent</td>
         </tr>
 
-        <tr class="event not-deprecated optional classification no-profile">
+        <tr class="event not-deprecated required classification no-profile">
             <td class="name">Specification</td>
             <td>specs</td>
             <td class="capitalize">classification</td>
             <td>Required</td>
             <td class="extensions">OneOf(any, <a href="/categories">Category</a>, <a href="/main_domains">Domain</a>)</td>
             <td>Generic specification schema of this extension</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <div class="col-md move-up">
+    <h3 class="extensions">
+      Agent Locator
+      <span class="text-secondary">
+        Model
+      </span>
+    </h3>
+
+    <div class="text-secondary">
+      Specifies the list of related release manifests associated with one agent.
+    </div>
+    <div class="text-secondary mt-2">
+    </div>
+  </div>
+</div>
+<div class="mt-4">
+  <table id="data-table" class="table table-bordered sortable">
+    <thead >
+    <tr class="thead-color">
+      <th style="width: 10%">Caption</th>
+      <th style="width: 10%">Name</th>
+      <th style="width: 10%">Group</th>
+      <th style="width: 10%">Requirement</th>
+      <th style="width: 10%">Type</th>
+      <th style="width: 50%">Description</th>
+    </tr>
+    </thead>
+    <tbody class="searchable">
+    <tr class="event not-deprecated required classification no-profile">
+            <td class="name">Name</td>
+            <td>name</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>Name of the agent</td>
+        </tr>
+
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Annotations</td>
+            <td>annotations</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions">Map[String, String]</td>
+            <td>Additional metadata associated with this agent</td>
+        </tr>
+
+        <tr class="event not-deprecated required classification no-profile">
+            <td class="name">Type</td>
+            <td>type</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>Describes the type of the release manifest pointed by its URI, e.g. oci-image, docker-image, py-package, binary. Allowed values MAY be defined for common manifest types.</td>
+        </tr>
+
+        <tr class="event not-deprecated required classification no-profile">
+            <td class="name">URL</td>
+            <td>url</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.</td>
+        </tr>
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Size</td>
+            <td>size</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions">UInt64</td>
+            <td>Specifies the size of the release manifest in bytes.</td>
+        </tr>
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Digest</td>
+            <td>digest</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions">String</td>
+            <td>Specifies the digest of the release manifest contents.</td>
         </tr>
     </tbody>
   </table>

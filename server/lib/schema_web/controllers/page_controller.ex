@@ -146,6 +146,18 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
+  Renders locator.
+  """
+  @spec locator(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def locator(conn, params) do
+    render(conn, "locator.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: nil
+    )
+  end
+
+  @doc """
   Renders extension_base.
   """
   @spec extension_base(Plug.Conn.t(), map) :: Plug.Conn.t()
