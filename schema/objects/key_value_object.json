@@ -1,5 +1,5 @@
 {
-  "caption": "Key:Value object",
+  "caption": "Map[String, String]",
   "description": "A generic object allowing to define a <code>{key:value}</code> pair.",
   "extends": "object",
   "name": "key_value_object",
@@ -10,17 +10,7 @@
     },
     "value": {
       "description": "The value associated to the key.",
-      "requirement": "optional"
-    },
-    "values": {
-      "description": "Optional, the values associated to the key. You can populate this attribute, when you have multiple values for the same key.",
-      "requirement": "optional"
+      "requirement": "required"
     }
-  },
-  "constraints": {
-    "at_least_one": [
-      "value",
-      "values"
-    ]
   }
 }

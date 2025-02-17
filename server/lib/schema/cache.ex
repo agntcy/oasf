@@ -941,7 +941,6 @@ defmodule Schema.Cache do
     class =
       class
       |> update_class_uid(categories)
-      |> add_type_uid(class_key)
       |> add_class_uid(class_key)
       |> add_category_uid(class_key, categories)
 
@@ -1052,63 +1051,6 @@ defmodule Schema.Cache do
   @spec hidden_domain?(atom(), map()) :: boolean()
   defp hidden_domain?(domain_key, domain) do
     domain_key != :base_event and !Map.has_key?(domain, :uid)
-  end
-
-  defp add_type_uid(data, name) do
-    Map.update!(
-      data,
-      :attributes,
-      fn attributes ->
-        uid = attributes[:type_uid] || %{}
-        enum = make_type_uid(data, name, attributes)
-
-        Map.put(attributes, :type_uid, Map.put(uid, :enum, enum))
-      end
-    )
-    |> put_in([:attributes, :type_uid, :_source], name)
-  end
-
-  defp make_type_uid(data, name, attributes) do
-    class_uid = get_class_uid(data)
-    caption = data[:caption] || "UNKNOWN"
-
-    case event_id(attributes)[:enum] do
-      nil ->
-        Logger.warning("class \"#{name}\" has no activity_id nor disposition_id")
-        %{}
-
-      values ->
-        enum_values(class_uid, caption, values)
-    end
-    |> Map.put(
-      integer_to_id(class_uid, 0),
-      Map.new(caption: Types.type_name(caption, "Unknown"))
-    )
-  end
-
-  defp event_id(attributes) do
-    attributes[:activity_id] || attributes[:disposition_id] || %{}
-  end
-
-  defp get_class_uid(class) do
-    Types.type_uid(class[:uid] || 0, 0)
-  end
-
-  defp enum_values(class_uid, caption, values) do
-    for {key, val} = _value <- values, into: %{} do
-      {
-        make_enum_id(class_uid, key),
-        Map.put(val, :caption, Types.type_name(caption, val[:caption]))
-      }
-    end
-  end
-
-  defp make_enum_id(class_uid, key) do
-    integer_to_id(class_uid, String.to_integer(Atom.to_string(key)))
-  end
-
-  defp integer_to_id(class_uid, id) do
-    Integer.to_string(class_uid + id) |> String.to_atom()
   end
 
   defp add_class_uid(data, name) do

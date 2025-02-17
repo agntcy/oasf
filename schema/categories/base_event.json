@@ -9,10 +9,6 @@
       "description": "The name of the category.",
       "requirement": "required"
     },
-    "version": {
-      "group": "classification",
-      "requirement": "required"
-    },
     "annotations": {
       "group": "classification",
       "requirement": "optional"

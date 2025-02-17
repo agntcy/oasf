@@ -245,9 +245,7 @@ limitations under the License.
 
 <div class="footer">
   OASF Server version <%= Schema.build_version() %>.
-  Copyright &copy; OASF a Series of LF Projects, LLC.
-  For web site terms of use, trademark policy and other project policies please see <a href="https://lfprojects.org">LF Projects, LLC</a>.
-  This content includes the ICD Schema developed by Symantec, a division of Broadcom.
+  Copyright &copy; 2025 Cisco and/or its affiliates.
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"

@@ -1,0 +1,40 @@
+{
+    "caption": "Agent Model",
+    "description": "",
+    "name": "agent_model",
+    "attributes": {
+      "name": {
+        "group": "classification",
+        "description": "The name of the agent.",
+        "requirement": "required"
+      },
+      "version": {
+        "group": "classification",
+        "requirement": "required"
+      },
+      "created_at": {
+        "group": "classification",
+        "requirement": "required"
+      },
+      "authors": {
+        "group": "classification",
+        "requirement": "required"
+      },
+      "annotations": {
+        "group": "context",
+        "requirement": "optional"
+      },
+      "locators": {
+        "group": "classification",
+        "requirement": "required"
+      },
+      "extensions": {
+        "group": "classification",
+        "requirement": "required"
+      },
+      "digest": {
+        "group": "classification",
+        "requirement": "required"
+      }
+    }
+  }

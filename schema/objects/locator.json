@@ -1,0 +1,38 @@
+{
+  "caption": "Agent Locator",
+  "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+  "extends": "_entity",
+  "name": "locator",
+  "attributes": {
+    "name": {
+      "description": "The schema extension name. For example: <code>dev</code>.",
+      "requirement": "required"
+    },
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Additional metadata associated with the extension.",
+      "requirement": "optional"
+    },
+    "type": {
+      "caption": "Type",
+      "description": "Describes the type of the release manifest pointed by its URI, e.g. <code>oci-image</code>, <code>docker-image</code>, <code>py-package</code>, <code>binary</code>. Allowed values MAY be defined for common manifest types.",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "URL",
+      "description": "Specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
+      "requirement": "required"
+    },
+    "size": {
+      "caption": "Size",
+      "description": "specifies the size of the release manifest in bytes.",
+      "requirement": "optional"
+    },
+    "digest": {
+      "caption": "Digest",
+      "description": "Specifies the digest of the release manifest contents.",
+      "requirement": "optional"
+    }
+  },
+  "constraints": {}
+}
