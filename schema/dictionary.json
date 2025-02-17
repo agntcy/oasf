@@ -14,6 +14,27 @@
       "type": "agent",
       "is_array": true
     },
+    "algorithm": {
+      "caption": "Algorithm",
+      "description": "The applicable algorithm, normalized to the caption of 'algorithm_id'. See specific usage.",
+      "type": "string_t"
+    },
+    "algorithm_id": {
+      "caption": "Algorithm ID",
+      "description": "The normalized identifier of the algorithm. See specific usage.",
+      "sibling": "algorithm",
+      "type": "integer_t",
+      "enum": {
+        "0": {
+          "caption": "Unknown",
+          "description": "The algorithm is unknown."
+        },
+        "99": {
+          "caption": "Other",
+          "description": "The algorithm is not mapped. See the <code>algorithm</code> attribute, which contains a data source specific value."
+        }
+      }
+    },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with this release manifest",
@@ -396,17 +417,6 @@
       "sibling": "domain_name",
       "type": "integer_t"
     },
-    "main_domain_name": {
-      "caption": "Main domain",
-      "description": "The main domain name, as defined by main_domain_uid value.",
-      "type": "string_t"
-    },
-    "main_domain_uid": {
-      "caption": "Domain ID",
-      "description": "The unique identifier of a main_domain.",
-      "sibling": "main_domain_name",
-      "type": "integer_t"
-    },
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
@@ -417,22 +427,6 @@
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
       "type": "extension",
       "is_array": true
-    },
-    "locator": {
-      "caption": "Agent Locator",
-      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
-      "type": "locator"
-    },
-    "locators": {
-      "caption": "Agent Locators",
-      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
-      "type": "locator",
-      "is_array": true
-    },
-    "specs": {
-      "caption": "Specifications",
-      "description": "Generic specification schema of this extension.",
-      "type": "object"
     },
     "fingerprint": {
       "caption": "Fingerprint",
@@ -450,26 +444,32 @@
       "description": "The hash attribute is the value of a digital fingerprint including information about its algorithm.",
       "type": "fingerprint"
     },
-    "algorithm": {
-      "caption": "Algorithm",
-      "description": "The applicable algorithm, normalized to the caption of 'algorithm_id'. See specific usage.",
+    "hostname": {
+      "caption": "Hostname",
+      "description": "The hostname of an endpoint or a device.",
+      "type": "hostname_t"
+    },
+    "locator": {
+      "caption": "Agent Locator",
+      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+      "type": "locator"
+    },
+    "locators": {
+      "caption": "Agent Locators",
+      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+      "type": "locator",
+      "is_array": true
+    },
+    "main_domain_name": {
+      "caption": "Main domain",
+      "description": "The main domain name, as defined by main_domain_uid value.",
       "type": "string_t"
     },
-    "algorithm_id": {
-      "caption": "Algorithm ID",
-      "description": "The normalized identifier of the algorithm. See specific usage.",
-      "sibling": "algorithm",
-      "type": "integer_t",
-      "enum": {
-        "0": {
-          "caption": "Unknown",
-          "description": "The algorithm is unknown."
-        },
-        "99": {
-          "caption": "Other",
-          "description": "The algorithm is not mapped. See the <code>algorithm</code> attribute, which contains a data source specific value."
-        }
-      }
+    "main_domain_uid": {
+      "caption": "Domain ID",
+      "description": "The unique identifier of a main_domain.",
+      "sibling": "main_domain_name",
+      "type": "integer_t"
     },
     "name": {
       "caption": "Name",
@@ -481,10 +481,45 @@
       "description": "The unique identifier of an object's parent object. See specific usage.",
       "type": "string_t"
     },
+    "path": {
+      "caption": "Path",
+      "description": "The path that pertains to the event or object. See specific usage.",
+      "type": "string_t"
+    },
+    "port": {
+      "caption": "Port",
+      "description": "The TCP/UDP port number associated with a connection. See specific usage.",
+      "type": "port_t"
+    },
+    "query_string": {
+      "caption": "HTTP Query String",
+      "description": "The query portion of the URL. For example: the query portion of the URL <code>http://www.example.com/search?q=bad&sort=date</code> is <code>q=bad&sort=date</code>.",
+      "type": "string_t"
+    },
+    "resource_type": {
+      "caption": "Resource Type",
+      "description": "The resource type as defined by the event source.",
+      "type": "string_t"
+    },
+    "scheme": {
+      "caption": "Scheme",
+      "description": "The scheme portion of the URL. For example: <code>http</code>, <code>https</code>, <code>ftp</code>, or <code>sftp</code>.",
+      "type": "string_t"
+    },
     "size": {
       "caption": "Size",
       "description": "The size of data, in bytes.",
       "type": "long_t"
+    },
+    "specs": {
+      "caption": "Specifications",
+      "description": "Generic specification schema of this extension.",
+      "type": "object"
+    },
+    "subdomain": {
+      "caption": "Subdomain",
+      "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
+      "type": "string_t"
     },
     "type": {
       "caption": "Type",
@@ -543,41 +578,6 @@
       "caption": "URL String",
       "description": "The URL string. See RFC 1738. For example: <code>http://www.example.com/download/trouble.exe</code>.",
       "type": "url_t"
-    },
-    "scheme": {
-      "caption": "Scheme",
-      "description": "The scheme portion of the URL. For example: <code>http</code>, <code>https</code>, <code>ftp</code>, or <code>sftp</code>.",
-      "type": "string_t"
-    },
-    "port": {
-      "caption": "Port",
-      "description": "The TCP/UDP port number associated with a connection. See specific usage.",
-      "type": "port_t"
-    },
-    "path": {
-      "caption": "Path",
-      "description": "The path that pertains to the event or object. See specific usage.",
-      "type": "string_t"
-    },
-    "hostname": {
-      "caption": "Hostname",
-      "description": "The hostname of an endpoint or a device.",
-      "type": "hostname_t"
-    },
-    "query_string": {
-      "caption": "HTTP Query String",
-      "description": "The query portion of the URL. For example: the query portion of the URL <code>http://www.example.com/search?q=bad&sort=date</code> is <code>q=bad&sort=date</code>.",
-      "type": "string_t"
-    },
-    "resource_type": {
-      "caption": "Resource Type",
-      "description": "The resource type as defined by the event source.",
-      "type": "string_t"
-    },
-    "subdomain": {
-      "caption": "Subdomain",
-      "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
-      "type": "string_t"
     },
     "version": {
       "caption": "Version",
