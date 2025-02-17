@@ -327,8 +327,7 @@ limitations under the License.
   "name": "marketing-strategy",
   "version": "v1.0.0",
   "authors": [
-    "author1",
-    "author2"
+    "Cisco <dev@cisco.com>"
   ],
   "created_at": {
     "seconds": 1735689600
@@ -379,7 +378,11 @@ limitations under the License.
       "name": "category",
       "version": "v0.0.0",
       "specs": {
-        "categories": []
+        "categories": [
+          "Contextual Comprehension [1002]",
+          "Text Summarization [1007]",
+          "Natural Language Generation [1005]"
+        ]
       }
     },
     {
