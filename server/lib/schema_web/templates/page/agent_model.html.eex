@@ -235,7 +235,7 @@ limitations under the License.
     </h3>
 
     <div class="text-secondary">
-      Specifies the list of related release manifests associated with one agent.
+      Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.
     </div>
     <div class="text-secondary mt-2">
     </div>
