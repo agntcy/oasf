@@ -24,7 +24,7 @@ limitations under the License.
     </h3>
 
     <div class="text-secondary">
-      Description 
+      The data model defines a schema for AI agent content representation. The schema provides a way to describe agent's features, constraints, artifact locators, versioning, ownership, or relevant details. 
     </div>
     <div class="text-secondary mt-2">
     </div>
