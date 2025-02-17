@@ -70,7 +70,7 @@ ENV PHX_SERVER=true
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/schema_server ./
 
 # Copy the things that need to be displayed
-#COPY --from=schema . /app/schema
+COPY --from=schema . /app/schema
 
 USER nobody
 
