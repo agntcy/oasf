@@ -105,6 +105,15 @@ limitations under the License.
             <td class="extensions"><a href="http://localhost:8081/objects/key_value_object?extensions=">Key:Value object</a> Array</td>
             <td>Additional metadata associated with this agent</td>
         </tr>
+
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Specification</td>
+            <td>specs</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">OneOf(any, <a href="/categories">Category</a>, <a href="/main_domains">Domain</a>)</td>
+            <td>Generic specification schema of this extension</td>
+        </tr>
     </tbody>
   </table>
 </div>

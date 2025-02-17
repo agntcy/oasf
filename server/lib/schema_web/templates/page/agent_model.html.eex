@@ -112,7 +112,7 @@ limitations under the License.
             <td>authors</td>
             <td class="capitalize">classification</td>
             <td>Required</td>
-            <td class="extensions">String Array</td>
+            <td class="extensions">Array[string]</td>
             <td>List of agent’s authors</td>
         </tr>
 
@@ -121,7 +121,7 @@ limitations under the License.
             <td>annotations</td>
             <td class="capitalize">context</td>
             <td>Optional</td>
-            <td class="extensions"><a href="http://localhost:8081/objects/key_value_object?extensions=">Key:Value object</a> Array</td>
+            <td class="extensions">Map[string, string]</td>
             <td>Additional metadata associated with this agent</td>
         </tr>
 
@@ -130,7 +130,7 @@ limitations under the License.
             <td>locators</td>
             <td class="capitalize">classification</td>
             <td>Required</td>
-            <td class="extensions">List[Locator]</td>
+            <td class="extensions">List(Locator)</td>
             <td>List of source locators where this agent can be found or used from</td>
         </tr>
 
@@ -139,7 +139,7 @@ limitations under the License.
             <td>extensions</td>
             <td class="capitalize">classification</td>
             <td>Required</td>
-            <td class="extensions">List[OneOf{<a href="/extension_base">Extension</a>}]</td>
+            <td class="extensions">List(Extension)</td>
             <td>List of extension models that describe this agent and its capabilities more in depth</td>
         </tr>
 
@@ -155,6 +155,184 @@ limitations under the License.
   </table>
 </div>
 
+
+<div class="row">
+  <div class="col-md move-up">
+    <h3 class="extensions">
+      Agent Extension
+      <span class="text-secondary">
+        Model
+      </span>
+    </h3>
+
+    <div class="text-secondary">
+      Extensions provide dynamic descriptors for an agent. For example, security and categorization features can be described using extensions.
+    </div>
+    <div class="text-secondary mt-2">
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <table id="data-table" class="table table-bordered sortable">
+    <thead >
+    <tr class="thead-color">
+      <th style="width: 10%">Caption</th>
+      <th style="width: 10%">Name</th>
+      <th style="width: 10%">Group</th>
+      <th style="width: 10%">Requirement</th>
+      <th style="width: 10%">Type</th>
+      <th style="width: 50%">Description</th>
+    </tr>
+    </thead>
+    <tbody class="searchable">
+    <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Name</td>
+            <td>name</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>Name of the agent</td>
+        </tr>
+
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Version</td>
+            <td>version</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">String</td>
+            <td>Name of the agent</td>
+        </tr>
+
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Annotations</td>
+            <td>annotations</td>
+            <td class="capitalize">context</td>
+            <td>Optional</td>
+            <td class="extensions">Map[string, string]</td>
+            <td>Additional metadata associated with this agent</td>
+        </tr>
+
+        <tr class="event not-deprecated optional classification no-profile">
+            <td class="name">Specification</td>
+            <td>specs</td>
+            <td class="capitalize">classification</td>
+            <td>Required</td>
+            <td class="extensions">OneOf(any, <a href="/categories">Category</a>, <a href="/main_domains">Domain</a>)</td>
+            <td>Generic specification schema of this extension</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="row">
+  <div class="col-md move-up">
+    <h3 class="extensions">
+      Example
+    </h3>
+
+    <div class="text-secondary">
+      Example representation of an agent in a JSON format.
+    </div>
+    <div class="text-secondary mt-2">
+    </div>
+  </div>
+  <div class="col-md-auto fixed-right mt-2">
+    <pre>
+{
+  "name": "marketing-strategy",
+  "version": "v1.0.0",
+  "authors": [
+    "author1",
+    "author2"
+  ],
+  "created_at": {
+    "seconds": 1735689600
+  },
+  "locators": [
+    {
+      "type": 3,
+      "source": {
+        "url": "http://ghcr.io/agntcy/marketing-strategy"
+      }
+    }
+  ],
+  "extensions": [
+    {
+      "name": "runtime",
+      "version": "v0.0.0",
+      "specs": {
+        "language": "python",
+        "sbom": {
+          "name": "marketing-strategy",
+          "packages": [
+            {
+              "name": "crewai",
+              "version": "0.55.2"
+            },
+            {
+              "name": "langchain",
+              "version": "0.2.16"
+            },
+            {
+              "name": "langchain-ollama",
+              "version": "0.1.3"
+            },
+            {
+              "name": "langchain-openai",
+              "version": "0.1.25"
+            },
+            {
+              "name": "langgraph",
+              "version": "0.2.34"
+            }
+          ]
+        },
+        "version": "\u003e=3.11,\u003c3.13"
+      }
+    },
+    {
+      "name": "category",
+      "version": "v0.0.0",
+      "specs": {
+        "categories": []
+      }
+    },
+    {
+      "name": "crewai",
+      "version": "v0.0.0",
+      "specs": {
+        "agent.chief_marketing_strategist.backstory": "You are the Chief Marketing Strategist at a leading digital marketing agency, known for crafting bespoke strategies that drive success.\n",
+        "agent.chief_marketing_strategist.goal": "Synthesize amazing insights from product analysis to formulate incredible marketing strategies.\n",
+        "agent.chief_marketing_strategist.role": "Chief Marketing Strategist\n",
+        "agent.creative_content_creator.backstory": "As a Creative Content Creator at a top-tier digital marketing agency, you excel in crafting narratives that resonate with audiences. Your expertise lies in turning marketing strategies into engaging stories and visual content that capture attention and inspire action.\n",
+        "agent.creative_content_creator.goal": "Develop compelling and innovative content for social media campaigns, with a focus on creating high-impact ad copies.\n",
+        "agent.creative_content_creator.role": "Creative Content Creator\n",
+        "agent.lead_market_analyst.backstory": "As the Lead Market Analyst at a premier digital marketing firm, you specialize in dissecting online business landscapes.\n",
+        "agent.lead_market_analyst.goal": "Conduct amazing analysis of the products and competitors, providing in-depth insights to guide marketing strategies.\n",
+        "agent.lead_market_analyst.role": "Lead Market Analyst\n",
+        "inputs.campaign_idea_task": "string",
+        "inputs.copy_creation_task": "string",
+        "inputs.marketing_strategy_task": "string",
+        "inputs.project_understanding_task": "string",
+        "inputs.research_task": "string",
+        "task.campaign_idea_task.description": "Develop creative marketing campaign ideas for {project_description}. Ensure the ideas are innovative, engaging, and aligned with the overall marketing strategy.\n",
+        "task.campaign_idea_task.expected_output": "A list of 5 campaign ideas, each with a brief description and expected impact.\n",
+        "task.copy_creation_task.description": "Create marketing copies based on the approved campaign ideas for {project_description}. Ensure the copies are compelling, clear, and tailored to the target audience.\n",
+        "task.copy_creation_task.expected_output": "Marketing copies for each campaign idea.\n",
+        "task.marketing_strategy_task.description": "Formulate a comprehensive marketing strategy for the project {project_description} of the customer {customer_domain}. Use the insights from the research task and the project understanding task to create a high-quality strategy.\n",
+        "task.marketing_strategy_task.expected_output": "A detailed marketing strategy document that outlines the goals, target audience, key messages, and proposed tactics, make sure to have name, tatics, channels and KPIs",
+        "task.project_understanding_task.description": "Understand the project details and the target audience for {project_description}. Review any provided materials and gather additional information as needed.\n",
+        "task.project_understanding_task.expected_output": "A detailed summary of the project and a profile of the target audience.\n",
+        "task.research_task.description": "Conduct a thorough research about the customer and competitors in the context of {customer_domain}. Make sure you find any interesting and relevant information given the current year is 2024. We are working with them on the following project: {project_description}.\n",
+        "task.research_task.expected_output": "A complete report on the customer and their customers and competitors, including their demographics, preferences, market positioning and audience engagement.\n"
+      }
+    }
+  ]
+}
+    </pre>
+  </div>
+</div>
 
 <script>
   init_schema_buttons();
