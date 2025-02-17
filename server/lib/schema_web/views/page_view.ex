@@ -30,30 +30,6 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  def domain_graph_path(conn, data) do
-    domain_name = data[:name]
-
-    case data[:extension] do
-      nil ->
-        Routes.static_path(conn, "/domain/graph/" <> domain_name)
-
-      extension ->
-        Routes.static_path(conn, "/domain/graph/" <> extension <> "/" <> domain_name)
-    end
-  end
-
-  def domain_path(conn, data) do
-    domain_name = data[:name]
-
-    case data[:extension] do
-      nil ->
-        Routes.static_path(conn, "/domains/" <> domain_name)
-
-      extension ->
-        Routes.static_path(conn, "/domains/" <> extension <> "/" <> domain_name)
-    end
-  end
-
   def object_graph_path(conn, data) do
     object_name = data[:name]
 
@@ -80,24 +56,6 @@ defmodule SchemaWeb.PageView do
 
   def class_profiles(conn, class, profiles) do
     case class[:profiles] || [] do
-      [] ->
-        ""
-
-      list ->
-        [
-          "<h5 class='mt-3'>Profiles</h5>",
-          "Applicable profiles: ",
-          Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
-          |> Enum.map_join(", ", fn name ->
-            profile_link(conn, get_in(profiles, [name, :caption]), name)
-          end),
-          "."
-        ]
-    end
-  end
-
-  def domain_profiles(conn, domain, profiles) do
-    case domain[:profiles] || [] do
       [] ->
         ""
 
@@ -275,19 +233,6 @@ defmodule SchemaWeb.PageView do
 
     if ok do
       format_hierarchy(path, all_classes, "class")
-    else
-      to_string(source)
-    end
-  end
-
-  @spec format_domain_attribute_source(atom(), map()) :: String.t()
-  def format_domain_attribute_source(domain_key, field) do
-    all_domains = Schema.all_domains()
-    source = get_hierarchy_source(field)
-    {ok, path} = build_hierarchy(Schema.Utils.to_uid(domain_key), source, all_domains)
-
-    if ok do
-      format_hierarchy(path, all_domains, "domain")
     else
       to_string(source)
     end

@@ -31,11 +31,6 @@ defmodule SchemaWeb.Router do
     get "/categories/:id", PageController, :categories
     get "/categories/:extension/:id", PageController, :categories
 
-    get "/main_domains", PageController, :main_domains
-
-    get "/main_domains/:id", PageController, :main_domains
-    get "/main_domains/:extension/:id", PageController, :main_domains
-
     get "/profiles", PageController, :profiles
     get "/profiles/:id", PageController, :profiles
     get "/profiles/:extension/:id", PageController, :profiles
@@ -47,15 +42,7 @@ defmodule SchemaWeb.Router do
     get "/class/graph/:id", PageController, :class_graph
     get "/class/graph/:extension/:id", PageController, :class_graph
 
-    get "/domains", PageController, :domains
-    get "/domains/:id", PageController, :domains
-    get "/domains/:extension/:id", PageController, :domains
-
-    get "/domain/graph/:id", PageController, :domain_graph
-    get "/domain/graph/:extension/:id", PageController, :domain_graph
-
     get "/base_event", PageController, :base_event
-    get "/base_domain", PageController, :base_domain
     get "/dictionary", PageController, :dictionary
 
     get "/objects", PageController, :objects
@@ -82,10 +69,6 @@ defmodule SchemaWeb.Router do
     get "/categories/:id", SchemaController, :category
     get "/categories/:extension/:id", SchemaController, :category
 
-    get "/main_domains", SchemaController, :main_domains
-    get "/main_domains/:id", SchemaController, :main_domain
-    get "/main_domains/:extension/:id", SchemaController, :main_domain
-
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile
 
@@ -93,12 +76,7 @@ defmodule SchemaWeb.Router do
     get "/classes/:id", SchemaController, :class
     get "/classes/:extension/:id", SchemaController, :class
 
-    get "/domains", SchemaController, :domains
-    get "/domains/:id", SchemaController, :domain
-    get "/domains/:extension/:id", SchemaController, :domain
-
     get "/base_event", SchemaController, :base_event
-    get "/base_domain", SchemaController, :base_domain
     get "/dictionary", SchemaController, :dictionary
 
     get "/objects", SchemaController, :objects
@@ -119,9 +97,6 @@ defmodule SchemaWeb.Router do
 
     get "/classes/:id", SchemaController, :json_class
     get "/classes/:extension/:id", SchemaController, :json_class
-
-    get "/domains/:id", SchemaController, :json_class
-    get "/domains/:extension/:id", SchemaController, :json_class
 
     get "/objects/:id", SchemaController, :json_object
     get "/objects/:extension/:id", SchemaController, :json_object

@@ -111,38 +111,6 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
-      DomainDesc:
-        swagger_schema do
-          title("Domain Descriptor")
-          description("Schema domain descriptor.")
-
-          properties do
-            name(:string, "Domain name", required: true)
-            caption(:string, "Domain caption", required: true)
-            description(:string, "Domain description", required: true)
-            main_domain(:string, "Domain's main domain", required: true)
-            main_domain_name(:string, "omain's main domain's caption", required: true)
-            profiles(:array, "Domain profiles", items: %PhoenixSwagger.Schema{type: :string})
-            uid(:integer, "Domain unique identifier", required: true)
-          end
-
-          example([
-            %{
-              caption: "DHCP Activity",
-              main_domain: "network",
-              main_domain_name: "Network Activity",
-              description: "DHCP Activity events report MAC to IP assignment via DHCP.",
-              name: "dhcp_activity",
-              profiles: [
-                "cloud",
-                "datetime",
-                "host",
-                "file_security"
-              ],
-              uid: 4004
-            }
-          ])
-        end,
       ObjectDesc:
         swagger_schema do
           title("Object Descriptor")
@@ -550,85 +518,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get the schema main domains.
-  """
-  swagger_path :main_domains do
-    get("/api/main_domains")
-    summary("List main domains")
-    description("Get OASF schema main domains.")
-    produces("application/json")
-    tag("Domains")
-
-    parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
-        items: [type: :string]
-      )
-    end
-
-    response(200, "Success")
-  end
-
-  @doc """
-  Returns the list of main domains.
-  """
-  @spec main_domains(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domains(conn, params) do
-    send_json_resp(conn, main_domains(params))
-  end
-
-  @spec main_domains(map()) :: map()
-  def main_domains(params) do
-    parse_options(extensions(params)) |> Schema.main_domains()
-  end
-
-  @doc """
-  Get the domains defined in a given main domain.
-  """
-  swagger_path :main_domain do
-    get("/api/main_domains/{name}")
-    summary("List sub domains of main domain")
-
-    description(
-      "Get OASF schema domains defined in the named main domain. The main domain name may contain an" <>
-        " extension name. For example, \"dev/policy\"."
-    )
-
-    produces("application/json")
-    tag("Domains")
-
-    parameters do
-      name(:path, :string, "Main domain name", required: true)
-
-      extensions(:query, :array, "Related extensions to include in response.",
-        items: [type: :string]
-      )
-    end
-
-    response(200, "Success")
-    response(404, "Main domain <code>name</code> not found")
-  end
-
-  @spec main_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domain(conn, %{"id" => id} = params) do
-    case main_domain_domains(params) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Main domain #{id} not found"})
-
-      data ->
-        send_json_resp(conn, data)
-    end
-  end
-
-  @spec main_domain_domains(map()) :: map() | nil
-  def main_domain_domains(params) do
-    name = params["id"]
-    extension = extension(params)
-    extensions = parse_options(extensions(params))
-
-    Schema.main_domain(extensions, extension, name)
-  end
-
-  @doc """
   Get the schema dictionary.
   """
   swagger_path :dictionary do
@@ -682,28 +571,6 @@ defmodule SchemaWeb.SchemaController do
   @spec base_event(Plug.Conn.t(), any) :: Plug.Conn.t()
   def base_event(conn, params) do
     class(conn, "base_event", params)
-  end
-
-  @doc """
-  Get the schema base domain class.
-  """
-  swagger_path :base_domain do
-    get("/api/base_domain")
-    summary("Base domain")
-    description("Get OASF schema base domain class.")
-    produces("application/json")
-    tag("Domains")
-
-    parameters do
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  @spec base_domain(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_domain(conn, params) do
-    class(conn, "base_domain", params)
   end
 
   @doc """
@@ -793,96 +660,6 @@ defmodule SchemaWeb.SchemaController do
 
       profiles ->
         Schema.classes(extensions, profiles)
-    end
-  end
-
-  @doc """
-  Get a domain by name.
-  get /api/domains/:name
-  """
-  swagger_path :domain do
-    get("/api/domains/{name}")
-    summary("Domain")
-
-    description(
-      "Get OASF schema domain by name. The domain name may contain an extension name." <>
-        " For example, \"dev/cpu_usage\"."
-    )
-
-    produces("application/json")
-    tag("Domains")
-
-    parameters do
-      name(:path, :string, "Domain name", required: true)
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(404, "Domain <code>name</code> not found")
-  end
-
-  @spec domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def domain(conn, %{"id" => id} = params) do
-    domain(conn, id, params)
-  end
-
-  defp domain(conn, id, params) do
-    extension = extension(params)
-
-    case Schema.domain(extension, id, parse_options(profiles(params))) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Domain #{id} not found"})
-
-      data ->
-        domain = add_objects(data, params)
-        send_json_resp(conn, domain)
-    end
-  end
-
-  @doc """
-  Get the schema domain.
-  """
-  swagger_path :domains do
-    get("/api/domains")
-    summary("List domains")
-    description("Get OASF schema domains.")
-    produces("application/json")
-    tag("Domains")
-
-    parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
-        items: [type: :string]
-      )
-
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success", :DomainDesc)
-  end
-
-  @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def domains(conn, params) do
-    domains =
-      Enum.map(domains(params), fn {_name, domain} ->
-        Schema.reduce_domain(domain)
-      end)
-
-    send_json_resp(conn, domains)
-  end
-
-  @doc """
-  Returns the list of domains.
-  """
-  @spec domains(map) :: map
-  def domains(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.domains(extensions)
-
-      profiles ->
-        Schema.domains(extensions, profiles)
     end
   end
 

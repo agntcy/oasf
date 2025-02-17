@@ -81,43 +81,6 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_domains :: map()
-  def main_domains() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_domains(schema) end)
-  end
-
-  @spec main_domains(extensions_t() | nil) :: map()
-  def main_domains(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_domains(schema) end)
-  end
-
-  def main_domains(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.main_domains(schema)
-      |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
-    end)
-  end
-
-  @spec main_domain(atom) :: nil | Cache.main_domain_t()
-  def main_domain(id) do
-    main_domain(nil, id)
-  end
-
-  @spec main_domain(extensions_t() | nil, atom) :: nil | Cache.main_domain_t()
-  def main_domain(extensions, id) do
-    Agent.get(__MODULE__, fn schema ->
-      case Cache.main_domain(schema, id) do
-        nil ->
-          nil
-
-          main_domain ->
-          add_domains(extensions, {id, main_domain}, Cache.domains(schema))
-      end
-    end)
-  end
-
-
-
   @spec data_types() :: map()
   def data_types() do
     Agent.get(__MODULE__, fn schema -> Cache.data_types(schema) end)
@@ -161,25 +124,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.all_classes(schema) end)
   end
 
-  @spec domains() :: map()
-  def domains() do
-    Agent.get(__MODULE__, fn schema -> Cache.domains(schema) end)
-  end
-
-  @spec domains(extensions_t() | nil) :: map()
-  def domains(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.domains(schema) end)
-  end
-
-  def domains(extensions) do
-    Agent.get(__MODULE__, fn schema -> Cache.domains(schema) |> filter(extensions) end)
-  end
-
-  @spec all_domains() :: map()
-  def all_domains() do
-    Agent.get(__MODULE__, fn schema -> Cache.all_domains(schema) end)
-  end
-
   @spec all_objects() :: map()
   def all_objects() do
     Agent.get(__MODULE__, fn schema -> Cache.all_objects(schema) end)
@@ -201,30 +145,9 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec export_domains() :: map()
-  def export_domains() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_domains(schema) end)
-  end
-
-  @spec export_domains(extensions_t() | nil) :: map()
-  def export_domains(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_domains(schema) end)
-  end
-
-  def export_domains(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter(extensions)
-    end)
-  end
-
   @spec export_base_event() :: map()
   def export_base_event() do
     Agent.get(__MODULE__, fn schema -> Cache.export_base_event(schema) end)
-  end
-
-  @spec export_base_domain() :: map()
-  def export_base_domain() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_base_domain(schema) end)
   end
 
   @spec class(atom) :: nil | Cache.class_t()
@@ -240,21 +163,6 @@ defmodule Schema.Repo do
   @spec find_class(any) :: nil | map
   def find_class(uid) do
     Agent.get(__MODULE__, fn schema -> Cache.find_class(schema, uid) end)
-  end
-
-  @spec domain(atom) :: nil | Cache.domain_t()
-  def domain(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.domain(schema, id) end)
-  end
-
-  @spec domain_ex(atom) :: nil | Cache.domain_t()
-  def domain_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.domain_ex(schema, id) end)
-  end
-
-  @spec find_domain(any) :: nil | map
-  def find_domain(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_domain(schema, uid) end)
   end
 
   @spec objects() :: map()
@@ -400,51 +308,5 @@ defmodule Schema.Repo do
       )
 
     Map.put(category, :classes, list)
-  end
-
-  defp add_domains(nil, {id, main_domain}, domains) do
-    main_domain_uid = Atom.to_string(id)
-
-    list =
-      domains
-      |> Stream.filter(fn {_name, domain} ->
-        md = Map.get(domain, :main_domain)
-        md == main_domain_uid or Utils.to_uid(domain[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, domain} ->
-        domain =
-          domain
-          |> Map.delete(:main_domain)
-          |> Map.delete(:main_domain_name)
-
-        {name, domain}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_domain, :domains, list)
-    |> Map.put(:name, main_domain_uid)
-  end
-
-  defp add_domains(extensions, {id, main_domain}, domains) do
-    main_domain_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        domains,
-        fn {_name, domain} ->
-          md = domain[:main_domain]
-
-          case domain[:extension] do
-            nil ->
-              md == main_domain_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_domain_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_domain, :domains, list)
   end
 end

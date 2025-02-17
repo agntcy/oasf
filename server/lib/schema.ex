@@ -94,37 +94,6 @@ defmodule Schema do
   def category(extensions, extension, id),
     do: get_category(extensions, Utils.to_uid(extension, id))
 
-
-  @doc """
-    Returns the main domains.
-  """
-  @spec main_domains :: map()
-  def main_domains(), do: Repo.main_domains()
-
-  @doc """
-    Returns the event main domains defined in the given extension set.
-  """
-  def main_domains(extensions) do
-    Map.update(Repo.main_domains(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_domain} ->
-        {name, main_domain(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single main domain with its classes.
-  """
-  @spec main_domain(atom | String.t()) :: nil | Cache.main_domain_t()
-  def main_domain(id), do: get_main_domain(Utils.to_uid(id))
-
-  @spec main_domain(Repo.extensions_t(), String.t()) :: nil | Cache.main_domain_t()
-  def main_domain(extensions, id), do: get_main_domain(extensions, Utils.to_uid(id))
-
-  @spec main_domain(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.main_domain_t()
-  def main_domain(extensions, extension, id),
-    do: get_main_domain(extensions, Utils.to_uid(extension, id))
-
   @doc """
     Returns the attribute dictionary.
   """
@@ -245,83 +214,6 @@ defmodule Schema do
   """
   @spec find_class(integer()) :: nil | Cache.class_t()
   def find_class(uid) when is_integer(uid), do: Repo.find_class(uid)
-
-
-  @doc """
-    Returns all domains.
-  """
-  @spec domains() :: map()
-  def domains(), do: Repo.domains()
-
-  @spec domains(Repo.extensions_t()) :: map()
-  def domains(extensions), do: Repo.domains(extensions)
-
-  @spec domains(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def domains(extensions, profiles) do
-    extensions
-    |> Repo.domains()
-    |> apply_profiles(profiles, MapSet.size(profiles))
-  end
-
-  @spec all_domains() :: map()
-  def all_domains(), do: Repo.all_domains()
-
-  @doc """
-    Returns a single domain.
-  """
-  @spec domain(atom() | String.t()) :: nil | Cache.domain_t()
-  def domain(id), do: Repo.domain(Utils.to_uid(id))
-
-  @spec domain(nil | String.t(), String.t()) :: nil | map()
-  def domain(extension, id),
-    do: Repo.domain(Utils.to_uid(extension, id))
-
-  @spec domain(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def domain(extension, id, nil), do: domain(extension, id)
-
-  def domain(extension, id, profiles) do
-    case domain(extension, id) do
-      nil ->
-        nil
-
-        domain ->
-        Map.update!(domain, :attributes, fn attributes ->
-          Utils.apply_profiles(attributes, profiles)
-        end)
-    end
-  end
-
-  @doc """
-    Returns a single domain with the embedded objects.
-  """
-  @spec domain_ex(atom() | String.t()) :: nil | Cache.domain_t()
-  def domain_ex(id),
-    do: Repo.domain_ex(Utils.to_uid(id))
-
-  @spec domain_ex(nil | String.t(), String.t()) :: nil | map()
-  def domain_ex(extension, id),
-    do: Repo.domain_ex(Utils.to_uid(extension, id))
-
-  @spec domain_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def domain_ex(extension, id, nil),
-    do: domain_ex(extension, id)
-
-  def domain_ex(extension, id, profiles) do
-    case domain_ex(extension, id) do
-      nil ->
-        nil
-
-        domain ->
-        Schema.Profiles.apply_profiles(domain, profiles)
-    end
-  end
-
-  @doc """
-  Finds a domain by the domain uid value.
-  """
-  @spec find_domain(integer()) :: nil | Cache.domain_t()
-  def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
-
 
   @doc """
     Returns all objects.
@@ -449,7 +341,6 @@ defmodule Schema do
   @spec export_schema() :: %{
           base_event: map(),
           classes: map(),
-          domains: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -459,7 +350,6 @@ defmodule Schema do
     %{
       base_event: Schema.export_base_event(),
       classes: Schema.export_classes(),
-      domains: Schema.export_domains(),
       objects: Schema.export_objects(),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(),
@@ -470,7 +360,6 @@ defmodule Schema do
   @spec export_schema(Repo.extensions_t()) :: %{
           base_event: map(),
           classes: map(),
-          domains: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -480,7 +369,6 @@ defmodule Schema do
     %{
       base_event: Schema.export_base_event(),
       classes: Schema.export_classes(extensions),
-      domains: Schema.export_domains(extensions),
       objects: Schema.export_objects(extensions),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(extensions),
@@ -491,7 +379,6 @@ defmodule Schema do
   @spec export_schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
           base_event: map(),
           classes: map(),
-          domains: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -505,7 +392,6 @@ defmodule Schema do
     %{
       base_event: Schema.export_base_event(profiles),
       classes: Schema.export_classes(extensions, profiles),
-      domains: Schema.export_domains(extensions, profiles),
       objects: Schema.export_objects(extensions, profiles),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(extensions),
@@ -537,22 +423,6 @@ defmodule Schema do
     Repo.export_classes(extensions) |> update_exported_classes(profiles)
   end
 
-  @doc """
-    Exports the domains.
-  """
-  @spec export_domains() :: map()
-  def export_domains(), do: Repo.export_domains() |> reduce_objects()
-
-  @spec export_domains(Repo.extensions_t()) :: map()
-  def export_domains(extensions), do: Repo.export_domains(extensions) |> reduce_objects()
-
-  @spec export_domains(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_domains(extensions, nil), do: export_domains(extensions)
-
-  def export_domains(extensions, profiles) do
-    Repo.export_domains(extensions) |> update_exported_domains(profiles)
-  end
-
   @spec export_base_event() :: map()
   def export_base_event() do
     Repo.export_base_event()
@@ -579,34 +449,6 @@ defmodule Schema do
 
   defp update_exported_classes(classes, profiles) do
     apply_profiles(classes, profiles, MapSet.size(profiles)) |> reduce_objects()
-  end
-
-  @spec export_base_domain() :: map()
-  def export_base_domain() do
-    Repo.export_base_domain()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.remove_profiles(attributes) |> Enum.into(%{})
-    end)
-  end
-
-  @spec export_base_domain(Repo.profiles_t() | nil) :: map()
-  def export_base_domain(nil) do
-    export_base_domain()
-  end
-
-  def export_base_domain(profiles) do
-    size = MapSet.size(profiles)
-
-    Repo.export_base_domain()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.apply_profiles(attributes, profiles, size) |> Enum.into(%{})
-    end)
-  end
-
-  defp update_exported_domains(domains, profiles) do
-    apply_profiles(domains, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
 
   @doc """
@@ -687,14 +529,6 @@ defmodule Schema do
     Repo.category(extensions, id) |> reduce_category()
   end
 
-  defp get_main_domain(id) do
-    Repo.main_domain(id) |> reduce_main_domain()
-  end
-
-  defp get_main_domain(extensions, id) do
-    Repo.main_domain(extensions, id) |> reduce_main_domain()
-  end
-
   defp reduce_category(nil) do
     nil
   end
@@ -706,20 +540,6 @@ defmodule Schema do
       end)
     end)
   end
-
-  defp reduce_main_domain(nil) do
-    nil
-  end
-
-  defp reduce_main_domain(data) do
-    Map.update(data, :domains, [], fn domains ->
-      Enum.into(domains, %{}, fn {name, domain} ->
-        {name, reduce_domain(domain)}
-      end)
-    end)
-  end
-
-
 
   defp reduce_objects(objects) do
     Enum.into(objects, %{}, fn {name, object} ->
@@ -776,11 +596,6 @@ defmodule Schema do
 
   @spec reduce_class(map) :: map
   def reduce_class(data) do
-    delete_attributes(data) |> delete_associations()
-  end
-
-  @spec reduce_domain(map) :: map
-  def reduce_domain(data) do
     delete_attributes(data) |> delete_associations()
   end
 

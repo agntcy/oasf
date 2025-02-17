@@ -1,6 +1,6 @@
 {
   "caption": "Categories",
-  "description": "The OASF categories organize attribute classes, each aligned with a specific area of focus.",
+  "description": "The OASF categories organize attribute classes, each aligned with a specific domain or area of focus.",
   "name": "category",
   "attributes": {
     "nlp": {
@@ -37,6 +37,11 @@
       "uid": 7,
       "caption": "Analytical skills",
       "description": "Analytical skills events report the activity, existence, and/or state of analytical skills for tracking, mission planning, and other related activities."
+    },
+    "domain_of_application": {
+      "uid": 8,
+      "caption": "Domain of application",
+      "description": "Domain of application events report the activity, existence, and/or state of domain of application for tracking, mission planning, and other related activities."
     }
   }
 }

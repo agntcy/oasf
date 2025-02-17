@@ -36,28 +36,6 @@ defmodule Schema.Types do
   def class_uid(category_uid, class_id), do: category_uid * 1000 + class_id
 
   @doc """
-  Makes a main domain uid for the given main domain and extension identifiers.
-  """
-  @spec main_domain_uid(number, number) :: number
-  def main_domain_uid(extension_uid, main_domain_id), do: extension_uid * 100 + main_domain_id
-
-  @doc """
-  Makes a main domain uid for the given main domain and extension identifiers. Checks if the
-  main domain uid already has the extension.
-  """
-  @spec main_domain_uid_ex(number, number) :: number
-  def main_domain_uid_ex(extension_uid, main_domain_id) when main_domain_id < 100,
-    do: main_domain_uid(extension_uid, main_domain_id)
-
-  def main_domain_uid_ex(_extension_uid, main_domain_id), do: main_domain_id
-
-  @doc """
-  Makes a domain uid for the given domain and domain identifiers.
-  """
-  @spec domain_uid(number, number) :: number
-  def domain_uid(main_domain_uid, domain_id), do: main_domain_uid * 1000 + domain_id
-
-  @doc """
   Makes a type uid for the given class and activity identifiers.
   """
   @spec type_uid(number, number) :: number

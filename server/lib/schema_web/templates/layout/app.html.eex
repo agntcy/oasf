@@ -186,9 +186,6 @@ limitations under the License.
       <li id="classes_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/classes") %>'>Classes</a>
       </li>
-      <li id="domains_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
-      </li>
       <li id="base_event_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/classes/base_event") %>'>Base Event</a>
       </li>

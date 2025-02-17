@@ -1,9 +1,0 @@
-{
-  "uid": 1,
-  "caption": "Molecular Biology",
-  "description": "Molecular Biology",
-  "extends": "life_science",
-  "name": "molecular_biology",
-  "main_domain_name": "life_science",
-  "attributes": {}
-}
