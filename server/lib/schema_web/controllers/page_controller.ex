@@ -133,6 +133,30 @@ defmodule SchemaWeb.PageController do
     )
   end
 
+  @doc """
+  Renders agent_model.
+  """
+  @spec agent_model(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def agent_model(conn, params) do
+    render(conn, "agent_model.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: nil
+    )
+  end
+
+  @doc """
+  Renders extension_base.
+  """
+  @spec extension_base(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def extension_base(conn, params) do
+    render(conn, "extension_base.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: nil
+    )
+  end
+
 
   @doc """
   Renders main domains or the domains in a given main domain.
