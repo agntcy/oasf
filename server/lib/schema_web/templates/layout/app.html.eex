@@ -193,13 +193,7 @@ limitations under the License.
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/classes") %>'>Classes</a>
       </li>--> 
       <li id="base_event_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Agent Model</a>
-      </li>
-      <li id="base_event_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/locator") %>'>Agent Locator</a>
-      </li>
-      <li id="base_event_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/extension_base") %>'>Agent Extension</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Data Model</a>
       </li>
       <li id="dictionary_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/dictionary") %>'>Dictionary</a>
