@@ -1,5 +1,5 @@
 {
-  "caption": "Map[String, String]",
+  "caption": "Key Value Object",
   "description": "A generic object allowing to define a <code>{key:value}</code> pair.",
   "extends": "object",
   "name": "key_value_object",
