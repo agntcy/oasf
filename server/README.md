@@ -142,7 +142,7 @@ You can use `mix test` command to test the changes made to the schema. For examp
 Assuming the schema repo has been cloned in `../oasf-schema` directory, then you can test the schema with this command:
 
 ```shell
-SCHEMA_DIR=../oasf-schema SCHEMA_EXTENSION=extensions mix test
+SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions mix test
 ```
 
 If everything is correct, then you should not see any errors or warnings.
@@ -152,7 +152,7 @@ If everything is correct, then you should not see any errors or warnings.
 You can use the Elixir's interactive shell, [IEx](https://hexdocs.pm/iex/IEx.html), to start the schema server use:
 
 ```shell
-SCHEMA_DIR=../oasf-schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
+SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
 ```
 
 Now you can access the Schema server at [`localhost:8080`](http://localhost:8080) or [`localhost:8443`](https://localhost:8443).
@@ -197,10 +197,10 @@ The schema server uses a number of environment variables.
 | ---------------- | ----------------------------------------------------------------------------------------- |
 | HTTP_PORT        | The server HTTP port number, default: `8080`                                              |
 | HTTPS_PORT       | The server HTTPS port number, default: `8443`                                             |
-| SCHEMA_DIR       | The directory containing the schema, default: `../oasf-schema`                            |
+| SCHEMA_DIR       | The directory containing the schema, default: `../schema`                                 |
 | SCHEMA_EXTENSION | The directory containing the schema extensions, relative to SCHEMA_DIR or absolute path   |
 | RELEASE_NODE     | The Erlang node name. Set it if you want to run more than one server on the same computer |
 
 ```shell
-SCHEMA_DIR=../oasf-schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
+SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
 ```
