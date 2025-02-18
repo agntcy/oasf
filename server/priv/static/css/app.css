@@ -85,7 +85,7 @@ body {
   }
 
   .oasf-logo img {
-    width: auto;
+    width: 100%;
     display: block;
   }
 
@@ -256,7 +256,7 @@ table.table-borderless tr td {
 }
 
 tr.thead-color {
-  background-color: #224f8b;
+  background-color: #005885;
   color: lightgrey;
 }
 
