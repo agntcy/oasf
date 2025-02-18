@@ -162,7 +162,7 @@ defmodule SchemaWeb.Router do
         title: "The OASF Schema API",
         description:
           "The Open Agents Schema Framework (OASF) server API allows to access the JSON" <>
-            " schema definitions and to validate and translate events.",
+            " schema definitions and to validate and translate objects.",
         license: %{
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
