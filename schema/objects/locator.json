@@ -25,7 +25,7 @@
     },
     "size": {
       "caption": "Size",
-      "description": "specifies the size of the release manifest in bytes.",
+      "description": "Specifies the size of the release manifest in bytes.",
       "requirement": "optional"
     },
     "digest": {
