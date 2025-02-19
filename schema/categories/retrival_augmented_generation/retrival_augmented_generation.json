@@ -1,7 +1,0 @@
-{
-  "caption": "Retrival Augmented Generation",
-  "category": "retrival_augmented_generation",
-  "extends": "base_event",
-  "name": "retrival_augmented_generation",
-  "attributes": {}
-}

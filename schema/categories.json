@@ -28,10 +28,10 @@
       "caption": "Multi-modal",
       "description": "Multi-model tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
     },
-    "retrival_augmented_generation": {
+    "retrieval_augmented_generation": {
       "uid": 6,
-      "caption": "Retrival Augmented Generation",
-      "description": "Retrival Augmented Generation tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
+      "caption": "Retrieval Augmented Generation",
+      "description": "Retrieval Augmented Generation tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
     },
     "analytical_skills": {
       "uid": 7,

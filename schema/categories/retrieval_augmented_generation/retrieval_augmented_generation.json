@@ -1,0 +1,7 @@
+{
+  "caption": "Retrieval Augmented Generation",
+  "category": "retrieval_augmented_generation",
+  "extends": "base_event",
+  "name": "retrieval_augmented_generation",
+  "attributes": {}
+}
