@@ -29,7 +29,6 @@ defmodule Schema.JsonReader do
   # The Schema version file
   @version_file "version.json"
 
-  @categories_file "categories.json"
   @main_domains_file "main_domains.json"
   @dictionary_file "dictionary.json"
 
@@ -48,9 +47,9 @@ defmodule Schema.JsonReader do
     GenServer.call(__MODULE__, :read_version)
   end
 
-  @spec read_categories() :: map()
-  def read_categories() do
-    GenServer.call(__MODULE__, :read_categories)
+  @spec read_categories(String.t()) :: map()
+  def read_categories(categories_file) do
+    GenServer.call(__MODULE__, {:read_categories, categories_file})
   end
 
   @spec read_main_domains() :: map()
@@ -129,8 +128,8 @@ defmodule Schema.JsonReader do
   end
 
   @impl true
-  def handle_call(:read_categories, _from, {home, ext} = state) do
-    {:reply, read_categories(home, ext), state}
+  def handle_call({:read_categories, categories_file}, _from, {home, ext} = state) do
+    {:reply, read_categories(home, ext, categories_file), state}
   end
 
   @impl true
@@ -195,15 +194,15 @@ defmodule Schema.JsonReader do
     end
   end
 
-  defp read_categories(home, []) do
-    Path.join(home, @categories_file) |> read_json_file()
+  defp read_categories(home, [], categories_file) do
+    Path.join(home, categories_file) |> read_json_file()
   end
 
-  defp read_categories(home, extensions) do
-    categories = Path.join(home, @categories_file) |> read_json_file()
+  defp read_categories(home, extensions, categories_file) do
+    categories = Path.join(home, categories_file) |> read_json_file()
 
     Enum.reduce(extensions, categories, fn ext, acc ->
-      merge_ext_file(acc, ext, @categories_file)
+      merge_ext_file(acc, ext, categories_file)
     end)
   end
 

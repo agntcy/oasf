@@ -19,6 +19,8 @@ defmodule Schema.Cache do
 
   require Logger
 
+  @categories_file "categories.json"
+
   @enforce_keys [
     :version,
     :profiles,
@@ -53,7 +55,7 @@ defmodule Schema.Cache do
   def init() do
     version = JsonReader.read_version()
 
-    categories = JsonReader.read_categories() |> update_categories()
+    categories = JsonReader.read_categories(@categories_file) |> update_categories()
     main_domains = JsonReader.read_main_domains() |> update_main_domains()
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
