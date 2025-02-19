@@ -55,15 +55,14 @@ defmodule Schema.Cache do
   def init() do
     version = JsonReader.read_version()
 
-    categories = JsonReader.read_categories(@categories_file) |> update_categories()
     main_domains = JsonReader.read_main_domains() |> update_main_domains()
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
     {base_domain, domains, all_domains, _observable_type_id_map} =
       read_domains(main_domains[:attributes])
 
-    {base_event, classes, all_classes, observable_type_id_map} =
-      read_classes(categories[:attributes])
+    {base_event, classes, all_classes, observable_type_id_map, categories} =
+      read_classes(@categories_file)
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -243,8 +242,6 @@ defmodule Schema.Cache do
     end
   end
 
-
-
   @spec domains(__MODULE__.t()) :: map()
   def domains(%__MODULE__{domains: domains}), do: domains
 
@@ -273,7 +270,7 @@ defmodule Schema.Cache do
       nil ->
         nil
 
-        domain ->
+      domain ->
         enrich(domain, dictionary[:attributes])
     end
   end
@@ -430,7 +427,10 @@ defmodule Schema.Cache do
     end
   end
 
-  defp read_classes(categories) do
+  defp read_classes(categories_file) do
+    categories = JsonReader.read_categories(categories_file) |> update_categories()
+    categories_attributes = categories[:attributes]
+
     classes = JsonReader.read_classes()
 
     observable_type_id_map = observables_from_classes(classes)
@@ -462,9 +462,9 @@ defmodule Schema.Cache do
       classes
       # remove intermediate hidden classes
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
-      |> Enum.into(%{}, fn class_tuple -> enrich_class(class_tuple, categories) end)
+      |> Enum.into(%{}, fn class_tuple -> enrich_class(class_tuple, categories_attributes) end)
 
-    {Map.get(classes, :base_event), classes, all_classes, observable_type_id_map}
+    {Map.get(classes, :base_event), classes, all_classes, observable_type_id_map, categories}
   end
 
   defp read_domains(main_domains) do
@@ -629,7 +629,7 @@ defmodule Schema.Cache do
     if not patch_extends?(domain) and hidden_domain?(domain_key, domain) do
       if Map.has_key?(domain, :attributes) and
            Enum.any?(
-            domain[:attributes],
+             domain[:attributes],
              fn {_attribute_key, attribute} ->
                Map.has_key?(attribute, :observable)
              end
@@ -1116,7 +1116,6 @@ defmodule Schema.Cache do
     end
     |> put_in([:attributes, :category_uid, :_source], name)
   end
-
 
   defp add_domain_uid(data, name) do
     domain_name = data[:caption]
