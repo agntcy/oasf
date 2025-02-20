@@ -94,7 +94,6 @@ defmodule Schema do
   def category(extensions, extension, id),
     do: get_category(extensions, Utils.to_uid(extension, id))
 
-
   @doc """
     Returns the main domains.
   """
@@ -246,7 +245,6 @@ defmodule Schema do
   @spec find_class(integer()) :: nil | Cache.class_t()
   def find_class(uid) when is_integer(uid), do: Repo.find_class(uid)
 
-
   @doc """
     Returns all domains.
   """
@@ -284,7 +282,7 @@ defmodule Schema do
       nil ->
         nil
 
-        domain ->
+      domain ->
         Map.update!(domain, :attributes, fn attributes ->
           Utils.apply_profiles(attributes, profiles)
         end)
@@ -311,7 +309,7 @@ defmodule Schema do
       nil ->
         nil
 
-        domain ->
+      domain ->
         Schema.Profiles.apply_profiles(domain, profiles)
     end
   end
@@ -321,7 +319,6 @@ defmodule Schema do
   """
   @spec find_domain(integer()) :: nil | Cache.domain_t()
   def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
-
 
   @doc """
     Returns all objects.
@@ -447,7 +444,7 @@ defmodule Schema do
     Exports the schema, including data types, objects, and classes.
   """
   @spec export_schema() :: %{
-          base_event: map(),
+          base_class: map(),
           classes: map(),
           domains: map(),
           objects: map(),
@@ -457,7 +454,7 @@ defmodule Schema do
         }
   def export_schema() do
     %{
-      base_event: Schema.export_base_event(),
+      base_class: Schema.export_base_class(),
       classes: Schema.export_classes(),
       domains: Schema.export_domains(),
       objects: Schema.export_objects(),
@@ -468,7 +465,7 @@ defmodule Schema do
   end
 
   @spec export_schema(Repo.extensions_t()) :: %{
-          base_event: map(),
+          base_class: map(),
           classes: map(),
           domains: map(),
           objects: map(),
@@ -478,7 +475,7 @@ defmodule Schema do
         }
   def export_schema(extensions) do
     %{
-      base_event: Schema.export_base_event(),
+      base_class: Schema.export_base_class(),
       classes: Schema.export_classes(extensions),
       domains: Schema.export_domains(extensions),
       objects: Schema.export_objects(extensions),
@@ -489,7 +486,7 @@ defmodule Schema do
   end
 
   @spec export_schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
-          base_event: map(),
+          base_class: map(),
           classes: map(),
           domains: map(),
           objects: map(),
@@ -503,7 +500,7 @@ defmodule Schema do
 
   def export_schema(extensions, profiles) do
     %{
-      base_event: Schema.export_base_event(profiles),
+      base_class: Schema.export_base_class(profiles),
       classes: Schema.export_classes(extensions, profiles),
       domains: Schema.export_domains(extensions, profiles),
       objects: Schema.export_objects(extensions, profiles),
@@ -553,24 +550,24 @@ defmodule Schema do
     Repo.export_domains(extensions) |> update_exported_domains(profiles)
   end
 
-  @spec export_base_event() :: map()
-  def export_base_event() do
-    Repo.export_base_event()
+  @spec export_base_class() :: map()
+  def export_base_class() do
+    Repo.export_base_class()
     |> reduce_attributes()
     |> Map.update!(:attributes, fn attributes ->
       Utils.remove_profiles(attributes) |> Enum.into(%{})
     end)
   end
 
-  @spec export_base_event(Repo.profiles_t() | nil) :: map()
-  def export_base_event(nil) do
-    export_base_event()
+  @spec export_base_class(Repo.profiles_t() | nil) :: map()
+  def export_base_class(nil) do
+    export_base_class()
   end
 
-  def export_base_event(profiles) do
+  def export_base_class(profiles) do
     size = MapSet.size(profiles)
 
-    Repo.export_base_event()
+    Repo.export_base_class()
     |> reduce_attributes()
     |> Map.update!(:attributes, fn attributes ->
       Utils.apply_profiles(attributes, profiles, size) |> Enum.into(%{})
@@ -718,8 +715,6 @@ defmodule Schema do
       end)
     end)
   end
-
-
 
   defp reduce_objects(objects) do
     Enum.into(objects, %{}, fn {name, object} ->

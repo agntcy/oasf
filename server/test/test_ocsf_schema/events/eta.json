@@ -3,7 +3,7 @@
   "category": "system",
   "description": "The Eta example event class.",
   "name": "eta",
-  "extends": "base_event",
+  "extends": "base_class",
   "uid": 3,
   "profiles": [],
   "attributes": {

@@ -215,9 +215,9 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec export_base_event() :: map()
-  def export_base_event() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_base_event(schema) end)
+  @spec export_base_class() :: map()
+  def export_base_class() do
+    Agent.get(__MODULE__, fn schema -> Cache.export_base_class(schema) end)
   end
 
   @spec export_base_domain() :: map()

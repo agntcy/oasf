@@ -3,7 +3,7 @@
   "category": "network",
   "description": "The hidden Ghost example event class.",
   "name": "ghost",
-  "extends": "base_event",
+  "extends": "base_class",
   "profiles": [],
   "attributes": {
     "hidden_thing": {

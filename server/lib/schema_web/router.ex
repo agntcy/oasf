@@ -54,7 +54,7 @@ defmodule SchemaWeb.Router do
     get "/domain/graph/:id", PageController, :domain_graph
     get "/domain/graph/:extension/:id", PageController, :domain_graph
 
-    get "/base_event", PageController, :base_event
+    get "/base_class", PageController, :base_class
     get "/base_domain", PageController, :base_domain
     get "/dictionary", PageController, :dictionary
 
@@ -99,7 +99,7 @@ defmodule SchemaWeb.Router do
     get "/domains/:id", SchemaController, :domain
     get "/domains/:extension/:id", SchemaController, :domain
 
-    get "/base_event", SchemaController, :base_event
+    get "/base_class", SchemaController, :base_class
     get "/base_domain", SchemaController, :base_domain
     get "/dictionary", SchemaController, :dictionary
 
@@ -132,7 +132,7 @@ defmodule SchemaWeb.Router do
   scope "/export", SchemaWeb do
     pipe_through :api
 
-    get "/base_event", SchemaController, :export_base_event
+    get "/base_class", SchemaController, :export_base_class
     get "/classes", SchemaController, :export_classes
     get "/objects", SchemaController, :export_objects
     get "/schema", SchemaController, :export_schema
@@ -141,7 +141,7 @@ defmodule SchemaWeb.Router do
   scope "/sample", SchemaWeb do
     pipe_through :api
 
-    get "/base_event", SchemaController, :sample_event
+    get "/base_class", SchemaController, :sample_event
 
     get "/objects/:id", SchemaController, :sample_object
     get "/objects/:extension/:id", SchemaController, :sample_object

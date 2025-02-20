@@ -239,7 +239,7 @@ defmodule Schema.Utils do
     Map.update!(dictionary, :attributes, fn dictionary_attributes ->
       type =
         case class[:name] do
-          nil -> "base_event"
+          nil -> "base_class"
           _ -> class_key
         end
 

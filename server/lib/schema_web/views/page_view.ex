@@ -422,7 +422,7 @@ defmodule SchemaWeb.PageView do
   @spec field_classes(map) :: nonempty_binary
   def field_classes(field) do
     base =
-      if field[:_source] == :base_event or field[:_source] == :event do
+      if field[:_source] == :base_class or field[:_source] == :event do
         "base-event "
       else
         "event "
@@ -809,7 +809,7 @@ defmodule SchemaWeb.PageView do
         [
           [
             "<a href=\"",
-            SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_event"),
+            SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class"),
             "\" data-toggle=\"tooltip\ title=\"Directly referenced\">Base Event Class</a>"
           ]
           | acc
@@ -957,8 +957,8 @@ defmodule SchemaWeb.PageView do
                 | acc
               ]
 
-            source == :base_event ->
-              # Skip base_event source:
+            source == :base_class ->
+              # Skip base_class source:
               #   - Reduces noise
               #   - It is redundant with showing Base Event Class separately
               acc
@@ -1113,8 +1113,8 @@ defmodule SchemaWeb.PageView do
         [],
         fn link, acc ->
           type_path =
-            if link[:type] == "base_event" do
-              SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_event")
+            if link[:type] == "base_class" do
+              SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class")
             else
               SchemaWeb.Router.Helpers.static_path(conn, "/classes/" <> link[:type])
             end
@@ -1304,7 +1304,7 @@ defmodule SchemaWeb.PageView do
         [
           [
             "<a href=\"",
-            SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_event"),
+            SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class"),
             "\">Base Event Class</a>"
           ]
           | acc

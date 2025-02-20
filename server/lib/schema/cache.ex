@@ -25,7 +25,7 @@ defmodule Schema.Cache do
     :categories,
     :main_domains,
     :dictionary,
-    :base_event,
+    :base_class,
     :base_domain,
     :classes,
     :domains,
@@ -35,7 +35,7 @@ defmodule Schema.Cache do
     :all_objects
   ]
   defstruct ~w[
-    version profiles dictionary base_event base_domain categories main_domains classes domains all_classes all_domains objects all_objects
+    version profiles dictionary base_class base_domain categories main_domains classes domains all_classes all_domains objects all_objects
   ]a
 
   @type t() :: %__MODULE__{}
@@ -60,7 +60,7 @@ defmodule Schema.Cache do
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
-    {base_event, classes, all_classes, observable_type_id_map, categories} =
+    {base_class, classes, all_classes, observable_type_id_map, categories} =
       read_classes(@categories_file, @categories_dir)
 
     {base_domain, domains, all_domains, _observable_domains_type_id_map, main_domains} =
@@ -68,7 +68,7 @@ defmodule Schema.Cache do
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
-    dictionary = Utils.update_dictionary(dictionary, base_event, classes, objects)
+    dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
 
     # TODO: Right now this map is empty. What are observables for, should we keep the logic around them?
     observable_type_id_map = observables_from_dictionary(dictionary, observable_type_id_map)
@@ -101,12 +101,12 @@ defmodule Schema.Cache do
       update_classes(domains, objects)
       |> final_check(dictionary_attributes)
 
-    base_event = final_check(:base_event, base_event, dictionary_attributes)
+    base_class = final_check(:base_class, base_class, dictionary_attributes)
     base_domain = final_check(:base_domain, base_domain, dictionary_attributes)
 
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
-    {base_event, no_req_set} = fix_entity(base_event, no_req_set, :base_class, "class")
+    {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
     {classes, no_req_set} = fix_entities(classes, no_req_set, "class")
     {base_domain, no_req_set} = fix_entity(base_domain, no_req_set, :base_class, "domain")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
@@ -127,7 +127,7 @@ defmodule Schema.Cache do
       categories: categories,
       main_domains: main_domains,
       dictionary: dictionary,
-      base_event: base_event,
+      base_class: base_class,
       base_domain: base_domain,
       classes: classes,
       domains: domains,
@@ -194,14 +194,14 @@ defmodule Schema.Cache do
     end)
   end
 
-  @spec export_base_event(__MODULE__.t()) :: map()
-  def export_base_event(%__MODULE__{base_event: base_event, dictionary: dictionary}) do
-    enrich(base_event, dictionary[:attributes])
+  @spec export_base_class(__MODULE__.t()) :: map()
+  def export_base_class(%__MODULE__{base_class: base_class, dictionary: dictionary}) do
+    enrich(base_class, dictionary[:attributes])
   end
 
   @spec class(__MODULE__.t(), atom()) :: nil | class_t()
-  def class(%__MODULE__{dictionary: dictionary, base_event: base_event}, :base_event) do
-    enrich(base_event, dictionary[:attributes])
+  def class(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
+    enrich(base_class, dictionary[:attributes])
   end
 
   def class(%__MODULE__{dictionary: dictionary, classes: classes}, id) do
@@ -219,10 +219,10 @@ defmodule Schema.Cache do
   """
   @spec class_ex(__MODULE__.t(), atom()) :: nil | class_t()
   def class_ex(
-        %__MODULE__{dictionary: dictionary, objects: objects, base_event: base_event},
-        :base_event
+        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
+        :base_class
       ) do
-    class_ex(base_event, dictionary, objects)
+    class_ex(base_class, dictionary, objects)
   end
 
   def class_ex(%__MODULE__{dictionary: dictionary, classes: classes, objects: objects}, id) do
@@ -284,10 +284,10 @@ defmodule Schema.Cache do
   """
   @spec domain_ex(__MODULE__.t(), atom()) :: nil | domain_t()
   def domain_ex(
-        %__MODULE__{dictionary: dictionary, objects: objects, base_event: base_event},
-        :base_event
+        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
+        :base_class
       ) do
-    domain_ex(base_event, dictionary, objects)
+    domain_ex(base_class, dictionary, objects)
   end
 
   def domain_ex(%__MODULE__{dictionary: dictionary, domains: domains, objects: objects}, id) do
@@ -1152,7 +1152,7 @@ defmodule Schema.Cache do
   end
 
   # Final fix up of an entity definition map.
-  # The term "entity" mean a single profile, object, class, or base_event (a special class).
+  # The term "entity" mean a single profile, object, class, or base_class (a special class).
   @spec fix_entity(map(), MapSet.t(), atom(), String.t()) :: {map(), MapSet.t()}
   defp fix_entity(entity, no_req_set, entity_key, kind) do
     attributes = entity[:attributes]

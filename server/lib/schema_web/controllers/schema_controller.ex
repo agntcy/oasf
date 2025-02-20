@@ -665,8 +665,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema base event class.
   """
-  swagger_path :base_event do
-    get("/api/base_event")
+  swagger_path :base_class do
+    get("/api/base_class")
     summary("Base event")
     description("Get OASF schema base event class.")
     produces("application/json")
@@ -679,9 +679,9 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec base_event(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_event(conn, params) do
-    class(conn, "base_event", params)
+  @spec base_class(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def base_class(conn, params) do
+    class(conn, "base_class", params)
   end
 
   @doc """
@@ -1034,8 +1034,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Export the OASF base event class.
   """
-  swagger_path :export_base_event do
-    get("/export/base_event")
+  swagger_path :export_base_class do
+    get("/export/base_class")
     summary("Export base event class")
     description("Get OASF schema base event class.")
     produces("application/json")
@@ -1048,11 +1048,11 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  def export_base_event(conn, params) do
+  def export_base_class(conn, params) do
     profiles = parse_options(profiles(params))
-    base_event = Schema.export_base_event(profiles)
+    base_class = Schema.export_base_class(profiles)
 
-    send_json_resp(conn, base_event)
+    send_json_resp(conn, base_class)
   end
 
   @doc """
@@ -1506,7 +1506,7 @@ defmodule SchemaWeb.SchemaController do
   Returns randomly generated event sample data for the base event class.
   """
   swagger_path :sample_event do
-    get("/sample/base_event")
+    get("/sample/base_class")
     summary("Base event sample data")
     description("This API returns randomly generated sample data for the base event class.")
     produces("application/json")
@@ -1521,7 +1521,7 @@ defmodule SchemaWeb.SchemaController do
 
   @spec sample_event(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def sample_event(conn, params) do
-    sample_class(conn, "base_event", params)
+    sample_class(conn, "base_class", params)
   end
 
   @doc """

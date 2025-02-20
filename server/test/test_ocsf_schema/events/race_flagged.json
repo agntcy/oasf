@@ -3,7 +3,7 @@
   "category": "system",
   "description": "Occurs when a driver or entire race is flagged.",
   "name": "race_flagged",
-  "extends": "base_event",
+  "extends": "base_class",
   "uid": 5,
   "profiles": [],
   "attributes": {
