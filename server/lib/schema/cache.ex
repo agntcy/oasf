@@ -21,6 +21,8 @@ defmodule Schema.Cache do
 
   @categories_file "categories.json"
   @categories_dir "categories"
+  @main_domains_file "main_domains.json"
+  @domains_dir "domains"
 
   @enforce_keys [
     :version,
@@ -56,14 +58,13 @@ defmodule Schema.Cache do
   def init() do
     version = JsonReader.read_version()
 
-    main_domains = JsonReader.read_main_domains() |> update_main_domains()
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
-
-    {base_domain, domains, all_domains, _observable_type_id_map} =
-      read_domains(main_domains[:attributes])
 
     {base_event, classes, all_classes, observable_type_id_map, categories} =
       read_classes(@categories_file, @categories_dir)
+
+    {base_domain, domains, all_domains, _observable_domains_type_id_map, main_domains} =
+      read_classes(@main_domains_file, @domains_dir)
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -468,43 +469,6 @@ defmodule Schema.Cache do
     {Map.get(classes, :base_event), classes, all_classes, observable_type_id_map, categories}
   end
 
-  defp read_domains(main_domains) do
-    domains = JsonReader.read_domains()
-
-    observable_type_id_map = observables_from_domains(domains)
-
-    domains =
-      domains
-      |> Enum.into(%{}, fn domain_tuple -> attribute_source(domain_tuple) end)
-      |> patch_type("domain")
-      |> resolve_extends()
-
-    # all_domains has just enough info to interrogate the complete domain hierarchy,
-    # removing most details. It can be used to get the caption and parent (extends) of
-    # any domain, including hidden ones.
-    all_domains =
-      Enum.map(
-        domains,
-        fn {domain_key, domain} ->
-          domain =
-            domain
-            |> Map.take([:name, :caption, :extends, :extension])
-            |> Map.put(:hidden?, hidden_domain?(domain_key, domain))
-
-          {domain_key, domain}
-        end
-      )
-      |> Enum.into(%{})
-
-    domains =
-      domains
-      # remove intermediate hidden domains
-      |> Stream.filter(fn {domain_key, domain} -> !hidden_domain?(domain_key, domain) end)
-      |> Enum.into(%{}, fn domain_tuple -> enrich_domain(domain_tuple, main_domains) end)
-
-    {Map.get(domains, :base_domain), domains, all_domains, observable_type_id_map}
-  end
-
   defp read_objects(observable_type_id_map) do
     objects = JsonReader.read_objects()
 
@@ -557,21 +521,6 @@ defmodule Schema.Cache do
     )
   end
 
-  @spec observables_from_domains(map()) :: map()
-  defp observables_from_domains(domains) do
-    Enum.reduce(
-      domains,
-      %{},
-      fn {domain_key, domain}, observable_type_id_map ->
-        validate_domain_observables(domain_key, domain)
-
-        observable_type_id_map
-        |> observables_from_item_attributes(domains, domain_key, domain, "Domain")
-        |> observables_from_item_observables(domains, domain_key, domain, "Domain")
-      end
-    )
-  end
-
   defp validate_class_observables(class_key, class) do
     if Map.has_key?(class, :observable) do
       Logger.error(
@@ -608,49 +557,6 @@ defmodule Schema.Cache do
             " would cause colliding definitions of the same observable type_id values in" <>
             " all children of this class. Instead define observables (of any kind) in" <>
             " non-hidden child classes of \"#{class_key}\"."
-        )
-
-        System.stop(1)
-      end
-    end
-  end
-
-  defp validate_domain_observables(domain_key, domain) do
-    if Map.has_key?(domain, :observable) do
-      Logger.error(
-        "Illegal definition of one or more attributes with \"#{:observable}\" in domain" <>
-          "  \"#{domain_key}\". Defining domain-level observables is not supported (this would be" <>
-          " redundant). Instead use the \"domain_uid\" attribute for querying, correlating, and" <>
-          " reporting."
-      )
-
-      System.stop(1)
-    end
-
-    if not patch_extends?(domain) and hidden_domain?(domain_key, domain) do
-      if Map.has_key?(domain, :attributes) and
-           Enum.any?(
-             domain[:attributes],
-             fn {_attribute_key, attribute} ->
-               Map.has_key?(attribute, :observable)
-             end
-           ) do
-        Logger.error(
-          "Illegal definition of one or more attributes with \"#{:observable}\" definition in" <>
-            " hidden domain \"#{domain_key}\". This would cause colliding definitions of the same" <>
-            " observable type_id values in all children of this domain. Instead define" <>
-            " observables (of any kind) in non-hidden child domains of \"#{domain_key}\"."
-        )
-
-        System.stop(1)
-      end
-
-      if Map.has_key?(domain, :observables) do
-        Logger.error(
-          "Illegal \"#{:observables}\" definition in hidden domain \"#{domain_key}\". This" <>
-            " would cause colliding definitions of the same observable type_id values in" <>
-            " all children of this domain. Instead define observables (of any kind) in" <>
-            " non-hidden child domains of \"#{domain_key}\"."
         )
 
         System.stop(1)
@@ -995,67 +901,6 @@ defmodule Schema.Cache do
     end
   end
 
-  # Add main_domain_uid, domain_uid, and type_uid
-  defp enrich_domain({domain_key, domain}, main_domains) do
-    domain =
-      domain
-      |> update_domain_uid(main_domains)
-      |> add_domain_uid(domain_key)
-      |> add_main_domain_uid(domain_key, main_domains)
-
-    {domain_key, domain}
-  end
-
-  defp update_main_domains(main_domains) do
-    Map.update!(main_domains, :attributes, fn attributes ->
-      Enum.into(attributes, Map.new(), fn {name, md} ->
-        update_main_domain_uid(name, md, md[:extension_id])
-      end)
-    end)
-  end
-
-  defp update_main_domain_uid(name, main_domain, nil) do
-    {name, main_domain}
-  end
-
-  defp update_main_domain_uid(name, main_domain, extension) do
-    {name, Map.update!(main_domain, :uid, fn uid -> Types.main_domain_uid(extension, uid) end)}
-  end
-
-  defp update_domain_uid(domain, main_domains) do
-    {key, main_domain} = Utils.find_entity(main_domains, domain, domain[:main_domain_name])
-
-    domain =
-      if main_domain != nil do
-        domain
-        |> Map.put(:main_domain, Atom.to_string(key))
-        |> Map.put(:main_domain_name, main_domain[:caption])
-      else
-        domain
-      end
-
-    md_uid = main_domain[:uid] || 0
-    domain_uid = domain[:uid] || 0
-
-    try do
-      case domain[:extension_id] do
-        nil ->
-          Map.put(domain, :uid, Types.domain_uid(md_uid, domain_uid))
-
-        ext ->
-          Map.put(domain, :uid, Types.domain_uid(Types.category_uid_ex(ext, md_uid), domain_uid))
-      end
-    rescue
-      ArithmeticError ->
-        error("invalid domain #{domain[:name]}: #{inspect(Map.delete(domain, :attributes))}")
-    end
-  end
-
-  @spec hidden_domain?(atom(), map()) :: boolean()
-  defp hidden_domain?(domain_key, domain) do
-    domain_key != :base_event and !Map.has_key?(domain, :uid)
-  end
-
   defp add_class_uid(data, name) do
     class_name = data[:caption]
 
@@ -1116,68 +961,6 @@ defmodule Schema.Cache do
       )
     end
     |> put_in([:attributes, :category_uid, :_source], name)
-  end
-
-  defp add_domain_uid(data, name) do
-    domain_name = data[:caption]
-
-    domain_uid =
-      data[:uid]
-      |> Integer.to_string()
-      |> String.to_atom()
-
-    enum = %{
-      :caption => domain_name,
-      :description => data[:description]
-    }
-
-    data
-    |> put_in([:attributes, :domain_uid, :enum], %{domain_uid => enum})
-    |> put_in([:attributes, :domain_uid, :_source], name)
-    |> put_in(
-      [:attributes, :domain_name, :description],
-      "The domain name, as defined by domain_uid value: <code>#{domain_name}</code>."
-    )
-  end
-
-  defp add_main_domain_uid(domain, name, main_domains) do
-    main_domain_name = domain[:main_domain]
-
-    {_key, main_domain} = Utils.find_entity(main_domains, domain, main_domain_name)
-
-    if main_domain == nil do
-      case main_domain_name do
-        "other" ->
-          Logger.info("Domain \"#{domain[:name]}\" uses special undefined main domain \"other\"")
-
-        nil ->
-          Logger.warning("Domain \"#{domain[:name]}\" has no main domain")
-
-        undefined ->
-          Logger.warning("Domain \"#{domain[:name]}\" has undefined main domain: #{undefined}")
-      end
-
-      # Match update_domain_uid and use 0 for undefined main domains
-      Map.put(domain, :main_domain_uid, 0)
-    else
-      main_domain_uid = main_domain[:uid]
-
-      domain
-      |> Map.put(:main_domain_uid, main_domain_uid)
-      |> update_in(
-        [:attributes, :main_domain_uid, :enum],
-        fn _enum ->
-          id = Integer.to_string(main_domain_uid) |> String.to_atom()
-          %{id => main_domain}
-        end
-      )
-      |> put_in(
-        [:attributes, :main_domain_name, :description],
-        "The domain's main_domain name, as defined by main_domain_uid value:" <>
-          " <code>#{main_domain[:caption]}</code>."
-      )
-    end
-    |> put_in([:attributes, :main_domain_uid, :_source], name)
   end
 
   # Adds :_source key to each attribute of item. This must be done before processing (compiling)

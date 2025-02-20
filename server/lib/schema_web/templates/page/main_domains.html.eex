@@ -50,7 +50,7 @@ limitations under the License.
         <table class="table table-striped table-borderless">
           <tbody class="searchable">
             <td>
-            <%= for {id, class} <- main_domain[:domains] do %>
+            <%= for {id, class} <- main_domain[:classes] do %>
               <% name = Atom.to_string(id) %>
               <% path = Routes.static_path(@conn, "/domains/" <> name) %>
               <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>

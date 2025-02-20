@@ -148,12 +148,12 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
-        domains = sort_by(data[:domains], :uid)
+        domains = sort_by(data[:classes], :uid)
 
         render(conn, "main_domain.html",
           extensions: Schema.extensions(),
           profiles: SchemaController.get_profiles(params),
-          data: Map.put(data, :domains, domains)
+          data: Map.put(data, :classes, domains)
         )
     end
   end
@@ -171,7 +171,6 @@ defmodule SchemaWeb.PageController do
       data: data
     )
   end
-
 
   @doc """
   Renders the attribute dictionary.
@@ -229,7 +228,6 @@ defmodule SchemaWeb.PageController do
       data: data
     )
   end
-
 
   @doc """
   Redirects from the older /base_domain URL to /domains/base_domain.
@@ -318,7 +316,7 @@ defmodule SchemaWeb.PageController do
   defp sort_domains(main_domains) do
     Map.update!(main_domains, :attributes, fn list ->
       Enum.map(list, fn {name, main_domain} ->
-        {name, Map.update!(main_domain, :domains, &sort_by(&1, :uid))}
+        {name, Map.update!(main_domain, :classes, &sort_by(&1, :uid))}
       end)
     end)
   end

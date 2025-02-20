@@ -110,13 +110,11 @@ defmodule Schema.Repo do
         nil ->
           nil
 
-          main_domain ->
+        main_domain ->
           add_domains(extensions, {id, main_domain}, Cache.domains(schema))
       end
     end)
   end
-
-
 
   @spec data_types() :: map()
   def data_types() do
@@ -408,20 +406,20 @@ defmodule Schema.Repo do
     list =
       domains
       |> Stream.filter(fn {_name, domain} ->
-        md = Map.get(domain, :main_domain)
+        md = Map.get(domain, :category)
         md == main_domain_uid or Utils.to_uid(domain[:extension], md) == id
       end)
       |> Stream.map(fn {name, domain} ->
         domain =
           domain
-          |> Map.delete(:main_domain)
-          |> Map.delete(:main_domain_name)
+          |> Map.delete(:category)
+          |> Map.delete(:category_name)
 
         {name, domain}
       end)
       |> Enum.to_list()
 
-    Map.put(main_domain, :domains, list)
+    Map.put(main_domain, :classes, list)
     |> Map.put(:name, main_domain_uid)
   end
 
@@ -432,7 +430,7 @@ defmodule Schema.Repo do
       Enum.filter(
         domains,
         fn {_name, domain} ->
-          md = domain[:main_domain]
+          md = domain[:category]
 
           case domain[:extension] do
             nil ->
@@ -445,6 +443,6 @@ defmodule Schema.Repo do
         end
       )
 
-    Map.put(main_domain, :domains, list)
+    Map.put(main_domain, :classes, list)
   end
 end

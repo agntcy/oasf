@@ -15,8 +15,8 @@ limitations under the License.
   show("#schema");
 </script>
 
-<% main_domain = @data[:main_domain] %>
-<% main_domain_name = @data[:main_domain_name] %>
+<% main_domain = @data[:category] %>
+<% main_domain_name = @data[:category_name] %>
 <% extension = @data[:extension] %>
 <% observables = @data[:observables] %>
 <% references = @data[:references] %>

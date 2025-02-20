@@ -712,7 +712,7 @@ defmodule Schema do
   end
 
   defp reduce_main_domain(data) do
-    Map.update(data, :domains, [], fn domains ->
+    Map.update(data, :classes, [], fn domains ->
       Enum.into(domains, %{}, fn {name, domain} ->
         {name, reduce_domain(domain)}
       end)
