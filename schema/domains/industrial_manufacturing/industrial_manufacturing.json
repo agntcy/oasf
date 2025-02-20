@@ -1,8 +1,8 @@
 {
-  "_uid": 15,
+  "uid": 15,
   "caption": "Industrial Manufacturing",
   "description": "Production of goods, use of automation and technology in manufacturing, and industrial processes to create products on a large scale. Subdomains: Automation, Robotics, Supply Chain Management, Lean Manufacturing, Process Engineering",
-  "extends": "base_domain",
+  "extends": "base_class",
   "name": "industrial_manufacturing",
   "attributes": {}
 }

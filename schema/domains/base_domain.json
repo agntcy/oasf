@@ -2,7 +2,7 @@
   "caption": "Domain of Application",
   "category": "other",
   "description": "Domain of application events report the activity, existence, and/or state of domain of application for tracking, mission planning, and other related activities.",
-  "name": "base_domain",
+  "name": "base_class",
   "attributes": {
     "name": {
       "group": "classification",

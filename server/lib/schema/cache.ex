@@ -19,11 +19,6 @@ defmodule Schema.Cache do
 
   require Logger
 
-  @categories_file "categories.json"
-  @categories_dir "categories"
-  @main_domains_file "main_domains.json"
-  @domains_dir "domains"
-
   @enforce_keys [
     :version,
     :profiles,
@@ -51,6 +46,11 @@ defmodule Schema.Cache do
   @type main_domain_t() :: map()
   @type dictionary_t() :: map()
 
+  @categories_file "categories.json"
+  @categories_dir "categories"
+  @main_domains_file "main_domains.json"
+  @domains_dir "domains"
+
   @doc """
   Load the schema files and initialize the cache.
   """
@@ -69,6 +69,8 @@ defmodule Schema.Cache do
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
     dictionary = Utils.update_dictionary(dictionary, base_event, classes, objects)
+
+    # TODO: Right now this map is empty. What are observables for, should we keep the logic around them?
     observable_type_id_map = observables_from_dictionary(dictionary, observable_type_id_map)
 
     dictionary_attributes = dictionary[:attributes]
@@ -100,13 +102,13 @@ defmodule Schema.Cache do
       |> final_check(dictionary_attributes)
 
     base_event = final_check(:base_event, base_event, dictionary_attributes)
-    # base_domain = final_check(:base_domain, base_domain, dictionary_attributes)
+    base_domain = final_check(:base_domain, base_domain, dictionary_attributes)
 
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
-    {base_event, no_req_set} = fix_entity(base_event, no_req_set, :base_event, "class")
+    {base_event, no_req_set} = fix_entity(base_event, no_req_set, :base_class, "class")
     {classes, no_req_set} = fix_entities(classes, no_req_set, "class")
-    {base_domain, no_req_set} = fix_entity(base_domain, no_req_set, :base_domain, "domain")
+    {base_domain, no_req_set} = fix_entity(base_domain, no_req_set, :base_class, "domain")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
     {objects, no_req_set} = fix_entities(objects, no_req_set, "object")
 
@@ -466,7 +468,7 @@ defmodule Schema.Cache do
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> Enum.into(%{}, fn class_tuple -> enrich_class(class_tuple, categories_attributes) end)
 
-    {Map.get(classes, :base_event), classes, all_classes, observable_type_id_map, categories}
+    {Map.get(classes, :base_class), classes, all_classes, observable_type_id_map, categories}
   end
 
   defp read_objects(observable_type_id_map) do
@@ -842,7 +844,7 @@ defmodule Schema.Cache do
 
   @spec hidden_class?(atom(), map()) :: boolean()
   defp hidden_class?(class_key, class) do
-    class_key != :base_event and !Map.has_key?(class, :uid)
+    class_key != :base_class and !Map.has_key?(class, :uid)
   end
 
   # Add category_uid, class_uid, and type_uid

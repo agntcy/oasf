@@ -1,7 +1,7 @@
 {
   "caption": "Tabular / Text",
   "category": "tabular_text",
-  "extends": "base_event",
+  "extends": "base_class",
   "name": "tabular_text",
   "attributes": {}
 }

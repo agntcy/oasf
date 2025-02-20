@@ -2,7 +2,7 @@
   "caption": "Base Event",
   "category": "other",
   "description": "The base event is a generic and concrete event. It also defines a set of attributes available in most event classes. As a generic event that does not belong to any event category, it could be used to log events that are not otherwise defined by the schema.",
-  "name": "base_event",
+  "name": "base_class",
   "attributes": {
     "name": {
       "group": "classification",

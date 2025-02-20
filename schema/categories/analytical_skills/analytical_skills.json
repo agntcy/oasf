@@ -1,7 +1,7 @@
 {
   "caption": "Analytical Skills",
   "category": "analytical_skills",
-  "extends": "base_event",
+  "extends": "base_class",
   "name": "analytical_skills",
   "attributes": {}
 }

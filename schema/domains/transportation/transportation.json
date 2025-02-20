@@ -1,8 +1,8 @@
 {
-  "_uid": 16,
+  "uid": 16,
   "caption": "Transportation",
   "description": "Systems and processes involved in the movement of goods and people, as well as the physical infrastructure supporting them. Subdomains: Logistics, Automotive, Public Transit, Supply Chain, Freight, Autonomous Vehicles",
-  "extends": "base_domain",
+  "extends": "base_class",
   "name": "transportation",
   "attributes": {}
 }
