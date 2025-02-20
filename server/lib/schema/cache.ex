@@ -20,6 +20,7 @@ defmodule Schema.Cache do
   require Logger
 
   @categories_file "categories.json"
+  @categories_dir "categories"
 
   @enforce_keys [
     :version,
@@ -62,7 +63,7 @@ defmodule Schema.Cache do
       read_domains(main_domains[:attributes])
 
     {base_event, classes, all_classes, observable_type_id_map, categories} =
-      read_classes(@categories_file)
+      read_classes(@categories_file, @categories_dir)
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -427,11 +428,11 @@ defmodule Schema.Cache do
     end
   end
 
-  defp read_classes(categories_file) do
+  defp read_classes(categories_file, classes_dir) do
     categories = JsonReader.read_categories(categories_file) |> update_categories()
     categories_attributes = categories[:attributes]
 
-    classes = JsonReader.read_classes()
+    classes = JsonReader.read_classes(classes_dir)
 
     observable_type_id_map = observables_from_classes(classes)
 

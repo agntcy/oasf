@@ -18,7 +18,6 @@ defmodule Schema.JsonReader do
   require Logger
 
   # The default location of the schema file"schema"
-  @categories_dir "categories"
   @domains_dir "domains"
   @objects_dir "objects"
   @profiles_dir "profiles"
@@ -67,9 +66,9 @@ defmodule Schema.JsonReader do
     GenServer.call(__MODULE__, :read_objects)
   end
 
-  @spec read_classes() :: map()
-  def read_classes() do
-    GenServer.call(__MODULE__, :read_classes)
+  @spec read_classes(String.t()) :: map()
+  def read_classes(classes_dir) do
+    GenServer.call(__MODULE__, {:read_classes, classes_dir})
   end
 
   @spec read_domains() :: map()
@@ -153,8 +152,8 @@ defmodule Schema.JsonReader do
   end
 
   @impl true
-  def handle_call(:read_classes, _from, {home, ext} = state) do
-    {:reply, read_classes(home, ext), state}
+  def handle_call({:read_classes, classes_dir}, _from, {home, ext} = state) do
+    {:reply, read_classes(home, ext, classes_dir), state}
   end
 
   @impl true
@@ -256,15 +255,15 @@ defmodule Schema.JsonReader do
     end)
   end
 
-  defp read_classes(home, []) do
-    read_schema_dir(Map.new(), home, Path.join(home, @categories_dir))
+  defp read_classes(home, [], classes_dir) do
+    read_schema_dir(Map.new(), home, Path.join(home, classes_dir))
   end
 
-  defp read_classes(home, extensions) do
-    events = read_schema_dir(Map.new(), home, Path.join(home, @categories_dir))
+  defp read_classes(home, extensions, classes_dir) do
+    events = read_schema_dir(Map.new(), home, Path.join(home, classes_dir))
 
     Enum.reduce(extensions, events, fn ext, acc ->
-      read_extension_dir(acc, home, ext, @categories_dir)
+      read_extension_dir(acc, home, ext, classes_dir)
     end)
   end
 
