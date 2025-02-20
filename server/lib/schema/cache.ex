@@ -96,7 +96,7 @@ defmodule Schema.Cache do
       |> final_check(dictionary_attributes)
 
     domains =
-      update_domains(domains, objects)
+      update_classes(domains, objects)
       |> final_check(dictionary_attributes)
 
     base_event = final_check(:base_event, base_event, dictionary_attributes)
@@ -1317,26 +1317,6 @@ defmodule Schema.Cache do
 
       links ->
         update_linked_profiles(:class, links, object, classes)
-    end
-  end
-
-  defp update_domains(domains, objects) do
-    Enum.reduce(objects, domains, fn {name, object}, acc ->
-      if Map.has_key?(object, :profiles) do
-        update_domain_profiles(name, object, acc)
-      else
-        acc
-      end
-    end)
-  end
-
-  defp update_domain_profiles(_name, object, domains) do
-    case object[:_links] do
-      nil ->
-        domains
-
-      links ->
-        update_linked_profiles(:domain, links, object, domains)
     end
   end
 
