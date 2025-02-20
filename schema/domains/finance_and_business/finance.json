@@ -4,6 +4,6 @@
   "description": "Managing money, investments, and financial risks within businesses or for individuals. Subdomains: Corporate Finance, Personal Finance, Risk Management, Accounting, Financial Analysis",
   "extends": "finance_and_business",
   "name": "finance",
-  "main_domain_name": "finance_and_business",
+  "category": "finance_and_business",
   "attributes": {}
 }

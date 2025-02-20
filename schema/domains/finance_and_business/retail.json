@@ -4,6 +4,6 @@
   "description": "Sale of goods and services directly to consumers through various channels. Subdomains: E-commerce, In-store Retail, Inventory Management, Customer Experience, Omnichannel Retail",
   "extends": "finance_and_business",
   "name": "retail",
-  "main_domain_name": "finance_and_business",
+  "category": "finance_and_business",
   "attributes": {}
 }

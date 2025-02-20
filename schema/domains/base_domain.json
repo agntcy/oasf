@@ -1,14 +1,23 @@
 {
   "caption": "Domain of Application",
-  "main_domain": "other",
+  "category": "other",
   "description": "Domain of application events report the activity, existence, and/or state of domain of application for tracking, mission planning, and other related activities.",
   "name": "base_domain",
   "attributes": {
-    "main_domain_name": {
+    "name": {
+      "group": "classification",
+      "description": "The name of the category.",
+      "requirement": "required"
+    },
+    "annotations": {
       "group": "classification",
       "requirement": "optional"
     },
-    "main_domain_uid": {
+    "category_name": {
+      "group": "classification",
+      "requirement": "optional"
+    },
+    "category_uid": {
       "group": "classification",
       "requirement": "required",
       "enum": {
@@ -17,11 +26,11 @@
         }
       }
     },
-    "domain_name": {
+    "class_name": {
       "group": "classification",
       "requirement": "optional"
     },
-    "domain_uid": {
+    "class_uid": {
       "group": "classification",
       "requirement": "required",
       "enum": {
