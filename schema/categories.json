@@ -1,6 +1,6 @@
 {
-  "caption": "Categories",
-  "description": "The OASF categories organize attribute classes, each aligned with a specific area of focus.",
+  "caption": "Skills",
+  "description": "A structured view of distinct abilities, defining the capabilities within the Open Agentic Schema Framework.",
   "name": "category",
   "attributes": {
     "nlp": {

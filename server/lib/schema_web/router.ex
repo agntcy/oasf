@@ -68,6 +68,11 @@ defmodule SchemaWeb.Router do
     get "/data_types", PageController, :data_types
 
     get "/agent_model", PageController, :agent_model
+
+    get "/skills", PageController, :categories
+
+    get "/skills/:id", PageController, :categories
+    get "/skills/:extension/:id", PageController, :categories
   end
 
   # Other scopes may use custom stacks.

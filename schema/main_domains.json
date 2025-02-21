@@ -1,6 +1,6 @@
 {
   "caption": "Domain of Application",
-  "description": "The OASF categories organize attribute classes, each aligned with a specific domain or area of focus.",
+  "description": "A comprehensive table outlining distinct fields of application and knowledge areas within the framework.",
   "name": "main_domains",
   "attributes": {
     "technology": {
@@ -9,7 +9,7 @@
       "description": "Development, management, and use of systems, devices, and software to solve problems and enhance human capabilities."
     },
     "healthcare": {
-      "uid": 2,
+      "uid": 9,
       "caption": "Healthcare",
       "description": "Management, delivery, and innovation of medical services, treatments, and technologies aimed at improving the health and well-being of individuals and populations."
     },
@@ -44,7 +44,7 @@
       "description": "Systems and processes involved in the movement of goods and people, as well as the physical infrastructure supporting them. Subdomains: Logistics, Automotive, Public Transit, Supply Chain, Freight, Autonomous Vehicles"
     },
     "finance_and_business": {
-      "uid": 9,
+      "uid": 2,
       "caption": "Finance and Business",
       "description": "Managing money, investments, and financial risks within businesses or for individuals. Subdomains: Corporate Finance, Personal Finance, Risk Management, Accounting, Financial Analysis"
     }

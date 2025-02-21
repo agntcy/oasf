@@ -28,14 +28,14 @@ limitations under the License.
     <h3 class="extensions">
       <%= @data[:caption] %>
       <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<sup><%= extension || "" %></sup>
-        Class
+        Skill
       </span>
     </h3>
 
     <%= if category_name != nil do %>
       <h4 class="extensions">
         <a href="<%= path %>"><%= category_name %></a>
-         Category
+         Skill Category
       </h4>
     <% end %>
     <div class="text-secondary">

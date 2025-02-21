@@ -181,7 +181,7 @@ limitations under the License.
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="extensions navbar-nav ml-auto">
       <li id="categories_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/categories") %>'>Categories</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/skills") %>'>Skills</a>
       </li>
       <li id="domains_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
@@ -191,7 +191,7 @@ limitations under the License.
       </li>
       <li id="classes_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/classes") %>'>Classes</a>
-      </li>--> 
+      </li>-->
       <li id="base_class_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Data Model</a>
       </li>

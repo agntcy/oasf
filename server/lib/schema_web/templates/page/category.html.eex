@@ -15,7 +15,7 @@ limitations under the License.
     <h3><%= @data[:caption] %>
       <span class="text-secondary">
         [<%= @data[:uid] %>]<sup><%= @data[:extension] || "" %></sup>
-        Category
+        Skill
       </span>
     </h3>
     <div class="text-dark"><%= raw description(@data) %></div>
