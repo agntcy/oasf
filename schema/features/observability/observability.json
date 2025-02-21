@@ -1,0 +1,8 @@
+{
+  "caption": "Observability",
+  "description": "Observability feature set",
+  "extends": "base_observe_eval",
+  "name": "observability",
+  "category": "observability",
+  "attributes": {}
+}

@@ -173,6 +173,40 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
+  Renders main features or the features in a given main feature.
+  """
+  @spec main_features(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_features(conn, %{"id" => id} = params) do
+    case SchemaController.main_feature_features(params) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      data ->
+        features = sort_by(data[:classes], :uid)
+
+        render(conn, "main_feature.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: Map.put(data, :classes, features)
+        )
+    end
+  end
+
+  def main_features(conn, params) do
+    data =
+      Map.put_new(params, "extensions", "")
+      |> SchemaController.main_features()
+      |> sort_attributes(:uid)
+      |> sort_features()
+
+    render(conn, "main_features.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: data
+    )
+  end
+
+  @doc """
   Renders the attribute dictionary.
   """
   @spec dictionary(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -273,6 +307,49 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
+  Redirects from the older /base_feature URL to /features/base_feature.
+  """
+  @spec base_feature(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def base_feature(conn, _params) do
+    redirect(conn, to: "/features/base_feature")
+  end
+
+  @doc """
+  Renders features.
+  """
+  @spec features(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def features(conn, %{"id" => id} = params) do
+    extension = params["extension"]
+
+    case Schema.feature(extension, id) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      data ->
+        data =
+          data
+          |> sort_attributes()
+          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+
+        render(conn, "feature.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: data
+        )
+    end
+  end
+
+  def features(conn, params) do
+    data = SchemaController.features(params) |> sort_by(:uid)
+
+    render(conn, "features.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: data
+    )
+  end
+
+  @doc """
   Renders objects.
   """
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -317,6 +394,14 @@ defmodule SchemaWeb.PageController do
     Map.update!(main_domains, :attributes, fn list ->
       Enum.map(list, fn {name, main_domain} ->
         {name, Map.update!(main_domain, :classes, &sort_by(&1, :uid))}
+      end)
+    end)
+  end
+
+  defp sort_features(main_features) do
+    Map.update!(main_features, :attributes, fn list ->
+      Enum.map(list, fn {name, main_feature} ->
+        {name, Map.update!(main_feature, :classes, &sort_by(&1, :uid))}
       end)
     end)
   end

@@ -143,6 +143,38 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
+      FeatureDesc:
+        swagger_schema do
+          title("Feature Descriptor")
+          description("Schema feature descriptor.")
+
+          properties do
+            name(:string, "Feature name", required: true)
+            caption(:string, "Feature caption", required: true)
+            description(:string, "Feature description", required: true)
+            main_feature(:string, "Feature's main feature", required: true)
+            main_feature_name(:string, "Feature's main feature's caption", required: true)
+            profiles(:array, "Feature profiles", items: %PhoenixSwagger.Schema{type: :string})
+            uid(:integer, "Feature unique identifier", required: true)
+          end
+
+          example([
+            %{
+              caption: "DHCP Activity",
+              main_feature: "network",
+              main_feature_name: "Network Activity",
+              description: "DHCP Activity events report MAC to IP assignment via DHCP.",
+              name: "dhcp_activity",
+              profiles: [
+                "cloud",
+                "datetime",
+                "host",
+                "file_security"
+              ],
+              uid: 4004
+            }
+          ])
+        end,
       ObjectDesc:
         swagger_schema do
           title("Object Descriptor")
@@ -629,6 +661,85 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
+  Get the schema main features.
+  """
+  swagger_path :main_features do
+    get("/api/main_features")
+    summary("List main features")
+    description("Get OASF schema main features.")
+    produces("application/json")
+    tag("Features")
+
+    parameters do
+      extensions(:query, :array, "Related extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @doc """
+  Returns the list of main features.
+  """
+  @spec main_features(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_features(conn, params) do
+    send_json_resp(conn, main_features(params))
+  end
+
+  @spec main_features(map()) :: map()
+  def main_features(params) do
+    parse_options(extensions(params)) |> Schema.main_features()
+  end
+
+  @doc """
+  Get the features defined in a given main feature.
+  """
+  swagger_path :main_feature do
+    get("/api/main_features/{name}")
+    summary("List sub features of main feature")
+
+    description(
+      "Get OASF schema features defined in the named main feature. The main feature name may contain an" <>
+      " extension name. For example, \"dev/policy\"."
+    )
+
+    produces("application/json")
+    tag("Features")
+
+    parameters do
+      name(:path, :string, "Main feature name", required: true)
+
+      extensions(:query, :array, "Related extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+    response(404, "Main feature <code>name</code> not found")
+  end
+
+  @spec main_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_feature(conn, %{"id" => id} = params) do
+    case main_feature_features(params) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Main feature #{id} not found"})
+
+      data ->
+        send_json_resp(conn, data)
+    end
+  end
+
+  @spec main_feature_features(map()) :: map() | nil
+  def main_feature_features(params) do
+    name = params["id"]
+    extension = extension(params)
+    extensions = parse_options(extensions(params))
+
+    Schema.main_feature(extensions, extension, name)
+  end
+
+  @doc """
   Get the schema dictionary.
   """
   swagger_path :dictionary do
@@ -704,6 +815,28 @@ defmodule SchemaWeb.SchemaController do
   @spec base_domain(Plug.Conn.t(), any) :: Plug.Conn.t()
   def base_domain(conn, params) do
     class(conn, "base_domain", params)
+  end
+
+  @doc """
+  Get the schema base feature class.
+  """
+  swagger_path :base_feature do
+    get("/api/base_feature")
+    summary("Base feature")
+    description("Get OASF schema base feature class.")
+    produces("application/json")
+    tag("Features")
+
+    parameters do
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  @spec base_feature(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def base_feature(conn, params) do
+    class(conn, "base_feature", params)
   end
 
   @doc """
@@ -883,6 +1016,96 @@ defmodule SchemaWeb.SchemaController do
 
       profiles ->
         Schema.domains(extensions, profiles)
+    end
+  end
+
+  @doc """
+  Get a feature by name.
+  get /api/features/:name
+  """
+  swagger_path :feature do
+    get("/api/features/{name}")
+    summary("Feature")
+
+    description(
+      "Get OASF schema feature by name. The feature name may contain an extension name." <>
+      " For example, \"dev/cpu_usage\"."
+    )
+
+    produces("application/json")
+    tag("Features")
+
+    parameters do
+      name(:path, :string, "Feature name", required: true)
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success")
+    response(404, "Feature <code>name</code> not found")
+  end
+
+  @spec feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def feature(conn, %{"id" => id} = params) do
+    feature(conn, id, params)
+  end
+
+  defp feature(conn, id, params) do
+    extension = extension(params)
+
+    case Schema.feature(extension, id, parse_options(profiles(params))) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Feature #{id} not found"})
+
+      data ->
+        feature = add_objects(data, params)
+        send_json_resp(conn, feature)
+    end
+  end
+
+  @doc """
+  Get the schema feature.
+  """
+  swagger_path :features do
+    get("/api/features")
+    summary("List features")
+    description("Get OASF schema features.")
+    produces("application/json")
+    tag("Features")
+
+    parameters do
+      extensions(:query, :array, "Related extensions to include in response.",
+        items: [type: :string]
+      )
+
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success", :FeatureDesc)
+  end
+
+  @spec features(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def features(conn, params) do
+    features =
+      Enum.map(features(params), fn {_name, feature} ->
+        Schema.reduce_feature(feature)
+      end)
+
+    send_json_resp(conn, features)
+  end
+
+  @doc """
+  Returns the list of features.
+  """
+  @spec features(map) :: map
+  def features(params) do
+    extensions = parse_options(extensions(params))
+
+    case parse_options(profiles(params)) do
+      nil ->
+        Schema.features(extensions)
+
+      profiles ->
+        Schema.features(extensions, profiles)
     end
   end
 

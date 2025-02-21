@@ -1,0 +1,8 @@
+{
+  "caption": "Runtime",
+  "description": "Runtime feature set",
+  "extends": "base_class",
+  "name": "runtime",
+  "category": "runtime",
+  "attributes": {}
+}

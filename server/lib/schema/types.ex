@@ -58,6 +58,28 @@ defmodule Schema.Types do
   def domain_uid(main_domain_uid, domain_id), do: main_domain_uid * 1000 + domain_id
 
   @doc """
+  Makes a main feature uid for the given main feature and extension identifiers.
+  """
+  @spec main_feature_uid(number, number) :: number
+  def main_feature_uid(extension_uid, main_feature_id), do: extension_uid * 100 + main_feature_id
+
+  @doc """
+  Makes a main feature uid for the given main feature and extension identifiers. Checks if the
+  main feature uid already has the extension.
+  """
+  @spec main_feature_uid_ex(number, number) :: number
+  def main_feature_uid_ex(extension_uid, main_feature_id) when main_feature_id < 100,
+      do: main_feature_uid(extension_uid, main_feature_id)
+
+  def main_feature_uid_ex(_extension_uid, main_feature_id), do: main_feature_id
+
+  @doc """
+  Makes a feature uid for the given feature and feature identifiers.
+  """
+  @spec feature_uid(number, number) :: number
+  def feature_uid(main_feature_uid, feature_id), do: main_feature_uid * 1000 + feature_id
+
+  @doc """
   Makes a type uid for the given class and activity identifiers.
   """
   @spec type_uid(number, number) :: number

@@ -54,6 +54,30 @@ defmodule SchemaWeb.PageView do
     end
   end
 
+  def feature_graph_path(conn, data) do
+    feature_name = data[:name]
+
+    case data[:extension] do
+      nil ->
+        Routes.static_path(conn, "/feature/graph/" <> feature_name)
+
+      extension ->
+        Routes.static_path(conn, "/feature/graph/" <> extension <> "/" <> feature_name)
+    end
+  end
+
+  def feature_path(conn, data) do
+    feature_name = data[:name]
+
+    case data[:extension] do
+      nil ->
+        Routes.static_path(conn, "/features/" <> feature_name)
+
+      extension ->
+        Routes.static_path(conn, "/features/" <> extension <> "/" <> feature_name)
+    end
+  end
+
   def object_graph_path(conn, data) do
     object_name = data[:name]
 
@@ -108,6 +132,24 @@ defmodule SchemaWeb.PageView do
           Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
           |> Enum.map_join(", ", fn name ->
             profile_link(conn, get_in(profiles, [name, :caption]), name)
+          end),
+          "."
+        ]
+    end
+  end
+
+  def feature_profiles(conn, feature, profiles) do
+    case feature[:profiles] || [] do
+      [] ->
+        ""
+
+      list ->
+        [
+          "<h5 class='mt-3'>Profiles</h5>",
+          "Applicable profiles: ",
+          Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
+          |> Enum.map_join(", ", fn name ->
+                                    profile_link(conn, get_in(profiles, [name, :caption]), name)
           end),
           "."
         ]
@@ -288,6 +330,19 @@ defmodule SchemaWeb.PageView do
 
     if ok do
       format_hierarchy(path, all_domains, "domain")
+    else
+      to_string(source)
+    end
+  end
+
+  @spec format_feature_attribute_source(atom(), map()) :: String.t()
+  def format_feature_attribute_source(feature_key, field) do
+    all_features = Schema.all_features()
+    source = get_hierarchy_source(field)
+    {ok, path} = build_hierarchy(Schema.Utils.to_uid(feature_key), source, all_features)
+
+    if ok do
+      format_hierarchy(path, all_features, "feature")
     else
       to_string(source)
     end

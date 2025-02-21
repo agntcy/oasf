@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Logging",
+  "description": "Describes logging capabilities",
+  "name": "logging",
+  "extends": "observability",
+  "category": "observability",
+  "attributes": {}
+}

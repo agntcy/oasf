@@ -1,0 +1,27 @@
+{
+  "caption": "Features",
+  "description": "A comprehensive table outlining feature sets of application and knowledge areas within the framework.",
+  "name": "main_features",
+  "attributes": {
+    "observability": {
+      "uid": 1,
+      "caption": "Observability",
+      "description": "Observability feature set."
+    },
+    "evaluation": {
+      "uid": 2,
+      "caption": "Evaluation",
+      "description": "Evaluation feature set."
+    },
+    "runtime": {
+      "uid": 3,
+      "caption": "Runtime",
+      "description": "Runtime feature set."
+    },
+    "identity": {
+      "uid": 4,
+      "caption": "Identity",
+      "description": "Identity feature set."
+    }
+  }
+}

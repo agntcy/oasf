@@ -124,7 +124,8 @@
 <% end %>
 
 <%= if @data[:name] == "agent" do %>
-<script defer src="https://unpkg.com/pretty-json-custom-element/index.js"></script>
+<script defer src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
 <div class="row">
   <div class="col-md move-up">
     <h3 class="extensions">
@@ -135,7 +136,7 @@
       Example representation of an agent in a JSON format.
     </div>
     <div class="text-secondary mt-2">
-    <pretty-json expand="10">
+<pre class="prettyprint" style="white-space: break-spaces; word-break: break-word; height: 400px">
 {
   "name": "directory.agntcy.org/cisco/marketing-strategy",
   "version": "v1.0.0",
@@ -156,7 +157,7 @@
   ],
   "extensions": [
     {
-      "name": "oasf.agntcy.org/io-mapper",
+      "name": "oasf.agntcy.org/features/runtime/io-mapper",
       "version": "v0.0.0",
       "specs": {
         "input": {
@@ -197,11 +198,11 @@
       }
     },
     {
-      "name": "oasf.agntcy.org/runtime",
+      "name": "oasf.agntcy.org/features/runtime",
       "version": "v0.0.0",
       "specs": {
-          "language": "python",
-          "version": "<=3.11,>3.13",
+        "language": "python",
+        "version": "<=3.11,>3.13",
         "config": {},
         "interrupts": [],
         "deployments": [
@@ -243,7 +244,7 @@
       }
     },
     {
-      "name": "oasf.agntcy.org/framework",
+      "name": "oasf.agntcy.org/features/framework",
       "version": "v0.0.0",
       "specs": {
         "type": "crewai",
@@ -251,10 +252,17 @@
         "tasks": {},
         "config": {}
       }
+    },
+    {
+      "name": "oasf.agntcy.org/features/observability/logging",
+      "version": "v0.0.0",
+      "specs": {
+        "config": {}
+      }
     }
   ]
 }
-    </pretty-json>
+</pre>
     </div>
   </div>
 </div>

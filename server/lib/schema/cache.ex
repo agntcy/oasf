@@ -22,27 +22,36 @@ defmodule Schema.Cache do
   @enforce_keys [
     :version,
     :profiles,
-    :categories,
-    :main_domains,
     :dictionary,
-    :base_class,
-    :base_domain,
-    :classes,
-    :domains,
-    :all_classes,
-    :all_domains,
     :objects,
-    :all_objects
+    :all_objects,
+    # domain libs
+    :domains,
+    :all_domains,
+    :main_domains,
+    :base_domain,
+    # category libs
+    :classes,
+    :all_classes,
+    :categories,
+    :base_class,
+    # feature libs
+    :features,
+    :all_features,
+    :main_features,
+    :base_feature,
   ]
   defstruct ~w[
-    version profiles dictionary base_class base_domain categories main_domains classes domains all_classes all_domains objects all_objects
+    version profiles dictionary base_class base_domain categories main_domains classes domains all_classes all_domains objects all_objects features all_features main_features base_feature
   ]a
 
   @type t() :: %__MODULE__{}
   @type class_t() :: map()
   @type domain_t() :: map()
+  @type feature_t() :: map()
   @type object_t() :: map()
   @type category_t() :: map()
+  @type main_feature_t() :: map()
   @type main_domain_t() :: map()
   @type dictionary_t() :: map()
 
@@ -50,6 +59,8 @@ defmodule Schema.Cache do
   @categories_dir "categories"
   @main_domains_file "main_domains.json"
   @domains_dir "domains"
+  @main_features_file "main_features.json"
+  @features_dir "features"
 
   @doc """
   Load the schema files and initialize the cache.
@@ -65,6 +76,9 @@ defmodule Schema.Cache do
 
     {base_domain, domains, all_domains, _observable_domains_type_id_map, main_domains} =
       read_classes(@main_domains_file, @domains_dir)
+
+    {base_feature, features, all_features, _observable_features_type_id_map, main_features} =
+      read_classes(@main_features_file, @features_dir)
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -101,8 +115,13 @@ defmodule Schema.Cache do
       update_classes(domains, objects)
       |> final_check(dictionary_attributes)
 
+    features =
+      update_classes(features, objects)
+      |> final_check(dictionary_attributes)
+
     base_class = final_check(:base_class, base_class, dictionary_attributes)
     base_domain = final_check(:base_domain, base_domain, dictionary_attributes)
+    base_feature = final_check(:base_feature, base_feature, dictionary_attributes)
 
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
@@ -110,6 +129,8 @@ defmodule Schema.Cache do
     {classes, no_req_set} = fix_entities(classes, no_req_set, "class")
     {base_domain, no_req_set} = fix_entity(base_domain, no_req_set, :base_class, "domain")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
+    {base_feature, no_req_set} = fix_entity(base_feature, no_req_set, :base_class, "feature")
+    {features, no_req_set} = fix_entities(features, no_req_set, "feature")
     {objects, no_req_set} = fix_entities(objects, no_req_set, "object")
 
     if MapSet.size(no_req_set) > 0 do
@@ -124,17 +145,24 @@ defmodule Schema.Cache do
     %__MODULE__{
       version: version,
       profiles: profiles,
-      categories: categories,
-      main_domains: main_domains,
       dictionary: dictionary,
-      base_class: base_class,
-      base_domain: base_domain,
-      classes: classes,
-      domains: domains,
-      all_classes: all_classes,
-      all_domains: all_domains,
       objects: objects,
-      all_objects: all_objects
+      all_objects: all_objects,
+      # categories libs
+      classes: classes,
+      all_classes: all_classes,
+      categories: categories,
+      base_class: base_class,
+      # domains libs
+      domains: domains,
+      all_domains: all_domains,
+      main_domains: main_domains,
+      base_domain: base_domain,
+      # features libs
+      features: features,
+      all_features: all_features,
+      main_features: main_features,
+      base_feature: base_feature
     }
   end
 
@@ -176,6 +204,14 @@ defmodule Schema.Cache do
   @spec main_domain(__MODULE__.t(), any) :: nil | main_domain_t()
   def main_domain(%__MODULE__{main_domains: main_domains}, id) do
     Map.get(main_domains[:attributes], id)
+  end
+
+  @spec main_features(__MODULE__.t()) :: map()
+  def main_features(%__MODULE__{main_features: main_features}), do: main_features
+
+  @spec main_feature(__MODULE__.t(), any) :: nil | main_feature_t()
+  def main_feature(%__MODULE__{main_features: main_features}, id) do
+    Map.get(main_features[:attributes], id)
   end
 
   @spec classes(__MODULE__.t()) :: map()
@@ -307,6 +343,71 @@ defmodule Schema.Cache do
   def find_domain(%__MODULE__{dictionary: dictionary, domains: domains}, uid) do
     case Enum.find(domains, fn {_, domain} -> domain[:uid] == uid end) do
       {_, domain} -> enrich(domain, dictionary[:attributes])
+      nil -> nil
+    end
+  end
+
+  @spec features(__MODULE__.t()) :: map()
+  def features(%__MODULE__{features: features}), do: features
+
+  @spec all_features(__MODULE__.t()) :: map()
+  def all_features(%__MODULE__{all_features: all_features}), do: all_features
+
+  @spec export_features(__MODULE__.t()) :: map()
+  def export_features(%__MODULE__{features: features, dictionary: dictionary}) do
+    Enum.into(features, Map.new(), fn {name, feature} ->
+      {name, enrich(feature, dictionary[:attributes])}
+    end)
+  end
+
+  @spec export_base_feature(__MODULE__.t()) :: map()
+  def export_base_feature(%__MODULE__{base_feature: base_feature, dictionary: dictionary}) do
+    enrich(base_feature, dictionary[:attributes])
+  end
+
+  @spec feature(__MODULE__.t(), atom()) :: nil | feature_t()
+  def feature(%__MODULE__{dictionary: dictionary, base_feature: base_feature}, :base_feature) do
+    enrich(base_feature, dictionary[:attributes])
+  end
+
+  def feature(%__MODULE__{dictionary: dictionary, features: features}, id) do
+    case Map.get(features, id) do
+      nil ->
+        nil
+
+      feature ->
+        enrich(feature, dictionary[:attributes])
+    end
+  end
+
+  @doc """
+  Returns extended feature definition, which includes all objects referred by the feature.
+  """
+  @spec feature_ex(__MODULE__.t(), atom()) :: nil | feature_t()
+  def feature_ex(
+        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
+        :base_class
+      ) do
+    feature_ex(base_class, dictionary, objects)
+  end
+
+  def feature_ex(%__MODULE__{dictionary: dictionary, features: features, objects: objects}, id) do
+    Map.get(features, id) |> feature_ex(dictionary, objects)
+  end
+
+  defp feature_ex(nil, _dictionary, _objects) do
+    nil
+  end
+
+  defp feature_ex(feature, dictionary, objects) do
+    {feature_ex, ref_objects} = enrich_ex(feature, dictionary[:attributes], objects, Map.new())
+    Map.put(feature_ex, :objects, Map.to_list(ref_objects))
+  end
+
+  @spec find_feature(Schema.Cache.t(), any) :: nil | map
+  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, uid) do
+    case Enum.find(features, fn {_, feature} -> feature[:uid] == uid end) do
+      {_, feature} -> enrich(feature, dictionary[:attributes])
       nil -> nil
     end
   end

@@ -1,0 +1,18 @@
+{
+  "caption": "",
+  "category": "other",
+  "description": "",
+  "name": "base_observe_eval",
+  "extends": "base_class",
+  "attributes": {
+    "name": {
+      "group": "classification",
+      "description": "The name of the category.",
+      "requirement": "required"
+    },
+    "annotations": {
+      "group": "classification",
+      "requirement": "optional"
+    }
+  }
+}

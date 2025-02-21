@@ -1,0 +1,8 @@
+{
+  "caption": "Evaluation",
+  "description": "Evaluation feature set",
+  "extends": "base_observe_eval",
+  "name": "evaluation",
+  "category": "evaluation",
+  "attributes": {}
+}

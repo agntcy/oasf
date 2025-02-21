@@ -9,8 +9,7 @@
 # limitations under the License.
 defmodule Schema do
   @moduledoc """
-  Schema keeps the contexts that define your domain
-  and business logic.
+  Schema keeps the contexts that define your business logic.
 
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
@@ -123,6 +122,36 @@ defmodule Schema do
   @spec main_domain(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.main_domain_t()
   def main_domain(extensions, extension, id),
     do: get_main_domain(extensions, Utils.to_uid(extension, id))
+
+  @doc """
+    Returns the main features.
+  """
+  @spec main_features :: map()
+  def main_features(), do: Repo.main_features()
+
+  @doc """
+    Returns the event main features defined in the given extension set.
+  """
+  def main_features(extensions) do
+    Map.update(Repo.main_features(extensions), :attributes, %{}, fn attributes ->
+      Enum.into(attributes, %{}, fn {name, _main_feature} ->
+        {name, main_feature(extensions, name)}
+      end)
+    end)
+  end
+
+  @doc """
+    Returns a single main feature with its classes.
+  """
+  @spec main_feature(atom | String.t()) :: nil | Cache.main_feature_t()
+  def main_feature(id), do: get_main_feature(Utils.to_uid(id))
+
+  @spec main_feature(Repo.extensions_t(), String.t()) :: nil | Cache.main_feature_t()
+  def main_feature(extensions, id), do: get_main_feature(extensions, Utils.to_uid(id))
+
+  @spec main_feature(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.main_feature_t()
+  def main_feature(extensions, extension, id),
+      do: get_main_feature(extensions, Utils.to_uid(extension, id))
 
   @doc """
     Returns the attribute dictionary.
@@ -321,6 +350,81 @@ defmodule Schema do
   def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
 
   @doc """
+    Returns all features.
+  """
+  @spec features() :: map()
+  def features(), do: Repo.features()
+
+  @spec features(Repo.extensions_t()) :: map()
+  def features(extensions), do: Repo.features(extensions)
+
+  @spec features(Repo.extensions_t(), Repo.profiles_t()) :: map()
+  def features(extensions, profiles) do
+    extensions
+    |> Repo.features()
+    |> apply_profiles(profiles, MapSet.size(profiles))
+  end
+
+  @spec all_features() :: map()
+  def all_features(), do: Repo.all_features()
+
+  @doc """
+    Returns a single feature.
+  """
+  @spec feature(atom() | String.t()) :: nil | Cache.feature_t()
+  def feature(id), do: Repo.feature(Utils.to_uid(id))
+
+  @spec feature(nil | String.t(), String.t()) :: nil | map()
+  def feature(extension, id),
+      do: Repo.feature(Utils.to_uid(extension, id))
+
+  @spec feature(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
+  def feature(extension, id, nil), do: feature(extension, id)
+
+  def feature(extension, id, profiles) do
+    case feature(extension, id) do
+      nil ->
+        nil
+
+      feature ->
+        Map.update!(feature, :attributes, fn attributes ->
+          Utils.apply_profiles(attributes, profiles)
+        end)
+    end
+  end
+
+  @doc """
+    Returns a single feature with the embedded objects.
+  """
+  @spec feature_ex(atom() | String.t()) :: nil | Cache.feature_t()
+  def feature_ex(id),
+      do: Repo.feature_ex(Utils.to_uid(id))
+
+  @spec feature_ex(nil | String.t(), String.t()) :: nil | map()
+  def feature_ex(extension, id),
+      do: Repo.feature_ex(Utils.to_uid(extension, id))
+
+  @spec feature_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
+  def feature_ex(extension, id, nil),
+      do: feature_ex(extension, id)
+
+  def feature_ex(extension, id, profiles) do
+    case feature_ex(extension, id) do
+      nil ->
+        nil
+
+      feature ->
+        Schema.Profiles.apply_profiles(feature, profiles)
+    end
+  end
+
+  @doc """
+  Finds a feature by the feature uid value.
+  """
+  @spec find_feature(integer()) :: nil | Cache.feature_t()
+  def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
+
+  @doc """
     Returns all objects.
   """
   @spec objects() :: map()
@@ -447,6 +551,7 @@ defmodule Schema do
           base_class: map(),
           classes: map(),
           domains: map(),
+          features: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -457,6 +562,7 @@ defmodule Schema do
       base_class: Schema.export_base_class(),
       classes: Schema.export_classes(),
       domains: Schema.export_domains(),
+      features: Schema.export_features(),
       objects: Schema.export_objects(),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(),
@@ -468,6 +574,7 @@ defmodule Schema do
           base_class: map(),
           classes: map(),
           domains: map(),
+          features: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -478,6 +585,7 @@ defmodule Schema do
       base_class: Schema.export_base_class(),
       classes: Schema.export_classes(extensions),
       domains: Schema.export_domains(extensions),
+      features: Schema.export_features(extensions),
       objects: Schema.export_objects(extensions),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(extensions),
@@ -489,6 +597,7 @@ defmodule Schema do
           base_class: map(),
           classes: map(),
           domains: map(),
+          features: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -503,6 +612,7 @@ defmodule Schema do
       base_class: Schema.export_base_class(profiles),
       classes: Schema.export_classes(extensions, profiles),
       domains: Schema.export_domains(extensions, profiles),
+      features: Schema.export_features(extensions, profiles),
       objects: Schema.export_objects(extensions, profiles),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(extensions),
@@ -548,6 +658,22 @@ defmodule Schema do
 
   def export_domains(extensions, profiles) do
     Repo.export_domains(extensions) |> update_exported_domains(profiles)
+  end
+
+  @doc """
+    Exports the features.
+  """
+  @spec export_features() :: map()
+  def export_features(), do: Repo.export_features() |> reduce_objects()
+
+  @spec export_features(Repo.extensions_t()) :: map()
+  def export_features(extensions), do: Repo.export_features(extensions) |> reduce_objects()
+
+  @spec export_features(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def export_features(extensions, nil), do: export_features(extensions)
+
+  def export_features(extensions, profiles) do
+    Repo.export_features(extensions) |> update_exported_features(profiles)
   end
 
   @spec export_base_class() :: map()
@@ -604,6 +730,34 @@ defmodule Schema do
 
   defp update_exported_domains(domains, profiles) do
     apply_profiles(domains, profiles, MapSet.size(profiles)) |> reduce_objects()
+  end
+
+  @spec export_base_feature() :: map()
+  def export_base_feature() do
+    Repo.export_base_feature()
+    |> reduce_attributes()
+    |> Map.update!(:attributes, fn attributes ->
+      Utils.remove_profiles(attributes) |> Enum.into(%{})
+    end)
+  end
+
+  @spec export_base_feature(Repo.profiles_t() | nil) :: map()
+  def export_base_feature(nil) do
+    export_base_feature()
+  end
+
+  def export_base_feature(profiles) do
+    size = MapSet.size(profiles)
+
+    Repo.export_base_feature()
+    |> reduce_attributes()
+    |> Map.update!(:attributes, fn attributes ->
+      Utils.apply_profiles(attributes, profiles, size) |> Enum.into(%{})
+    end)
+  end
+
+  defp update_exported_features(features, profiles) do
+    apply_profiles(features, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
 
   @doc """
@@ -692,6 +846,14 @@ defmodule Schema do
     Repo.main_domain(extensions, id) |> reduce_main_domain()
   end
 
+  defp get_main_feature(id) do
+    Repo.main_feature(id) |> reduce_main_feature()
+  end
+
+  defp get_main_feature(extensions, id) do
+    Repo.main_feature(extensions, id) |> reduce_main_feature()
+  end
+
   defp reduce_category(nil) do
     nil
   end
@@ -712,6 +874,18 @@ defmodule Schema do
     Map.update(data, :classes, [], fn domains ->
       Enum.into(domains, %{}, fn {name, domain} ->
         {name, reduce_domain(domain)}
+      end)
+    end)
+  end
+
+  defp reduce_main_feature(nil) do
+    nil
+  end
+
+  defp reduce_main_feature(data) do
+    Map.update(data, :classes, [], fn features ->
+      Enum.into(features, %{}, fn {name, feature} ->
+        {name, reduce_feature(feature)}
       end)
     end)
   end
@@ -776,6 +950,11 @@ defmodule Schema do
 
   @spec reduce_domain(map) :: map
   def reduce_domain(data) do
+    delete_attributes(data) |> delete_associations()
+  end
+
+  @spec reduce_feature(map) :: map
+  def reduce_feature(data) do
     delete_attributes(data) |> delete_associations()
   end
 
