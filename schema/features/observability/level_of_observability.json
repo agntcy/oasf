@@ -1,0 +1,9 @@
+{
+    "uid": 7,
+    "caption": "Level of observability",
+    "description": "Values: Verbose\n\nDebug\nInfo\nWarning\nErrors",
+    "extends": "observability",
+    "name": "level_of_observability",
+    "attributes": {}
+}
+

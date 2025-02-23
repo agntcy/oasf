@@ -1,0 +1,9 @@
+{
+    "uid": 6,
+    "caption": "Planning",
+    "description": "Task Delegation Accuracy\nDeviation from best / ground-truth planning graph:\nGraph Edit Distance: distance measure between the two graphs.\nStructural Similarity Index: single measure for node and edge similarities between the two graphs.\nPath Length Similarity: comparing the paths between any two nodes in the two graphs. Longer paths represent more work, so it is important not to “overshoot” here.\nComplexity Score: total sum of nodes and edges, the higher, the more complex the MAS is.\nRedundancy Score: nodes that are not present in the ground truth graph, are likely to be redundant and so might be the corresponding subtasks.",
+    "extends": "performance",
+    "name": "planning",
+    "attributes": {}
+}
+

@@ -1,0 +1,9 @@
+{
+    "uid": 2,
+    "caption": "MAA_Agent_Task",
+    "description": "Values: Task Completion (success rate)",
+    "extends": "quality",
+    "name": "maa_agent_task",
+    "attributes": {}
+}
+

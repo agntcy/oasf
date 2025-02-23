@@ -1,0 +1,9 @@
+{
+    "uid": 11,
+    "caption": "Metrics",
+    "description": "Values: Cost, Quality, Safety, Security, (cfr detail below)",
+    "extends": "observability",
+    "name": "metrics",
+    "attributes": {}
+}
+

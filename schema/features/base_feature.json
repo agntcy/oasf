@@ -1,7 +1,7 @@
 {
-  "caption": "Features sets of Agents",
+  "caption": "Base Feature",
   "category": "other",
-  "description": "",
+  "description": "The base feature is a generic and concrete feature. It also defines a set of attributes available in most feature classes. As a generic feature that does not belong to any feature category, it could be used to log features that are not otherwise defined by the schema.",
   "name": "base_class",
   "attributes": {
     "name": {
@@ -35,7 +35,7 @@
       "requirement": "required",
       "enum": {
         "0": {
-          "caption": "Base Domain"
+          "caption": "Base Feature"
         }
       }
     }

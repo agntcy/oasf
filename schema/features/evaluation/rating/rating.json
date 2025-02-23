@@ -1,0 +1,7 @@
+{
+    "caption": "Rating",
+    "category": "rating",
+    "extends": "evaluation",
+    "name": "rating",
+    "attributes": {}
+}

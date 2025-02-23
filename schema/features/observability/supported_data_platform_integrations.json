@@ -1,0 +1,9 @@
+{
+    "uid": 5,
+    "caption": "Supported data platform integrations",
+    "description": "Values: Splunk, Datadog...",
+    "extends": "observability",
+    "name": "supported_data_platform_integrations",
+    "attributes": {}
+}
+

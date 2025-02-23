@@ -1,8 +1,8 @@
 {
   "caption": "Observability",
-  "description": "Observability feature set",
-  "extends": "base_observe_eval",
-  "name": "observability",
   "category": "observability",
+  "description": "The ability to gain actionable insights into the inner workings of an agent by analysing the inputs and outputs of different components, as they flow through the operational pipeline.",
+  "extends": "base_feature",
+  "name": "observability",
   "attributes": {}
 }

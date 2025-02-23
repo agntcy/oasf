@@ -1,0 +1,7 @@
+{
+    "caption": "Quality",
+    "category": "quality",
+    "extends": "evaluation",
+    "name": "quality",
+    "attributes": {}
+}

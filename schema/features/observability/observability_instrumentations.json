@@ -1,0 +1,9 @@
+{
+    "uid": 2,
+    "caption": "Observability Instrumentations",
+    "description": "Values: Metrics, Events, Logs, Traces",
+    "extends": "observability",
+    "name": "observability_instrumentations",
+    "attributes": {}
+}
+

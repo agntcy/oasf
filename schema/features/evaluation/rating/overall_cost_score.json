@@ -1,0 +1,9 @@
+{
+    "uid": 4,
+    "caption": "Overall cost score (based on referred evaluations)",
+    "description": "Values: MAA_Agent_AgenticFunction",
+    "extends": "rating",
+    "name": "overall_cost_score",
+    "attributes": {}
+}
+

@@ -1,8 +1,33 @@
 {
   "caption": "Evaluation",
-  "description": "Evaluation feature set",
-  "extends": "base_observe_eval",
-  "name": "evaluation",
   "category": "evaluation",
-  "attributes": {}
+  "description": "Assessing actions and outcomes to determine their effectiveness, guiding future decision-making and enhancing personal agency.",
+  "extends": "base_feature",
+  "name": "evaluation",
+  "attributes": {
+    "quality": {
+      "uid": 1,
+      "caption": "Quality"
+    },
+    "performance": {
+      "uid": 2,
+      "caption": "Performance"
+    },
+    "rating": {
+      "uid": 3,
+      "caption": "Rating"
+    },
+    "supported_scores": {
+      "uid": 4,
+      "caption": "Supported Scores"
+    },
+    "trust_and_safety": {
+      "uid": 5,
+      "caption": "Trust and Safety"
+    },
+    "sustainability": {
+      "uid": 6,
+      "caption": "Sustainablity"
+    }
+  }
 }

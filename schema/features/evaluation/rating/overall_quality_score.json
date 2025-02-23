@@ -1,0 +1,9 @@
+{
+    "uid": 3,
+    "caption": "Overall quality score",
+    "description": "Values: MAA_Agent_Task",
+    "extends": "rating",
+    "name": "overall_quality_score",
+    "attributes": {}
+}
+

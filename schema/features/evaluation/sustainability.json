@@ -1,0 +1,9 @@
+{
+    "uid": 6,
+    "caption": "Sustainablity",
+    "description": "Values: Energy Monitoring: Tools track energy consumption during training and inference, identifying inefficiencies.\nCarbon Footprint Analysis: Evaluate the greenhouse gas emissions associated with AI workflows.",
+    "extends": "evaluation",
+    "name": "sustainability",
+    "attributes": {}
+}
+

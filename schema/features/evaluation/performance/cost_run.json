@@ -1,0 +1,9 @@
+{
+    "uid": 3,
+    "caption": "Cost/Run",
+    "description": "Values: $",
+    "extends": "performance",
+    "name": "cost_run",
+    "attributes": {}
+}
+

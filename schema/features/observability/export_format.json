@@ -1,0 +1,9 @@
+{
+    "uid": 4,
+    "caption": "Export format",
+    "description": "Values: Otel, others",
+    "extends": "observability",
+    "name": "export_format",
+    "attributes": {}
+}
+
