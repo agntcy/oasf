@@ -796,50 +796,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get the schema base domain class.
-  """
-  swagger_path :base_domain do
-    get("/api/base_domain")
-    summary("Base domain")
-    description("Get OASF schema base domain class.")
-    produces("application/json")
-    tag("Domains")
-
-    parameters do
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  @spec base_domain(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_domain(conn, params) do
-    class(conn, "base_domain", params)
-  end
-
-  @doc """
-  Get the schema base feature class.
-  """
-  swagger_path :base_feature do
-    get("/api/base_feature")
-    summary("Base feature")
-    description("Get OASF schema base feature class.")
-    produces("application/json")
-    tag("Features")
-
-    parameters do
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  @spec base_feature(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_feature(conn, params) do
-    class(conn, "base_feature", params)
-  end
-
-  @doc """
   Get an event class by name.
   get /api/classes/:name
   """

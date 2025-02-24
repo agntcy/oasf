@@ -66,10 +66,8 @@ defmodule SchemaWeb.Router do
     get "/feature/graph/:id", PageController, :feature_graph
     get "/feature/graph/:extension/:id", PageController, :feature_graph
 
-    get "/base_class", PageController, :base_class
-    get "/base_domain", PageController, :base_domain
-    get "/base_feature", PageController, :base_feature
     get "/dictionary", PageController, :dictionary
+    get "/base_class", PageController, :base_class
 
     get "/objects", PageController, :objects
     get "/objects/:id", PageController, :objects
@@ -125,10 +123,8 @@ defmodule SchemaWeb.Router do
     get "/features/:id", SchemaController, :feature
     get "/features/:extension/:id", SchemaController, :feature
 
-    get "/base_class", SchemaController, :base_class
-    get "/base_domain", SchemaController, :base_domain
-    get "/base_feature", SchemaController, :base_feature
     get "/dictionary", SchemaController, :dictionary
+    get "/base_class", SchemaController, :base_class
 
     get "/objects", SchemaController, :objects
     get "/objects/:id", SchemaController, :object

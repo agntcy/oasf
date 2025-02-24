@@ -704,56 +704,8 @@ defmodule Schema do
     apply_profiles(classes, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
 
-  @spec export_base_domain() :: map()
-  def export_base_domain() do
-    Repo.export_base_domain()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.remove_profiles(attributes) |> Enum.into(%{})
-    end)
-  end
-
-  @spec export_base_domain(Repo.profiles_t() | nil) :: map()
-  def export_base_domain(nil) do
-    export_base_domain()
-  end
-
-  def export_base_domain(profiles) do
-    size = MapSet.size(profiles)
-
-    Repo.export_base_domain()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.apply_profiles(attributes, profiles, size) |> Enum.into(%{})
-    end)
-  end
-
   defp update_exported_domains(domains, profiles) do
     apply_profiles(domains, profiles, MapSet.size(profiles)) |> reduce_objects()
-  end
-
-  @spec export_base_feature() :: map()
-  def export_base_feature() do
-    Repo.export_base_feature()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.remove_profiles(attributes) |> Enum.into(%{})
-    end)
-  end
-
-  @spec export_base_feature(Repo.profiles_t() | nil) :: map()
-  def export_base_feature(nil) do
-    export_base_feature()
-  end
-
-  def export_base_feature(profiles) do
-    size = MapSet.size(profiles)
-
-    Repo.export_base_feature()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.apply_profiles(attributes, profiles, size) |> Enum.into(%{})
-    end)
   end
 
   defp update_exported_features(features, profiles) do

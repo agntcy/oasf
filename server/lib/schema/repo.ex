@@ -290,16 +290,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.export_base_class(schema) end)
   end
 
-  @spec export_base_domain() :: map()
-  def export_base_domain() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_base_domain(schema) end)
-  end
-
-  @spec export_base_feature() :: map()
-  def export_base_feature() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_base_feature(schema) end)
-  end
-
   @spec class(atom) :: nil | Cache.class_t()
   def class(id) do
     Agent.get(__MODULE__, fn schema -> Cache.class(schema, id) end)

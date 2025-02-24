@@ -264,14 +264,6 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Redirects from the older /base_domain URL to /domains/base_domain.
-  """
-  @spec base_domain(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_domain(conn, _params) do
-    redirect(conn, to: "/domains/base_domain")
-  end
-
-  @doc """
   Renders domains.
   """
   @spec domains(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -304,14 +296,6 @@ defmodule SchemaWeb.PageController do
       profiles: SchemaController.get_profiles(params),
       data: data
     )
-  end
-
-  @doc """
-  Redirects from the older /base_feature URL to /features/base_feature.
-  """
-  @spec base_feature(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_feature(conn, _params) do
-    redirect(conn, to: "/features/base_feature")
   end
 
   @doc """

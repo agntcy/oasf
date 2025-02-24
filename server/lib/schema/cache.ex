@@ -23,26 +23,24 @@ defmodule Schema.Cache do
     :version,
     :profiles,
     :dictionary,
+    :base_class,
     :objects,
     :all_objects,
     # domain libs
     :domains,
     :all_domains,
     :main_domains,
-    :base_domain,
     # category libs
     :classes,
     :all_classes,
     :categories,
-    :base_class,
     # feature libs
     :features,
     :all_features,
-    :main_features,
-    :base_feature
+    :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class base_domain categories main_domains classes domains all_classes all_domains objects all_objects features all_features main_features base_feature
+    version profiles dictionary base_class categories main_domains classes domains all_classes all_domains objects all_objects features all_features main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -72,13 +70,13 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
 
-    {base_class, classes, all_classes, observable_type_id_map, categories} =
+    {classes, all_classes, observable_type_id_map, categories} =
       read_classes(base_class, @main_skills_file, @skills_dir)
 
-    {base_domain, domains, all_domains, _observable_domains_type_id_map, main_domains} =
+    {domains, all_domains, _observable_domains_type_id_map, main_domains} =
       read_classes(base_class, @main_domains_file, @domains_dir)
 
-    {base_feature, features, all_features, _observable_features_type_id_map, main_features} =
+    {features, all_features, _observable_features_type_id_map, main_features} =
       read_classes(base_class, @main_features_file, @features_dir)
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
@@ -121,16 +119,12 @@ defmodule Schema.Cache do
       |> final_check(dictionary_attributes)
 
     base_class = final_check(:base_class, base_class, dictionary_attributes)
-    base_domain = final_check(:base_domain, base_domain, dictionary_attributes)
-    base_feature = final_check(:base_feature, base_feature, dictionary_attributes)
 
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
     {classes, no_req_set} = fix_entities(classes, no_req_set, "class")
-    {base_domain, no_req_set} = fix_entity(base_domain, no_req_set, :base_class, "domain")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
-    {base_feature, no_req_set} = fix_entity(base_feature, no_req_set, :base_class, "feature")
     {features, no_req_set} = fix_entities(features, no_req_set, "feature")
     {objects, no_req_set} = fix_entities(objects, no_req_set, "object")
 
@@ -147,23 +141,21 @@ defmodule Schema.Cache do
       version: version,
       profiles: profiles,
       dictionary: dictionary,
+      base_class: base_class,
       objects: objects,
       all_objects: all_objects,
       # categories libs
       classes: classes,
       all_classes: all_classes,
       categories: categories,
-      base_class: base_class,
       # domains libs
       domains: domains,
       all_domains: all_domains,
       main_domains: main_domains,
-      base_domain: base_domain,
       # features libs
       features: features,
       all_features: all_features,
-      main_features: main_features,
-      base_feature: base_feature
+      main_features: main_features
     }
   end
 
@@ -296,14 +288,9 @@ defmodule Schema.Cache do
     end)
   end
 
-  @spec export_base_domain(__MODULE__.t()) :: map()
-  def export_base_domain(%__MODULE__{base_domain: base_domain, dictionary: dictionary}) do
-    enrich(base_domain, dictionary[:attributes])
-  end
-
   @spec domain(__MODULE__.t(), atom()) :: nil | domain_t()
-  def domain(%__MODULE__{dictionary: dictionary, base_domain: base_domain}, :base_domain) do
-    enrich(base_domain, dictionary[:attributes])
+  def domain(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
+    enrich(base_class, dictionary[:attributes])
   end
 
   def domain(%__MODULE__{dictionary: dictionary, domains: domains}, id) do
@@ -361,14 +348,9 @@ defmodule Schema.Cache do
     end)
   end
 
-  @spec export_base_feature(__MODULE__.t()) :: map()
-  def export_base_feature(%__MODULE__{base_feature: base_feature, dictionary: dictionary}) do
-    enrich(base_feature, dictionary[:attributes])
-  end
-
   @spec feature(__MODULE__.t(), atom()) :: nil | feature_t()
-  def feature(%__MODULE__{dictionary: dictionary, base_feature: base_feature}, :base_feature) do
-    enrich(base_feature, dictionary[:attributes])
+  def feature(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
+    enrich(base_class, dictionary[:attributes])
   end
 
   def feature(%__MODULE__{dictionary: dictionary, features: features}, id) do
@@ -572,7 +554,7 @@ defmodule Schema.Cache do
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> Enum.into(%{}, fn class_tuple -> enrich_class(class_tuple, categories_attributes) end)
 
-    {Map.get(classes, :base_class), classes, all_classes, observable_type_id_map, categories}
+    {classes, all_classes, observable_type_id_map, categories}
   end
 
   defp read_objects(observable_type_id_map) do
