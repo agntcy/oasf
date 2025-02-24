@@ -36,7 +36,7 @@ limitations under the License.
       <tr class="thead-color">
         <%= for {key, category} <- @data[:attributes] do %>
           <% name = Atom.to_string(key) %>
-          <% path = Routes.static_path(@conn, "/categories/" <> name) %>
+          <% path = Routes.static_path(@conn, "/"<> @data[:categories_path] <> "/" <> name) %>
           <th>
             <a href="<%= path %>"><%= raw format_caption(name, category) %></a>
           </th>
@@ -52,7 +52,7 @@ limitations under the License.
             <td>
             <%= for {id, class} <- category[:classes] do %>
               <% name = Atom.to_string(id) %>
-              <% path = Routes.static_path(@conn, "/classes/" <> name) %>
+              <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
               <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>
                 <td class='align-middle" style="height: 36px; overflow:auto;'>
                   <%= raw format_linked_class_caption(path, name, class) %>

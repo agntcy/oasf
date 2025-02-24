@@ -125,6 +125,8 @@ defmodule SchemaWeb.PageController do
       |> SchemaController.categories()
       |> sort_attributes(:uid)
       |> sort_classes()
+      |> Map.put(:categories_path, "categories")
+      |> Map.put(:classes_path, "classes")
 
     render(conn, "index.html",
       extensions: Schema.extensions(),
@@ -163,9 +165,11 @@ defmodule SchemaWeb.PageController do
       Map.put_new(params, "extensions", "")
       |> SchemaController.main_domains()
       |> sort_attributes(:uid)
-      |> sort_domains()
+      |> sort_classes()
+      |> Map.put(:categories_path, "main_domains")
+      |> Map.put(:classes_path, "domains")
 
-    render(conn, "main_domains.html",
+    render(conn, "index.html",
       extensions: Schema.extensions(),
       profiles: SchemaController.get_profiles(params),
       data: data
@@ -197,9 +201,11 @@ defmodule SchemaWeb.PageController do
       Map.put_new(params, "extensions", "")
       |> SchemaController.main_features()
       |> sort_attributes(:uid)
-      |> sort_features()
+      |> sort_classes()
+      |> Map.put(:categories_path, "main_features")
+      |> Map.put(:classes_path, "features")
 
-    render(conn, "main_features.html",
+    render(conn, "index.html",
       extensions: Schema.extensions(),
       profiles: SchemaController.get_profiles(params),
       data: data
@@ -370,22 +376,6 @@ defmodule SchemaWeb.PageController do
     Map.update!(categories, :attributes, fn list ->
       Enum.map(list, fn {name, category} ->
         {name, Map.update!(category, :classes, &sort_by(&1, :uid))}
-      end)
-    end)
-  end
-
-  defp sort_domains(main_domains) do
-    Map.update!(main_domains, :attributes, fn list ->
-      Enum.map(list, fn {name, main_domain} ->
-        {name, Map.update!(main_domain, :classes, &sort_by(&1, :uid))}
-      end)
-    end)
-  end
-
-  defp sort_features(main_features) do
-    Map.update!(main_features, :attributes, fn list ->
-      Enum.map(list, fn {name, main_feature} ->
-        {name, Map.update!(main_feature, :classes, &sort_by(&1, :uid))}
       end)
     end)
   end
