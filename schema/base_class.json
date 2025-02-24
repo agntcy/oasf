@@ -1,7 +1,7 @@
 {
-  "caption": "Base Feature",
+  "caption": "Base class",
   "category": "other",
-  "description": "The base feature is a generic and concrete feature. It also defines a set of attributes available in most feature classes. As a generic feature that does not belong to any feature category, it could be used to log features that are not otherwise defined by the schema.",
+  "description": "The base class is a generic and concrete class for all categories.",
   "name": "base_class",
   "attributes": {
     "name": {
@@ -35,7 +35,7 @@
       "requirement": "required",
       "enum": {
         "0": {
-          "caption": "Base Feature"
+          "caption": "Base class"
         }
       }
     }

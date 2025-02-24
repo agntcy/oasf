@@ -29,6 +29,8 @@ defmodule Schema.JsonReader do
 
   @dictionary_file "dictionary.json"
 
+  @base_class_file "base_class.json"
+
   # The Schema extension file
   @extension_file "extension.json"
 
@@ -52,6 +54,11 @@ defmodule Schema.JsonReader do
   @spec read_dictionary() :: map()
   def read_dictionary() do
     GenServer.call(__MODULE__, :read_dictionary)
+  end
+
+  @spec read_base_class() :: map()
+  def read_base_class() do
+    GenServer.call(__MODULE__, :read_base_class)
   end
 
   @spec read_objects() :: map()
@@ -125,6 +132,11 @@ defmodule Schema.JsonReader do
   end
 
   @impl true
+  def handle_call(:read_base_class, _from, {home, ext} = state) do
+    {:reply, read_base_class(home, ext), state}
+  end
+
+  @impl true
   def handle_call(:get_profiles, _from, state) do
     {:reply, get_profiles(), state}
   end
@@ -192,6 +204,18 @@ defmodule Schema.JsonReader do
 
     Enum.reduce(extensions, dictionary, fn ext, acc ->
       merge_ext_file(acc, ext, @dictionary_file)
+    end)
+  end
+
+  defp read_base_class(home, []) do
+    Path.join(home, @base_class_file) |> read_json_file()
+  end
+
+  defp read_base_class(home, extensions) do
+    base_class = Path.join(home, @base_class_file) |> read_json_file()
+
+    Enum.reduce(extensions, base_class, fn ext, acc ->
+      merge_ext_file(acc, ext, @base_class_file)
     end)
   end
 

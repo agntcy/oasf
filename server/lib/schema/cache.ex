@@ -70,15 +70,16 @@ defmodule Schema.Cache do
     version = JsonReader.read_version()
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
+    base_class = JsonReader.read_base_class()
 
     {base_class, classes, all_classes, observable_type_id_map, categories} =
-      read_classes(@main_skills_file, @skills_dir)
+      read_classes(base_class, @main_skills_file, @skills_dir)
 
     {base_domain, domains, all_domains, _observable_domains_type_id_map, main_domains} =
-      read_classes(@main_domains_file, @domains_dir)
+      read_classes(base_class, @main_domains_file, @domains_dir)
 
     {base_feature, features, all_features, _observable_features_type_id_map, main_features} =
-      read_classes(@main_features_file, @features_dir)
+      read_classes(base_class, @main_features_file, @features_dir)
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -532,11 +533,13 @@ defmodule Schema.Cache do
     end
   end
 
-  defp read_classes(categories_file, classes_dir) do
+  defp read_classes(base_class, categories_file, classes_dir) do
     categories = JsonReader.read_categories(categories_file) |> update_categories()
     categories_attributes = categories[:attributes]
 
     classes = JsonReader.read_classes(classes_dir)
+    # merge classes with base class
+    classes = Map.put(classes, :base_class, base_class)
 
     observable_type_id_map = observables_from_classes(classes)
 
