@@ -1,9 +1,0 @@
-{
-  "uid": 1,
-  "caption": "Benchmark",
-  "description": "Describes benchmark capabilities",
-  "name": "benchmark",
-  "extends": "evaluation",
-  "category": "evaluation",
-  "attributes": {}
-}
