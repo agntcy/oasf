@@ -39,7 +39,7 @@ defmodule Schema.Cache do
     :features,
     :all_features,
     :main_features,
-    :base_feature,
+    :base_feature
   ]
   defstruct ~w[
     version profiles dictionary base_class base_domain categories main_domains classes domains all_classes all_domains objects all_objects features all_features main_features base_feature
@@ -55,8 +55,8 @@ defmodule Schema.Cache do
   @type main_domain_t() :: map()
   @type dictionary_t() :: map()
 
-  @categories_file "categories.json"
-  @categories_dir "categories"
+  @main_skills_file "categories.json"
+  @skills_dir "categories"
   @main_domains_file "main_domains.json"
   @domains_dir "domains"
   @main_features_file "main_features.json"
@@ -72,7 +72,7 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
     {base_class, classes, all_classes, observable_type_id_map, categories} =
-      read_classes(@categories_file, @categories_dir)
+      read_classes(@main_skills_file, @skills_dir)
 
     {base_domain, domains, all_domains, _observable_domains_type_id_map, main_domains} =
       read_classes(@main_domains_file, @domains_dir)
