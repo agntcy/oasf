@@ -1,7 +1,7 @@
 {
   "caption": "Identity",
   "description": "Identity feature set",
-  "extends": "base_class",
+  "extends": "base_feature",
   "name": "identity",
   "category": "identity",
   "attributes": {}
