@@ -1,7 +1,7 @@
 {
   "caption": "Tabular / Text",
   "category": "tabular_text",
-  "extends": "base_class",
+  "extends": "base_skill",
   "name": "tabular_text",
   "attributes": {}
 }

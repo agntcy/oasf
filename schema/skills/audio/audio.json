@@ -1,7 +1,7 @@
 {
     "caption": "Audio Processing",
     "category": "audio",
-    "extends": "base_class",
+    "extends": "base_skill",
     "name": "audio",
     "attributes": {}
 }

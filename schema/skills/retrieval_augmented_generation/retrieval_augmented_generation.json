@@ -1,7 +1,7 @@
 {
   "caption": "Retrieval Augmented Generation",
   "category": "retrieval_augmented_generation",
-  "extends": "base_class",
+  "extends": "base_skill",
   "name": "retrieval_augmented_generation",
   "attributes": {}
 }

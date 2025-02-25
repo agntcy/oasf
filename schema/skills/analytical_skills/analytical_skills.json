@@ -1,7 +1,7 @@
 {
   "caption": "Analytical Skills",
   "category": "analytical_skills",
-  "extends": "base_class",
+  "extends": "base_skill",
   "name": "analytical_skills",
   "attributes": {}
 }

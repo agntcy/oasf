@@ -1,7 +1,7 @@
 {
   "caption": "Multi Modal",
   "category": "multi_modal",
-  "extends": "base_class",
+  "extends": "base_skill",
   "name": "multi_modal",
   "attributes": {}
 }
