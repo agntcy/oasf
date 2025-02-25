@@ -1,7 +1,7 @@
 {
   "caption": "Finance and Business",
   "description": "Management of money, investments, and business operations, alongside the development and delivery of products and services in various industries.",
-  "extends": "base_class",
+  "extends": "base_domain",
   "name": "finance_and_business",
   "category": "finance_and_business",
   "attributes": {}

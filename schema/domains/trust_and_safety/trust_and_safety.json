@@ -1,7 +1,7 @@
 {
   "caption": "Trust and Safety",
   "description": "Maintaining a secure and reliable environment, primarily online, by managing risks, preventing harm, and ensuring safety and privacy. Subdomains: Online Safety, Content Moderation, Fraud Prevention, Data Privacy, Risk Management",
-  "extends": "base_class",
+  "extends": "base_domain",
   "name": "trust_and_safety",
   "category": "trust_and_safety",
   "attributes": {}
