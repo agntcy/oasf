@@ -53,7 +53,7 @@ defmodule Schema.Cache do
   @type main_domain_t() :: map()
   @type dictionary_t() :: map()
 
-  @main_skills_file "categories.json"
+  @main_skills_file "main_skills.json"
   @skills_dir "skills"
   @main_domains_file "main_domains.json"
   @domains_dir "domains"
