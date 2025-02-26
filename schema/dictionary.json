@@ -354,7 +354,7 @@
     },
     "class_name": {
       "caption": "Class",
-      "description": "The event class name, as defined by class_uid value.",
+      "description": "The class name, as defined by class_uid value.",
       "type": "string_t"
     },
     "class_uid": {
@@ -401,22 +401,6 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "fingerprint"
     },
-    "domain": {
-      "caption": "Domain",
-      "description": "The name of the domain. See specific usage.",
-      "type": "string_t"
-    },
-    "domain_name": {
-      "caption": "Domain",
-      "description": "The domain name, as defined by domain_uid value.",
-      "type": "string_t"
-    },
-    "domain_uid": {
-      "caption": "Domain ID",
-      "description": "The unique identifier of a domain.",
-      "sibling": "domain_name",
-      "type": "integer_t"
-    },
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
@@ -460,16 +444,20 @@
       "type": "locator",
       "is_array": true
     },
-    "main_domain_name": {
-      "caption": "Main domain",
-      "description": "The main domain name, as defined by main_domain_uid value.",
-      "type": "string_t"
+    "skill": {
+      "caption": "Skill",
+      "description": "A skill that apply to an agent.",
+      "type": "class_t",
+      "class_type": "base_skill",
+      "class_name": "Base Skill"
     },
-    "main_domain_uid": {
-      "caption": "Domain ID",
-      "description": "The unique identifier of a main_domain.",
-      "sibling": "main_domain_name",
-      "type": "integer_t"
+    "skills": {
+      "caption": "Skills",
+      "description": "Skills that apply to an agent.",
+      "type": "class_t",
+      "class_type": "base_skill",
+      "class_name": "Base Skill",
+      "is_array": true
     },
     "name": {
       "caption": "Name",
@@ -592,19 +580,22 @@
   },
   "types": {
     "caption": "Data Types",
-    "description": "The data types available in OASF. Each data type specifies constraints in the form regular expressions, max lengths or value limits. Implementors of OCSF should ensure they abide to these constraints.",
+    "description": "The data types available in OASF. Each data type specifies constraints in the form regular expressions, max lengths or value limits. Implementers of OCSF should ensure they abide to these constraints.",
     "attributes": {
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [
-          false,
-          true
-        ]
+        "values": [false, true]
       },
       "bytestring_t": {
         "caption": "Byte String",
         "description": "Base64 encoded immutable byte sequence.",
+        "type": "string_t",
+        "type_name": "String"
+      },
+      "class_t": {
+        "caption": "Class",
+        "description": "Name of the class linked to the object.",
         "type": "string_t",
         "type_name": "String"
       },
@@ -685,10 +676,7 @@
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [
-          0,
-          65535
-        ]
+        "range": [0, 65535]
       },
       "process_name_t": {
         "observable": 9,

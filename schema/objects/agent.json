@@ -43,6 +43,11 @@
       "caption": "Extensions",
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
       "requirement": "required"
+    },
+    "skills": {
+      "caption": "Skills",
+      "description": "List of skills associated with this agent.",
+      "requirement": "required"
     }
   }
 }

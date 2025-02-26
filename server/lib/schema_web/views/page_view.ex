@@ -149,7 +149,7 @@ defmodule SchemaWeb.PageView do
           "Applicable profiles: ",
           Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
           |> Enum.map_join(", ", fn name ->
-                                    profile_link(conn, get_in(profiles, [name, :caption]), name)
+            profile_link(conn, get_in(profiles, [name, :caption]), name)
           end),
           "."
         ]
@@ -624,7 +624,19 @@ defmodule SchemaWeb.PageView do
               "<a href='#{obj_path}'>#{format_type(conn, obj)}</a>"
 
             obj_name ->
-              format_object_path(obj_name, obj_path)
+              format_path(obj_name, obj_path)
+          end
+
+        "class_t" ->
+          class = Map.get(field, :class_type)
+          class_path = SchemaWeb.Router.Helpers.static_path(conn, "/classes/#{class}")
+
+          case Map.get(field, :class_name) do
+            nil ->
+              "<a href='#{class_path}'>#{format_type(conn, class)}</a>"
+
+            class_name ->
+              format_path(class_name, class_path)
           end
 
         _type ->
@@ -640,7 +652,7 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  defp format_object_path(name, path) do
+  defp format_path(name, path) do
     if String.starts_with?(name, "*") do
       "<div class='text-danger'>#{name}</div>"
     else
