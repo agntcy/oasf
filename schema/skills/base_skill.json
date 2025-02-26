@@ -1,44 +1,9 @@
 {
+	"uid": 1,
   "caption": "Base Skill",
-  "category": "other",
+	"category": "other",
   "description": "Skill classes",
   "name": "base_skill",
   "extends": "base_class",
-  "attributes": {
-    "name": {
-      "group": "classification",
-      "description": "The name of the category.",
-      "requirement": "required"
-    },
-    "annotations": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "category_name": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "category_uid": {
-      "group": "classification",
-      "requirement": "required",
-      "enum": {
-        "0": {
-          "caption": "Uncategorized"
-        }
-      }
-    },
-    "class_name": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "class_uid": {
-      "group": "classification",
-      "requirement": "required",
-      "enum": {
-        "0": {
-          "caption": "Base Skill"
-        }
-      }
-    }
-  }
+  "attributes": {}
 }

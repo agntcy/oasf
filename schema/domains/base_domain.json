@@ -1,44 +1,9 @@
 {
+	"uid": 1,
   "caption": "Base Domain",
   "category": "other",
   "description": "Domain of application classes report the activity, existence, and/or state of domain of application for tracking, mission planning, and other related activities.",
   "name": "base_domain",
   "extends": "base_class",
-  "attributes": {
-    "name": {
-      "group": "classification",
-      "description": "The name of the category.",
-      "requirement": "required"
-    },
-    "annotations": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "category_name": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "category_uid": {
-      "group": "classification",
-      "requirement": "required",
-      "enum": {
-        "0": {
-          "caption": "Uncategorized"
-        }
-      }
-    },
-    "class_name": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "class_uid": {
-      "group": "classification",
-      "requirement": "required",
-      "enum": {
-        "0": {
-          "caption": "Base Domain"
-        }
-      }
-    }
-  }
+  "attributes": {}
 }
