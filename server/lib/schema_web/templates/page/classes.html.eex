@@ -11,9 +11,9 @@ limitations under the License.
 --%>
 <div class="row">
   <div class="col-md move-up">
-    <h3>Classes</h3>
+    <h3><%= @data[:title] %></h3>
     <div class="text-secondary">
-      The OASF classes.
+      <%= @data[:description] %>
     </div>
   </div>
   <div class="col-md-auto fixed-right mt-2">
@@ -38,9 +38,9 @@ limitations under the License.
       </tr>
     </thead>
     <tbody class="searchable">
-      <%= for {key, map} <- @data do %>
+      <%= for {key, map} <- @data[:classes] do %>
         <% name = Atom.to_string(key) %>
-        <% path = Routes.static_path(@conn, "/classes/" <> name) %>
+        <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
         <tr class="oasf-class" <%= raw format_profiles(map[:profiles])%>>
           <td class="name"><%= raw format_caption(name, map) %></td>
           <td class="extensions"><a href="<%= path %>"><%= name %></a></td>

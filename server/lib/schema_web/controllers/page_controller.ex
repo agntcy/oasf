@@ -260,7 +260,14 @@ defmodule SchemaWeb.PageController do
   end
 
   def classes(conn, params) do
-    data = SchemaController.classes(params) |> sort_by(:uid)
+    data = %{
+      classes:
+        SchemaController.classes(params)
+        |> sort_by(:uid),
+      title: "Classes",
+      description: "The OASF classes",
+      classes_path: "classes"
+    }
 
     render(conn, "classes.html",
       extensions: Schema.extensions(),
@@ -295,9 +302,16 @@ defmodule SchemaWeb.PageController do
   end
 
   def domains(conn, params) do
-    data = SchemaController.domains(params) |> sort_by(:uid)
+    data = %{
+      classes:
+        SchemaController.domains(params)
+        |> sort_by(:uid),
+      title: "Domains",
+      description: "The OASF domains",
+      classes_path: "domains"
+    }
 
-    render(conn, "domains.html",
+    render(conn, "classes.html",
       extensions: Schema.extensions(),
       profiles: SchemaController.get_profiles(params),
       data: data
@@ -330,9 +344,16 @@ defmodule SchemaWeb.PageController do
   end
 
   def features(conn, params) do
-    data = SchemaController.features(params) |> sort_by(:uid)
+    data = %{
+      classes:
+        SchemaController.features(params)
+        |> sort_by(:uid),
+      title: "Features",
+      description: "The OASF features",
+      classes_path: "features"
+    }
 
-    render(conn, "features.html",
+    render(conn, "classes.html",
       extensions: Schema.extensions(),
       profiles: SchemaController.get_profiles(params),
       data: data
