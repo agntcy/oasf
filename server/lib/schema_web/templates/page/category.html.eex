@@ -15,7 +15,7 @@ limitations under the License.
     <h3><%= @data[:caption] %>
       <span class="text-secondary">
         [<%= @data[:uid] %>]<sup><%= @data[:extension] || "" %></sup>
-        Skill
+        <%= if @data[:class_type] == "class", do: "skill", else: @data[:class_type] %> category
       </span>
     </h3>
     <div class="text-dark"><%= raw description(@data) %></div>
@@ -44,7 +44,7 @@ limitations under the License.
     <tbody class="searchable">
       <%= for {id, class} <- @data[:classes] do %>
       <% name = Atom.to_string(id) %>
-      <% path = Routes.static_path(@conn, "/classes/" <> name) %>
+      <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
       <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>
         <td class="name"><%= raw format_caption(name, class) %></td>
         <td class="extensions">

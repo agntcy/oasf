@@ -111,10 +111,15 @@ defmodule SchemaWeb.PageController do
       data ->
         classes = sort_by(data[:classes], :uid)
 
+        data =
+          Map.put(data, :classes, classes)
+          |> Map.put(:class_type, "class")
+          |> Map.put(:classes_path, "classes")
+
         render(conn, "category.html",
           extensions: Schema.extensions(),
           profiles: SchemaController.get_profiles(params),
-          data: Map.put(data, :classes, classes)
+          data: data
         )
     end
   end
@@ -152,10 +157,15 @@ defmodule SchemaWeb.PageController do
       data ->
         domains = sort_by(data[:classes], :uid)
 
-        render(conn, "main_domain.html",
+        data =
+          Map.put(data, :classes, domains)
+          |> Map.put(:class_type, "domain")
+          |> Map.put(:classes_path, "domains")
+
+        render(conn, "category.html",
           extensions: Schema.extensions(),
           profiles: SchemaController.get_profiles(params),
-          data: Map.put(data, :classes, domains)
+          data: data
         )
     end
   end
@@ -188,10 +198,15 @@ defmodule SchemaWeb.PageController do
       data ->
         features = sort_by(data[:classes], :uid)
 
-        render(conn, "main_feature.html",
+        data =
+          Map.put(data, :classes, features)
+          |> Map.put(:class_type, "feature")
+          |> Map.put(:classes_path, "features")
+
+        render(conn, "category.html",
           extensions: Schema.extensions(),
           profiles: SchemaController.get_profiles(params),
-          data: Map.put(data, :classes, features)
+          data: data
         )
     end
   end
