@@ -250,6 +250,7 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:class_type, "class")
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -292,8 +293,9 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:class_type, "domain")
 
-        render(conn, "domain.html",
+        render(conn, "class.html",
           extensions: Schema.extensions(),
           profiles: SchemaController.get_profiles(params),
           data: data
@@ -334,8 +336,9 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:class_type, "feature")
 
-        render(conn, "feature.html",
+        render(conn, "class.html",
           extensions: Schema.extensions(),
           profiles: SchemaController.get_profiles(params),
           data: data

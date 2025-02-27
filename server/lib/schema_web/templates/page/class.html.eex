@@ -28,14 +28,14 @@ limitations under the License.
     <h3 class="extensions">
       <%= @data[:caption] %>
       <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<sup><%= extension || "" %></sup>
-        Skill
+        <%= if @data[:class_type] == "class", do: "skill", else: @data[:class_type] %> class
       </span>
     </h3>
 
     <%= if category_name != nil do %>
       <h4 class="extensions">
         <a href="<%= path %>"><%= category_name %></a>
-         Skill Category
+        <%= if @data[:class_type] == "class", do: "skill", else: @data[:class_type] %> category
       </h4>
     <% end %>
     <div class="text-secondary">
@@ -106,7 +106,7 @@ limitations under the License.
       <%= for {key, field} <- @data[:attributes] do %>
         <tr class="<%= field_classes(field)%>">
           <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
-          <td data-toggle="tooltip" title="<%= format_class_attribute_source(@data[:key], field) %>"><%= raw format_attribute_name(key) %></td>
+          <td data-toggle="tooltip" title="<%= format_class_attribute_source(@data[:key], field, @data[:class_type]) %>"><%= raw format_attribute_name(key) %></td>
           <td class="capitalize"><%= field[:group] %></td>
           <td><%= raw format_requirement(constraints, key, field) %></td>
           <td class="extensions"><%= raw format_type(@conn, field) %></td>
