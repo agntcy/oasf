@@ -6,7 +6,7 @@ version: "3"
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
-  IMAGE_TAG: '{{ .IMAGE_TAG | default "v0.1.0-rc" }}'
+  IMAGE_TAG: '{{ .IMAGE_TAG | default "v0.0.3" }}'
   IMAGE_BAKE_OPTS: '{{ .IMAGE_BAKE_OPTS | default "--set *.platform=linux/amd64,linux/arm64" }}'
 
   ## Dependency config

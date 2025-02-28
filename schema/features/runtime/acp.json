@@ -1,10 +1,11 @@
 {
-  "extends": "runtime",
   "uid" : "1",
-  "name": "acp",
   "caption": "Agent Connect Protocol",
   "description": "Specification of agent capabilities, config, input, output, and interrupts",
-  "AgentConnectProtocol": {
+  "extends": "runtime",
+  "name": "acp",
+  "attributes": {
+    "AgentConnectProtocol": {
     "type": "object",
     "properties": {
       "capabilities": {
@@ -245,4 +246,5 @@
       "config"
     ]
   }
+}
 }
