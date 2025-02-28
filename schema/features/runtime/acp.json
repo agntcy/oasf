@@ -1,0 +1,248 @@
+{
+  "extends": "runtime",
+  "uid" : "1",
+  "name": "acp",
+  "caption": "Agent Connect Protocol",
+  "description": "Specification of agent capabilities, config, input, output, and interrupts",
+  "AgentConnectProtocol": {
+    "type": "object",
+    "properties": {
+      "capabilities": {
+        "type": "object",
+        "title": "Agent Capabilities",
+        "description": "Declares what invocation features this agent is capable of.",
+        "properties": {
+          "threads": {
+            "type": "boolean",
+            "title": "Thread Support",
+            "default": false,
+            "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`"
+          },
+          "interrupts": {
+            "type": "boolean",
+            "title": "Interrupt Support",
+            "default": false,
+            "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`"
+          },
+          "callbacks": {
+            "type": "boolean",
+            "title": "Callback Support",
+            "default": false,
+            "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`"
+          },
+          "streaming": {
+            "type": "object",
+            "title": "Streaming Modes",
+            "description": "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+            "properties": {
+              "result": {
+                "type": "boolean",
+                "title": "Result Streaming",
+                "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one."
+              },
+              "custom": {
+                "type": "boolean",
+                "title": "Custom Objects Streaming",
+                "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`."
+              }
+            }
+          }
+        }
+      },
+      "input": {
+        "type": "object",
+        "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+        "examples": [
+          {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "address": {
+                "type": "string"
+              },
+              "age": {
+                "type": "integer",
+                "format": "int32",
+                "minimum": 0
+              }
+            }
+          }
+        ]
+      },
+      "output": {
+        "type": "object",
+        "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+        "examples": [
+          {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": null,
+            "name": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "age": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ]
+      },
+      "custom_streaming_update": {
+        "type": "object",
+        "description": "This describes the format of an Update in the streaming.  Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+        "examples": [
+          {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": null,
+            "name": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "age": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ]
+      },
+      "thread_state": {
+        "type": "object",
+        "description": "This describes the format of ThreadState.  Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+        "examples": [
+          {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": null,
+            "name": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "age": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ]
+      },
+      "config": {
+        "type": "object",
+        "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+        "examples": [
+          {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": null,
+            "name": {
+              "type": "string"
+            },
+            "address": {
+              "type": "string"
+            },
+            "age": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ]
+      },
+      "interrupts": {
+        "type": "array",
+        "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "interrupt_type": {
+              "description": "Name of this interrupt type. Needs to be unique in the list of interrupts.",
+              "title": "Interrupt Type Name",
+              "type": "string"
+            },
+            "interrupt_payload": {
+              "type": "object",
+              "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+              "examples": [
+                {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "properties": null,
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 0
+                  }
+                }
+              ]
+            },
+            "resume_payload": {
+              "type": "object",
+              "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+              "examples": [
+                {
+                  "type": "object",
+                  "required": [
+                    "name"
+                  ],
+                  "properties": null,
+                  "name": {
+                    "type": "string"
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "age": {
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 0
+                  }
+                }
+              ]
+            }
+          },
+          "required": [
+            "interrupt_type",
+            "resume_payload",
+            "interrupt_payload"
+          ]
+        }
+      }
+    },
+    "required": [
+      "capabilities",
+      "input",
+      "output",
+      "config"
+    ]
+  }
+}
