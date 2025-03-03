@@ -24,47 +24,45 @@ contribute to the development of OASF Schemas and the framework itself.
 
 ### Key OASF Terminology
 
-1. **Field**: A field is a unique identifier name for a piece of data contained in OCSF. Each field also designates a corresponding data_type.
-2. **Object**: An object is a collection of contextually related fields and other objects.  It is also a data_type in OCSF.
-3. **Attribute**: An attribute is the more generic name for both fields and objects in OCSF.  A field is a scalar attribute while an object is a complex attribute.
-4. ** Class**: An event is represented by an Event Class, which are a particular set of attributes (including fields & objects) representing a log line or telemetry submission at a point in time.
-5. **Category:** A Category organizes event classes that represent a particular domain.
+1. **Field**: A field is a unique identifier name for a piece of data contained in OASF. Each field also designates a corresponding data_type.
+2. **Object**: An object is a collection of contextually related fields and other objects.  It is also a data_type in OASF.
+3. **Attribute**: An attribute is the more generic name for both fields and objects in OASF.  A field is a scalar attribute while an object is a complex attribute.
+4. **BaseClass**: An base object is represented by a Base Class, which are a particular set of attributes (including fields & objects) representing metadata associated to an autonomous agent.
+5. **Category:** A Category organizes based classes that represent a particular domain.
 
-More details about OCSF concepts, terminology and use-cases can be found in [Understanding OCSF.](https://github.com/ocsf/ocsf-docs/blob/main/Understanding%20OCSF.md)
-
-## How do I add an `event_class`?
+## How do I add a `base_class`?
 
 ### In brief -
 
-1. Determine all the `attributes` (including fields and objects) you would want to add in the `event_class`.
-2. Check the [dictionary](https://github.com/ocsf/ocsf-schema/blob/main/dictionary.json) and the [/objects](https://github.com/ocsf/ocsf-schema/tree/main/objects) folder, many of your desired attributes may already be present.
+1. Determine all the `attributes` (including fields and objects) you would want to add in the `base_class`.
+2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
 3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
-4. Determine which category you would want to add your event_class in, note it’s  `name`
-5. Create a new file →  `<event_class_name.json>` inside the category specific subfolder in the [/events](https://github.com/ocsf/ocsf-schema/tree/main/events) folder. Template available [here](https://github.com/ocsf/ocsf-schema/blob/main/templates/event_class_name.json)
-6. Define the `event_class` itself → [Adding/Modifying an `event_class`](#addingmodifying-an-event_class)
-7. Finally, verify the changes are working as expected in your local [ocsf-server](https://github.com/ocsf/ocsf-server).
+4. Determine which category you would want to add your base_class in, note it’s  `name`
+5. Create a new file →  `<base_class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/base_class_name.json)
+6. Define the `base_class` itself → [Adding/Modifying a `base_class`](#addingmodifying-a-base_class)
+7. Finally, verify the changes are working as expected in your local [oasfserver](https://github.com/agntcy/oasf/server).
 
 * * *
 
 ### Adding/Modifying an `attribute`
 
-1. All the available `attributes` - `fields` & `objects` in OCSF are and will need to be defined in the attribute dictionary, the [dictionary.json](https://github.com/ocsf/ocsf-schema/blob/main/dictionary.json) file and [/objects](https://github.com/ocsf/ocsf-schema/tree/main/objects) folder if defining an object.
-2. Determine if a new attribute is required for your change, it might already be defined in the attribute dictionary and/or the [/objects](https://github.com/ocsf/ocsf-schema/tree/main/objects) folder.
-3. Before adding a new attribute, review the following OCSF attribute conventions -
+1. All the available `attributes` - `fields` & `objects` in OASF are and will need to be defined in the attribute dictionary, the [dictionary.json](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) file and [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder if defining an object.
+2. Determine if a new attribute is required for your change, it might already be defined in the attribute dictionary and/or the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder.
+3. Before adding a new attribute, review the following OASF attribute conventions -
 
    * Attribute names must be a valid UTF-8 sequence.
    * Attribute names must be all lower case.
    * Combine words using underscore.
    * No special characters except underscore.
    * Use present tense unless the attribute describes historical information.
-   * Use singular and plural names properly to reflect the field content. Example: use `events_per_sec` rather than `event_per_sec`.
-   * When attribute represents multiple entities, the attribute name should be pluralized and the value type should be an array. Example: `process.loaded_modules` includes multiple values -- a loaded module names list.
-   * Avoid repetition of words. Example: `src_endpoint.src_ip` should be `src_endpoint.ip`.
-   * Avoid abbreviations when possible. Some exceptions can be made for well-accepted abbreviation. Example: `ip`, `os`, `cve` etc.
+   * Use singular and plural names properly to reflect the field content.
+   * When attribute represents multiple entities, the attribute name should be pluralized and the value type should be an array.
+   * Avoid repetition of words.
+   * Avoid abbreviations when possible. Some exceptions can be made for well-accepted abbreviation like well known acronyms (e.g. LLM, AI)
 
 #### How to define a `field` in the dictionary?
 
-To add a new field in OCSF, you need to define it in the [dictionary.json](https://github.com/ocsf/ocsf-schema/blob/main/dictionary.json) file as described below.
+To add a new field in OASF, you need to define it in the [dictionary.json](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) file as described below.
 
 Sample entry in the dictionary -
 
@@ -79,44 +77,68 @@ Sample entry in the dictionary -
 
 Choose a **unique** field you want to add, `uid` in the example above and populate it as described below.
 
-1. `caption` → Add a user friendly name to the field.
+1. `caption` → Add a user-friendly name to the field.
 2. `description` → Add concise description to define the attributes.
-    1. Note that `field` descriptions can be overridden in the `event_class/object`, therefore if it’s a common field (like name, label, uid etc) feel free to add a generic description, specific descriptions can be added in the `event_class/object` definition. For example,
+    1. Note that `field` descriptions can be overridden in the `base_class/object`, therefore if it’s a common field (like name, label, uid etc) feel free to add a generic description, specific descriptions can be added in the `base_class/object` definition. For example,
     2. A generic definition of `uid` in the dictionary -
         1.  `uid` : `The unique identifier. See specific usage.`
-    3. Specific description of `uid` in the `vulnerability` object -
-        1. `uid` : `Unique Identifier/s of the reported vulnerability. e.g. CVE ID/s"`
-3. `type` → Review OCSF data_types and ensure you utilize appropriate types while defining new fields.
-    1. All the available data_types can be accessed [here](https://schema.ocsf.io/data_types).
-    2. They are also accessible in your local instance of the ocsf-server - http://localhost:8000/data_types
+    3. Specific description of `uid` in the `agent` object -
+        1. `uid` : `Unique Identifier/s of the reported agent."`
+3. `type` → Review OASF data_types and ensure you utilize appropriate types while defining new fields.
+    1. All the available data_types can be accessed [here](https://schema.oasf.agntcy.org/data_types).
+    2. They are also accessible in your local instance of the oasf server - http://localhost:8000/data_types
 4. `is_array` → This a boolean key:value pair that you would need to add if the field you are defining is an array.
     1. e.g. `"is_array": true`
 
 #### How to define an `object`?
 
-1. All the available `objects` need to be defined as individual field entries in the dictionary, the [dictionary.json](https://github.com/ocsf/ocsf-schema/blob/main/dictionary.json) file and as distinct .json files in the [/objects](https://github.com/ocsf/ocsf-schema/tree/main/objects) folder.
+1. All the available `objects` need to be defined as individual field entries in the dictionary, the [dictionary.json](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) file and as distinct .json files in the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder.
 2. Review existing Objects, determine if a modification of the existing object would be sufficient or if there’s a need for a completely new object.
-3. Use the template available [here](https://github.com/ocsf/ocsf-schema/blob/main/templates/object_name.json), to get started with .json file definition.
+3. Use the template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/object_name.json), to get started with .json file definition.
 
-An example `vulnerability.json` object file,
+An example `locator.json` object file,
 
 ```
 {
-  "caption": "Vulnerability Details",
-  "name": "vulnerability",
-  "description": "The vulnerability object describes details related to the observed vulnerability.",
-  "extends": "object",
+  "caption": "Agent Locator",
+  "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+  "extends": "_entity",
+  "name": "locator",
   "attributes": {
-    "desc": {
-      "description": "The description of the vulnerability",
-      "requirement": "recommended"
+    "name": {
+      "description": "The schema extension name. For example: <code>dev</code>.",
+      "requirement": "required"
     },
-    "kb_article_list": {
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Additional metadata associated with the extension.",
+      "requirement": "optional"
+    },
+    "type": {
+      "caption": "Type",
+      "description": "Describes the type of the release manifest pointed by its URI, e.g. <code>oci-image</code>, <code>docker-image</code>, <code>py-package</code>, <code>binary</code>. Allowed values MAY be defined for common manifest types.",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "URL",
+      "description": "Specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
+      "requirement": "required"
+    },
+    "size": {
+      "caption": "Size",
+      "description": "Specifies the size of the release manifest in bytes.",
+      "requirement": "optional"
+    },
+    "digest": {
+      "caption": "Digest",
+      "description": "Specifies the digest of the release manifest contents.",
       "requirement": "optional"
     }
-  }
+  },
+  "constraints": {}
 }
 ```
+
 4. `caption` → Add a user friendly name to the object.
 5. `description` → Add a concise description to define the object.
 6. `extends` → Ensure the value is `object` or an existing object, e.g. `entity` (All objects in OCSF must extend a base definition of `object` or another existing object.)
@@ -133,26 +155,38 @@ An example `vulnerability.json` object file,
         }
         ```
 
-**Note:** If you want to create an object which would act only as a base for other objects, you must prefix the object `name` and the actual `json` filename with an `_`. The resultant object will not be visible in the [OCSF Server.](https://schema.ocsf.io/1.0.0-rc.2/objects) For example, take a look at the [entity](https://github.com/ocsf/ocsf-schema/blob/main/objects/_entity.json) object.
+**Note:** If you want to create an object which would act only as a base for other objects, you must prefix the object `name` and the actual `json` filename with an `_`. The resultant object will not be visible in the [OASF Server.](https://schema.oasf.agntcy.org/objects) For example, take a look at the [entity](https://github.com/agntcy/oasf/blob/main/schema/objects/_entity.json) object.
 
 Sample entry in the `dictionary.json`,
 
 ```
-    "vulnerability":
-    {
-      "caption": "Vulnerability",
-      "description": "The vulnerability object describes details related to the observed vulnerability.",
-      "type": "vulnerability"
+    "skill": {
+      "caption": "Skill",
+      "description": "A skill that apply to an agent.",
+      "type": "class_t",
+      "class_type": "base_skill",
+      "class_name": "Base Skill"
     }
 ```
 
-Choose a **unique** object you want to add, `vulnerability` in the example above and populate it as described below.
+Choose a **unique** object you want to add, `skill` in the example above and populate it as described below.
 
-1. `caption` → Add a user friendly name to the object
+1. `caption` → Add a user-friendly name to the object
 2. `description` → Add a concise description to define the object.
 3. `type` → Add the type of the object you are defining.
 4. `is_array` → This a boolean key:value pair that you would need to add if the object you are defining is an array.
     1. e.g. `"is_array": true`
+
+```
+    "skills": {
+      "caption": "Skills",
+      "description": "Skills that apply to an agent.",
+      "type": "class_t",
+      "class_type": "base_skill",
+      "class_name": "Base Skill",
+      "is_array": true
+    }
+```
 
 * * *
 
@@ -237,14 +271,13 @@ To deprecate an attribute (`field`, `object`) follow the steps below -
 
 ### Verifying the changes
 
-Contributors should verify the changes before they submit the PR, the best method to test and verify their changes is to run a local instance of the [ocsf-server](https://github.com/ocsf/ocsf-server). Follow the instructions [here](https://github.com/ocsf/ocsf-server/blob/main/README.md) to set your own local ocsf-server.
+Contributors should verify the changes before they submit the PR, the best method to test and verify their changes is to run a local instance of the [oasfserver](https://github.com/agntcy/oasf/tree/main/server). Follow the instructions [here](https://github.com/agntcy/oasf/blob/main/server/README.md) to set your own local oasf server.
 
 If there are any problems with the newly made changes, the server will throw corresponding errors.
 Sample error messages -
 
 ```
-[error] dictionary: missing attribute: event_uid for Network HTTP Activity
-[error] dictionary: missing attribute: event_name for Container Orchestration
+[error] dictionary: missing attribute:
 ```
  Address the errors before submitting the changes, your server run should be completely error free.
 
@@ -278,21 +311,33 @@ By making a contribution to this project, I certify that:
     involved.
 
 ---
-We require that every contribution to this repository is signed with a Developer Certificate of Origin. Additionally, please use your real name. We do not accept anonymous contributors nor those utilizing pseudonyms.
+We require that every contribution to this repository is signed with a
+Developer Certificate of Origin. Additionally, please use your real name.
+We do not accept anonymous contributors nor those utilizing pseudonyms.
 
 Each commit must include a DCO which looks like this
 
 Signed-off-by: Jane Smith <jane.smith@email.com>
 
-You may type this line on your own when writing your commit messages. However, if your user.name and user.email are set in your git configs, you can use -s or --signoff to add the Signed-off-by line to the end of the commit message.
+You may type this line on your own when writing your commit messages.
+However, if your user.name and user.email are set in your git configs,
+you can use -s or --signoff to add the Signed-off-by line to the end of the commit message.
 
 * * *
 
-## OCSF Extensions
+## OASF Extensions
 
-The OCSF Schema can be extended by adding an extension that defines additional attributes, objects, profiles, event classes and/or categories. Extensions allow one to create vendor/customer specific schemas or augment an existing schema to better suit their custom requirements. Extensions can also be used to factor out non-essential schema domains keeping the core schema succinct. Extensions use the framework in the same way as a new schema, optionally creating categories, profiles or event classes from the dictionary.
+The OCSF Schema can be extended by adding an extension that defines additional
+attributes, objects, profiles, event classes and/or categories.
+Extensions allow one to create vendor/customer specific schemas or augment an
+existing schema to better suit their custom requirements. Extensions can also
+be used to factor out non-essential schema domains keeping the core schema
+succinct. Extensions use the framework in the same way as a new schema,
+optionally creating categories, profiles or event classes from the dictionary.
 
-As with categories and event classes, extensions have unique IDs within the framework as well as their own versioning. The following sections provide guidelines to create extensions within OCSF.
+As with categories and base classes, extensions have unique IDs within the
+framework as well as their own versioning. The following sections provide
+guidelines to create extensions within OASF.
 
 ### Reserve a UID and Name for your extension:
 
