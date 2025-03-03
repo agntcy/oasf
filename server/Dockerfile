@@ -36,7 +36,7 @@ COPY lib lib
 # Compile the release
 RUN mix compile
 # Generate ssl certificate
-RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -sha256 -x509 -subj "/C=US/ST=CA/L=oasf/O=oasf.io/CN=oasf-schema" -keyout priv/cert/selfsigned_key.pem -out priv/cert/selfsigned.pem
+RUN openssl req -new -newkey rsa:4096 -days 365 -nodes -sha256 -x509 -subj "/C=US/ST=CA/L=oasf/O=oasf.agntcy.org/CN=oasf-schema" -keyout priv/cert/selfsigned_key.pem -out priv/cert/selfsigned.pem
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/releases.exs  config/runtime.exs
 

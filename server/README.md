@@ -3,11 +3,11 @@
 This directory contains the Open Agents Schema Framework (OASF) Schema Server source code.
 The schema server is an HTTP server that provides a convenient way to browse and use the OASF schema.
 
-You can access the OASF schema server, which is running the latest released schema, at [schema.oasf.io](https://schema.oasf.io).
+You can access the OASF schema server, which is running the latest released schema, at [schema.oasf.agntcy.org](https://schema.oasf.agntcy.org).
 
-The schema server can be also used locally. To do that clone the `oasf-server` and `oasf-schema` repositories and follow the instruction below to build and run the schema server.
+The schema server can also be used locally.
 
-## Clone the OAFS schema (`oasf-schema`) repository
+## Clone the OAFS schema and server (`oasf`) repository
 
 ```shell
 git clone https://github.com/agntcy/oasf.git
@@ -16,89 +16,11 @@ git clone https://github.com/agntcy/oasf.git
 ## Build a server docker image
 
 ```shell
-cd oasf/server
-docker build -t oasf-server .
+task server:build
+task server:run
 ```
-
-## Run the server docker image
-
-Change the `/path/to` to your local OASF schema directory (use an absolute path). Note, the `-p 8443:8443` parameter enables HTTPS with a self-signed SSL certificate.
-
-```shell
-docker run -it --rm --volume /path/to/oasf/schema:/app/schema -p 8080:8080 -p 8443:8443 oasf-server
-```
-
-For example, if the `oasf-schema` and `oasf-server` repos were cloned to the local directory `~/github-projects`, this would be the proper replacement for `/path/to`:
-
-```shell
-docker run -it --rm --volume ~/github-projects/oasf/schema:/app/schema -p 8080:8080 -p 8443:8443 oasf-server
-```
-
-(Note that paths used for volume mounts with `docker run` cannot be relative.)
 
 To access the schema server, open [`localhost:8080`](http://localhost:8080) or [`localhost:8443`](https://localhost:8443) in your Web browser.
-
-## Development with docker-compose
-
-The `docker-compose` environment enables development without needing to install any dependencies (apart from Docker/Podman and docker-compose) on the development machine.
-
-When run, the standard `_build` and `deps` folders are created, along with a `.mix` folder. If the environment needs to be recreated for whatever reason, the `_build` folder can be removed and `docker-compose` brought down and up again and the environment will automatically rebuild.
-
-### Run the oasf-server and build the development container
-
-```shell
-docker-compose up
-```
-
-Then browse to the schema server at http://localhost:8080
-
-### Testing the schema with docker-compose
-
-**NOTE:** it is _not_ necessary to run the server with `docker-compose up` first in order to test the schema (or run any other commands in the development container).
-
-```
-# docker-compose run oasf-elixir mix test
-Creating oasf-server_oasf-elixir_run ... done
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-
-
-Finished in 0.00 seconds (0.00s async, 0.00s sync)
-0 failures
-
-Randomized with seed 933777
-```
-
-### Set aliases to avoid docker-compose inflicted RSI
-
-```shell
-source docker-source.sh
-```
-
-### Using aliases to run docker-compose commands
-
-```
-# testschema
-Creating oasf-server_oasf-elixir_run ... done
-Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
-
-
-Finished in 0.00 seconds (0.00s async, 0.00s sync)
-0 failures
-
-Randomized with seed 636407
-```
-
-### Using environment variables to change docker-compose defaults
-
-Optional environment variables can be placed in a `.env` file in the root of the repo to change the default behavior.
-
-An `.env.sample` is provided, and the following options are available:
-
-```
-SCHEMA_PATH=../oasf-schema      # Set the local schema path, eg. ../oasf-schema, defaults to ../oasf-schema
-OASF_SERVER_PORT=8080           # Set the port for Docker to listen on for forwarding traffic to the Schema server, defaults to 8080
-ELIXIR_VERSION=otp-25-alpine    # Set the Elixir container version for development, defaults to otp-25-alpine
-```
 
 ## Local Usage
 
@@ -125,7 +47,7 @@ mix local.hex --force && mix local.rebar --force
 Change to the schema directory, fetch and compile the dependencies:
 
 ```shell
-cd oasf-server
+cd server
 mix do deps.get, deps.compile
 ```
 
@@ -139,7 +61,7 @@ mix compile
 
 You can use `mix test` command to test the changes made to the schema. For example to ensure the JSON files are correct or the attributes are defined.
 
-Assuming the schema repo has been cloned in `../oasf-schema` directory, then you can test the schema with this command:
+Assuming the schema repo is in `../schema` directory, then you can test the schema with this command:
 
 ```shell
 SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions mix test
