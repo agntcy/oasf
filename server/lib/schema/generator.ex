@@ -20,7 +20,7 @@ defmodule Schema.Generator do
 
   require Logger
 
-  defstruct ~w[countries tactics techniques names words files]a
+  defstruct ~w[countries tactics names words files]a
 
   @spec start :: {:error, any} | {:ok, pid}
   def start(), do: Agent.start(fn -> init() end, name: __MODULE__)
@@ -33,7 +33,6 @@ defmodule Schema.Generator do
   @countries_file "country-and-continent-codes-list.json"
 
   # MITRE ATT&CK files
-  @techniques_file "techniques.json"
   @tactics_file "enterprise-tactics.json"
 
   @files_file "files.txt"
@@ -52,7 +51,6 @@ defmodule Schema.Generator do
     countries = read_countries(Path.join(dir, @countries_file))
 
     tactics = read_json_file(Path.join(dir, @tactics_file))
-    techniques = read_json_file(Path.join(dir, @techniques_file))
 
     files = read_file_types(Path.join(dir, @files_file))
     names = read_data_file(Path.join(dir, @names_file))
@@ -61,7 +59,6 @@ defmodule Schema.Generator do
     %Generator{
       countries: countries,
       tactics: tactics,
-      techniques: techniques,
       files: files,
       names: names,
       words: words
@@ -678,17 +675,9 @@ defmodule Schema.Generator do
     end)
   end
 
-  def technique() do
-    Agent.get(__MODULE__, fn %Generator{techniques: {_len, techniques}} ->
-      {uid, name} = Enum.random(techniques)
-      %{:uid => uid, :name => name}
-    end)
-  end
-
   def attack() do
     Map.new()
     |> Map.put(:tactics, tactics())
-    |> Map.put(:technique, technique())
     |> Map.put(:version, "12.1")
   end
 
