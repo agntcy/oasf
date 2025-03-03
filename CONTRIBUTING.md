@@ -271,10 +271,14 @@ To deprecate an attribute (`field`, `object`) follow the steps below -
 
 ### Verifying the changes
 
-Contributors should verify the changes before they submit the PR, the best method to test and verify their changes is to run a local instance of the [oasfserver](https://github.com/agntcy/oasf/tree/main/server). Follow the instructions [here](https://github.com/agntcy/oasf/blob/main/server/README.md) to set your own local oasf server.
+Contributors should verify the changes before they submit the PR, the best
+method to test and verify their changes is to run a local instance of the
+[oasfserver](https://github.com/agntcy/oasf/tree/main/server). Follow the
+instructions [here](https://github.com/agntcy/oasf/blob/main/server/README.md)
+to set your own local oasf server.
 
-If there are any problems with the newly made changes, the server will throw corresponding errors.
-Sample error messages -
+If there are any problems with the newly made changes, the server will throw
+corresponding errors. Sample error messages -
 
 ```
 [error] dictionary: missing attribute:
@@ -341,7 +345,11 @@ guidelines to create extensions within OASF.
 
 ### Reserve a UID and Name for your extension:
 
-In order to reserve an ID space, and make your extension public, add a unique identifier & a unique name for your extension in the OCSF Extensions Registry [here](https://github.com/ocsf/ocsf-schema/blob/main/extensions.md). This is done to avoid collisions with core or other extension schemas.  For example, a new sample extension would have a row in the table as follows:
+In order to reserve an ID space, and make your extension public, add a unique
+identifier & a unique name for your extension in the OASF Extensions Registry
+[here](https://github.com/agntcy/oasf/blob/main/schema/extensions.md).
+This is done to avoid collisions with core or other extension schemas.
+For example, a new sample extension would have a row in the table as follows:
 
 | **Caption** | **Name** | **UID** | **Notes**                         |
 | ------------------ | -------- | ------- | --------------------------------- |
@@ -349,7 +357,9 @@ In order to reserve an ID space, and make your extension public, add a unique id
 
 ### Create your Extension's sub-directory:
 
-To extend the schema, create a new subdirectory in the `extensions` directory, and add a new `extension.json` file, which defines the extension's `name` and `uid`. For example:
+To extend the schema, create a new subdirectory in the `extensions` directory,
+and add a new `extension.json` file, which defines the extension's `name`
+and `uid`. For example:
 
 ```
 {
@@ -360,25 +370,8 @@ To extend the schema, create a new subdirectory in the `extensions` directory, a
 }
 ```
 
-The extension's directory structure is the same as the top level schema directory, and it may contain the following files and subdirectories, depending on what type of extension is desired:
-
-| Name              | Description                                                               |
-|-------------------|---------------------------------------------------------------------------|
-| `categories.json` | Create it to define new categories. Note, to avoid collisions with the categories defined in the core schema, the category IDs must be greater than or equal to 30. |
-| `dictionary.json` | Create it to define new attributes.                                       |
-| `events`          | Create it to define new event classes.                                    |                                    |
-| `objects`         | Create it to define new objects.                                          |
-| `profiles`        | Create it to define new profiles.                                         |
-
-
-As a reference, take a look at the [Linux Extension](https://github.com/ocsf/ocsf-schema/tree/main/extensions/linux) that is currently added to OCSF.
-
-## Looking to contribute to OCSF Server?
-
-See the [ocsf-server](https://github.com/ocsf/ocsf-server) project documentation.
-
-
-
+The extension's directory structure is the same as the top level schema directory,
+and it may contain the following files and subdirectories, depending on what type of extension is desired:
 
 ## Reporting Issues
 
