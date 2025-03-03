@@ -105,7 +105,6 @@ defmodule Schema.Generator do
       Utils.remove_profiles(attributes)
     end)
     |> generate_sample_event()
-    |> add_profiles([])
   end
 
   defp generate_event(class, profiles, size) do
