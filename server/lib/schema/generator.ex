@@ -157,7 +157,6 @@ defmodule Schema.Generator do
     case type[:name] do
       "fingerprint" -> fingerprint(type)
       "location" -> location()
-      "attack" -> attack()
       "file" -> generate_sample(type) |> update_file_path()
       _type -> generate_sample(type)
     end
@@ -427,10 +426,6 @@ defmodule Schema.Generator do
     end
   end
 
-  defp generate_objects(n, {:attacks, _field}) do
-    Enum.map(1..n, fn _ -> attack() end)
-  end
-
   defp generate_objects(n, {_name, field}) do
     object =
       field[:object_type]
@@ -658,11 +653,6 @@ defmodule Schema.Generator do
 
   def country() do
     Agent.get(__MODULE__, fn %Generator{countries: {len, names}} -> random_word(len, names) end)
-  end
-
-  def attack() do
-    Map.new()
-    |> Map.put(:version, "12.1")
   end
 
   def location() do
