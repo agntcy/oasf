@@ -1,5 +1,5 @@
 {
-    "$id": "https://schema.ocsf.io/extension.schema.json",
+    "$id": "https://schema.oasf.agntcy.org/extension.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Extension",
     "description": "Extensions allow the schema to be extended using the framework without modification of the core schema. New attributes, objects, event classes, categories and profiles are all available to extensions.",

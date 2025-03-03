@@ -141,7 +141,7 @@ An example `locator.json` object file,
 
 4. `caption` → Add a user friendly name to the object.
 5. `description` → Add a concise description to define the object.
-6. `extends` → Ensure the value is `object` or an existing object, e.g. `entity` (All objects in OCSF must extend a base definition of `object` or another existing object.)
+6. `extends` → Ensure the value is `object` or an existing object, e.g. `skill` (All objects in OAF must extend a base definition of `object` or another existing object.)
 7. `name` → Add a **unique** name of the object. `name` must match the filename of the actual `.json` file.
 8.  `attributes` → Add the attributes that you want to define in the object,
     1. `requirement` →  For each attribute ensure you add a requirement value. Valid values are `optional`, `required`, `recommended`
@@ -190,19 +190,19 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
 
 * * *
 
-### Adding/Modifying an `event_class`
+### Adding/Modifying a `base_class`
 
-1. All the available Event Classes are defined as .json files in the [/events](https://github.com/ocsf/ocsf-schema/tree/main/events) folder.
-2. Review existing Event Classes, determine if a modification of the existing class would be sufficient or if there’s a need for a completely new event_class.
+1. All the available Base Classes are defined as .json files in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+2. Review existing Base Classes, determine if a modification of the existing class would be sufficient or if there’s a need for a completely new base_class.
 3. To define a new class,
-    1. Create a new file →  `<event_class_name.json>` inside the category specific subfolder in the [/events](https://github.com/ocsf/ocsf-schema/tree/main/events) folder.
-    2. Use the template available [here](https://github.com/ocsf/ocsf-schema/blob/main/templates/event_class_name.json), to get started with the .json definition.
+    1. Create a new file →  `<base_class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+    2. Use the template available [here](https://github.com/agntcy/oasf/tree/main/schema/templates/base_class_name.json), to get started with the .json definition.
     3. `uid` → Select an integer in the range 0 - 99. Ensure the integer is **unique** within the category.
-        * Note: Without `uid`, an event_class won’t be visible in the ocsf-server.
+        * Note: Without `uid`, a base_class won’t be visible in the oasf server.
     4. `caption` → Add a user friendly name to the event_class.
     5. `description` → Add a concise description to define the attributes.
     6. `name` → Add a **unique** name of the event_class. Ensure it matches the file name to maintain consistency.
-    7. `extends` → Ensure the value is `base_event`.
+    7. `extends` → Ensure the value is `base_class`.
     8. `attributes` → Add the attributes that you want to define in the event_class,
         1. `group` → For each attribute ensure you add a group value. Valid values are - `classification`, `context`, `occurrence`, `primary`
         2. `requirement` →  For each attribute ensure you add a requirement value. Valid values are `optional`, `required`, `recommended`
@@ -331,7 +331,7 @@ you can use -s or --signoff to add the Signed-off-by line to the end of the comm
 
 ## OASF Extensions
 
-The OCSF Schema can be extended by adding an extension that defines additional
+The OASF Schema can be extended by adding an extension that defines additional
 attributes, objects, profiles, event classes and/or categories.
 Extensions allow one to create vendor/customer specific schemas or augment an
 existing schema to better suit their custom requirements. Extensions can also
