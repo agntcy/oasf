@@ -1,0 +1,42 @@
+{
+  "caption": "Skills",
+  "description": "A structured view of distinct abilities, defining the capabilities within the Open Agentic Schema Framework.",
+  "name": "category",
+  "attributes": {
+    "nlp": {
+      "uid": 1,
+      "caption": "Natural Language Processing",
+      "description": "Natural Language Processing (NLP) tasks are the application of computational techniques to the analysis and synthesis of natural language and speech."
+    },
+    "images_computer_vision": {
+      "uid": 2,
+      "caption": "Images / Computer Vision",
+      "description": "Images / Computer Vision tasks are the application of computational techniques to the analysis and synthesis of images"
+    },
+    "audio": {
+      "uid": 3,
+      "caption": "Audio",
+      "description": "Audio tasks are the application of computational techniques to the analysis and synthesis of audio data."
+    },
+    "tabular_text": {
+      "uid": 4,
+      "caption": "Tabular / Text",
+      "description": "Tabular / Text tasks are the application of computational techniques to the analysis and synthesis of tabular data and text."
+    },
+    "multi_modal": {
+      "uid": 5,
+      "caption": "Multi-modal",
+      "description": "Multi-model tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
+    },
+    "retrieval_augmented_generation": {
+      "uid": 6,
+      "caption": "Retrieval Augmented Generation",
+      "description": "Retrieval Augmented Generation tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
+    },
+    "analytical_skills": {
+      "uid": 7,
+      "caption": "Analytical skills",
+      "description": "Analytical skills events report the activity, existence, and/or state of analytical skills for tracking, mission planning, and other related activities."
+    }
+  }
+}

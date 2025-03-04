@@ -1,7 +1,7 @@
 {
   "caption": "Eta",
   "category": "system",
-  "description": "The Eta example event class.",
+  "description": "The Eta example skill class.",
   "name": "eta",
   "extends": "base_class",
   "uid": 3,

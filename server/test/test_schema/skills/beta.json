@@ -1,7 +1,7 @@
 {
   "caption": "Beta",
   "category": "system",
-  "description": "The Beta example event class.",
+  "description": "The Beta example skill class.",
   "name": "beta",
   "extends": "ghost",
   "uid": 2,

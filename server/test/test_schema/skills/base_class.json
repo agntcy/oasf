@@ -1,7 +1,7 @@
 {
-  "caption": "Base Event",
+  "caption": "Base Class",
   "category": "other",
-  "description": "The base event is a generic and concrete event. It also defines a set of attributes available in most event classes. As a generic event that does not belong to any event category, it could be used to log events that are not otherwise defined by the schema.",
+  "description": "The base class is a generic and concrete class. It also defines a set of attributes available in most class classes. As a generic class that does not belong to any class category, it could be used to log class that are not otherwise defined by the schema.",
   "name": "base_class",
   "profiles": ["datetime"],
   "attributes": {
@@ -39,7 +39,7 @@
     "class_uid": {
       "enum": {
         "0": {
-          "caption": "Base Event"
+          "caption": "Base class"
         }
       },
       "requirement": "required"

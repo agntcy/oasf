@@ -1,7 +1,7 @@
 {
   "caption": "Alpha",
   "category": "network",
-  "description": "The Alpha example event class.",
+  "description": "The Alpha example skill class.",
   "name": "alpha",
   "extends": "ghost",
   "uid": 1,
