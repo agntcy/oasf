@@ -20,7 +20,7 @@ defmodule Schema.Generator do
 
   require Logger
 
-  defstruct ~w[countries tactics techniques names words files]a
+  defstruct ~w[countries names words files]a
 
   @spec start :: {:error, any} | {:ok, pid}
   def start(), do: Agent.start(fn -> init() end, name: __MODULE__)
@@ -31,10 +31,6 @@ defmodule Schema.Generator do
   @data_dir "priv/data"
 
   @countries_file "country-and-continent-codes-list.json"
-
-  # MITRE ATT&CK files
-  @techniques_file "techniques.json"
-  @tactics_file "enterprise-tactics.json"
 
   @files_file "files.txt"
   @names_file "names.txt"
@@ -51,17 +47,12 @@ defmodule Schema.Generator do
 
     countries = read_countries(Path.join(dir, @countries_file))
 
-    tactics = read_json_file(Path.join(dir, @tactics_file))
-    techniques = read_json_file(Path.join(dir, @techniques_file))
-
     files = read_file_types(Path.join(dir, @files_file))
     names = read_data_file(Path.join(dir, @names_file))
     words = read_data_file(Path.join(dir, @words_file))
 
     %Generator{
       countries: countries,
-      tactics: tactics,
-      techniques: techniques,
       files: files,
       names: names,
       words: words
@@ -105,7 +96,6 @@ defmodule Schema.Generator do
       Utils.remove_profiles(attributes)
     end)
     |> generate_sample_event()
-    |> add_profiles([])
   end
 
   defp generate_event(class, profiles, size) do
@@ -167,7 +157,6 @@ defmodule Schema.Generator do
     case type[:name] do
       "fingerprint" -> fingerprint(type)
       "location" -> location()
-      "attack" -> attack()
       "file" -> generate_sample(type) |> update_file_path()
       _type -> generate_sample(type)
     end
@@ -437,10 +426,6 @@ defmodule Schema.Generator do
     end
   end
 
-  defp generate_objects(n, {:attacks, _field}) do
-    Enum.map(1..n, fn _ -> attack() end)
-  end
-
   defp generate_objects(n, {_name, field}) do
     object =
       field[:object_type]
@@ -668,29 +653,6 @@ defmodule Schema.Generator do
 
   def country() do
     Agent.get(__MODULE__, fn %Generator{countries: {len, names}} -> random_word(len, names) end)
-  end
-
-  def tactics() do
-    Agent.get(__MODULE__, fn %Generator{tactics: {_len, tactics}} ->
-      Enum.map(1..(random(3) + 1), fn _ ->
-        {uid, name} = Enum.random(tactics)
-        %{:uid => uid, :name => name}
-      end)
-    end)
-  end
-
-  def technique() do
-    Agent.get(__MODULE__, fn %Generator{techniques: {_len, techniques}} ->
-      {uid, name} = Enum.random(techniques)
-      %{:uid => uid, :name => name}
-    end)
-  end
-
-  def attack() do
-    Map.new()
-    |> Map.put(:tactics, tactics())
-    |> Map.put(:technique, technique())
-    |> Map.put(:version, "12.1")
   end
 
   def location() do

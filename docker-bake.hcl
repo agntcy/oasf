@@ -5,7 +5,7 @@
 
 # Docker build args
 variable "IMAGE_REPO" {default = "ghcr.io/agntcy"}
-variable "IMAGE_TAG" {default = "v0.1.0-rc"}
+variable "IMAGE_TAG" {default = "latest"}
 
 function "get_tag" {
   params = [tags, name]

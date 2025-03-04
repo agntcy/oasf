@@ -137,7 +137,7 @@ limitations under the License.
     </script>
 
     <!--<div class="navbar-brand">
-      <a target="_blank" href=https://github.com/oasf/oasf-schema/blob/main/extensions.md>Extensions</a>
+      <a target="_blank" href=https://github.com/agntcy/oasf/blob/main/schema/extensions.md>Extensions</a>
       <hr class="divider"/>
     </div>-->
     <div class="collapse navbar-collapse" id="checkbox-extensions">
@@ -196,7 +196,7 @@ limitations under the License.
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/classes") %>'>Classes</a>
       </li>-->
       <li id="base_class_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Data Model</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Agent Core Object</a>
       </li>
       <li id="dictionary_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/dictionary") %>'>Dictionary</a>
@@ -211,10 +211,8 @@ limitations under the License.
         <div class="dropdown">
           Resources
           <div class="dropdown-content">
-            <a class="nav-link" target="_blank" href="https://github.com/oasf/oasf-docs/blob/main/Understanding%20OASF.pdf">Understanding OASF</a>
-            <a class="nav-link" target="_blank" href="https://github.com/oasf/examples/tree/main">Example Mappings</a>
-            <a class="nav-link" target="_blank" href="https://github.com/oasf/oasf-schema/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
-            <a class="nav-link" target="_blank" href="https://github.com/oasf/oasf-schema">Fork Me on GitHub</a>
+            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
+            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
             <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>OASF Data Types</a>
             <a class="nav-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
           </div>

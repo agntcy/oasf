@@ -1,5 +1,5 @@
 {
-    "$id": "https://schema.ocsf.io/common-event-object.schema.json",
+    "$id": "https://schema.oasf.agntcy.org/common-event-object.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Object",
     "description": "Common metaschema shared between objects and event classes.",

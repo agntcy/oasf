@@ -572,8 +572,8 @@ defmodule SchemaWeb.PageView do
           end
 
         "class_t" ->
-          class = Map.get(field, :class_type)
-          class_path = SchemaWeb.Router.Helpers.static_path(conn, "/classes/#{class}")
+          class = Map.get(field, :class_path)
+          class_path = SchemaWeb.Router.Helpers.static_path(conn, "/#{class}")
 
           case Map.get(field, :class_name) do
             nil ->

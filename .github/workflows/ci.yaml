@@ -21,8 +21,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify-gen:
-    name: Verify generated files
+  verify:
+    name: Verify codebase changes
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,19 +33,23 @@ jobs:
       - name: Setup Taskfile
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
-  
-      - name: Generate api
+
+      - name: Build code
         run: |
-          task gen
+          # NOTE: We are only interested in codebase, dont build images here
+          task build:charts
+
+      - name: Check code changes
+        run: |
           if [[ -n "$(git status --porcelain)" ]]; then
-            echo "There are uncommitted changes after running 'task gen'. Please commit these changes."
+            echo "There are uncommitted changes after running 'task build'. Please commit these changes."
             exit 1
           fi
 
   prepare-build:
     name: Prepare Build
     needs:
-      - verify-gen
+      - verify
     outputs:
       targets: ${{ steps.targets.outputs.targets }}
       image_tag: ${{ steps.resolve.outputs.image_tag }}
