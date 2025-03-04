@@ -38,8 +38,8 @@ contribute to the development of OASF Schemas and the framework itself.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
 3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
 4. Determine which category you would want to add your class in, note it’s  `name`
-5. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/base_class_name.json)
-6. Define the `base_class` itself → [Adding/Modifying a `base_class`](#addingmodifying-a-base_class)
+5. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/class_name.json)
+6. Define the `class` itself → [Adding/Modifying a `class`](#addingmodifying-a-class)
 7. Finally, verify the changes are working as expected in your local [oasfserver](https://github.com/agntcy/oasf/server).
 
 * * *
@@ -79,7 +79,7 @@ Choose a **unique** field you want to add, `uid` in the example above and popula
 
 1. `caption` → Add a user-friendly name to the field.
 2. `description` → Add concise description to define the attributes.
-    1. Note that `field` descriptions can be overridden in the `base_class/object`, therefore if it’s a common field (like name, label, uid etc) feel free to add a generic description, specific descriptions can be added in the `base_class/object` definition. For example,
+    1. Note that `field` descriptions can be overridden in the `class/object`, therefore if it’s a common field (like name, label, uid etc) feel free to add a generic description, specific descriptions can be added in the `class/object` definition. For example,
     2. A generic definition of `uid` in the dictionary -
         1.  `uid` : `The unique identifier. See specific usage.`
     3. Specific description of `uid` in the `agent` object -
@@ -190,22 +190,22 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
 
 * * *
 
-### Adding/Modifying a `base_class`
+### Adding/Modifying a `class`
 
 1. All the available Classes are defined as .json files in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
 2. Review existing Classes, determine if a modification of the existing class would be sufficient or if there’s a need for a completely new class.
 3. To define a new class,
     1. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
-    2. Use the template available [here](https://github.com/agntcy/oasf/tree/main/schema/templates/base_class_name.json), to get started with the .json definition.
+    2. Use the template available [here](https://github.com/agntcy/oasf/tree/main/schema/templates/class_name.json), to get started with the .json definition.
     3. `uid` → Select an integer in the range 0 - 99. Ensure the integer is **unique** within the category.
-        * Note: Without `uid`, a base_class won’t be visible in the oasf server.
-    4. `caption` → Add a user friendly name to the event_class.
+        * Note: Without `uid`, a class won’t be visible in the oasf server.
+    4. `caption` → Add a user-friendly name to the event_class.
     5. `description` → Add a concise description to define the attributes.
     6. `name` → Add a **unique** name of the class. Ensure it matches the file name to maintain consistency.
-    7. `extends` → Ensure the value is `base_class`.
+    7. `extends` → Ensure the value container the parent class `class`.
     8. `attributes` → Add the attributes that you want to define in the event_class,
         1. `group` → For each attribute ensure you add a group value. Valid values are - `classification`, `context`, `occurrence`, `primary`
-        2. `requirement` →  For each attribute ensure you add a requirement value. Valid values are `optional`, `required`, `recommended`
+        2. `requirement` → For each attribute ensure you add a requirement value. Valid values are `optional`, `required`, `recommended`
         3. `$include` → As for objects, you can also include attributes from other places; to do so, specify the list of files (relative to the root of the schema repository) that should contribute their attributes to this object.  _e.g._
         ```
         "attributes": {
@@ -339,7 +339,7 @@ be used to factor out non-essential schema domains keeping the core schema
 succinct. Extensions use the framework in the same way as a new schema,
 optionally creating categories, profiles or event classes from the dictionary.
 
-As with categories and base classes, extensions have unique IDs within the
+As with categories and classes, extensions have unique IDs within the
 framework as well as their own versioning. The following sections provide
 guidelines to create extensions within OASF.
 
