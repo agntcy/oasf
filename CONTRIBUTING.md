@@ -34,7 +34,7 @@ contribute to the development of OASF Schemas and the framework itself.
 
 ### In brief -
 
-1. Determine all the `attributes` (including fields and objects) you would want to add in the `base_class`.
+1. Determine all the `attributes` (including fields and objects) you would want to add in the `class`.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
 3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
 4. Determine which category you would want to add your class in, note it’s  `name`
