@@ -30,7 +30,7 @@ contribute to the development of OASF Schemas and the framework itself.
 4. **BaseClass**: An base object is represented by a Base Class, which are a particular set of attributes (including fields & objects) representing metadata associated to an autonomous agent.
 5. **Category:** A Category organizes based classes that represent a particular domain.
 
-## How do I add a `base_class`?
+## How do I add a `class`?
 
 ### In brief -
 
