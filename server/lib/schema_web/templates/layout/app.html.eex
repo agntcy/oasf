@@ -211,7 +211,7 @@ limitations under the License.
         <div class="dropdown">
           Resources
           <div class="dropdown-content">
-            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/schema/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
+            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
             <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
             <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>OASF Data Types</a>
             <a class="nav-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
