@@ -7,7 +7,6 @@ vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
   IMAGE_TAG: '{{ .IMAGE_TAG | default "latest" }}'
-  IMAGE_BAKE_OPTS: '--set *.platform=linux/{{ARCH}}'
 
   ## Dependency config
   BIN_DIR: '{{ .ROOT_DIR }}/bin'
@@ -45,8 +44,10 @@ tasks:
 
   build:images:
     desc: Build container images
+    vars:
+      BAKE_OPTS: '--set *.platform=linux/{{ARCH}}'
     cmds:
-      - docker buildx bake {{.IMAGE_BAKE_OPTS}}
+      - docker buildx bake {{.BAKE_OPTS}}
 
   pull:
     desc: Pull images for all components
@@ -63,7 +64,7 @@ tasks:
     prompt:
       - Are you sure you want to push the images to remote registry?
     cmds:
-      - docker buildx bake {{.IMAGE_BAKE_OPTS}} --set=*.output=type=registry
+      - docker buildx bake default --set=*.output=type=registry
 
   release:
     desc: Release images for all components with a release tag
