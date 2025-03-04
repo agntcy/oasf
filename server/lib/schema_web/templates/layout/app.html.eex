@@ -196,7 +196,7 @@ limitations under the License.
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/classes") %>'>Classes</a>
       </li>-->
       <li id="base_class_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Data Model</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Agent Core Object</a>
       </li>
       <li id="dictionary_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/dictionary") %>'>Dictionary</a>
