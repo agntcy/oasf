@@ -45,19 +45,19 @@ To access the schema server, open [`localhost:8080`](http://localhost:8080) in y
 
 Note that any changes made to the schema or server backend itself will require running `task up` again.
 
-#### Hot reload
+### Hot reload
 
-In order to run the server in hot-reload mode, you must specify the necessary flags
-during deployment to signal that the schema will be actively updated.
+In order to run the server in hot-reload mode, you must first deploy
+the services, and run another command to signal that the schema will be actively updated.
 
-This can be achieved by performing an interactive deployment via:
+This can be achieved by starting an interactive reload session via:
 
 ```shell
 task reload
 ```
 
-Note that this will only perform hot-reload for schema changes, but not the backend.
-Reloading backend changes requires `task build`.
+Note that this will only perform hot-reload for schema changes.
+Reloading backend changes still requires re-running `task build && task up`.
 
 ### Cleanup
 

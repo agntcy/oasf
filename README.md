@@ -7,8 +7,7 @@
 
 Make sure Docker is installed with Buildx.
 
-Check the [example.env](example.env) file which contains a list of
-environment variables used to control the operations below.
+Check the [example.env](example.env) to see the configuration for the operations below.
 
 Fetch required tools:
 
