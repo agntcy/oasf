@@ -106,7 +106,7 @@ tasks:
 
       # Create volume config to share between Kind and host
       - |
-        cat <<EOF >> {{.KIND_CONFIG_PATH}}
+        cat <<EOF > {{.KIND_CONFIG_PATH}}
         apiVersion: kind.x-k8s.io/v1alpha4
         kind: Cluster
         nodes:
@@ -159,8 +159,11 @@ tasks:
       - 'schema/**'
     vars:
       RELEASE_NAME: 'oasf'
+    status:
+      - '{{ .KUBECTL_BIN }} get deploy/{{.RELEASE_NAME}}'
     cmds:
       - '{{ .KUBECTL_BIN }} exec deploy/{{.RELEASE_NAME}} -- ./bin/schema_server rpc "Schema.reload()"'
+      - 'echo "Reloaded schema! Use CTRL + C to exit."'
 
   down:
     desc: Stop services and remove ephemeral kind cluster
