@@ -28,7 +28,7 @@ contribute to the development of OASF Schemas and the framework itself.
 2. **Object**: An object is a collection of contextually related fields and other objects.  It is also a data_type in OASF.
 3. **Attribute**: An attribute is the more generic name for both fields and objects in OASF.  A field is a scalar attribute while an object is a complex attribute.
 4. **Class**: A class is a particular set of attributes (including fields & objects) representing metadata associated to an autonomous agent.
-5. **Category:** A Category organizes based classes that represent a particular domain.
+5. **Category:** A Category organizes classes that represent a particular domain.
 
 ## How do I add a `class`?
 
@@ -38,7 +38,7 @@ contribute to the development of OASF Schemas and the framework itself.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
 3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
 4. Determine which category you would want to add your class in, note it’s  `name`
-5. Create a new file →  `<base_class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/base_class_name.json)
+5. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/base_class_name.json)
 6. Define the `base_class` itself → [Adding/Modifying a `base_class`](#addingmodifying-a-base_class)
 7. Finally, verify the changes are working as expected in your local [oasfserver](https://github.com/agntcy/oasf/server).
 
@@ -192,16 +192,16 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
 
 ### Adding/Modifying a `base_class`
 
-1. All the available Base Classes are defined as .json files in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
-2. Review existing Base Classes, determine if a modification of the existing class would be sufficient or if there’s a need for a completely new base_class.
+1. All the available Classes are defined as .json files in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+2. Review existing Classes, determine if a modification of the existing class would be sufficient or if there’s a need for a completely new class.
 3. To define a new class,
-    1. Create a new file →  `<base_class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+    1. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
     2. Use the template available [here](https://github.com/agntcy/oasf/tree/main/schema/templates/base_class_name.json), to get started with the .json definition.
     3. `uid` → Select an integer in the range 0 - 99. Ensure the integer is **unique** within the category.
         * Note: Without `uid`, a base_class won’t be visible in the oasf server.
     4. `caption` → Add a user friendly name to the event_class.
     5. `description` → Add a concise description to define the attributes.
-    6. `name` → Add a **unique** name of the event_class. Ensure it matches the file name to maintain consistency.
+    6. `name` → Add a **unique** name of the class. Ensure it matches the file name to maintain consistency.
     7. `extends` → Ensure the value is `base_class`.
     8. `attributes` → Add the attributes that you want to define in the event_class,
         1. `group` → For each attribute ensure you add a group value. Valid values are - `classification`, `context`, `occurrence`, `primary`
