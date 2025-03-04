@@ -43,6 +43,11 @@ Once you are done, tear down the deployment:
 task down
 ```
 
+### Configuration
+
+You can check [example.env](example.env) file which contains a list of 
+environment variables used to control the operations above.
+
 ## Copyright Notice
 
 [Copyright Notice and License](./LICENSE.md)
