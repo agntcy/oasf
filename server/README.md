@@ -7,122 +7,64 @@ You can access the OASF schema server, which is running the latest released sche
 
 The schema server can also be used locally.
 
-## Clone the OAFS schema and server (`oasf`) repository
+## Usage
+
+OASF uses Kubernetes as its native runtime.
+The project comes with the necessary tooling for local development that relies on [Taskfile](https://taskfile.dev/installation/) and [Docker](https://docs.docker.com/get-started/get-docker/).
+Make sure Docker is installed with Buildx.
+
+### Clone the repository
 
 ```shell
 git clone https://github.com/agntcy/oasf.git
 ```
 
-## Build a server docker image
+### Build artifacts
+
+This step will fetch all project dependencies and
+subsequently build all project artifacts such as
+helm charts and docker images.
 
 ```shell
-task server:build
-task server:run
+task deps
+task build
 ```
 
-To access the schema server, open [`localhost:8080`](http://localhost:8080) or [`localhost:8443`](https://localhost:8443) in your Web browser.
+### Deploy locally
 
-## Local Usage
-
-This section describes how to build and run the OASF Schema server.
-
-### Required build tools
-
-The Schema server is written in [Elixir](https://elixir-lang.org) using the [Phoenix](https://phoenixframework.org/) Web framework.
-
-The Elixir site maintains a great installation page, see https://elixir-lang.org/install.html for help.
-
-### Building the schema server
-
-Elixir uses the [`mix`](https://hexdocs.pm/mix/Mix.html) build tool, which is included in the Elixir installation package.
-
-#### Install the build tools
+This step will create an ephemeral Kind cluster
+and deploy OASF services via Helm chart.
+It also sets up port forwarding
+so that the services can be accessed locally.
 
 ```shell
-mix local.hex --force && mix local.rebar --force
+task up
 ```
 
-#### Get the dependencies
+To access the schema server, open [`localhost:8080`](http://localhost:8080) in your Web browser.
 
-Change to the schema directory, fetch and compile the dependencies:
+Note that any changes made to the schema or server backend itself will require running `task up` again.
+
+#### Hot reload
+
+In order to run the server in hot-reload mode, you must specify the necessary flags
+during deployment to signal that the schema will be actively updated.
+
+This can be achieved by performing an interactive deployment via:
 
 ```shell
-cd server
-mix do deps.get, deps.compile
+task reload
 ```
 
-#### Compile the source code
+Note that this will only perform hot-reload for schema changes, but not the backend.
+Reloading backend changes requires `task build`.
+
+### Cleanup
+
+This step will handle cleanup procedure by
+removing resources from previous steps,
+including ephemeral Kind clusters and Docker containers.
 
 ```shell
-mix compile
-```
-
-### Testing local schema changes
-
-You can use `mix test` command to test the changes made to the schema. For example to ensure the JSON files are correct or the attributes are defined.
-
-Assuming the schema repo is in `../schema` directory, then you can test the schema with this command:
-
-```shell
-SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions mix test
-```
-
-If everything is correct, then you should not see any errors or warnings.
-
-### Running the schema server
-
-You can use the Elixir's interactive shell, [IEx](https://hexdocs.pm/iex/IEx.html), to start the schema server use:
-
-```shell
-SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
-```
-
-Now you can access the Schema server at [`localhost:8080`](http://localhost:8080) or [`localhost:8443`](https://localhost:8443).
-
-### Reloading the schema
-
-You can use the following command in the `iex` shell to force reloading the schema with extensions:
-
-```elixir
-Schema.reload(["<extension folder>", "<extension folder>", ...])
-```
-
-Reload the core schema without extensions:
-
-```elixir
-Schema.reload()
-```
-
-Reload the schema only with the `linux` extension (note the folder is relative to the `SCHEMA_DIR` folder):
-
-```elixir
-Schema.reload(["extensions/linux"])
-```
-
-Reload the schema with all extensions defined in the `extensions` folder (note the folder is relative to the `SCHEMA_DIR` folder):
-
-```elixir
-Schema.reload(["extensions"])
-```
-
-Reload the schema with extensions defined outside the `SCHEMA_DIR` folder (use an absolute or relative path):
-
-```elixir
-Schema.reload(["/home/schema/cloud", "../dev-ext"])
-```
-
-### Runtime configuration
-
-The schema server uses a number of environment variables.
-
-| Variable Name    | Description                                                                               |
-| ---------------- | ----------------------------------------------------------------------------------------- |
-| HTTP_PORT        | The server HTTP port number, default: `8080`                                              |
-| HTTPS_PORT       | The server HTTPS port number, default: `8443`                                             |
-| SCHEMA_DIR       | The directory containing the schema, default: `../schema`                                 |
-| SCHEMA_EXTENSION | The directory containing the schema extensions, relative to SCHEMA_DIR or absolute path   |
-| RELEASE_NODE     | The Erlang node name. Set it if you want to run more than one server on the same computer |
-
-```shell
-SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
+task down
 ```

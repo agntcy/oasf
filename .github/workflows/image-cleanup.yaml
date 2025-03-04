@@ -55,4 +55,4 @@ jobs:
           timestamp-to-use: created_at
           # Which images should be deleted
           image-names: ${{ env.images }}
-          image-tags: "!v*.*.*"
+          image-tags: "!latest !v*.*.*"

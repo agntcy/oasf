@@ -8,3 +8,16 @@ image:
 
 service:
   type: NodePort
+
+volumes:
+  - name: schema
+    hostPath:
+      path: /schema
+      type: Directory
+
+volumeMounts:
+  - name: schema
+    mountPath: /schema
+
+env:
+  SCHEMA_DIR: /schema

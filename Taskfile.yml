@@ -17,6 +17,9 @@ vars:
   KIND_VERSION: '0.25.0'
   KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
 
+# Used for hot-reload feature
+interval: 500ms
+
 tasks:
   ##
   ## General
@@ -91,16 +94,30 @@ tasks:
       # Kind args
       KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
       KIND_CREATE_OPTS:  '{{ .KIND_CREATE_OPTS | default "" }}'
+      KIND_CONFIG_PATH:  '/tmp/{{.KIND_CLUSTER_NAME}}'
       # Deployment args
       HELM_NAMESPACE:   '{{ .HELM_NAMESPACE | default "default" }}'
       HELM_CHART_PATH:  '{{ .ROOT_DIR }}/install/charts/oasf'
       HELM_VALUES_PATH: '{{ .ROOT_DIR }}/install/charts/oasf/values-test.yaml'
+      RELEASE_NAME:     'oasf'
     cmds:
       # Clean up previous deployment
       - task: down
 
+      # Create volume config to share between Kind and host
+      - |
+        cat <<EOF >> {{.KIND_CONFIG_PATH}}
+        apiVersion: kind.x-k8s.io/v1alpha4
+        kind: Cluster
+        nodes:
+          - role: control-plane
+            extraMounts:
+              - hostPath: {{ .ROOT_DIR }}/schema
+                containerPath: /schema
+        EOF
+
       # Create ephemeral cluster
-      - '{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }}'
+      - '{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }} --config {{.KIND_CONFIG_PATH}}'
       - '{{ .KIND_BIN }} export kubeconfig --name {{ .KIND_CLUSTER_NAME }}'
 
       # Check cluster status
@@ -115,7 +132,7 @@ tasks:
 
       # Deploy chart
       - |
-        {{ .HELM_BIN }} upgrade oasf \
+        {{ .HELM_BIN }} upgrade {{.RELEASE_NAME}} \
           {{ .HELM_CHART_PATH }} \
           -f {{ .HELM_VALUES_PATH }} \
           --set image.tag="{{ .IMAGE_TAG }}" \
@@ -128,10 +145,22 @@ tasks:
 
       # Port-forward dependency services
       - |
-        {{ .KUBECTL_BIN }} port-forward service/oasf 8080:8080 -n {{ .HELM_NAMESPACE }} &
+        {{ .KUBECTL_BIN }} port-forward service/{{.RELEASE_NAME}} 8080:8080 -n {{ .HELM_NAMESPACE }} &
 
       # Delay to ensure services are online
       - sleep 10
+
+  reload:
+    desc: Hot reload schema changes after deployment
+    watch: true
+    deps:
+      - deps:kubectl
+    sources:
+      - 'schema/**'
+    vars:
+      RELEASE_NAME: 'oasf'
+    cmds:
+      - '{{ .KUBECTL_BIN }} exec deploy/{{.RELEASE_NAME}} -- ./bin/schema_server rpc "Schema.reload()"'
 
   down:
     desc: Stop services and remove ephemeral kind cluster

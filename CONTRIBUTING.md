@@ -17,7 +17,7 @@ in any real-time space e.g., Slack, Discord, etc.
 
 # OASF Contribution Guide
 
-This documentation presents guidelines and expected etiquettes to successfully
+This documentation presents guidelines and expected etiquette to successfully
 contribute to the development of OASF Schemas and the framework itself.
 
 * * *
@@ -38,9 +38,9 @@ contribute to the development of OASF Schemas and the framework itself.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
 3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
 4. Determine which category you would want to add your class in, note it’s  `name`
-5. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/class_name.json)
+5. Create a new file →  `<class_name.json>` inside the category specific subdirectory in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/class_name.json)
 6. Define the `class` itself → [Adding/Modifying a `class`](#addingmodifying-a-class)
-7. Finally, verify the changes are working as expected in your local [oasfserver](https://github.com/agntcy/oasf/server).
+7. Finally, verify the changes are working as expected in your local [oasf/server](https://github.com/agntcy/oasf/server).
 
 * * *
 
@@ -79,7 +79,7 @@ Choose a **unique** field you want to add, `uid` in the example above and popula
 
 1. `caption` → Add a user-friendly name to the field.
 2. `description` → Add concise description to define the attributes.
-    1. Note that `field` descriptions can be overridden in the `class/object`, therefore if it’s a common field (like name, label, uid etc) feel free to add a generic description, specific descriptions can be added in the `class/object` definition. For example,
+    1. Note that `field` descriptions can be overridden in the `class/object`, therefore if it’s a common field (like name, label, uid, etc.) feel free to add a generic description, specific descriptions can be added in the `class/object` definition. For example,
     2. A generic definition of `uid` in the dictionary -
         1.  `uid` : `The unique identifier. See specific usage.`
     3. Specific description of `uid` in the `agent` object -
@@ -139,7 +139,7 @@ An example `locator.json` object file,
 }
 ```
 
-4. `caption` → Add a user friendly name to the object.
+4. `caption` → Add a user-friendly name to the object.
 5. `description` → Add a concise description to define the object.
 6. `extends` → Ensure the value is `object` or an existing object, e.g. `skill` (All objects in OAF must extend a base definition of `object` or another existing object.)
 7. `name` → Add a **unique** name of the object. `name` must match the filename of the actual `.json` file.
@@ -195,7 +195,7 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
 1. All the available Classes are defined as .json files in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
 2. Review existing Classes, determine if a modification of the existing class would be sufficient or if there’s a need for a completely new class.
 3. To define a new class,
-    1. Create a new file →  `<class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+    1. Create a new file →  `<class_name.json>` inside the category specific subdirectory in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
     2. Use the template available [here](https://github.com/agntcy/oasf/tree/main/schema/templates/class_name.json), to get started with the .json definition.
     3. `uid` → Select an integer in the range 0 - 99. Ensure the integer is **unique** within the category.
         * Note: Without `uid`, a class won’t be visible in the oasf server.
@@ -234,7 +234,7 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
 
 To deprecate an attribute (`field`, `object`) follow the steps below -
 
-1. Create a github issue, explaining why an attribute needs to be deprecated and what the alternate solution is.
+1. Create a GitHub issue, explaining why an attribute needs to be deprecated and what the alternate solution is.
 2. Utilize the following flag to allow deprecation of attributes. This flag needs to be added a json property of the attribute that is the subject of deprecation.
     ```
           "@deprecated": {
@@ -273,7 +273,7 @@ To deprecate an attribute (`field`, `object`) follow the steps below -
 
 Contributors should verify the changes before they submit the PR, the best
 method to test and verify their changes is to run a local instance of the
-[oasfserver](https://github.com/agntcy/oasf/tree/main/server). Follow the
+[oasf/server](https://github.com/agntcy/oasf/tree/main/server). Follow the
 instructions [here](https://github.com/agntcy/oasf/blob/main/server/README.md)
 to set your own local oasf server.
 
@@ -351,11 +351,11 @@ identifier & a unique name for your extension in the OASF Extensions Registry
 This is done to avoid collisions with core or other extension schemas.
 For example, a new sample extension would have a row in the table as follows:
 
-| **Caption** | **Name** | **UID** | **Notes**                         |
-| ------------------ | -------- | ------- | --------------------------------- |
-| New Extension      | new_ex   | 123     | The development schema extensions |
+| **Caption**   | **Name** | **UID** | **Notes**                         |
+|---------------|----------|---------|-----------------------------------|
+| New Extension | new_ex   | 123     | The development schema extensions |
 
-### Create your Extension's sub-directory:
+### Create your Extension's subdirectory:
 
 To extend the schema, create a new subdirectory in the `extensions` directory,
 and add a new `extension.json` file, which defines the extension's `name`

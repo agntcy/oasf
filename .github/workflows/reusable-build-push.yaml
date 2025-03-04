@@ -56,7 +56,9 @@ jobs:
         with:
           images: |
             ${{ inputs.image_repo }}/${{ inputs.bake_target }},enable=true
-          tags: type=raw,value=${{ inputs.image_tag }}
+          tags: |
+            type=raw,value=${{ inputs.image_tag }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/') }}
 
       - name: Create cache directory
         run: mkdir -p /tmp/.buildx-cache
