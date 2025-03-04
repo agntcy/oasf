@@ -448,15 +448,15 @@
       "caption": "Skill",
       "description": "A skill that apply to an agent.",
       "type": "class_t",
-      "class_type": "base_skill",
+      "class_path": "classes/base_skill",
       "class_name": "Base Skill"
     },
     "skills": {
       "caption": "Skills",
       "description": "Skills that apply to an agent.",
       "type": "class_t",
-      "class_type": "base_skill",
-      "class_name": "Base Skill",
+      "class_path": "skills",
+      "class_name": "Skill",
       "is_array": true
     },
     "name": {
