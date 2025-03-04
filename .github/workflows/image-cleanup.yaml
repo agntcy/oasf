@@ -1,0 +1,58 @@
+name: Container Image Cleanup
+
+on:
+  pull_request:
+    types:
+      - closed
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        required: false
+        type: boolean
+        description: Prints output showing images which would be deleted but does not actually delete any images.
+        default: true
+
+env:
+  images: oasf-server
+
+permissions:
+  packages: write
+
+jobs:
+  pull-request:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    name: Cleanup container images for Pull Request
+    steps:
+      - name: Remove images for PR#${{ github.event.pull_request.number }}
+        uses: snok/container-retention-policy@4f22ef80902ad409ed55a99dc5133cc1250a0d03 # v3.0.0
+        with:
+          # Who should delete images
+          account: notused
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # How to delete images
+          dry-run: false
+          cut-off: 1s
+          timestamp-to-use: created_at
+          # Which images should be deleted
+          image-names: ${{ env.images }}
+          image-tags: "${{ format( 'pr{0}-*', github.event.pull_request.number) }}"
+
+  dispatch:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    name: Cleanup stale container images
+    steps:
+      - name: Remove stale images
+        uses: snok/container-retention-policy@4f22ef80902ad409ed55a99dc5133cc1250a0d03 # v3.0.0
+        with:
+          # Who should delete images
+          account: notused
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # How to delete images
+          dry-run: ${{ inputs.dry-run }}
+          cut-off: 1s
+          timestamp-to-use: created_at
+          # Which images should be deleted
+          image-names: ${{ env.images }}
+          image-tags: "!v*.*.*"
