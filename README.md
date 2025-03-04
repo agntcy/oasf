@@ -7,6 +7,9 @@
 
 Make sure Docker is installed with Buildx.
 
+Check the [example.env](example.env) file which contains a list of
+environment variables used to control the operations below.
+
 Fetch required tools:
 
 ```shell
@@ -42,11 +45,6 @@ Once you are done, tear down the deployment:
 ```shell
 task down
 ```
-
-### Configuration
-
-Check the [example.env](example.env) file which contains a list of 
-environment variables used to control the operations above.
 
 ## Copyright Notice
 
