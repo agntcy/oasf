@@ -6,8 +6,8 @@ version: "3"
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
-  IMAGE_TAG: '{{ .IMAGE_TAG | default "v0.1.0-rc" }}'
-  IMAGE_BAKE_OPTS: '{{ .IMAGE_BAKE_OPTS | default "--set *.platform=linux/amd64,linux/arm64" }}'
+  IMAGE_TAG: '{{ .IMAGE_TAG | default "latest" }}'
+  IMAGE_BAKE_OPTS: '--set *.platform=linux/{{ARCH}}'
 
   ## Dependency config
   BIN_DIR: '{{ .ROOT_DIR }}/bin'
@@ -26,13 +26,25 @@ tasks:
     cmds:
       - task -l
 
-  gen:
-    desc: Generate API code
-    cmds:
-      - task: server:gen
-
   build:
-    desc: Build images for all components
+    desc: Build project artifacts
+    cmds:
+      - task: build:charts
+      - task: build:images
+
+  build:charts:
+    desc: Build helm charts
+    deps:
+      - deps:helm
+    vars:
+      HELM_ALL_CHART_PATHS:
+        sh: find . -name Chart.yaml -exec dirname {} \;
+    cmds:
+      - for: { var: HELM_ALL_CHART_PATHS }
+        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
+
+  build:images:
+    desc: Build container images
     cmds:
       - docker buildx bake {{.IMAGE_BAKE_OPTS}}
 
@@ -47,18 +59,18 @@ tasks:
         done
 
   push:
-    desc: Build and push images for all components
+    desc: Push images for all components
     prompt:
       - Are you sure you want to push the images to remote registry?
     cmds:
       - docker buildx bake {{.IMAGE_BAKE_OPTS}} --set=*.output=type=registry
 
   release:
-    desc: Release images for all components with release tag tag
+    desc: Release images for all components with a release tag
     prompt:
       - Are you sure you want to push the images to remote registry?
     vars:
-      RELEASE_TAG: '{{ .RELEASE_TAG | default "v0.0.0-dev" }}'
+      RELEASE_TAG: '{{ .RELEASE_TAG | default "latest" }}'
     cmds:
       # TODO: use buildx to simplify
       - |
@@ -68,63 +80,23 @@ tasks:
           skopeo copy --multi-arch all docker://$image docker://$release_image
         done
 
-  test:
-    desc: Run test suite
-    cmds:
-      - task: server:test
-
-  ##
-  ## Server
-  ##
-  server:build:
-    desc: Build server image
-    cmds:
-      - docker buildx bake {{.IMAGE_BAKE_OPTS}} oasf-server
-
-  server:run:
-    desc: Run server as a container
-    deps:
-      - task: server:build
-    cmds:
-      - docker run -p 8080:8080 -p 8443:8443 {{.IMAGE_REPO}}/oasf-server:{{.IMAGE_TAG}}
-
-  server:gen:
-    desc: Update server dependencies for chart and subcharts
-    internal: true
-    deps:
-      - deps:helm
-    vars:
-      HELM_ALL_CHART_PATHS:
-        sh: find . -name Chart.yaml -exec dirname {} \;
-    cmds:
-      - for: { var: HELM_ALL_CHART_PATHS }
-        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
-
-  server:test:
-    desc: Run tests against server
-    cmds:
-      - defer: { task: server:test:cleanup }
-      # Bootstrap
-      # NOTE: Run as a dedicated task instead of dependency, otherwise the port forwarding won't work
-      - task: server:test:bootstrap
-
-  server:test:bootstrap:
-    internal: true
-    desc: Bootstrap Kubernetes test environment
+  up:
+    desc: Deploy services in an ephemeral kind cluster
     deps:
       - deps:helm
       - deps:kubectl
       - deps:kind
     vars:
       # Kind args
-      KIND_CLUSTER_NAME:  '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
-      KIND_CREATE_OPTS:   '{{ .KIND_CREATE_OPTS | default "" }}'
-      # Helm args
+      KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
+      KIND_CREATE_OPTS:  '{{ .KIND_CREATE_OPTS | default "" }}'
+      # Deployment args
       HELM_NAMESPACE:   '{{ .HELM_NAMESPACE | default "default" }}'
       HELM_CHART_PATH:  '{{ .ROOT_DIR }}/install/charts/oasf'
       HELM_VALUES_PATH: '{{ .ROOT_DIR }}/install/charts/oasf/values-test.yaml'
     cmds:
-      # TODO: make logic idempotent so that running functional tests does not change previous contexts
+      # Clean up previous deployment
+      - task: down
 
       # Create ephemeral cluster
       - '{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }}'
@@ -160,22 +132,30 @@ tasks:
       # Delay to ensure services are online
       - sleep 10
 
-  server:test:cleanup:
-    internal: true
-    desc: Cleanup Kubernetes test environment
+  down:
+    desc: Stop services and remove ephemeral kind cluster
     deps:
       - deps:kind
     vars:
       # Kind args
-      KIND_CLUSTER_NAME:  '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
+      KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
     cmds:
       - '{{ .KIND_BIN }} delete cluster --name {{ .KIND_CLUSTER_NAME }}'
+
+  test:
+    desc: Run end-to-end test suite
+    cmds:
+      - defer: { task: down }
+      - task: up
+      # NOTE: For now, we are only interested to know if the
+      # chart can be deployed or not.
+      # TODO: add test cases here
 
   ##
   ## Dependencies
   ##
   deps:
-    desc: Install dependencies
+    desc: Install project dependencies
     cmds:
       - task: deps:helm
       - task: deps:kubectl

@@ -1,18 +1,40 @@
 
 # Open Agentic Schema Framework
 
-##
-
 ## Development
 
-Use `Taskfile` for all related development operations such as testing, validating, deploying, and working with the project.
+**For an optimal developer experience, it is recommended to install [Taskfile](https://taskfile.dev/installation/) and [Docker](https://docs.docker.com/get-started/get-docker/).**
 
-To execute the test suite locally, run:
+Make sure Docker is installed with Buildx.
 
-```bash
-task gen
+Fetch required tools:
+
+```shell
+task deps
+```
+
+Build artifacts locally:
+
+```shell
 task build
+```
+
+Deploy services and access [OASF webpage](http://localhost:8080) locally:
+
+```shell
+task up
+```
+
+Run the test suite:
+
+```shell
 task test
+```
+
+Once you are done, tear down the deployment:
+
+```shell
+task down
 ```
 
 ## Copyright Notice
