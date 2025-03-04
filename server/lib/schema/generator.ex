@@ -796,12 +796,6 @@ defmodule Schema.Generator do
     {length(list), :array.from_list(list)}
   end
 
-  defp read_json_file(filename) do
-    map = File.read!(filename) |> Jason.decode!()
-
-    {map_size(map), map}
-  end
-
   def read_classes(path) do
     if File.dir?(path) do
       read_classes(nil, path, []) |> Enum.sort()
