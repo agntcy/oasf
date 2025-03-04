@@ -157,10 +157,10 @@ tasks:
     deps:
       - deps:kubectl
     sources:
-      - 'schema/**'
+      - 'schema/**/*'
     vars:
       RELEASE_NAME: 'oasf'
-    status:
+    preconditions:
       - '{{ .KUBECTL_BIN }} get deploy/{{.RELEASE_NAME}}'
     cmds:
       - '{{ .KUBECTL_BIN }} exec deploy/{{.RELEASE_NAME}} -- ./bin/schema_server rpc "Schema.reload()"'
