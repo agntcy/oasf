@@ -34,8 +34,9 @@ jobs:
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
-      - name: Validate code
+      - name: Build code
         run: |
+          # NOTE: We are only interested in codebase, dont build images here
           task build:charts
 
       - name: Check code changes
