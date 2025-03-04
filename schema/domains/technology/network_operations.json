@@ -1,7 +1,7 @@
 {
   "uid": 4,
   "caption": "Network Operations",
-  "description": "Ensures the smooth operation and performance of network infrastructure. Subdomains: Network Monitoring, Incident Management, Network Performance Analysis, Traffic Management.",
+  "description": "Ensures the smooth operation and performance of network infrastructure. Subdomains: Network Monitoring, Incident Management, Network Performance Analysis, and Traffic Management.",
   "extends": "technology",
   "name": "network_operations",
   "attributes": {}

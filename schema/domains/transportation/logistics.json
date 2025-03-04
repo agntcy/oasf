@@ -1,0 +1,10 @@
+{
+    "uid": 1,
+    "caption": "Logistics",
+    "description": "The coordination of complex operations involving people, facilities, and supplies. Subdomains: Warehousing, Distribution Management, Transportation Planning, and Reverse Logistics.",
+    "extends": "transportation",
+    "name": "logistics",
+    "category": "transportation",
+    "attributes": {}
+  }
+  

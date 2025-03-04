@@ -1,0 +1,10 @@
+{
+    "uid": 5,
+    "caption": "Freight",
+    "description": "The transportation of goods in bulk. Subdomains: Freight Forwarding, Cargo Management, Logistics Operations, and Freight Brokerage.",
+    "extends": "transportation",
+    "name": "freight",
+    "category": "transportation",
+    "attributes": {}
+  }
+  

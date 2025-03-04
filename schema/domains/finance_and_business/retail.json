@@ -1,7 +1,7 @@
 {
   "uid": 5,
   "caption": "Retail",
-  "description": "Sale of goods and services directly to consumers through various channels. Subdomains: E-commerce, In-store Retail, Inventory Management, Customer Experience, Omnichannel Retail",
+  "description": "Sale of goods and services directly to consumers through various channels. Subdomains: E-commerce, In-store Retail, Inventory Management, Customer Experience, and Omnichannel Retail.",
   "extends": "finance_and_business",
   "name": "retail",
   "category": "finance_and_business",

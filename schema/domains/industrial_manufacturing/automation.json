@@ -1,0 +1,11 @@
+{
+    "uid": 1,
+    "caption": "Automation",
+    "description": "Using technology to perform processes with minimal human intervention. Subdomains: Automated Manufacturing, Control Systems, Industrial IoT, and Process Automation.",
+    "extends": "industrial_manufacturing",
+    "name": "automation",
+    "category": "industrial_manufacturing",
+    "attributes": {}
+  }
+
+  

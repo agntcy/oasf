@@ -1,0 +1,9 @@
+{
+    "uid": 4,
+    "caption": "Educational Technology",
+    "description": "Integrating digital tools and resources to enhance teaching and learning experiences. Subdomains: EdTech Innovations, Classroom Technology, Digital Content, and Gamification in Education.",
+    "extends": "education",
+    "name": "educational_technology",
+    "category": "education",
+    "attributes": {}
+  }

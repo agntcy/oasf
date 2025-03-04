@@ -1,0 +1,11 @@
+{
+    "uid": 4,
+    "caption": "Lean Manufacturing",
+    "description": "Methodology focusing on minimizing waste and maximizing efficiency in the production process. Subdomains: Continuous Improvement, Six Sigma, Value Stream Mapping, and Kaizen.",
+    "extends": "industrial_manufacturing",
+    "name": "lean_manufacturing",
+    "category": "industrial_manufacturing",
+    "attributes": {}
+  }
+
+  

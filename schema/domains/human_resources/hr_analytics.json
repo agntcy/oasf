@@ -1,0 +1,9 @@
+{
+    "uid": 5,
+    "caption": "HR Analytics",
+    "description": "Using data analysis to improve HR decision-making, workforce planning, and employee performance metrics. Subdomains: People Analytics, Predictive HR, Workforce Metrics, and Data-Driven HR Strategies.",
+    "extends": "human_resources",
+    "name": "hr_analytics",
+    "category": "human_resources",
+    "attributes": {}
+  }

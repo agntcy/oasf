@@ -1,0 +1,10 @@
+{
+    "uid": 1,
+    "caption": "Biotechnology",
+    "description": "The application of biological systems and organisms to develop or create products and technologies that improve the quality of human life. Subdomains: Medical Biotechnology, Agricultural Biotechnology, Industrial Biotechnology, and Environmental Biotechnology.",
+    "extends": "life_science",
+    "name": "biotechnology",
+    "category": "life_science",
+    "attributes": {}
+  }
+  

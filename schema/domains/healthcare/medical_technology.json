@@ -1,0 +1,9 @@
+{
+    "uid": 1,
+    "caption": "Medical Technology",
+    "description": "Innovations and devices used to improve the diagnosis, treatment, and management of health conditions. Subdomains: Medical Devices, Diagnostic Equipment, Wearable Health Tech, and Biotech Innovations.",
+    "extends": "healthcare",
+    "name": "medical_technology",
+    "category": "healthcare",
+    "attributes": {}
+  }

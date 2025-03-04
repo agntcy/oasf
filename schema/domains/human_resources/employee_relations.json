@@ -1,0 +1,9 @@
+{
+    "uid": 2,
+    "caption": "Employee Relations",
+    "description": "Maintaining positive relationships between the employer and employees to foster a productive work environment. Subdomains: Conflict Resolution, Employee Engagement, Workplace Culture, and Labor Relations.",
+    "extends": "human_resources",
+    "name": "employee_relations",
+    "category": "human_resources",
+    "attributes": {}
+  }

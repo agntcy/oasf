@@ -1,0 +1,10 @@
+{
+    "uid": 3,
+    "caption": "Public Transit",
+    "description": "Shared transportation services available for the public, such as buses and trains. Subdomains: Urban Transit Planning, Rail Systems, Bus Networks, and Transit Operations.",
+    "extends": "transportation",
+    "name": "public_transit",
+    "category": "transportation",
+    "attributes": {}
+  }
+  
