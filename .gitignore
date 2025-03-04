@@ -1,2 +1,5 @@
 # Builds
 bin/
+
+# Taskfile
+.task/

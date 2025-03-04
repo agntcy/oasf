@@ -31,6 +31,19 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+volumes: []
+#  - name: schema
+#    hostPath:
+#      path: /path/on/host
+#      type: Directory
+
+volumeMounts: []
+#  - name: schema
+#    mountPath: /app/schema/reload
+
+env: {}
+#  SCHEMA_DIR: /app/schema/reload
+
 podAnnotations: {}
 
 podSecurityContext: {}

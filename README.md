@@ -19,10 +19,16 @@ Build artifacts locally:
 task build
 ```
 
-Deploy services and access [OASF webpage](http://localhost:8080) locally:
+Deploy services and access [`localhost:8080`](http://localhost:8080) locally:
 
 ```shell
 task up
+```
+
+Run interactive hot-reload session for schema changes:
+
+```shell
+task reload
 ```
 
 Run the test suite:
