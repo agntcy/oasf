@@ -37,7 +37,7 @@ contribute to the development of OASF Schemas and the framework itself.
 1. Determine all the `attributes` (including fields and objects) you would want to add in the `base_class`.
 2. Check the [dictionary](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json) and the [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder, many of your desired attributes may already be present.
 3. Define the missing attributes → [Adding/Modifying an `attribute`](#addingmodifying-an-attribute)
-4. Determine which category you would want to add your base_class in, note it’s  `name`
+4. Determine which category you would want to add your class in, note it’s  `name`
 5. Create a new file →  `<base_class_name.json>` inside the category specific subfolder in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder. Template available [here](https://github.com/agntcy/oasf/blob/main/schema/templates/base_class_name.json)
 6. Define the `base_class` itself → [Adding/Modifying a `base_class`](#addingmodifying-a-base_class)
 7. Finally, verify the changes are working as expected in your local [oasfserver](https://github.com/agntcy/oasf/server).
