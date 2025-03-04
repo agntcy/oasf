@@ -27,7 +27,7 @@ contribute to the development of OASF Schemas and the framework itself.
 1. **Field**: A field is a unique identifier name for a piece of data contained in OASF. Each field also designates a corresponding data_type.
 2. **Object**: An object is a collection of contextually related fields and other objects.  It is also a data_type in OASF.
 3. **Attribute**: An attribute is the more generic name for both fields and objects in OASF.  A field is a scalar attribute while an object is a complex attribute.
-4. **BaseClass**: An base object is represented by a Base Class, which are a particular set of attributes (including fields & objects) representing metadata associated to an autonomous agent.
+4. **Class**: A class is a particular set of attributes (including fields & objects) representing metadata associated to an autonomous agent.
 5. **Category:** A Category organizes based classes that represent a particular domain.
 
 ## How do I add a `class`?
