@@ -45,7 +45,7 @@ task down
 
 ### Configuration
 
-You can check [example.env](example.env) file which contains a list of 
+Check the [example.env](example.env) file which contains a list of 
 environment variables used to control the operations above.
 
 ## Copyright Notice
