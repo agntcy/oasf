@@ -3,6 +3,11 @@
 
 version: "3"
 
+## Load config from dotenv file
+dotenv:
+  - '{{ .ROOT_DIR }}/.env'
+
+## Collection of config params
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
@@ -17,7 +22,7 @@ vars:
   KIND_VERSION: '0.25.0'
   KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
 
-# Used for hot-reload feature
+## Set refresh interval for observable tasks like hot-reload
 interval: 500ms
 
 tasks:

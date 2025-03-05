@@ -72,9 +72,11 @@ jobs:
           targets: ${{ inputs.bake_target }}
           provenance: false
           set: |
-            *.output=type=registry
-            *.cache-from=type=local,src=/tmp/.buildx-cache
             *.platform=linux/amd64,linux/arm64
+            *.output=type=registry
+            *.cache-to=type=local,dest=/tmp/.buildx-cache
+            *.cache-from=type=local,src=/tmp/.buildx-cache
+            *.cache-from=type=registry,ref=${{ inputs.image_repo }}/${{ inputs.bake_target }}
         env:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
