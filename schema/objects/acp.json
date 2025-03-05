@@ -13,6 +13,48 @@
       "caption": "Input",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
       "requirement": "required"
+    },
+    "output" : {
+      "caption": "Output",
+      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "requirement": "required"
+    },
+    "custom_streaming_update": {
+      "caption": "Custom Streaming Update",
+      "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "requirement": "required"
+    },
+    "thread_state": {
+      "caption": "ThreadState",
+      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "requirement": "required"
+    },
+    "config": {
+      "caption": "Configuration",
+      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "requirement": "required"
+    },
+    "interrupts": {
+      "caption": "Interrupts",
+      "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
+      "requirement": "required",
+      "attributes": {
+        "interrupt_type": {
+          "caption": "Interrupt Type",
+          "description": "Name of this interrupt type. Needs to be unique in the list of interrupts.",
+          "requirement": "required"
+        },
+        "interrupt_payload": {
+          "caption": "Interrupt Payload",
+          "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+          "requirement": "required"
+        },
+        "resume_payload": {
+          "caption": "Resume Payload",
+          "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+          "requirement": "required"
+        }
+      }
     }
   }
 }

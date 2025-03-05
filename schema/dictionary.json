@@ -401,6 +401,11 @@
       "type": "string_t",
       "is_array": true
     },
+    "config": {
+      "caption": "Configuration",
+      "description": "This object contains an instance of an OpenAPI schema object.",
+      "type": "json_t"
+    },
     "created_at": {
       "caption": "Created Time",
       "description": "The time when the object was created. See specific usage.",
@@ -410,6 +415,11 @@
       "caption": "Custom Objects Streaming",
       "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`.",
       "type": "boolean_t"
+    },
+    "custom_streaming_update": {
+      "caption": "Custom Streaming Update",
+      "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "type": "json_t"
     },
     "digest": {
       "caption": "Digest",
@@ -478,6 +488,11 @@
       "caption": "Name",
       "description": "The name of the entity. See specific usage.",
       "type": "string_t"
+    },
+    "output" : {
+      "caption": "Output",
+      "description": "A json output",
+      "type": "json_t"
     },
     "parent_uid": {
       "caption": "Parent Unique ID",
@@ -548,6 +563,11 @@
       "caption": "Subdomain",
       "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
       "type": "string_t"
+    },
+    "thread_state": {
+      "caption": "ThreadState",
+      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+      "type": "json_t"
     },
     "threads": {
       "caption": "Threads",
