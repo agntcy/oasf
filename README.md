@@ -13,8 +13,9 @@ agent capabilities across distributed systems.
 
 # Open Agentic Schema Framework Server
 
-This directory contains the Open Agents Schema Framework (OASF) Schema Server source code.
+The server/ directory contains the Open Agents Schema Framework (OASF) Schema Server source code.
 The schema server is an HTTP server that provides a convenient way to browse and use the OASF schema.
+The server provides also schema validation capabilities to be used during development.
 
 You can access the OASF schema server, which is running the latest released schema, at [schema.oasf.agntcy.org](https://schema.oasf.agntcy.org).
 
