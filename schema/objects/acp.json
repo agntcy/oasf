@@ -4,5 +4,10 @@
   "extends": "object",
   "name": "acp",
   "attributes": {
+    "input": {
+      "caption": "Input",
+      "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "requirement": "required"
+    }
   }
 }

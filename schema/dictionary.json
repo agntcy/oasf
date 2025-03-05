@@ -438,6 +438,11 @@
       "description": "The hostname of an endpoint or a device.",
       "type": "hostname_t"
     },
+    "input": {
+      "caption": "Input",
+      "description": "A json input",
+      "type": "json_t"
+    },
     "locator": {
       "caption": "Agent Locator",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
