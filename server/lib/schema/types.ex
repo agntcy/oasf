@@ -33,7 +33,7 @@ defmodule Schema.Types do
   Makes a class uid for the given class and category identifiers.
   """
   @spec class_uid(number, number) :: number
-  def class_uid(category_uid, class_id), do: category_uid * 1000 + class_id
+  def class_uid(category_uid, class_id), do: category_uid * 100 + class_id
 
   @doc """
   Makes a type uid for the given class and activity identifiers.
