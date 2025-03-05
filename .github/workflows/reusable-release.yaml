@@ -96,7 +96,7 @@ jobs:
         shell: bash
         run: |
           for version in "latest" "${{ inputs.release_tag }}"; do
-            "helm package install/charts/oasf --dependency-update --version $version"
+            helm package install/charts/oasf --dependency-update --version $version
           done
 
       - name: Helm push to GHCR OCI registry
