@@ -110,7 +110,7 @@ docker pull ghcr.io/agntcy/oasf-server:latest
 ### Helm charts
 
 ```bash
-helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf:latest
+helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf --version latest
 ```
 
 ## Copyright Notice

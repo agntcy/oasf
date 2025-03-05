@@ -93,17 +93,19 @@ jobs:
         run: echo "value=${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
 
       - name: Helm package
-        id: build
         shell: bash
         run: |
-          helm package install/charts/oasf --dependency-update --version ${{ inputs.release_tag }}
-          echo "package=${{ steps.chart-name.outputs.value }}-${{ inputs.release_tag }}.tgz" >> "$GITHUB_OUTPUT"
+          for version in "latest" "${{ inputs.release_tag }}"; do
+            "helm package install/charts/oasf --dependency-update --version $version"
+          done
 
       - name: Helm push to GHCR OCI registry
         shell: bash
         run: |
-          echo "🚧 Pushing ${{ steps.build.outputs.package }} to GHCR OCI registry"
-          helm push ${{ steps.build.outputs.package }} oci://${{ inputs.image_repo }}/oasf/helm-charts
+          echo "🚧 Pushing ${{ steps.chart-name.outputs.value }} to GHCR OCI registry"
+          for version in "latest" "${{ inputs.release_tag }}"; do
+            helm push ${{ steps.chart-name.outputs.value }}-$version.tgz oci://${{ inputs.image_repo }}/oasf/helm-charts
+          done
 
   release:
     name: Release
