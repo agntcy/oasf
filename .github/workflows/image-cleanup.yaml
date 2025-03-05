@@ -16,6 +16,7 @@ on:
         default: true
 
 env:
+  repo: agntcy
   images: oasf-server
 
 permissions:
@@ -31,7 +32,7 @@ jobs:
         uses: snok/container-retention-policy@4f22ef80902ad409ed55a99dc5133cc1250a0d03 # v3.0.0
         with:
           # Who should delete images
-          account: notused
+          account: ${{ env.repo }}
           token: ${{ secrets.GITHUB_TOKEN }}
           # How to delete images
           dry-run: false
@@ -50,7 +51,7 @@ jobs:
         uses: snok/container-retention-policy@4f22ef80902ad409ed55a99dc5133cc1250a0d03 # v3.0.0
         with:
           # Who should delete images
-          account: notused
+          account: ${{ env.repo }}
           token: ${{ secrets.GITHUB_TOKEN }}
           # How to delete images
           dry-run: ${{ inputs.dry-run }}
@@ -58,4 +59,4 @@ jobs:
           timestamp-to-use: created_at
           # Which images should be deleted
           image-names: ${{ env.images }}
-          image-tags: "!v*.*.*"
+          image-tags: "!latest !v*.*.*"
