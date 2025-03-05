@@ -1,4 +1,3 @@
-
 # Open Agentic Schema Framework
 
 The Open Agentic Schema Framework (OASF) is a standardized schema system for
@@ -11,7 +10,15 @@ containerized development environment. OASF serves as the foundation for
 interoperable AI agent systems, enabling consistent definition and discovery of
 agent capabilities across distributed systems.
 
-# Open Agentic Schema Framework Server
+## Features
+
+OASF defines a set of standards for AI agent content representation that aims to:
+
+- Define common data structure to facilitate content standardisation, validation, and interoperability
+- Ensure unique agent identification to address content identity and consumption
+- Provide extension capabilities to enable third-party features
+
+### Open Agentic Schema Framework Server
 
 The server/ directory contains the Open Agents Schema Framework (OASF) Schema Server source code.
 The schema server is an HTTP server that provides a convenient way to browse and use the OASF schema.
@@ -21,11 +28,18 @@ You can access the OASF schema server, which is running the latest released sche
 
 The schema server can also be used locally.
 
-## Usage
+## Prerequisites
 
-OASF uses Kubernetes as its native runtime.
-The project comes with the necessary tooling for local development that relies on [Taskfile](https://taskfile.dev/installation/) and [Docker](https://docs.docker.com/get-started/get-docker/).
+- [Taskfile](https://taskfile.dev/)
+- [Docker](https://www.docker.com/)
+
 Make sure Docker is installed with Buildx.
+
+## Development
+
+Use `Taskfile` for all related development operations such as testing, validating, deploying, and working with the project.
+
+Check the [example.env](example.env) to see the configuration for the operations below.
 
 ### Clone the repository
 
@@ -81,6 +95,22 @@ including ephemeral Kind clusters and Docker containers.
 
 ```shell
 task down
+```
+
+## Artifacts distribution
+
+See https://github.com/orgs/agntcy/packages?repo_name=oasf
+
+### Container images
+
+```bash
+docker pull ghcr.io/agntcy/oasf-server:latest
+```
+
+### Helm charts
+
+```bash
+helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf:latest
 ```
 
 ## Copyright Notice
