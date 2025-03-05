@@ -4,6 +4,5 @@
     "description": "Systems for managing healthcare data to support clinical and administrative decision-making. Subdomains: Hospital Information Systems, Clinical Decision Support, Health Data Security, and Interoperability Solutions.",
     "extends": "healthcare",
     "name": "health_information_systems",
-    "category": "healthcare",
     "attributes": {}
   }

@@ -1,8 +1,0 @@
-{
-    "uid": 37,
-    "caption": "Bias Mitigation",
-    "description": "Reducing or eliminating biased language and ensuring fair and unbiased output.",
-    "extends": "ethical_interaction",
-    "name": "bias_mitigation",
-    "attributes": {}
-}

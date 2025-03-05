@@ -1,11 +1,8 @@
 {
-    "uid": 3,
-    "caption": "Supply Chain Management",
-    "description": "Coordinating and managing all activities involved in the production and delivery of goods. Subdomains: Inventory Management, Procurement, Logistics Management, and Demand Forecasting.",
-    "extends": "industrial_manufacturing",
-    "name": "supply_chain_management",
-    "category": "industrial_manufacturing",
-    "attributes": {}
-  }
-
-  
+  "uid": 3,
+  "caption": "Supply Chain Management",
+  "description": "Coordinating and managing all activities involved in the production and delivery of goods. Subdomains: Inventory Management, Procurement, Logistics Management, and Demand Forecasting.",
+  "extends": "industrial_manufacturing",
+  "name": "supply_chain_management",
+  "attributes": {}
+}

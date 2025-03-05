@@ -1,8 +1,0 @@
-{
-    "uid": 21,
-    "caption": "Language Translation and Multilingual Support",
-    "description": "Capabilities for handling multiple languages, including translation and multilingual text processing.",
-    "extends": "nlp",
-    "name": "language_translation",
-    "attributes": {}
-}

@@ -4,6 +4,5 @@
     "description": "Providing employees with skills and knowledge to enhance their job performance and career growth. Subdomains: Skills Training, Leadership Development, Career Pathing, and E-Learning Platforms.",
     "extends": "human_resources",
     "name": "training_and_development",
-    "category": "human_resources",
     "attributes": {}
   }

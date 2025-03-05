@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Contextual Comprehension",
+  "description": "Contextual Comprehension describes the ability to understand the context of a given situation or event.",
+  "extends": "nlu",
+  "name": "contextual_comprehension",
+  "attributes": {}
+}

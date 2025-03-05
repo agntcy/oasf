@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Image to Text",
+  "description": "Generating textual descriptions or captions for images.",
+  "extends": "image_processing",
+  "name": "image_to_text",
+  "attributes": {}
+}

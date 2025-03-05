@@ -1,10 +1,8 @@
 {
-    "uid": 4,
-    "caption": "Supply Chain",
-    "description": "The system of production, processing, and distribution of goods. Subdomains: Supplier Management, Production Scheduling, Inventory Control, and Global Supply Chain.",
-    "extends": "transportation",
-    "name": "supply_chain",
-    "category": "transportation",
-    "attributes": {}
-  }
-  
+  "uid": 4,
+  "caption": "Supply Chain",
+  "description": "The system of production, processing, and distribution of goods. Subdomains: Supplier Management, Production Scheduling, Inventory Control, and Global Supply Chain.",
+  "extends": "transportation",
+  "name": "supply_chain",
+  "attributes": {}
+}

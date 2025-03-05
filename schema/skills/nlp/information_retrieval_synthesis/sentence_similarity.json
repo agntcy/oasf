@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Sentence Similarity",
+  "description": "Capability to analyze and determine the semantic similarity between sentences, supporting tasks like search, matching, and content comparison.",
+  "extends": "information_retrieval_synthesis",
+  "name": "sentence_similarity",
+  "attributes": {}
+}

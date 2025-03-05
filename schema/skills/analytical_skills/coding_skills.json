@@ -1,8 +1,0 @@
-{
-    "uid": 2,
-    "caption": "Coding Skills",
-    "description": "Capabilities for code generation, documentation, and optimization.",
-    "extends": "analytical_skills",
-    "name": "coding_skills",
-    "attributes": {}
-}

@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Story Generation",
+  "description": "Generating a piece of text given a description or a first sentence to complete.",
+  "extends": "natural_language_generation",
+  "name": "story_generation",
+  "attributes": {}
+}

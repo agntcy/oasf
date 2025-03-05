@@ -401,6 +401,11 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "fingerprint"
     },
+    "domain": {
+      "caption": "Domain",
+      "description": "The name of the domain. See specific usage.",
+      "type": "string_t"
+    },
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
@@ -444,21 +449,6 @@
       "type": "locator",
       "is_array": true
     },
-    "skill": {
-      "caption": "Skill",
-      "description": "A skill that apply to an agent.",
-      "type": "class_t",
-      "class_path": "classes/base_skill",
-      "class_name": "Base Skill"
-    },
-    "skills": {
-      "caption": "Skills",
-      "description": "Skills that apply to an agent.",
-      "type": "class_t",
-      "class_path": "skills",
-      "class_name": "Skill",
-      "is_array": true
-    },
     "name": {
       "caption": "Name",
       "description": "The name of the entity. See specific usage.",
@@ -498,6 +488,21 @@
       "caption": "Size",
       "description": "The size of data, in bytes.",
       "type": "long_t"
+    },
+    "skill": {
+      "caption": "Skill",
+      "description": "A skill that apply to an agent.",
+      "type": "class_t",
+      "class_path": "classes/base_skill",
+      "class_name": "Base Skill"
+    },
+    "skills": {
+      "caption": "Skills",
+      "description": "Skills that apply to an agent.",
+      "type": "class_t",
+      "class_path": "skills",
+      "class_name": "Skill",
+      "is_array": true
     },
     "specs": {
       "caption": "Specifications",

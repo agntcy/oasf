@@ -1,9 +1,8 @@
 {
-    "uid": 8,
-    "caption": "Decision Accuracy(/MAA_Agent)",
-    "description": "Assesses the correctness of decisions made by agents.",
-    "extends": "performance",
-    "name": "decision_accuracy_maa_agent",
-    "attributes": {}
+  "uid": 8,
+  "caption": "Decision Accuracy(/MAA_Agent)",
+  "description": "Assesses the correctness of decisions made by agents.",
+  "extends": "performance",
+  "name": "decision_accuracy_maa_agent",
+  "attributes": {}
 }
-

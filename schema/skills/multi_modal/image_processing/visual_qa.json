@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Visual Question Answering",
+  "description": "Answering questions about images using natural language.",
+  "extends": "image_processing",
+  "name": "visual_qa",
+  "attributes": {}
+}

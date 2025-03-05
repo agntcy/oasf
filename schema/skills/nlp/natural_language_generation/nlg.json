@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Natural Language Generation",
+  "description": "Natural Language Generation (NLG) describes the ability to generate human-like text from structured data or other inputs.",
+  "extends": "nlp",
+  "name": "natural_language_generation",
+  "attributes": {}
+}

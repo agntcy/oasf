@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Text Summarization",
+  "description": "Condensing longer texts into concise summaries while preserving essential information and maintaining coherence.",
+  "extends": "natural_language_generation",
+  "name": "summarization",
+  "attributes": {}
+}

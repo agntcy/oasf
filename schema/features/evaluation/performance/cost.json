@@ -1,9 +1,8 @@
 {
-    "uid": 2,
-    "caption": "Cost",
-    "description": "Values: tokens",
-    "extends": "performance",
-    "name": "cost",
-    "attributes": {}
+  "uid": 2,
+  "caption": "Cost",
+  "description": "Values: tokens",
+  "extends": "performance",
+  "name": "cost",
+  "attributes": {}
 }
-

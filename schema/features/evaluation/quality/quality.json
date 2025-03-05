@@ -1,7 +1,8 @@
 {
-    "caption": "Quality",
-    "category": "quality",
-    "extends": "evaluation",
-    "name": "quality",
-    "attributes": {}
+  "uid": 2,
+  "caption": "Quality",
+  "category": "evaluation",
+  "extends": "evaluation",
+  "name": "quality",
+  "attributes": {}
 }

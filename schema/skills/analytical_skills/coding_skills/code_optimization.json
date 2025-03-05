@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Code Refactoring and Optimization",
+  "description": "Rewriting and optimizing existing code through refactoring techniques.",
+  "extends": "coding_skills",
+  "name": "code_optimization",
+  "attributes": {}
+}

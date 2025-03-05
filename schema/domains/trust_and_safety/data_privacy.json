@@ -4,6 +4,5 @@
     "description": "Safeguarding personal information from unauthorized access and ensuring compliance with privacy laws and regulations. Subdomains: Privacy Regulations Compliance, Data Encryption, Data Anonymization, and User Consent Management.",
     "extends": "trust_and_safety",
     "name": "data_privacy",
-    "category": "trust_and_safety",
     "attributes": {}
   }

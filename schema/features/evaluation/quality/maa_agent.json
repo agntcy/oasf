@@ -1,9 +1,8 @@
 {
-    "uid": 1,
-    "caption": "MAA_Agent",
-    "description": "Values: Scores values\nAdditional metrics?",
-    "extends": "quality",
-    "name": "maa_agent",
-    "attributes": {}
+  "uid": 1,
+  "caption": "MAA_Agent",
+  "description": "Values: Scores values\nAdditional metrics?",
+  "extends": "quality",
+  "name": "maa_agent",
+  "attributes": {}
 }
-

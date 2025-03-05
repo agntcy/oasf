@@ -1,9 +1,8 @@
 {
-    "uid": 1,
-    "caption": "E-Learning",
-    "description": "Delivering educational content and instruction through digital platforms and online courses. Subdomains: Online Course Development, Virtual Classrooms, Interactive Learning Tools, and Mobile Learning.",
-    "extends": "education",
-    "name": "e_learning",
-    "category": "education",
-    "attributes": {}
-  }
+  "uid": 1,
+  "caption": "E-Learning",
+  "description": "Delivering educational content and instruction through digital platforms and online courses. Subdomains: Online Course Development, Virtual Classrooms, Interactive Learning Tools, and Mobile Learning.",
+  "extends": "education",
+  "name": "e_learning",
+  "attributes": {}
+}

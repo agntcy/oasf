@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Mathematical Reasoning",
+  "description": "Capabilities for solving mathematical problems and proving theorems.",
+  "extends": "analytical_skills",
+  "name": "mathematical_reasoning",
+  "attributes": {}
+}

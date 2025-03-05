@@ -1,11 +1,8 @@
 {
-    "uid": 5,
-    "caption": "Process Engineering",
-    "description": "Designing, implementing, and optimizing industrial processes to improve efficiency and quality. Subdomains: Process Design, Process Optimization, Quality Control, and Safety Engineering.",
-    "extends": "industrial_manufacturing",
-    "name": "process_engineering",
-    "category": "industrial_manufacturing",
-    "attributes": {}
-  }
-
-  
+  "uid": 5,
+  "caption": "Process Engineering",
+  "description": "Designing, implementing, and optimizing industrial processes to improve efficiency and quality. Subdomains: Process Design, Process Optimization, Quality Control, and Safety Engineering.",
+  "extends": "industrial_manufacturing",
+  "name": "process_engineering",
+  "attributes": {}
+}

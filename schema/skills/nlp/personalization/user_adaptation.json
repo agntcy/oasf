@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "User Adaptation",
+  "description": "Tailoring responses based on user preferences, history, or context.",
+  "extends": "personalization",
+  "name": "user_adaptation",
+  "attributes": {}
+}

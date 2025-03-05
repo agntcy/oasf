@@ -1,8 +1,0 @@
-{
-    "uid": 36,
-    "caption": "Fact and Claim Verification",
-    "description": "Verifying facts and claims given a reference text.",
-    "extends": "analytical_reasoning",
-    "name": "fact_verification",
-    "attributes": {}
-}

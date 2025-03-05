@@ -3,5 +3,6 @@
   "description": "Scientific research and innovations in biology, genetics, biotechnology, and other related fields, with the goal of understanding life processes and advancing medical and environmental solutions. Subdomains: Biotechnology, Pharmaceutical Research, Genomics, Bioinformatics, Molecular Biology",
   "extends": "base_domain",
   "name": "life_science",
+	"category": "life_science",
   "attributes": {}
 }

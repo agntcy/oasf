@@ -1,8 +1,0 @@
-{
-    "uid": 19,
-    "caption": "Search",
-    "description": "Capability to perform efficient and accurate searches within large textual databases based on various criteria, including keywords, semantic meaning, or complex queries.",
-    "extends": "information_retrieval_synthesis",
-    "name": "search",
-    "attributes": {}
-}

@@ -1,8 +1,0 @@
-{
-    "uid": 35,
-    "caption": "Problem Solving",
-    "description": "Assisting with solving problems by generating potential solutions or strategies.",
-    "extends": "analytical_reasoning",
-    "name": "problem_solving",
-    "attributes": {}
-}

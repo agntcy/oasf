@@ -1,10 +1,8 @@
 {
-    "uid": 6,
-    "caption": "Autonomous Vehicles",
-    "description": "Vehicles equipped with technology to navigate and operate without human control. Subdomains: Self-Driving Cars, Autonomous Trucks, Sensor Technology, and Vehicle AI.",
-    "extends": "transportation",
-    "name": "autonomous_vehicles",
-    "category": "transportation",
-    "attributes": {}
-  }
-  
+  "uid": 6,
+  "caption": "Autonomous Vehicles",
+  "description": "Vehicles equipped with technology to navigate and operate without human control. Subdomains: Self-Driving Cars, Autonomous Trucks, Sensor Technology, and Vehicle AI.",
+  "extends": "transportation",
+  "name": "autonomous_vehicles",
+  "attributes": {}
+}

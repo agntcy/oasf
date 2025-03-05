@@ -1,10 +1,8 @@
 {
-    "uid": 3,
-    "caption": "Genomics",
-    "description": "The study of genomes to understand genetic structure, function, and evolution. Subdomains: Comparative Genomics, Functional Genomics, Population Genomics, and Metagenomics.",
-    "extends": "life_science",
-    "name": "genomics",
-    "category": "life_science",
-    "attributes": {}
-  }
-  
+  "uid": 3,
+  "caption": "Genomics",
+  "description": "The study of genomes to understand genetic structure, function, and evolution. Subdomains: Comparative Genomics, Functional Genomics, Population Genomics, and Metagenomics.",
+  "extends": "life_science",
+  "name": "genomics",
+  "attributes": {}
+}

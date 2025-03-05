@@ -23,20 +23,20 @@
       "caption": "Tabular / Text",
       "description": "Tabular / Text tasks are the application of computational techniques to the analysis and synthesis of tabular data and text."
     },
-    "multi_modal": {
+    "analytical_skills": {
       "uid": 5,
-      "caption": "Multi-modal",
-      "description": "Multi-model tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
+      "caption": "Analytical skills",
+      "description": "Analytical skills events report the activity, existence, and/or state of analytical skills for tracking, mission planning, and other related activities."
     },
     "retrieval_augmented_generation": {
       "uid": 6,
       "caption": "Retrieval Augmented Generation",
       "description": "Retrieval Augmented Generation tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
     },
-    "analytical_skills": {
+    "multi_modal": {
       "uid": 7,
-      "caption": "Analytical skills",
-      "description": "Analytical skills events report the activity, existence, and/or state of analytical skills for tracking, mission planning, and other related activities."
+      "caption": "Multi-modal",
+      "description": "Multi-model tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
     }
   }
 }

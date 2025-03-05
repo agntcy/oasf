@@ -1,9 +1,8 @@
 {
-    "uid": 4,
-    "caption": "Compensation and Benefits",
-    "description": "Designing and managing salary structures, bonuses, and benefits to attract and retain employees. Subdomains: Salary Benchmarking, Benefits Administration, Incentive Programs, and Retirement Planning.",
-    "extends": "human_resources",
-    "name": "compensation_and_benefits",
-    "category": "human_resources",
-    "attributes": {}
-  }
+  "uid": 4,
+  "caption": "Compensation and Benefits",
+  "description": "Designing and managing salary structures, bonuses, and benefits to attract and retain employees. Subdomains: Salary Benchmarking, Benefits Administration, Incentive Programs, and Retirement Planning.",
+  "extends": "human_resources",
+  "name": "compensation_and_benefits",
+  "attributes": {}
+}

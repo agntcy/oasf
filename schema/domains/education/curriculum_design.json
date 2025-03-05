@@ -1,9 +1,8 @@
 {
-    "uid": 2,
-    "caption": "Curriculum Design",
-    "description": "Creating structured educational content and learning experiences for students. Subdomains: Instructional Design, Learning Objectives, Assessment Strategies, and Content Development.",
-    "extends": "education",
-    "name": "curriculum_design",
-    "category": "education",
-    "attributes": {}
-  }
+  "uid": 2,
+  "caption": "Curriculum Design",
+  "description": "Creating structured educational content and learning experiences for students. Subdomains: Instructional Design, Learning Objectives, Assessment Strategies, and Content Development.",
+  "extends": "education",
+  "name": "curriculum_design",
+  "attributes": {}
+}

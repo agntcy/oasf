@@ -1,9 +1,0 @@
-{
-    "uid": 4,
-    "caption": "Entity Recognition",
-    "description": "Entity Recognition describes the ability to identify and classify entities in a given situation or event.",
-    "category": "nlp",
-    "extends": "nlp",
-    "name": "entity_recognition",
-    "attributes": {}
-  }

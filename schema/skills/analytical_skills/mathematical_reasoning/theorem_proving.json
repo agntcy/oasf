@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Automated Theorem Proving",
+  "description": "Proving mathematical theorems using computational methods.",
+  "extends": "mathematical_reasoning",
+  "name": "theorem_proving",
+  "attributes": {}
+}

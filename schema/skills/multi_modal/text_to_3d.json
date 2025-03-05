@@ -1,8 +1,0 @@
-{
-    "uid": 7,
-    "caption": "Text to 3D",
-    "description": "Generating 3D objects or scenes based on textual descriptions.",
-    "extends": "image_processing",
-    "name": "text_to_3d",
-    "attributes": {}
-}

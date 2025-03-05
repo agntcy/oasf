@@ -1,8 +1,0 @@
-{
-    "uid": 5,
-    "caption": "Text to Image",
-    "description": "Generating images based on textual descriptions or instructions.",
-    "extends": "image_processing",
-    "name": "text_to_image",
-    "attributes": {}
-}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Question Generation",
+  "description": "Automatically generating relevant and meaningful questions from a given text or context.",
+  "extends": "natural_language_generation",
+  "name": "question_generation",
+  "attributes": {}
+}

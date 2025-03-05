@@ -3,7 +3,6 @@
   "caption": "Document Retrieval",
   "description": "Document retrieval is the process of retrieving relevant documents from a collection based on a specific query, typically through indexing and search techniques.",
   "extends": "retrieval_of_information",
-	"category": "retrieval_of_information",
   "name": "document_retrieval",
   "attributes": {}
 }
