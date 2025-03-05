@@ -1,0 +1,11 @@
+{
+    "uid": 2,
+    "caption": "Robotics",
+    "description": "Designing and using robots for manufacturing tasks to enhance productivity and precision. Subdomains: Robotic Process Automation, Industrial Robotics, AI and Robotics, and Collaborative Robots.",
+    "extends": "industrial_manufacturing",
+    "name": "robotics",
+    "category": "industrial_manufacturing",
+    "attributes": {}
+  }
+
+  

@@ -1,7 +1,7 @@
 {
-  "uid": 1,
+  "uid": 5,
   "caption": "Molecular Biology",
-  "description": "Molecular Biology",
+  "description": "Molecular Biology is the branch of biology that focuses on the structure, function, and interactions of biological macromolecules, such as DNA, RNA, and proteins. Subdomains: Genomics, Gene Expression, and Cell Signaling.",
   "extends": "life_science",
   "name": "molecular_biology",
   "category": "life_science",

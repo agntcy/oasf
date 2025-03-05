@@ -7,6 +7,8 @@
 
 Make sure Docker is installed with Buildx.
 
+Check the [example.env](example.env) to see the configuration for the operations below.
+
 Fetch required tools:
 
 ```shell

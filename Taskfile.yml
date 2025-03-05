@@ -135,6 +135,7 @@ tasks:
         {{ .HELM_BIN }} upgrade {{.RELEASE_NAME}} \
           {{ .HELM_CHART_PATH }} \
           -f {{ .HELM_VALUES_PATH }} \
+          --set image.repository="{{ .IMAGE_REPO }}/oasf-server" \
           --set image.tag="{{ .IMAGE_TAG }}" \
           --namespace {{ .HELM_NAMESPACE }} \
           --create-namespace \
@@ -156,10 +157,10 @@ tasks:
     deps:
       - deps:kubectl
     sources:
-      - 'schema/**'
+      - 'schema/**/*'
     vars:
       RELEASE_NAME: 'oasf'
-    status:
+    preconditions:
       - '{{ .KUBECTL_BIN }} get deploy/{{.RELEASE_NAME}}'
     cmds:
       - '{{ .KUBECTL_BIN }} exec deploy/{{.RELEASE_NAME}} -- ./bin/schema_server rpc "Schema.reload()"'

@@ -1,0 +1,9 @@
+{
+    "uid": 1,
+    "caption": "Recruitment",
+    "description": "Attracting, screening, and selecting qualified candidates for job openings within an organization. Subdomains: Talent Acquisition, Candidate Sourcing, Interviewing Techniques, and Onboarding Processes.",
+    "extends": "human_resources",
+    "name": "recruitment",
+    "category": "human_resources",
+    "attributes": {}
+  }

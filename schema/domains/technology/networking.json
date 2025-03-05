@@ -1,7 +1,7 @@
 {
   "uid": 3,
   "caption": "Networking",
-  "description": "Design, management, and security of computer networks. Subdomains: Wireless Networks, Network Protocols, Network Architecture, Network Security",
+  "description": "Design, management, and security of computer networks. Subdomains: Wireless Networks, Network Protocols, Network Architecture, and Network Security.",
   "extends": "technology",
   "name": "networking",
   "attributes": {}

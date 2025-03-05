@@ -1,0 +1,9 @@
+{
+    "uid": 5,
+    "caption": "Risk Management",
+    "description": "Identifying, assessing, and prioritizing risks to minimize their impact on an organization's objectives and operations. Subdomains: Risk Assessment, Mitigation Strategies, Crisis Management, and Compliance and Auditing.",
+    "extends": "trust_and_safety",
+    "name": "risk_management",
+    "category": "trust_and_safety",
+    "attributes": {}
+  }

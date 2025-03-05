@@ -1,0 +1,10 @@
+{
+    "uid": 2,
+    "caption": "Pharmaceutical Research",
+    "description": "The discovery, development, and testing of new drugs and therapies to treat diseases and improve health outcomes. Subdomains: Drug Discovery, Clinical Trials, Pharmacology, and Regulatory Affairs.",
+    "extends": "life_science",
+    "name": "pharmaceutical_research",
+    "category": "life_science",
+    "attributes": {}
+  }
+  

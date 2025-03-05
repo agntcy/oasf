@@ -155,6 +155,10 @@
       }
     }
   ],
+  "skills": [
+    "Text Completion [1006]",
+    "Problem Solving [1035]"
+  ]
   "extensions": [
     {
       "name": "oasf.agntcy.org/features/runtime/io-mapper",
