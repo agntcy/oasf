@@ -14,9 +14,9 @@ Version: 0.0.1
 
 This document describes the Open Agentic Schema Framework (OASF) and its
 taxonomy, including the core agents' skills descriptor schema built with the
-framework. It is highly inspired by the succesfuly Open Cybersecurity Schema Framework (OAF)
+framework. It is highly inspired by the successful Open Cybersecurity Schema Framework (OCSF)
 that the authors have been using previously in the context of cloud threat
-detection. OASF leverages the design principles of OASF to build a new
+detection. OASF leverages the design principles of OCSF to build a new
 framework dedicated to characterize autonomous agents through their skillset
 and cost to solve problems belonging to a number of domains of applications.
 
