@@ -1,0 +1,8 @@
+{
+  "caption": "Agent Connect Protocol Specs",
+  "description": "Specification of agent capabilities, config, input, output, and interrupts.",
+  "extends": "object",
+  "name": "acp",
+  "attributes": {
+  }
+}
