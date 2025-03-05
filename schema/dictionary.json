@@ -468,10 +468,26 @@
       "description": "A json input",
       "type": "json_t"
     },
-    "interrupts": {
+    "interrupt_payload": {
+      "caption": "Interrupt Payload",
+      "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "type": "json_t"
+    },
+    "interrupt_support": {
       "caption": "Interrupt Support",
       "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`",
       "type": "boolean_t"
+    },
+    "interrupt_type": {
+      "caption": "Interrupt Type",
+      "description": "Name of this interrupt type. Needs to be unique in the list of interrupts.",
+      "type": "string_t"
+    },
+    "interrupts": {
+      "caption": "Interrupts",
+      "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
+      "type": "interrupts",
+      "is_array": true
     },
     "locator": {
       "caption": "Agent Locator",
@@ -489,7 +505,7 @@
       "description": "The name of the entity. See specific usage.",
       "type": "string_t"
     },
-    "output" : {
+    "output": {
       "caption": "Output",
       "description": "A json output",
       "type": "json_t"
@@ -523,6 +539,11 @@
       "caption": "Result Streaming",
       "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
       "type": "boolean_t"
+    },
+    "resume_payload": {
+      "caption": "Resume Payload",
+      "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "type": "json_t"
     },
     "scheme": {
       "caption": "Scheme",

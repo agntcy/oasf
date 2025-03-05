@@ -9,7 +9,7 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`",
       "requirement": "required"
     },
-    "interrupts": {
+    "interrupt_support": {
       "caption": "Interrupt Support",
       "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`",
       "requirement": "required"
