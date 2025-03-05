@@ -137,6 +137,13 @@ defmodule SchemaWeb.PageView do
     ["data-profiles='", Enum.join(profiles, ","), "'"]
   end
 
+  def indent_class(uid) do
+    digits = Integer.to_string(uid) |> String.length()
+    # Calculate level based on uid length
+    level = div(digits - 3, 2)
+    "indent-level-#{level}"
+  end
+
   @spec format_linked_class_caption(String.t(), String.t(), map()) :: any()
   def format_linked_class_caption(path, class_name, class) do
     name = format_caption(class_name, class)
