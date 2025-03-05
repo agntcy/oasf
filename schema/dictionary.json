@@ -47,6 +47,16 @@
       "type": "string_t",
       "is_array": true
     },
+    "callbacks": {
+      "caption": "Callback Support",
+      "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`",
+      "type": "boolean_t"
+    },
+    "capabilities": {
+      "caption": "Capabilities",
+      "description": "Declares what invocation features this agent is capable of.",
+      "type": "capabilities"
+    },
     "categories": {
       "caption": "Website Categorization",
       "description": "The Website categorization names, as defined by <code>category_ids</code> enum values.",
@@ -396,6 +406,11 @@
       "description": "The time when the object was created. See specific usage.",
       "type": "timestamp_t"
     },
+    "custom_objects_streaming": {
+      "caption": "Custom Objects Streaming",
+      "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`.",
+      "type": "boolean_t"
+    },
     "digest": {
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
@@ -443,6 +458,11 @@
       "description": "A json input",
       "type": "json_t"
     },
+    "interrupts": {
+      "caption": "Interrupt Support",
+      "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`",
+      "type": "boolean_t"
+    },
     "locator": {
       "caption": "Agent Locator",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
@@ -484,6 +504,11 @@
       "description": "The resource type as defined by the event source.",
       "type": "string_t"
     },
+    "result_streaming": {
+      "caption": "Result Streaming",
+      "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
+      "type": "boolean_t"
+    },
     "scheme": {
       "caption": "Scheme",
       "description": "The scheme portion of the URL. For example: <code>http</code>, <code>https</code>, <code>ftp</code>, or <code>sftp</code>.",
@@ -514,10 +539,20 @@
       "description": "Generic specification schema of this extension.",
       "type": "object"
     },
+    "streaming": {
+      "caption": "Streaming Modes",
+      "description": "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+      "type": "streaming_modes"
+    },
     "subdomain": {
       "caption": "Subdomain",
       "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
       "type": "string_t"
+    },
+    "threads": {
+      "caption": "Threads",
+      "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`",
+      "type": "boolean_t"
     },
     "type": {
       "caption": "Type",

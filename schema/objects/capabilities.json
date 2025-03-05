@@ -1,0 +1,28 @@
+{
+  "caption": "Agent Capabilities",
+  "description": "Declares what invocation features this agent is capable of.",
+  "extends": "object",
+  "name": "capabilities",
+  "attributes": {
+    "threads": {
+      "caption": "Threads",
+      "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`",
+      "requirement": "required"
+    },
+    "interrupts": {
+      "caption": "Interrupt Support",
+      "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`",
+      "requirement": "required"
+    },
+    "callbacks": {
+      "caption": "Callback Support",
+      "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`",
+      "requirement": "required"
+    },
+    "streaming": {
+      "caption": "Streaming Modes",
+      "description": "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+      "requirement": "required"
+    }
+  }
+}

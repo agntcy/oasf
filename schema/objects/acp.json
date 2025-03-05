@@ -4,6 +4,11 @@
   "extends": "object",
   "name": "acp",
   "attributes": {
+    "capabilities": {
+      "caption": "Capabilities",
+      "description": "Declares what invocation features this agent is capable of.",
+      "requirement": "required"
+    },
     "input": {
       "caption": "Input",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
