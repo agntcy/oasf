@@ -102,8 +102,8 @@ jobs:
       - name: Helm push to GHCR OCI registry
         shell: bash
         run: |
-          echo "🚧 Pushing ${{ steps.chart-name.outputs.value }} to GHCR OCI registry"
           for version in "latest" "${{ inputs.release_tag }}"; do
+            echo "🚧 Pushing $version to GHCR OCI registry"
             helm push ${{ steps.chart-name.outputs.value }}-$version.tgz oci://${{ inputs.image_repo }}/oasf/helm-charts
           done
 
