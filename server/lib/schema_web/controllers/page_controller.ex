@@ -414,9 +414,20 @@ defmodule SchemaWeb.PageController do
   defp sort_classes(categories) do
     Map.update!(categories, :attributes, fn list ->
       Enum.map(list, fn {name, category} ->
-        {name, Map.update!(category, :classes, &sort_by(&1, :uid))}
+        {name, Map.update!(category, :classes, &sort_by_float_uid(&1))}
       end)
     end)
+  end
+
+  defp sort_by_float_uid(classes) do
+    Enum.sort_by(classes, fn {_, class} -> uid_to_float(class[:uid]) end)
+  end
+
+  # Convert the uid into a float with a leading "0."
+  defp uid_to_float(uid) do
+    uid_string = Integer.to_string(uid)
+    float_string = "0." <> String.slice(uid_string, 0..-1//1)
+    String.to_float(float_string)
   end
 
   defp sort_attributes(map) do
