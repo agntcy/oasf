@@ -43,7 +43,7 @@
     },
     "authors": {
       "caption": "Author",
-      "description": "Specifies the authors list of an. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
+      "description": "Specifies the authors list of an agent. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
       "type": "string_t",
       "is_array": true
     },
