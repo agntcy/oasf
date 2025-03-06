@@ -28,7 +28,7 @@ body {
   }
 
   .navbar {
-    background-color: #F5F8FD;
+    background-color: #E3E9FB;
   }
 
   .navbar.fixed-left {
@@ -285,6 +285,10 @@ tr th a:hover {
 
 .borderless th {
   border: none;
+}
+
+td.align-middle {
+  height: 30px !important;
 }
 
 .name {
