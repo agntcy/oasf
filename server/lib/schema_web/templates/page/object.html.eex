@@ -143,9 +143,11 @@
   "authors": [
     "Cisco Systems <dev@cisco.com>"
   ],
-  "created_at": {
-    "timestamp": 1740148371,
-    "datetime": "2025-02-21T14:32:51+00:00"
+  "created_at": 1740148371,
+  "digest": {
+    "value": "68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728",
+    "algorithm": "SHA-256",
+    "algorithm_id": 3
   },
   "locators": [
     {
@@ -160,47 +162,6 @@
     "Problem Solving [1035]"
   ]
   "extensions": [
-    {
-      "name": "oasf.agntcy.org/features/runtime/io-mapper",
-      "version": "v0.0.0",
-      "specs": {
-        "input": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string"
-            },
-            "audience": {
-              "type": "string",
-              "enum": [
-                "general",
-                "technical",
-                "business",
-                "academic"
-              ]
-            }
-          },
-          "required": [
-            "email",
-            "audience"
-          ]
-        },
-        "output": {
-          "type": "object",
-          "properties": {
-            "correct": {
-              "type": "boolean"
-            },
-            "corrected_email": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "correct"
-          ]
-        }
-      }
-    },
     {
       "name": "oasf.agntcy.org/features/runtime",
       "version": "v0.0.0",
