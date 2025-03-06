@@ -57,23 +57,6 @@ tasks:
     cmds:
       - docker buildx bake {{.BAKE_OPTS}}
 
-  pull:
-    desc: Pull images for all components
-    cmds:
-      - |
-        images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
-        echo "$images" | while read image; do
-          echo "Pulling image: $image"
-          docker pull $image
-        done
-
-  push:
-    desc: Push images for all components
-    prompt:
-      - Are you sure you want to push the images to remote registry?
-    cmds:
-      - docker buildx bake default --set=*.output=type=registry
-
   release:
     desc: Release images for all components with a release tag
     prompt:
@@ -86,6 +69,7 @@ tasks:
         images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
         echo "$images" | while read image; do
           release_image="${image%%:*}:{{.RELEASE_TAG}}"
+          echo "Releasing image: $image --> $release_image"
           skopeo copy --multi-arch all docker://$image docker://$release_image
         done
 

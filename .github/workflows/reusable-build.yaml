@@ -73,7 +73,7 @@ jobs:
             *.cache-to=type=local,dest=/tmp/.buildx-cache
             *.cache-from=type=local,src=/tmp/.buildx-cache
             *.cache-from=type=registry,ref=${{ inputs.image_repo }}/${{ inputs.bake_target }}
-            *.output=type=tar,dest=/tmp/${{ inputs.bake_target }}.tar
+            *.output=type=oci,dest=/tmp/${{ inputs.bake_target }}.tar
         env:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
