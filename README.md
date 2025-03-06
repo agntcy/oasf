@@ -10,6 +10,11 @@ containerized development environment. OASF serves as the foundation for
 interoperable AI agent systems, enabling consistent definition and discovery of
 agent capabilities across distributed systems.
 
+OASF is highly inspired from OCSF (Open Cybersecurity Schema Framework) in terms of data modeling philosophy but also in terms of implementation.
+The server is a derivative work of OCSF schema server and the schema update
+workflows reproduce those developed by OCSF.
+
+
 ## Features
 
 OASF defines a set of standards for AI agent content representation that aims to:
