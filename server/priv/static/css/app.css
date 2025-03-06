@@ -28,7 +28,11 @@ body {
   }
 
   .navbar {
-    background-color: #f0f0ef;
+    background-color: #E3EAFA;
+  }
+
+  .navbar.fixed-left {
+    background-color: #EFF3FC;
   }
 
   .navbar.fixed-left {
@@ -40,7 +44,7 @@ body {
   .navbar.fixed-left {
     bottom: 0;
     width: 200px;
-    border-right: 0.1em solid;
+    border-right: 0.1em solid #dee2e6;
     flex-flow: column nowrap;
     align-items: flex-start;
   }
@@ -77,6 +81,14 @@ body {
 
   .navbar.fixed-left .navbar-nav .nav-item .dropdown-menu {
     left: 100%;
+  }
+
+  .navbar-light .navbar-nav .nav-link {
+    color: #187ADC !important;
+  }
+
+  .btn-link {
+    color: #187ADC;
   }
 
   .oasf-logo {
@@ -123,6 +135,10 @@ body {
     border: 0;
     border-top: 4px solid rgba(0, 0, 0, 0.5);
   }
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #EFF3FC;
 }
 
 hr {
@@ -179,7 +195,7 @@ strong {
 }
 
 a {
-  color: rgb(89, 89, 166);
+  color: #00142B;
 }
 
 a:hover,
@@ -255,7 +271,7 @@ table.table-borderless tr td {
 }
 
 tr.thead-color {
-  background-color: #005885;
+  background-color: #187ADC;
   color: lightgrey;
 }
 
@@ -263,12 +279,16 @@ tr th a {
   color: lightgrey;
 }
 
+tr th a:hover {
+  color: #ffffff !important;
+}
+
 .borderless th {
   border: none;
 }
 
 .name {
-  background-color: #cccccc;
+  background-color: #E3EAFA;
 }
 
 .links {
@@ -341,7 +361,7 @@ input[type="checkbox"]:hover {
   display: none;
   position: absolute;
   right: 1%;
-  background-color: #f0f0ef;
+  background-color: #F5F8FD;
   min-width: 150px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
