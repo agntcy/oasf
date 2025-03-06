@@ -111,10 +111,10 @@ limitations under the License.
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#">OASF Schema</a>
+  <a class="navbar-brand" href="<%= Routes.static_path(@conn, "/") %>">Open Agentic Schema Framework</a>
 
   <nav class="navbar navbar-bg collapse navbar-collapse navbar-expand-md navbar-light fixed-left">
-    <a href="<%= Routes.static_path(@conn, "/?extensions=") %>" onclick="reset_home_page()" class="navbar-brand oasf-logo">
+    <a href="<%= Routes.static_path(@conn, "/") %>" onclick="reset_home_page()" class="navbar-brand oasf-logo">
       <img src='<%= Routes.static_path(@conn, "/images/oasf.png") %>' alt="OASF"/>
     </a>
     <h6 class="container-fluid version">
