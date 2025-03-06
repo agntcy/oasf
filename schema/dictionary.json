@@ -666,7 +666,7 @@
   },
   "types": {
     "caption": "Data Types",
-    "description": "The data types available in OASF. Each data type specifies constraints in the form regular expressions, max lengths or value limits. Implementers of OCSF should ensure they abide to these constraints.",
+    "description": "The data types available in OASF. Each data type specifies constraints in the form regular expressions, max lengths or value limits. Implementers of OASF should ensure they abide to these constraints.",
     "attributes": {
       "boolean_t": {
         "caption": "Boolean",
