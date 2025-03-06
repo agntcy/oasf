@@ -18,6 +18,10 @@ on:
         required: true
         type: string
         description: "Release tag for all components."
+      artifact_path:
+        required: true
+        type: string
+        description: "Path from where to download image artifacts."
       helm-version:
         required: false
         default: "3.12.1"
@@ -49,6 +53,19 @@ jobs:
           registry: ghcr.io
           username: notused
           password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          path: ${{ inputs.artifact_path }}
+          merge-multiple: true
+
+      - name: Load images to local Docker registry
+        run: |
+          for image_archive in ${{ inputs.artifact_path }}/*.tar; do
+            docker load --input "$image_archive"
+          done
+          docker images
 
       - name: Release images
         env:

@@ -14,6 +14,10 @@ on:
         required: true
         type: string
         description: 'Image tag to use.'
+      artifact_path:
+        required: true
+        type: string
+        description: "Path from where to download image artifacts."
 
 jobs:
   test:
@@ -25,23 +29,22 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Login to ghcr.io
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
       - name: Setup Taskfile
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
-      - name: Pull images
-        env:
-          IMAGE_REPO: ${{ inputs.image_repo }}
-          IMAGE_TAG: ${{ inputs.image_tag }}
+      - name: Download artifacts
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        with:
+          path: ${{ inputs.artifact_path }}
+          merge-multiple: true
+
+      - name: Load images to local Docker registry
         run: |
-          task pull
+          for image_archive in ${{ inputs.artifact_path }}/*.tar; do
+            docker load --input "$image_archive"
+          done
+          docker images
 
       - name: Run tests
         env:
