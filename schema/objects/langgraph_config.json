@@ -1,0 +1,23 @@
+{
+  "caption": "LangGraph Config",
+  "description": "Describes an agent deployment config for the LangGraph framework.",
+  "extends": "object",
+  "name": "langgraph_config",
+  "attributes": {
+    "framework_type": {
+      "caption": "Framework Type",
+      "description": "Agent framework type.",
+      "requirement": "required",
+      "enum": {
+        "langgraph": {
+          "caption": "LangGraph"
+        }
+      }
+    },
+    "graph": {
+      "caption": "Graph",
+      "description": "Graph of the framework config",
+      "requirement": "required"
+    }
+  }
+}

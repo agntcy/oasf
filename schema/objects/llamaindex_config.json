@@ -1,0 +1,23 @@
+{
+  "caption": "Llamaindex Config",
+  "description": "Describes an agent deployment config for the Llamaindex framework.",
+  "extends": "object",
+  "name": "llamaindex_config",
+  "attributes": {
+    "framework_type": {
+      "caption": "Framework Type",
+      "description": "Agent framework type.",
+      "requirement": "required",
+      "enum": {
+        "llamaindex": {
+          "caption": "Llamaindex"
+        }
+      }
+    },
+    "path": {
+      "caption": "Path",
+      "description": "Path to the framework config. Required for llamaindex based agents.",
+      "requirement": "required"
+    }
+  }
+}

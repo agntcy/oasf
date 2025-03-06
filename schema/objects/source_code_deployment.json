@@ -1,0 +1,33 @@
+{
+  "caption": "Source Code Deployment",
+  "description": "Describes the source code where the agent is available. It specifies also the type of deployer that it supports.",
+  "extends": "object",
+  "name": "source_code_deployment",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Deployment type.",
+      "requirement": "required",
+      "enum": {
+        "source_code": {
+          "caption": "Source Code"
+        }
+      }
+    },
+    "name": {
+      "caption": "Deployment Option Name",
+      "description": "Name this deployment option is referred to within this agent. This is needed to indicate which one is preferred when this manifest is referred. Can be omitted, in such case selection is not possible.",
+      "requirement": "optional"
+    },
+    "url": {
+      "caption": "Source Code Locator",
+      "description": "Location of the source code. E.g. path to code root, github repo url etc.",
+      "requirement": "required"
+    },
+    "framework_config": {
+      "caption": "Agentic Framework Config",
+      "description": "Config for an agent of an agentic framework. Valid options: llamaindex_config, langgraph_config",
+      "requirement": "required"
+    }
+  }
+}

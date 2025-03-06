@@ -453,6 +453,29 @@
       "type": "fingerprint",
       "is_array": true
     },
+    "framework_config": {
+      "caption": "Agentic Framework Config",
+      "description": "Config for an agent of an agentic framework.",
+      "type": "object",
+      "enum": {
+        "llamaindex_config": {
+          "caption": "Llamaindex Config"
+        },
+        "langgraph_config": {
+          "caption": "LangGraph Config"
+        }
+      }
+    },
+    "framework_type": {
+      "caption": "Framework Type",
+      "description": "Agent framework type.",
+      "type": "string_t"
+    },
+    "graph": {
+      "caption": "Graph",
+      "description": "Graph of the framework config.",
+      "type": "string_t"
+    },
     "hash": {
       "caption": "Hash",
       "description": "The hash attribute is the value of a digital fingerprint including information about its algorithm.",
