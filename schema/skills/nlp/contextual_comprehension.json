@@ -1,8 +1,0 @@
-{
-    "uid": 2,
-    "caption": "Contextual Comprehension",
-    "description": "Contextual Comprehension describes the ability to understand the context of a given situation or event.",
-    "extends": "nlp",
-    "name": "contextual_comprehension",
-    "attributes": {}
-  }

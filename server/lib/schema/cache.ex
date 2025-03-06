@@ -552,7 +552,9 @@ defmodule Schema.Cache do
       classes
       # remove intermediate hidden classes
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
-      |> Enum.into(%{}, fn class_tuple -> enrich_class(class_tuple, categories_attributes) end)
+      |> Enum.into(%{}, fn class_tuple ->
+        enrich_class(class_tuple, categories_attributes, classes)
+      end)
 
     {classes, all_classes, observable_type_id_map, categories}
   end
@@ -934,10 +936,10 @@ defmodule Schema.Cache do
   end
 
   # Add category_uid, class_uid, and type_uid
-  defp enrich_class({class_key, class}, categories) do
+  defp enrich_class({class_key, class}, categories, classes) do
     class =
       class
-      |> update_class_uid(categories)
+      |> update_class_uid(categories, classes)
       |> add_class_uid(class_key)
       |> add_category_uid(class_key, categories)
 
@@ -960,7 +962,7 @@ defmodule Schema.Cache do
     {name, Map.update!(category, :uid, fn uid -> Types.category_uid(extension, uid) end)}
   end
 
-  defp update_class_uid(class, categories) do
+  def update_class_uid(class, categories, classes) do
     {key, category} = Utils.find_entity(categories, class, class[:category])
 
     class =
@@ -978,7 +980,14 @@ defmodule Schema.Cache do
     try do
       case class[:extension_id] do
         nil ->
-          Map.put(class, :uid, Types.class_uid(cat_uid, class_uid))
+          if class[:name] == class[:category] do
+            # Use the category UID directly if extends is the same as category
+            Map.put(class, :uid, Types.class_uid(cat_uid, class_uid))
+          else
+            # Calculate UID considering the hierarchy and hidden classes
+            new_uid = calculate_uid(classes, class_uid, class[:extends], cat_uid)
+            Map.put(class, :uid, new_uid)
+          end
 
         ext ->
           Map.put(class, :uid, Types.class_uid(Types.category_uid_ex(ext, cat_uid), class_uid))
@@ -986,6 +995,28 @@ defmodule Schema.Cache do
     rescue
       ArithmeticError ->
         error("invalid class #{class[:name]}: #{inspect(Map.delete(class, :attributes))}")
+    end
+  end
+
+  defp calculate_uid(classes, class_uid, extends, cat_uid) do
+    case Enum.find(classes, fn {k, _v} -> Atom.to_string(k) == extends end) do
+      {_, parent} ->
+        if Map.has_key?(parent, :uid) do
+          if parent[:category] == parent[:name] do
+            # If parent extends category, use category UID
+            Types.class_uid(cat_uid, class_uid)
+          else
+            # Recursively calculate the UID
+            parent_uid = calculate_uid(classes, parent[:uid], parent[:extends], cat_uid)
+            Types.class_uid(parent_uid, class_uid)
+          end
+        else
+          # If parent is hidden (doesn't have a uid), continue recursion
+          calculate_uid(classes, class_uid, parent[:extends], cat_uid)
+        end
+
+      nil ->
+        Types.class_uid(cat_uid, class_uid)
     end
   end
 

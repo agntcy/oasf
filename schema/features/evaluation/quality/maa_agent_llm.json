@@ -1,9 +1,8 @@
 {
-    "uid": 5,
-    "caption": "MAA_Agent_LLM",
-    "description": "Values: accuracy\nhallucination\nbias\ntoxicity\nrelevance\nerror rate\nsummarisation\nanswer correctness\nresponse relevancy\nsemantic similarity\naspect critic\ncontext entity recall\ncontext precision\ncontext recall\nfactual correctness\nfaithfulness\nnoise sensitivity\nConversational metrics:\nConversational G-Eval\nKnowledge Retention\nRole Adherence\nConversation Completeness\nConversation Relevancy\nMulti-modal metrics:\nImage Coherence\nImage Helpfulness\nImage Reference\nText to Image\nImage Editing\nMultimodal Answer Relevancy\nMultimodal Faithfulness\nMultimodal Contextual Precision\nMultimodal Contextual Recall\nMultimodal Contextual Relevancy",
-    "extends": "quality",
-    "name": "maa_agent_llm",
-    "attributes": {}
+  "uid": 5,
+  "caption": "MAA_Agent_LLM",
+  "description": "Values: accuracy\nhallucination\nbias\ntoxicity\nrelevance\nerror rate\nsummarisation\nanswer correctness\nresponse relevancy\nsemantic similarity\naspect critic\ncontext entity recall\ncontext precision\ncontext recall\nfactual correctness\nfaithfulness\nnoise sensitivity\nConversational metrics:\nConversational G-Eval\nKnowledge Retention\nRole Adherence\nConversation Completeness\nConversation Relevancy\nMulti-modal metrics:\nImage Coherence\nImage Helpfulness\nImage Reference\nText to Image\nImage Editing\nMultimodal Answer Relevancy\nMultimodal Faithfulness\nMultimodal Contextual Precision\nMultimodal Contextual Recall\nMultimodal Contextual Relevancy",
+  "extends": "quality",
+  "name": "maa_agent_llm",
+  "attributes": {}
 }
-

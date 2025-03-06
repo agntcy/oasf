@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Text Style Transfer",
+  "description": "Rewriting text to match the style of a given reference text while preserving the original content.",
+  "extends": "natural_language_generation",
+  "name": "style_transfer",
+  "attributes": {}
+}

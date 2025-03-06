@@ -1,8 +1,0 @@
-{
-    "uid": 3,
-    "caption": "Pure Mathematical Operations",
-    "description": "Executing pure mathematical operations, such as arithmetic calculations.",
-    "extends": "mathematical_reasoning",
-    "name": "pure_math_operations",
-    "attributes": {}
-}

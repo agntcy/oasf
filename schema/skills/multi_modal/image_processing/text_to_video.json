@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Text to Video",
+  "description": "Generating video content based on textual descriptions or instructions.",
+  "extends": "image_processing",
+  "name": "text_to_video",
+  "attributes": {}
+}

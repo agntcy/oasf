@@ -4,6 +4,5 @@
   "description": "Creation, marketing, and distribution of products intended for personal use. Subdomains: Product Development, Consumer Behavior, Marketing, Retail, and Supply Chain Management.",
   "extends": "finance_and_business",
   "name": "consumer_goods",
-  "category": "finance_and_business",
   "attributes": {}
 }

@@ -1,0 +1,18 @@
+{
+  "caption": "Streaming Modes",
+  "description": "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+  "extends": "object",
+  "name": "streaming_modes",
+  "attributes": {
+    "result_streaming": {
+      "caption": "Result Streaming",
+      "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
+      "requirement": "optional"
+    },
+    "custom_objects_streaming": {
+      "caption": "Custom Objects Streaming",
+      "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`.",
+      "requirement": "optional"
+    }
+  }
+}

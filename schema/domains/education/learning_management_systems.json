@@ -1,9 +1,8 @@
 {
-    "uid": 3,
-    "caption": "Learning Management Systems",
-    "description": "Software platforms for delivering, tracking, and managing educational courses and training programs. Subdomains: User Experience Design, Content Management, Reporting and Analytics, and System Integration.",
-    "extends": "education",
-    "name": "learning_management_systems",
-    "category": "education",
-    "attributes": {}
-  }
+  "uid": 3,
+  "caption": "Learning Management Systems",
+  "description": "Software platforms for delivering, tracking, and managing educational courses and training programs. Subdomains: User Experience Design, Content Management, Reporting and Analytics, and System Integration.",
+  "extends": "education",
+  "name": "learning_management_systems",
+  "attributes": {}
+}

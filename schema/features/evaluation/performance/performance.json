@@ -1,7 +1,8 @@
 {
-    "caption": "Performance",
-    "category": "performance",
-    "extends": "evaluation",
-    "name": "performance",
-    "attributes": {}
+  "uid": 1,
+  "caption": "Performance",
+  "category": "evaluation",
+  "extends": "evaluation",
+  "name": "performance",
+  "attributes": {}
 }

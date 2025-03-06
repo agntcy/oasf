@@ -1,9 +1,8 @@
 {
-    "uid": 7,
-    "caption": "MAA_Agent_Tool",
-    "description": "Values: Tool Selection Correctness\nTools Use efficiency\nTools Use errors/re-trials",
-    "extends": "quality",
-    "name": "maa_agent_tool",
-    "attributes": {}
+  "uid": 7,
+  "caption": "MAA_Agent_Tool",
+  "description": "Values: Tool Selection Correctness\nTools Use efficiency\nTools Use errors/re-trials",
+  "extends": "quality",
+  "name": "maa_agent_tool",
+  "attributes": {}
 }
-

@@ -1,9 +1,8 @@
 {
-    "uid": 10,
-    "caption": "Algorithmic Transparency(/MAA_Agent)",
-    "description": "Measures the ability to trace and understand AI decision processes.",
-    "extends": "performance",
-    "name": "algorithmic_transparency_maa_agent",
-    "attributes": {}
+  "uid": 10,
+  "caption": "Algorithmic Transparency(/MAA_Agent)",
+  "description": "Measures the ability to trace and understand AI decision processes.",
+  "extends": "performance",
+  "name": "algorithmic_transparency_maa_agent",
+  "attributes": {}
 }
-

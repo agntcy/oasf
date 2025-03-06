@@ -1,8 +1,0 @@
-{
-    "uid": 28,
-    "caption": "Storytelling",
-    "description": "Creating narratives, stories, or fictional content with creativity and coherence.",
-    "extends": "creative_content",
-    "name": "storytelling",
-    "attributes": {}
-}

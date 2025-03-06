@@ -1,7 +1,8 @@
 {
-    "caption": "Rating",
-    "category": "rating",
-    "extends": "evaluation",
-    "name": "rating",
-    "attributes": {}
+  "uid": 3,
+  "caption": "Rating",
+  "category": "evaluation",
+  "extends": "evaluation",
+  "name": "rating",
+  "attributes": {}
 }

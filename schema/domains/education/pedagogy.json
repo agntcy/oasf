@@ -1,9 +1,8 @@
 {
-    "uid": 5,
-    "caption": "Pedagogy",
-    "description": "The methods and practices of teaching, focusing on how best to convey knowledge and skills to learners. Subdomains: Teaching Strategies, Student-Centered Learning, Instructional Theory, and Learning Styles.",
-    "extends": "education",
-    "name": "pedagogy",
-    "category": "education",
-    "attributes": {}
-  }
+  "uid": 5,
+  "caption": "Pedagogy",
+  "description": "The methods and practices of teaching, focusing on how best to convey knowledge and skills to learners. Subdomains: Teaching Strategies, Student-Centered Learning, Instructional Theory, and Learning Styles.",
+  "extends": "education",
+  "name": "pedagogy",
+  "attributes": {}
+}

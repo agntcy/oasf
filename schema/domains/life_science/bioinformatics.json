@@ -1,10 +1,8 @@
 {
-    "uid": 4,
-    "caption": "Bioinformatics",
-    "description": "the application of computational techniques to analyze and interpret biological data. Subdomains: Sequence Analysis, Systems Biology, Data Mining, and Structural Bioinformatics.",
-    "extends": "life_science",
-    "name": "bioinformatics",
-    "category": "life_science",
-    "attributes": {}
-  }
-  
+  "uid": 4,
+  "caption": "Bioinformatics",
+  "description": "the application of computational techniques to analyze and interpret biological data. Subdomains: Sequence Analysis, Systems Biology, Data Mining, and Structural Bioinformatics.",
+  "extends": "life_science",
+  "name": "bioinformatics",
+  "attributes": {}
+}

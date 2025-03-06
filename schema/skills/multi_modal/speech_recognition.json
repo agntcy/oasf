@@ -1,8 +1,0 @@
-{
-    "uid": 10,
-    "caption": "Automatic Speech Recognition",
-    "description": "Converting spoken language into written text.",
-    "extends": "audio_processing",
-    "name": "speech_recognition",
-    "attributes": {}
-}

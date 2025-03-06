@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Content Moderation",
+  "description": "Avoiding the generation of harmful, inappropriate, or sensitive content.",
+  "extends": "ethical_interaction",
+  "name": "content_moderation",
+  "attributes": {}
+}

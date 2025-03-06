@@ -1,9 +1,8 @@
 {
-    "uid": 3,
-    "caption": "MAA_Agent/Input",
-    "description": "Values: Prompt robustness\nPrompt Perplexity",
-    "extends": "quality",
-    "name": "maa_agent_input",
-    "attributes": {}
+  "uid": 3,
+  "caption": "MAA_Agent/Input",
+  "description": "Values: Prompt robustness\nPrompt Perplexity",
+  "extends": "quality",
+  "name": "maa_agent_input",
+  "attributes": {}
 }
-

@@ -4,6 +4,5 @@
     "description": "Software solutions that help healthcare providers manage patient information and clinical processes. Subdomains: Appointment Scheduling, Patient Portals, Billing and Coding, and Health Record Management.",
     "extends": "healthcare",
     "name": "patient_management_systems",
-    "category": "healthcare",
     "attributes": {}
   }

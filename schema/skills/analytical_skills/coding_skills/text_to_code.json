@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text to Code",
+  "description": "Translating natural language instructions into executable code.",
+  "extends": "coding_skills",
+  "name": "text_to_code",
+  "attributes": {}
+}

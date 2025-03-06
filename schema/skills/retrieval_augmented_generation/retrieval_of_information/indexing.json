@@ -3,7 +3,6 @@
   "caption": "Indexing",
   "description": "Depth estimations the task of predicting the distance or depth of objects within a scene from a single image or multiple images.",
   "extends": "retrieval_of_information",
-  "category": "retrieval_of_information",
   "name": "indexing",
   "attributes": {}
 }

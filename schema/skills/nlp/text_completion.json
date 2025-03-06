@@ -1,8 +1,0 @@
-{
-    "uid": 6,
-    "caption": "Text Completion",
-    "description": "Continuing a given text prompt in a coherent and contextually appropriate manner to generate fluent and contextually relevant content.",
-    "extends": "natural_language_generation",
-    "name": "text_completion",
-    "attributes": {}
-}

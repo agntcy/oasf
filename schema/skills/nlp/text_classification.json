@@ -1,8 +1,0 @@
-{
-    "uid": 25,
-    "caption": "Text Classification",
-    "description": "Capabilities for classifying and categorizing text into predefined categories or labels.",
-    "extends": "nlp",
-    "name": "text_classification",
-    "attributes": {}
-}

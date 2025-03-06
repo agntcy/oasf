@@ -1,8 +1,0 @@
-{
-    "uid": 41,
-    "caption": "Natural Language Inference",
-    "description": "Classifying the relation between two texts, e.g., as a contradiction, entailment, etc.",
-    "extends": "text_classification",
-    "name": "natural_language_inference",
-    "attributes": {}
-}

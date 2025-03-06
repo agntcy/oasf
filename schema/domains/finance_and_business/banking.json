@@ -4,6 +4,5 @@
   "description": "Operations of financial institutions involved in accepting deposits, lending money, and other financial services. Subdomains: Retail Banking, Investment Banking, Corporate Banking, and Digital Banking.",
   "extends": "finance_and_business",
   "name": "banking",
-  "category": "finance_and_business",
   "attributes": {}
 }

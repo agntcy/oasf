@@ -1,8 +1,0 @@
-{
-    "uid": 5,
-    "caption": "Geometry",
-    "description": "Solving geometric problems and spatial reasoning tasks.",
-    "extends": "mathematical_reasoning",
-    "name": "geometry",
-    "attributes": {}
-}

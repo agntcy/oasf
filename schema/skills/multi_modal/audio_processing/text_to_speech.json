@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text to Speech",
+  "description": "Converting text into natural-sounding speech audio.",
+  "extends": "audio_processing",
+  "name": "text_to_speech",
+  "attributes": {}
+}

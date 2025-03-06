@@ -4,6 +4,5 @@
     "description": "The delivery of healthcare services through telecommunications technology. Subdomains: Remote Consultation, Telehealth Platforms, Mobile Health, and Virtual Care.",
     "extends": "healthcare",
     "name": "telemedicine",
-    "category": "healthcare",
     "attributes": {}
   }

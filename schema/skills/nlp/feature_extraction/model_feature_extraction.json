@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Model Feature Extraction",
+  "description": "Representing parts of text with vectors to be used as input to other tasks.",
+  "extends": "feature_extraction",
+  "name": "model_feature_extraction",
+  "attributes": {}
+}

@@ -1,9 +1,8 @@
 {
-    "uid": 4,
-    "caption": "MAA_Agent/Output",
-    "description": "Values: Correctness (Open Domain Hallucinations)\nInstruction Adherence: Scorers.instruction_adherence_plus\nUncertainty\nGround Truth Adherence: Scorers.ground_truth_adherence_plus\nCompleteness\nCompleteness Luna: Scorers.completeness_luna\nCompleteness Plus: Scorers.completeness_plus\nBLEU and ROUGE",
-    "extends": "quality",
-    "name": "maa_agent_output",
-    "attributes": {}
+  "uid": 4,
+  "caption": "MAA_Agent/Output",
+  "description": "Values: Correctness (Open Domain Hallucinations)\nInstruction Adherence: Scorers.instruction_adherence_plus\nUncertainty\nGround Truth Adherence: Scorers.ground_truth_adherence_plus\nCompleteness\nCompleteness Luna: Scorers.completeness_luna\nCompleteness Plus: Scorers.completeness_plus\nBLEU and ROUGE",
+  "extends": "quality",
+  "name": "maa_agent_output",
+  "attributes": {}
 }
-

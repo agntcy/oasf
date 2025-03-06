@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Analytical and Logical Reasoning",
+  "description": "Capabilities for performing logical analysis, inference, and problem-solving tasks.",
+  "extends": "nlp",
+  "name": "analytical_reasoning",
+  "attributes": {}
+}

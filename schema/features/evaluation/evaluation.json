@@ -7,27 +7,33 @@
   "attributes": {
     "quality": {
       "uid": 1,
-      "caption": "Quality"
+      "caption": "Quality",
+      "requirement": "recommended"
     },
     "performance": {
       "uid": 2,
-      "caption": "Performance"
+      "caption": "Performance",
+      "requirement": "recommended"
     },
     "rating": {
       "uid": 3,
-      "caption": "Rating"
+      "caption": "Rating",
+      "requirement": "recommended"
     },
     "supported_scores": {
       "uid": 4,
-      "caption": "Supported Scores"
+      "caption": "Supported Scores",
+      "requirement": "recommended"
     },
     "trust_and_safety": {
       "uid": 5,
-      "caption": "Trust and Safety"
+      "caption": "Trust and Safety",
+      "requirement": "recommended"
     },
     "sustainability": {
       "uid": 6,
-      "caption": "Sustainablity"
+      "caption": "Sustainablity",
+      "requirement": "recommended"
     }
   }
 }

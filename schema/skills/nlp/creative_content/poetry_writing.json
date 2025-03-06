@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Poetry and Creative Writing",
+  "description": "Composing poems, prose, or other forms of creative literature.",
+  "extends": "creative_content",
+  "name": "poetry_writing",
+  "attributes": {}
+}

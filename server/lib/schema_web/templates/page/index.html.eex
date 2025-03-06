@@ -53,8 +53,8 @@ limitations under the License.
             <%= for {id, class} <- category[:classes] do %>
               <% name = Atom.to_string(id) %>
               <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
-              <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>
-                <td class='align-middle" style="height: 36px; overflow:auto;'>
+              <tr class="oasf-class" <%= raw format_profiles(class[:profiles]) %>>
+                <td class="align-middle <%= indent_class(class[:uid]) %>" style="height: 36px; overflow:auto">
                   <%= raw format_linked_class_caption(path, name, class) %>
                 </td>
               </tr>

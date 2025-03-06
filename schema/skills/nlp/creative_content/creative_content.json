@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Creative Content Generation",
+  "description": "Capabilities for generating various forms of creative content, including narratives, poetry, and other creative writing forms.",
+  "extends": "nlp",
+  "name": "creative_content",
+  "attributes": {}
+}

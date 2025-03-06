@@ -1,8 +1,0 @@
-{
-    "uid": 14,
-    "caption": "Fact Extraction",
-    "description": "Capability to identify and extract factual information from text documents or knowledge bases, including entities, relationships, and key data points.",
-    "extends": "information_retrieval_synthesis",
-    "name": "fact_extraction",
-    "attributes": {}
-}

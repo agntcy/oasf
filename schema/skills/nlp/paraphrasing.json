@@ -1,8 +1,0 @@
-{
-    "uid": 8,
-    "caption": "Text Paraphrasing",
-    "description": "Rewriting text to express the same ideas using different words and structures while maintaining the original meaning.",
-    "extends": "natural_language_generation",
-    "name": "paraphrasing",
-    "attributes": {}
-}

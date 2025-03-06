@@ -1,8 +1,7 @@
 {
-    "uid": 5,
-    "caption": "MAA_Agent_Task",
-    "extends": "performance",
-    "name": "cost_maa_agent_task",
-    "attributes": {}
+  "uid": 5,
+  "caption": "MAA_Agent_Task",
+  "extends": "performance",
+  "name": "cost_maa_agent_task",
+  "attributes": {}
 }
-

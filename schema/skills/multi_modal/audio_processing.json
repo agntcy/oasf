@@ -1,8 +1,0 @@
-{
-    "uid": 2,
-    "caption": "Audio Processing",
-    "description": "Capabilities for processing audio, including speech synthesis and recognition.",
-    "extends": "multi_modal",
-    "name": "audio_processing",
-    "attributes": {}
-}

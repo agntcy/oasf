@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Entity Recognition",
+  "description": "Entity Recognition describes the ability to identify and classify entities in a given situation or event.",
+  "extends": "nlu",
+  "name": "entity_recognition",
+  "attributes": {}
+}

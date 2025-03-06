@@ -1,8 +1,0 @@
-{
-    "uid": 39,
-    "caption": "Topic Labelling and Tagging",
-    "description": "Classifying a text as belong to one of several topics, which can be used to tag a text.",
-    "extends": "text_classification",
-    "name": "topic_labeling",
-    "attributes": {}
-}

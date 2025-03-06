@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Named Entity Recognition",
+  "description": "Task to recognise names as entity, e.g., people, locations, buildings, etc.",
+  "extends": "token_classification",
+  "name": "named_entity_recognition",
+  "attributes": {}
+}

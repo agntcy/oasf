@@ -1,8 +1,0 @@
-{
-    "uid": 24,
-    "caption": "Ethical and Safe Interaction",
-    "description": "Capabilities for ensuring ethical, unbiased, and safe content generation and interaction.",
-    "extends": "nlp",
-    "name": "ethical_interaction",
-    "attributes": {}
-}
