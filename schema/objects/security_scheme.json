@@ -1,0 +1,23 @@
+{
+  "caption": "Security Scheme",
+  "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0",
+  "extends": "object",
+  "name": "security_scheme",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Type of the object.",
+      "requirement": "required"
+    },
+    "name": {
+      "caption": "Name",
+      "description": "Name of the object.",
+      "requirement": "required"
+    },
+    "in": {
+      "caption": "In",
+      "description": "Location of the object.",
+      "requirement": "required"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "caption": "Remote Service Deployment",
+  "description": "Describes the network endpoint where the agent is available.",
+  "extends": "object",
+  "name": "remote_service_deployment",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Deployment type.",
+      "requirement": "required",
+      "enum": {
+        "remote_service": {
+          "caption": "Remote Service"
+        }
+      }
+    },
+    "protocol": {
+      "caption": "ACP Endpoint",
+      "description": "ACP endpoint description.",
+      "requirement": "required"
+    }
+  }
+}

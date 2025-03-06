@@ -8,6 +8,11 @@
       "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
       "type": "agent"
     },
+    "agent_id": {
+      "caption": "Agent Identifier",
+      "description": "Agent identifier",
+      "type": "uuid_t"
+    },
     "agent_list": {
       "caption": "Agent List",
       "description": "A list of <code>agent</code> objects associated with a device, endpoint, or resource.",
@@ -40,6 +45,11 @@
       "description": "Provides additional metadata associated with this release manifest",
       "type": "key_value_object",
       "is_array": true
+    },
+    "authentication": {
+      "caption": "Authentication",
+      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0",
+      "type": "security_scheme"
     },
     "authors": {
       "caption": "Author",
@@ -486,6 +496,11 @@
       "description": "The hostname of an endpoint or a device.",
       "type": "hostname_t"
     },
+    "in": {
+      "caption": "In",
+      "description": "A location",
+      "type": "string_t"
+    },
     "input": {
       "caption": "Input",
       "description": "A json input",
@@ -547,6 +562,11 @@
       "caption": "Port",
       "description": "The TCP/UDP port number associated with a connection. See specific usage.",
       "type": "port_t"
+    },
+    "protocol": {
+      "caption": "ACP Endpoint",
+      "description": "ACP endpoint description.",
+      "type": "acp_endpoint"
     },
     "query_string": {
       "caption": "HTTP Query String",

@@ -1,0 +1,32 @@
+{
+  "caption": "ACP Details",
+  "description": "ACP endpoint description",
+  "extends": "object",
+  "name": "acp_endpoint",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "ACP endpoint type.",
+      "requirement": "required",
+      "enum": {
+        "ACP": {
+          "caption": "ACP"
+        }
+      }
+    },
+    "url": {
+      "caption": "ACP URL",
+      "description": "URL pointing to the ACP endpoint root.",
+      "requirement": "required"
+    },
+    "agent_id": {
+      "caption": "Agent Identifier",
+      "description": "Agent identifier in ACP server. If missing, the first returned agent with matching name and version should be used.",
+      "requirement": "optional"
+    },
+    "authentication": {
+      "caption": "Security Scheme",
+      "requirement": "optional"
+    }
+  }
+}
