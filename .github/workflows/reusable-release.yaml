@@ -33,31 +33,25 @@ jobs:
     name: Images
     runs-on: ubuntu-latest
     steps:
-      - name: Install Skopeo
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y skopeo
-
       - name: Checkout code
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         with:
           fetch-depth: 0
 
+      - name: Setup Skopeo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y skopeo
+
       - name: Setup Taskfile
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
       - name: Download artifacts
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4.1.8
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
           path: ${{ inputs.artifact_path }}
+          pattern: "*.tar"
           merge-multiple: true
 
       - name: Load images to local Docker registry
@@ -66,6 +60,13 @@ jobs:
             docker load --input "$image_archive"
           done
           docker images
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: notused
+          password: ${{ secrets.GITHUB_TOKEN  }}
 
       - name: Release images
         env:
