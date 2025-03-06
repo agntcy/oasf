@@ -8,9 +8,6 @@
     "categories": {
       "requirement": "optional"
     },
-    "category_ids": {
-      "requirement": "recommended"
-    },
     "domain": {
       "description": "The domain portion of the URL. For example: <code>example.com</code> in <code>https://sub.example.com</code>.",
       "requirement": "optional"
@@ -46,9 +43,6 @@
     }
   },
   "constraints": {
-    "at_least_one": [
-      "url_string",
-      "path"
-    ]
+    "at_least_one": ["url_string", "path"]
   }
 }
