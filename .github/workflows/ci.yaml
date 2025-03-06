@@ -93,7 +93,7 @@ jobs:
       bake_target: ${{ matrix.targets }}
       image_repo: ghcr.io/agntcy
       image_tag: ${{ needs.prepare.outputs.image_tag }}
-      artifact_path: /artifacts/${{ needs.prepare.outputs.image_tag }}
+      artifact_path: artifacts/${{ needs.prepare.outputs.image_tag }}
 
   test:
     name: Test
@@ -104,7 +104,7 @@ jobs:
     with:
       image_repo: ghcr.io/agntcy
       image_tag: ${{ needs.prepare.outputs.image_tag }}
-      artifact_path: /artifacts/${{ needs.prepare.outputs.image_tag }}
+      artifact_path: artifacts/${{ needs.prepare.outputs.image_tag }}
 
   release:
     name: Release
@@ -118,7 +118,7 @@ jobs:
       image_repo: ghcr.io/agntcy
       image_tag: ${{ needs.prepare.outputs.image_tag }}
       release_tag: ${{ needs.prepare.outputs.release_tag }}
-      artifact_path: /artifacts/${{ needs.prepare.outputs.image_tag }}
+      artifact_path: artifacts/${{ needs.prepare.outputs.image_tag }}
 
   success:
     name: Success

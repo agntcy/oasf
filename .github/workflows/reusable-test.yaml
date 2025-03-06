@@ -42,6 +42,7 @@ jobs:
 
       - name: Load images to local Docker registry
         run: |
+          ls -la ${{ inputs.artifact_path }}
           for image_archive in ${{ inputs.artifact_path }}/*.tar; do
             docker load --input "$image_archive"
           done
