@@ -1,0 +1,23 @@
+{
+  "caption": "Agent Manifest Reference",
+  "description": "Reference to an Agent Manifest, it includes name, version and a locator.",
+  "extends": "object",
+  "name": "agent_manifest_ref",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Name of the agent that identifies the agent in its manifest.",
+      "requirement": "required"
+    },
+    "version": {
+      "caption": "Version",
+      "description": "Version of the agent in its manifest. Should be formatted according to semantic versioning (https://semver.org)",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "Manifest URL",
+      "description": "URL of the manifest. Can be a network location or a file.",
+      "requirement": "optional"
+    }
+  }
+}
