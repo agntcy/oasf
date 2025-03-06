@@ -1,0 +1,28 @@
+{
+  "caption": "Docker Deployment",
+  "description": "Describes the docker deployment for this agent.",
+  "extends": "object",
+  "name": "docker_deployment",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Deployment type.",
+      "requirement": "required",
+      "enum": {
+        "docker": {
+          "caption": "Docker"
+        }
+      }
+    },
+    "image": {
+      "caption": "Agent Docker image",
+      "description": "Container image for the agent.",
+      "requirement": "required"
+    },
+    "protocol": {
+      "caption": "ACP Endpoint",
+      "description": "ACP endpoint description.",
+      "requirement": "required"
+    }
+  }
+}

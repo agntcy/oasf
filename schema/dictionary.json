@@ -436,6 +436,11 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "fingerprint"
     },
+    "image": {
+      "caption": "Docker Image",
+      "description": "The Docker image that pertains to the event or object. See specific usage.",
+      "type": "string_t"
+    },
     "domain": {
       "caption": "Domain",
       "description": "The name of the domain. See specific usage.",
