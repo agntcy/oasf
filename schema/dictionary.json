@@ -3,10 +3,20 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the events and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
+    "acp": {
+      "caption": "Agent Connect Protocol Specs",
+      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
+      "type": "acp"
+    },
     "agent": {
       "caption": "Agent",
       "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
       "type": "agent"
+    },
+    "agent_deployment": {
+      "caption": "Agent Workflow Server Deployment Manifest",
+      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
+      "type": "agent_deployment"
     },
     "agent_id": {
       "caption": "Agent Identifier",
@@ -428,7 +438,7 @@
     },
     "custom_streaming_update": {
       "caption": "Custom Streaming Update",
-      "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>schema-object</a>.",
       "type": "json_t"
     },
     "dependencies": {

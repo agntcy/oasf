@@ -1,0 +1,19 @@
+{
+  "uid": 1,
+  "caption": "Manifest",
+  "description": "Agent manifest",
+  "extends": "runtime",
+  "name": "manifest",
+  "attributes": {
+    "acp": {
+      "caption": "Agent Connect Protocol Specs",
+      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
+      "requirement": "required"
+    },
+    "agent_deployment": {
+      "caption": "Agent Workflow Server Deployment Manifest",
+      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
+      "requirement": "required"
+    }
+  }
+}
