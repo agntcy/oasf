@@ -68,9 +68,14 @@ tasks:
       - |
         images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
         echo "$images" | while read image; do
-          release_image="${image%%:*}:{{.RELEASE_TAG}}"
-          echo "Releasing image: $image --> $release_image"
-          skopeo copy --multi-arch all docker://$image docker://$release_image
+          target_name="${image%%:*}"
+          echo "Releasing images for $target_name"
+        
+          docker tag $image $target_name:latest
+          docker tag $image $target_name:{{.RELEASE_TAG}}
+          docker image rm $image
+        
+          docker push $target_name
         done
 
   up:

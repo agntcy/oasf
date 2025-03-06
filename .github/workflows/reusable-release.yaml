@@ -38,11 +38,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Skopeo
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y skopeo
-
       - name: Setup Taskfile
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
@@ -115,17 +110,13 @@ jobs:
       - name: Helm package
         shell: bash
         run: |
-          for version in "latest" "${{ inputs.release_tag }}"; do
-            helm package install/charts/oasf --dependency-update --version $version
-          done
+          helm package install/charts/oasf --dependency-update --version ${{ inputs.release_tag }}
 
       - name: Helm push to GHCR OCI registry
         shell: bash
         run: |
-          for version in "latest" "${{ inputs.release_tag }}"; do
-            echo "🚧 Pushing $version to GHCR OCI registry"
-            helm push ${{ steps.chart-name.outputs.value }}-$version.tgz oci://${{ inputs.image_repo }}/oasf/helm-charts
-          done
+          echo "🚧 Pushing ${{ inputs.release_tag }} to GHCR OCI registry"
+          helm push ${{ steps.chart-name.outputs.value }}-${{ inputs.release_tag }}.tgz oci://${{ inputs.image_repo }}/oasf/helm-charts
 
   release:
     name: Release

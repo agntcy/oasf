@@ -106,18 +106,6 @@ task down
 
 See https://github.com/orgs/agntcy/packages?repo_name=oasf
 
-### Container images
-
-```bash
-docker pull ghcr.io/agntcy/oasf-server:latest
-```
-
-### Helm charts
-
-```bash
-helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf --version latest
-```
-
 ## Copyright Notice
 
 [Copyright Notice and License](./LICENSE.md)
