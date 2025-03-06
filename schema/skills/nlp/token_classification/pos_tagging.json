@@ -1,7 +1,7 @@
 {
   "uid": 2,
   "caption": "Part-of-Speech Tagging",
-  "description": "Tagging each part of a sentence as nouns, adjectives, verbs, etc.",
+  "description": "Tagging each part of a sentence as nouns, adjectives, verbs, and so on.",
   "extends": "token_classification",
   "name": "pos_tagging",
   "attributes": {}

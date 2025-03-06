@@ -15,14 +15,14 @@ body:
     id: description
     attributes:
       label: Bug Description
-      description: Please provide a description of the problem
+      description: Please provide a description of the problem.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
       label: Expected Behavior
-      description: Please describe what you expected would happen
+      description: Please describe what you expected would happen.
     validations:
       required: true
   - type: dropdown
@@ -31,7 +31,7 @@ body:
       label: Affected Version
       description: |
         If applicable, provide the version number or release tag where this
-        issue was encountered
+        issue was encountered.
       options:
         - v1.0.0
         - v1.0.1
@@ -58,7 +58,7 @@ body:
       label: Checklist
       description: By submitting this issue, you agree to the following
       options:
-        - label: I have read the [contributing guidelines](/agntcy/repo-template/blob/main/CONTRIBUTING.md)
+        - label: I have read the [contributing guidelines](/agntcy/repo-template/blob/main/CONTRIBUTING.md).
           required: true
-        - label: I have verified this does not duplicate an existing issue
+        - label: I have verified this does not duplicate an existing issue.
           required: true

@@ -1,6 +1,6 @@
 {
   "uid": 2,
-  "caption": "Overall score based on ref.evals (tot and per eval)",
+  "caption": "Overall score based on ref.evals (total and per eval)",
   "description": "Values: MAA_Agent",
   "extends": "rating",
   "name": "overall_score_based_on_ref_evals",

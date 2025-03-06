@@ -1,7 +1,7 @@
 {
     "uid": 3,
     "caption": "Image Classification",
-    "description": "Image Classification is the task of assigning labels or categories to images based on their visual content.",
+    "description": "Assigning labels or categories to images based on their visual content.",
     "extends": "images_computer_vision",
     "name": "image_classification",
     "attributes": {}

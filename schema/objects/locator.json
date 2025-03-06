@@ -1,6 +1,6 @@
 {
   "caption": "Agent Locator",
-  "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+  "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
   "extends": "_entity",
   "name": "locator",
   "attributes": {

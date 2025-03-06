@@ -1,7 +1,7 @@
 {
   "uid": 7,
   "caption": "Collaboration Efficiency",
-  "description": "Measures the effectiveness of agents working together. Efficient collaboration = fewer redundant actions and optimal task distribution.",
+  "description": "Measures the effectiveness of agents working together. Efficient collaboration means fewer redundant actions and optimal task distribution.",
   "extends": "performance",
   "name": "collaboration_efficiency",
   "attributes": {}

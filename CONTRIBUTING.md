@@ -13,7 +13,7 @@ days of inactivity.
 Please note that all of your interactions in the project are subject to our
 [Code of Conduct](/CODE_OF_CONDUCT.md). This includes creation of issues or pull
 requests, commenting on issues or pull requests, and extends to all interactions
-in any real-time space e.g., Slack, Discord, etc.
+in any real-time space for example, Slack, Discord, and others.
 
 # OASF Contribution Guide
 
@@ -58,7 +58,7 @@ contribute to the development of OASF Schemas and the framework itself.
    * Use singular and plural names properly to reflect the field content.
    * When attribute represents multiple entities, the attribute name should be pluralized and the value type should be an array.
    * Avoid repetition of words.
-   * Avoid abbreviations when possible. Some exceptions can be made for well-accepted abbreviation like well known acronyms (e.g. LLM, AI)
+   * Avoid abbreviations when possible. Some exceptions can be made for well-accepted abbreviation like well known acronyms (for example, LLM, AI)
 
 #### How to define a `field` in the dictionary?
 

@@ -1,7 +1,7 @@
 {
     "uid": 8,
     "caption": "Image Feature Extraction",
-    "description": "Image feature extraction is the process of identifying and isolating key characteristics or patterns from an image to aid in tasks like classification or recognition.",
+    "description": "Identifying and isolating key characteristics or patterns from an image to aid in tasks like classification or recognition.",
     "extends": "images_computer_vision",
     "name": "image_feature_extraction",
     "attributes": {}

@@ -11,7 +11,7 @@
     "images_computer_vision": {
       "uid": 2,
       "caption": "Images / Computer Vision",
-      "description": "Images / Computer Vision tasks are the application of computational techniques to the analysis and synthesis of images"
+      "description": "Images / Computer Vision tasks are the application of computational techniques to the analysis and synthesis of images."
     },
     "audio": {
       "uid": 3,

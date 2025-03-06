@@ -37,19 +37,19 @@
     },
     "annotations": {
       "caption": "Annotations",
-      "description": "Provides additional metadata associated with this release manifest",
+      "description": "Provides additional metadata associated with this release manifest.",
       "type": "key_value_object",
       "is_array": true
     },
     "authors": {
       "caption": "Author",
-      "description": "Specifies agent’s authors list. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
+      "description": "Specifies the authors list of an. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
       "type": "string_t",
       "is_array": true
     },
     "callbacks": {
       "caption": "Callback Support",
-      "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`",
+      "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`.",
       "type": "boolean_t"
     },
     "capabilities": {
@@ -465,7 +465,7 @@
     },
     "input": {
       "caption": "Input",
-      "description": "A json input",
+      "description": "A json input.",
       "type": "json_t"
     },
     "interrupt_payload": {
@@ -475,7 +475,7 @@
     },
     "interrupt_support": {
       "caption": "Interrupt Support",
-      "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`",
+      "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`.",
       "type": "boolean_t"
     },
     "interrupt_type": {
@@ -491,12 +491,12 @@
     },
     "locator": {
       "caption": "Agent Locator",
-      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator"
     },
     "locators": {
       "caption": "Agent Locators",
-      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, etc.",
+      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
       "is_array": true
     },
@@ -507,7 +507,7 @@
     },
     "output": {
       "caption": "Output",
-      "description": "A json output",
+      "description": "A json output.",
       "type": "json_t"
     },
     "parent_uid": {
@@ -587,12 +587,12 @@
     },
     "thread_state": {
       "caption": "ThreadState",
-      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object",
+      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
       "type": "json_t"
     },
     "threads": {
       "caption": "Threads",
-      "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`",
+      "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
     "type": {
@@ -722,7 +722,7 @@
       "hostname_t": {
         "observable": 1,
         "caption": "Hostname",
-        "description": "Unique name assigned to a device connected to a computer network. It may be a fully qualified domain name (FQDN). For example:<br><code>r2-d2.example.com.</code>,<br><code>mx.example.com</code>",
+        "description": "Unique name assigned to a device connected to a computer network. It may be a fully qualified domain name (FQDN). For example:<br><code>r2-d2.example.com.</code>,<br><code>mx.example.com</code>.",
         "type": "string_t",
         "type_name": "String"
       },

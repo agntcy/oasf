@@ -1,6 +1,6 @@
 {
   "caption": "Human Resources",
-  "description": "Managing and optimizing the workforce of an organization, focusing on recruitment, employee development, and workplace culture. Subdomains: Recruitment, Employee Relations, Training and Development, Compensation and Benefits, HR Analytics",
+  "description": "Managing and optimizing the workforce of an organization, focusing on recruitment, employee development, and workplace culture. Subdomains: Recruitment, Employee Relations, Training and Development, Compensation and Benefits, and HR Analytics.",
   "extends": "base_domain",
   "name": "human_resources",
   "category": "human_resources",

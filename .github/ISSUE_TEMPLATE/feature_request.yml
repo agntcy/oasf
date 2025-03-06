@@ -17,7 +17,7 @@ body:
       label: Problem Statement
       description: |
         Please describe the problem or limitation to be addressed by
-        the proposed feature
+        the proposed feature.
     validations:
       required: true
   - type: textarea
@@ -26,7 +26,7 @@ body:
       label: Proposed Solution
       description: |
         Please describe what you envision the solution to this
-        problem would look like
+        problem would look like.
     validations:
       required: true
   - type: textarea
@@ -35,14 +35,14 @@ body:
       label: Alternatives Considered
       description: |
         Please briefly describe which alternatives, if any, have been
-        considered, including merits of alternate approaches and any tradeoffs
+        considered, including merits of alternate approaches and any tradeoffs.
     validations:
       required: false
   - type: textarea
     id: context
     attributes:
       label: Additional Context
-      description: Please provide any other information that may be relevant
+      description: Please provide any other information that may be relevant.
     validations:
       required: false
   - type: checkboxes
@@ -51,8 +51,8 @@ body:
       label: Checklist
       description: By submitting this request, you agree to the following
       options:
-        - label: I have read the [contributing guidelines](/agntcy/repo-template/blob/main/CONTRIBUTING.md)
+        - label: I have read the [contributing guidelines](/agntcy/repo-template/blob/main/CONTRIBUTING.md).
           required: true
         - label: |
-            I have verified this does not duplicate an existing feature request
+            I have verified this does not duplicate an existing feature request.
           required: true

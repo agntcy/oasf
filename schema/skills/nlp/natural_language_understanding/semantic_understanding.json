@@ -1,7 +1,7 @@
 {
   "uid": 2,
   "caption": "Semantic Understanding",
-  "description": "Semantinc Understanding describes the ability to understand the meaning of a given situation or event.",
+  "description": "Semantic Understanding describes the ability to understand the meaning of a given situation or event.",
   "extends": "nlu",
   "name": "semantic_understanding",
   "attributes": {}

@@ -36,7 +36,7 @@ jobs:
 
       - name: Build code
         run: |
-          # NOTE: We are only interested in codebase, dont build images here
+          # NOTE: We are only interested in codebase, don't build images here
           task build:charts
 
       - name: Check code changes

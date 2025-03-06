@@ -14,7 +14,7 @@ agent capabilities across distributed systems.
 
 OASF defines a set of standards for AI agent content representation that aims to:
 
-- Define common data structure to facilitate content standardisation, validation, and interoperability
+- Define common data structure to facilitate content standardization, validation, and interoperability
 - Ensure unique agent identification to address content discovery and consumption
 - Provide extension capabilities to enable third-party features
 
