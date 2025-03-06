@@ -77,12 +77,6 @@
       "description": "Declares what invocation features this agent is capable of.",
       "type": "capabilities"
     },
-    "categories": {
-      "caption": "Website Categorization",
-      "description": "The Website categorization names, as defined by <code>category_ids</code> enum values.",
-      "type": "string_t",
-      "is_array": true
-    },
     "category": {
       "caption": "Category",
       "description": "The object category, normalized to the caption of <code>category_id</code>. See specific usage.",

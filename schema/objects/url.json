@@ -5,9 +5,6 @@
   "extends": "object",
   "name": "url",
   "attributes": {
-    "categories": {
-      "requirement": "optional"
-    },
     "domain": {
       "description": "The domain portion of the URL. For example: <code>example.com</code> in <code>https://sub.example.com</code>.",
       "requirement": "optional"
