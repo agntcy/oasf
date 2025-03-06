@@ -75,7 +75,7 @@ tasks:
           docker tag $image $target_name:{{.RELEASE_TAG}}
           docker image rm $image
         
-          docker push $target_name
+          docker push --all-tags $target_name
         done
 
   up:
