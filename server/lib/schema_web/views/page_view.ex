@@ -828,7 +828,7 @@ defmodule SchemaWeb.PageView do
           [
             "<a href=\"",
             SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class"),
-            "\" data-toggle=\"tooltip\ title=\"Directly referenced\">Base Event Class</a>"
+            "\" data-toggle=\"tooltip\ title=\"Directly referenced\">Base Class</a>"
           ]
           | acc
         ]
@@ -978,7 +978,7 @@ defmodule SchemaWeb.PageView do
             source == :base_class ->
               # Skip base_class source:
               #   - Reduces noise
-              #   - It is redundant with showing Base Event Class separately
+              #   - It is redundant with showing Base Class separately
               acc
 
             source == class_key ->
@@ -1323,7 +1323,7 @@ defmodule SchemaWeb.PageView do
           [
             "<a href=\"",
             SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class"),
-            "\">Base Event Class</a>"
+            "\">Base Class</a>"
           ]
           | acc
         ]

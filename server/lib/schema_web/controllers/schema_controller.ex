@@ -774,12 +774,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get the schema base event class.
+  Get the schema base class.
   """
   swagger_path :base_class do
     get("/api/base_class")
-    summary("Base event")
-    description("Get OASF schema base event class.")
+    summary("Base class")
+    description("Get OASF schema base class.")
     produces("application/json")
     tag("Categories and Classes")
 
@@ -1211,12 +1211,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Export the OASF base event class.
+  Export the OASF base  class.
   """
   swagger_path :export_base_class do
     get("/export/base_class")
-    summary("Export base event class")
-    description("Get OASF schema base event class.")
+    summary("Export base class")
+    description("Get OASF schema base class.")
     produces("application/json")
     tag("Schema Export")
 
@@ -1388,7 +1388,7 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Example|
         |-----|-------|
-        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0,"activity_id": 0,"severity_id": 5,"status": "Something else","status_id": 99,"time": 1689125893360905}</code><br/><br/>Translated:<br/><code>{"activity_name": "Unknown", "activity_id": 0, "category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Event", "class_uid": 0, "severity": "Critical", "severity_id": 5, "status": "Something else", "status_id": 99, "time": 1689125893360905, "type_name": "Base Event: Unknown", "type_uid": 0}</code>|
+        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0,"activity_id": 0,"severity_id": 5,"status": "Something else","status_id": 99,"time": 1689125893360905}</code><br/><br/>Translated:<br/><code>{"activity_name": "Unknown", "activity_id": 0, "category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0, "severity": "Critical", "severity_id": 5, "status": "Something else", "status_id": 99, "time": 1689125893360905, "type_name": "Base Class: Unknown", "type_uid": 0}</code>|
         """,
         default: false
       )
@@ -1682,12 +1682,12 @@ defmodule SchemaWeb.SchemaController do
   # --------------------------
 
   @doc """
-  Returns randomly generated event sample data for the base event class.
+  Returns randomly generated event sample data for the base class.
   """
   swagger_path :sample_event do
     get("/sample/base_class")
-    summary("Base event sample data")
-    description("This API returns randomly generated sample data for the base event class.")
+    summary("Base sample data")
+    description("This API returns randomly generated sample data for the base class.")
     produces("application/json")
     tag("Sample Data")
 
