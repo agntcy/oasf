@@ -15,7 +15,7 @@ agent capabilities across distributed systems.
 OASF defines a set of standards for AI agent content representation that aims to:
 
 - Define common data structure to facilitate content standardisation, validation, and interoperability
-- Ensure unique agent identification to address content identity and consumption
+- Ensure unique agent identification to address content discovery and consumption
 - Provide extension capabilities to enable third-party features
 
 ### Open Agentic Schema Framework Server
@@ -110,7 +110,7 @@ docker pull ghcr.io/agntcy/oasf-server:latest
 ### Helm charts
 
 ```bash
-helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf:latest
+helm pull oci://ghcr.io/agntcy/oasf/helm-charts/oasf --version latest
 ```
 
 ## Copyright Notice

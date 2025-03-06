@@ -50,15 +50,5 @@
       "url_string",
       "path"
     ]
-  },
-  "references": [
-    {
-      "description": "Defined in RFC 1738",
-      "url": "https://datatracker.ietf.org/doc/html/rfc1738"
-    },
-    {
-      "description": "D3FEND™ Ontology d3f:URL",
-      "url": "https://d3fend.mitre.org/dao/artifact/d3f:URL/"
-    }
-  ]
+  }
 }

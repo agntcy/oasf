@@ -49,7 +49,7 @@
                 },
                 "attributes": {
                     "type": "object",
-                    "description": "A set of type attributes defined by the dictionary.  Type attributes must be all lowercase and end in '_t' by convention.",
+                    "description": "A set of type attributes defined by the dictionary. Type attributes must be all lowercase and end in '_t' by convention.",
                     "patternProperties": {
                         "^[a-z0-9_]*$": {
                             "allOf": [

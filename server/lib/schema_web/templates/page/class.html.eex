@@ -24,18 +24,31 @@ limitations under the License.
 
 <div class="row">
   <div class="col-md move-up">
-    <% path = Routes.static_path(@conn, "/categories/" <> category) %>
+    <%
+    class_type = if @data[:class_type] == "class", do: "skill", else: @data[:class_type]
+
+    path = case class_type do
+      "skill" ->
+        Routes.static_path(@conn, "/categories/" <> category)
+      "feature" ->
+        Routes.static_path(@conn, "/main_features/" <> category)
+      "domain" ->
+        Routes.static_path(@conn, "/main_domains/" <> category)
+      _ ->
+        ""
+    end
+    %>
     <h3 class="extensions">
       <%= @data[:caption] %>
       <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<sup><%= extension || "" %></sup>
-        <%= if @data[:class_type] == "class", do: "skill", else: @data[:class_type] %> class
+        <%= class_type %> class
       </span>
     </h3>
 
     <%= if category_name != nil do %>
       <h4 class="extensions">
         <a href="<%= path %>"><%= category_name %></a>
-        <%= if @data[:class_type] == "class", do: "skill", else: @data[:class_type] %> category
+        <%= class_type %> category
       </h4>
     <% end %>
     <div class="text-secondary">
@@ -65,8 +78,7 @@ limitations under the License.
               data-selected-text-format="count > 3"
               data-actions-box="true"
               data-width="auto">
-              <option selected id="base-event-select" class="base-event" value="base-event" title="Base Event">Base
-                Event Attributes
+              <option selected id="base-event-select" class="base-event" value="base-event" title="Base">Base Attributes
               </option>
               <option value="deprecated" title="Deprecated">Deprecated Attributes</option>
               <optgroup id="groups-select" label="Groups">
