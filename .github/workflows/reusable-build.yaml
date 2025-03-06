@@ -78,17 +78,12 @@ jobs:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
 
-      - name: Save image artifact
-        run: |
-          mkdir -p ${{ inputs.artifact_path }}
-          mv "/tmp/${{ inputs.bake_target }}.tar" ${{ inputs.artifact_path }}
-
       - name: Upload image artifact
         id: upload-artifacts
         uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
-          name: ${{ inputs.bake_target }}
-          path: ${{ inputs.artifact_path }}/${{ inputs.bake_target }}.tar
+          name: ${{ inputs.artifact_path }}
+          path: /tmp/${{ inputs.bake_target }}.tar
           if-no-files-found: error
           retention-days: 1
           compression-level: 0
