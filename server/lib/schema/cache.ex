@@ -26,6 +26,7 @@ defmodule Schema.Cache do
     :base_class,
     :classes,
     :all_classes,
+    :categories,
     :objects,
     :all_objects,
     # domain libs
@@ -35,14 +36,14 @@ defmodule Schema.Cache do
     # skill libs
     :skills,
     :all_skills,
-    :categories,
+    :main_skills,
     # feature libs
     :features,
     :all_features,
     :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class classes all_classes categories main_domains skills all_skills domains all_domains objects all_objects features all_features main_features
+    version profiles dictionary base_class classes all_classes categories objects all_objects skills all_skills main_skills domains all_domains main_domains features all_features main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -72,7 +73,7 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
 
-    {skills, all_skills, observable_type_id_map, categories} =
+    {skills, all_skills, observable_type_id_map, main_skills} =
       read_classes(base_class, @main_skills_file, @skills_dir)
 
     {domains, all_domains, _observable_domains_type_id_map, main_domains} =
@@ -81,9 +82,18 @@ defmodule Schema.Cache do
     {features, all_features, _observable_features_type_id_map, main_features} =
       read_classes(base_class, @main_features_file, @features_dir)
 
-    # Merge skills, domains and features classes
+    # Merge skills, domains and features classes and categories
     classes = Utils.merge_classes([skills, domains, features])
     all_classes = Utils.merge_classes([all_skills, all_domains, all_features])
+
+    categories_attributes =
+      Utils.merge_categories([
+        main_skills[:attributes],
+        main_domains[:attributes],
+        main_features[:attributes]
+      ])
+
+    categories = %{attributes: categories_attributes}
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -155,12 +165,13 @@ defmodule Schema.Cache do
       base_class: base_class,
       classes: classes,
       all_classes: all_classes,
+      categories: categories,
       objects: objects,
       all_objects: all_objects,
       # skill libs
       skills: skills,
       all_skills: all_skills,
-      categories: categories,
+      main_skills: main_skills,
       # domain libs
       domains: domains,
       all_domains: all_domains,
@@ -202,6 +213,14 @@ defmodule Schema.Cache do
   @spec category(__MODULE__.t(), any) :: nil | category_t()
   def category(%__MODULE__{categories: categories}, id) do
     Map.get(categories[:attributes], id)
+  end
+
+  @spec main_skills(__MODULE__.t()) :: map()
+  def main_skills(%__MODULE__{main_skills: main_skills}), do: main_skills
+
+  @spec main_skill(__MODULE__.t(), any) :: nil | category_t()
+  def main_skill(%__MODULE__{main_skills: main_skills}, id) do
+    Map.get(main_skills[:attributes], id)
   end
 
   @spec main_domains(__MODULE__.t()) :: map()
