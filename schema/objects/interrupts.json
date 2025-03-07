@@ -11,12 +11,12 @@
     },
     "interrupt_payload": {
       "caption": "Interrupt Payload",
-      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "requirement": "required"
     },
     "resume_payload": {
       "caption": "Resume Payload",
-      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: https://spec.openapis.org/oas/v3.1.1.html#schema-object.",
+      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "requirement": "required"
     }
   }

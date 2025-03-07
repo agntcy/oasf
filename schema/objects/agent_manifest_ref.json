@@ -11,7 +11,7 @@
     },
     "version": {
       "caption": "Version",
-      "description": "Version of the agent in its manifest. Should be formatted according to semantic versioning (https://semver.org)",
+      "description": "Version of the agent in its manifest. Should be formatted according to <a target='_blank' href='https://semver.org' >Semantic Versioning</a>.",
       "requirement": "required"
     },
     "url": {
