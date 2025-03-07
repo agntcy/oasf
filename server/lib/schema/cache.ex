@@ -24,14 +24,15 @@ defmodule Schema.Cache do
     :profiles,
     :dictionary,
     :base_class,
+    :classes,
     :objects,
     :all_objects,
     # domain libs
     :domains,
     :all_domains,
     :main_domains,
-    # category libs
-    :classes,
+    # skill libs
+    :skills,
     :all_classes,
     :categories,
     # feature libs
@@ -40,7 +41,7 @@ defmodule Schema.Cache do
     :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class categories main_domains classes domains all_classes all_domains objects all_objects features all_features main_features
+    version profiles dictionary base_class classes categories main_domains skills domains all_classes all_domains objects all_objects features all_features main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -70,7 +71,7 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
 
-    {classes, all_classes, observable_type_id_map, categories} =
+    {skills, all_classes, observable_type_id_map, categories} =
       read_classes(base_class, @main_skills_file, @skills_dir)
 
     {domains, all_domains, _observable_domains_type_id_map, main_domains} =
@@ -78,6 +79,9 @@ defmodule Schema.Cache do
 
     {features, all_features, _observable_features_type_id_map, main_features} =
       read_classes(base_class, @main_features_file, @features_dir)
+
+    # Merge skills, domains and features classes
+    classes = Utils.merge_classes([skills, domains, features])
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -110,6 +114,10 @@ defmodule Schema.Cache do
       update_classes(classes, objects)
       |> final_check(dictionary_attributes)
 
+    skills =
+      update_classes(skills, objects)
+      |> final_check(dictionary_attributes)
+
     domains =
       update_classes(domains, objects)
       |> final_check(dictionary_attributes)
@@ -124,6 +132,7 @@ defmodule Schema.Cache do
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
     {classes, no_req_set} = fix_entities(classes, no_req_set, "class")
+    {skills, no_req_set} = fix_entities(skills, no_req_set, "skill")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
     {features, no_req_set} = fix_entities(features, no_req_set, "feature")
     {objects, no_req_set} = fix_entities(objects, no_req_set, "object")
@@ -142,17 +151,18 @@ defmodule Schema.Cache do
       profiles: profiles,
       dictionary: dictionary,
       base_class: base_class,
+      classes: classes,
       objects: objects,
       all_objects: all_objects,
-      # categories libs
-      classes: classes,
+      # skill libs
+      skills: skills,
       all_classes: all_classes,
       categories: categories,
-      # domains libs
+      # domain libs
       domains: domains,
       all_domains: all_domains,
       main_domains: main_domains,
-      # features libs
+      # feature libs
       features: features,
       all_features: all_features,
       main_features: main_features
@@ -274,6 +284,9 @@ defmodule Schema.Cache do
       nil -> nil
     end
   end
+
+  @spec skills(__MODULE__.t()) :: map()
+  def skills(%__MODULE__{skills: skills}), do: skills
 
   @spec domains(__MODULE__.t()) :: map()
   def domains(%__MODULE__{domains: domains}), do: domains

@@ -328,6 +328,16 @@ defmodule Schema.Utils do
     )
   end
 
+  @spec merge_classes([map()]) :: map()
+  def merge_classes(maps) when is_list(maps) do
+    Enum.reduce(maps, %{}, fn map, acc ->
+      Map.merge(acc, map, fn
+        :base_class, val1, _val2 -> val1
+        key, _val1, _val2 -> raise ArgumentError, "Duplicate class names are forbidden: #{key}"
+      end)
+    end)
+  end
+
   @spec deep_merge(map | nil, map | nil) :: map | nil
   def deep_merge(left, right) when is_map(left) and is_map(right) do
     Map.merge(left, right, &deep_resolve/3)
