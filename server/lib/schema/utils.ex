@@ -338,6 +338,15 @@ defmodule Schema.Utils do
     end)
   end
 
+  @spec merge_categories([map()]) :: map()
+  def merge_categories(maps) when is_list(maps) do
+    Enum.reduce(maps, %{}, fn map, acc ->
+      Map.merge(acc, map, fn
+        key, _val1, _val2 -> raise ArgumentError, "Duplicate category names are forbidden: #{key}"
+      end)
+    end)
+  end
+
   @spec deep_merge(map | nil, map | nil) :: map | nil
   def deep_merge(left, right) when is_map(left) and is_map(right) do
     Map.merge(left, right, &deep_resolve/3)
