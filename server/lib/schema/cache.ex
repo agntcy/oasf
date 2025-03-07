@@ -25,6 +25,7 @@ defmodule Schema.Cache do
     :dictionary,
     :base_class,
     :classes,
+    :all_classes,
     :objects,
     :all_objects,
     # domain libs
@@ -33,7 +34,7 @@ defmodule Schema.Cache do
     :main_domains,
     # skill libs
     :skills,
-    :all_classes,
+    :all_skills,
     :categories,
     # feature libs
     :features,
@@ -41,7 +42,7 @@ defmodule Schema.Cache do
     :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class classes categories main_domains skills domains all_classes all_domains objects all_objects features all_features main_features
+    version profiles dictionary base_class classes all_classes categories main_domains skills all_skills domains all_domains objects all_objects features all_features main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -71,7 +72,7 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
 
-    {skills, all_classes, observable_type_id_map, categories} =
+    {skills, all_skills, observable_type_id_map, categories} =
       read_classes(base_class, @main_skills_file, @skills_dir)
 
     {domains, all_domains, _observable_domains_type_id_map, main_domains} =
@@ -82,6 +83,7 @@ defmodule Schema.Cache do
 
     # Merge skills, domains and features classes
     classes = Utils.merge_classes([skills, domains, features])
+    all_classes = Utils.merge_classes([all_skills, all_domains, all_features])
 
     {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
 
@@ -152,11 +154,12 @@ defmodule Schema.Cache do
       dictionary: dictionary,
       base_class: base_class,
       classes: classes,
+      all_classes: all_classes,
       objects: objects,
       all_objects: all_objects,
       # skill libs
       skills: skills,
-      all_classes: all_classes,
+      all_skills: all_skills,
       categories: categories,
       # domain libs
       domains: domains,
@@ -287,6 +290,9 @@ defmodule Schema.Cache do
 
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
+
+  @spec all_skills(__MODULE__.t()) :: map()
+  def all_skills(%__MODULE__{all_skills: all_skills}), do: all_skills
 
   @spec domains(__MODULE__.t()) :: map()
   def domains(%__MODULE__{domains: domains}), do: domains
