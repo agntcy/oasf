@@ -953,7 +953,7 @@ defmodule SchemaWeb.SchemaController do
   def domains(conn, params) do
     domains =
       Enum.map(domains(params), fn {_name, domain} ->
-        Schema.reduce_domain(domain)
+        Schema.reduce_class(domain)
       end)
 
     send_json_resp(conn, domains)
@@ -1043,7 +1043,7 @@ defmodule SchemaWeb.SchemaController do
   def features(conn, params) do
     features =
       Enum.map(features(params), fn {_name, feature} ->
-        Schema.reduce_feature(feature)
+        Schema.reduce_class(feature)
       end)
 
     send_json_resp(conn, features)

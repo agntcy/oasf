@@ -825,7 +825,7 @@ defmodule Schema do
   defp reduce_main_domain(data) do
     Map.update(data, :classes, [], fn domains ->
       Enum.into(domains, %{}, fn {name, domain} ->
-        {name, reduce_domain(domain)}
+        {name, reduce_class(domain)}
       end)
     end)
   end
@@ -837,7 +837,7 @@ defmodule Schema do
   defp reduce_main_feature(data) do
     Map.update(data, :classes, [], fn features ->
       Enum.into(features, %{}, fn {name, feature} ->
-        {name, reduce_feature(feature)}
+        {name, reduce_class(feature)}
       end)
     end)
   end
@@ -897,16 +897,6 @@ defmodule Schema do
 
   @spec reduce_class(map) :: map
   def reduce_class(data) do
-    delete_attributes(data) |> delete_associations()
-  end
-
-  @spec reduce_domain(map) :: map
-  def reduce_domain(data) do
-    delete_attributes(data) |> delete_associations()
-  end
-
-  @spec reduce_feature(map) :: map
-  def reduce_feature(data) do
     delete_attributes(data) |> delete_associations()
   end
 
