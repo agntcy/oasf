@@ -3,6 +3,6 @@
   "caption": "Content Moderation",
   "description": "Avoiding the generation of harmful, inappropriate, or sensitive content.",
   "extends": "ethical_interaction",
-  "name": "content_moderation",
+  "name": "content_moderation_skill",
   "attributes": {}
 }

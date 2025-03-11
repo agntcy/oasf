@@ -2,7 +2,7 @@
     "uid": 4,
     "caption": "Data Privacy",
     "description": "Safeguarding personal information from unauthorized access and ensuring compliance with privacy laws and regulations. Subdomains: Privacy Regulations Compliance, Data Encryption, Data Anonymization, and User Consent Management.",
-    "extends": "trust_and_safety",
+    "extends": "trust_and_safety_domain",
     "name": "data_privacy",
     "attributes": {}
   }

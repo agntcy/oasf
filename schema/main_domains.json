@@ -44,7 +44,7 @@
       "description": "Systems and processes involved in the movement of goods and people, as well as the physical infrastructure supporting them. Subdomains: Logistics, Automotive, Public Transit, Supply Chain, Freight, and Autonomous Vehicles."
     },
     "finance_and_business": {
-      "uid": 2,
+      "uid": 1,
       "caption": "Finance and Business",
       "description": "Managing money, investments, and financial risks within businesses or for individuals. Subdomains: Corporate Finance, Personal Finance, Risk Management, Accounting, and Financial Analysis."
     }

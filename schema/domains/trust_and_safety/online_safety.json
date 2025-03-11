@@ -2,7 +2,7 @@
     "uid": 1,
     "caption": "Online Safety",
     "description": "Protecting internet users from various forms of harm to ensure a secure digital environment. Subdomains: Cybersecurity Awareness, Child Online Protection, Identity Protection, and Digital Wellbeing.",
-    "extends": "trust_and_safety",
+    "extends": "trust_and_safety_domain",
     "name": "online_safety",
     "attributes": {}
   }

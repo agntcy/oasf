@@ -2,7 +2,7 @@
     "uid": 3,
     "caption": "Fraud Prevention",
     "description": "Identifying and stopping fraudulent activities to protect individuals and organizations from financial and reputational damage. Subdomains: Transaction Monitoring, Identity Verification, Fraud Analytics, and Fraud Awareness Training.",
-    "extends": "trust_and_safety",
+    "extends": "trust_and_safety_domain",
     "name": "fraud_prevention",
     "attributes": {}
   }
