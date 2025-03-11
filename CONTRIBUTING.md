@@ -332,12 +332,12 @@ you can use -s or --signoff to add the Signed-off-by line to the end of the comm
 ## OASF Extensions
 
 The OASF Schema can be extended by adding an extension that defines additional
-attributes, objects, profiles, event classes and/or categories.
+attributes, objects, profiles, classes, or categories.
 Extensions allow one to create vendor/customer specific schemas or augment an
 existing schema to better suit their custom requirements. Extensions can also
 be used to factor out non-essential schema domains keeping the core schema
 succinct. Extensions use the framework in the same way as a new schema,
-optionally creating categories, profiles or event classes from the dictionary.
+optionally creating categories, profiles, or classes from the dictionary.
 
 As with categories and classes, extensions have unique IDs within the
 framework as well as their own versioning. The following sections provide

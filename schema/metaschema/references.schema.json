@@ -2,11 +2,11 @@
     "$id": "https://schema.oasf.agntcy.org/references.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "References",
-    "description": "A list of references. A reference is a hyperlink to an associated definition for the current item (attribute, event class, or object).",
+    "description": "A list of references. A reference is a hyperlink to an associated definition for the current item (attribute, class, or object).",
     "type": "array",
     "items": {
         "title": "Reference",
-        "description": "A hyperlink to an associated definition for the current item (attribute, event class, or object).",
+        "description": "A hyperlink to an associated definition for the current item (attribute, class, or object).",
         "type": "object",
         "required": ["url", "description"],
         "properties": {

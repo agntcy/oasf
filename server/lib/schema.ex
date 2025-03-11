@@ -197,7 +197,7 @@ defmodule Schema do
   end
 
   @doc """
-    Returns all event classes.
+    Returns all classes.
   """
   @spec classes() :: map()
   def classes(), do: Repo.classes()
@@ -219,7 +219,7 @@ defmodule Schema do
   def all_objects(), do: Repo.all_objects()
 
   @doc """
-    Returns a single event class.
+    Returns a single class.
   """
   @spec class(atom() | String.t()) :: nil | Cache.class_t()
   def class(id), do: Repo.class(Utils.to_uid(id))
@@ -244,7 +244,7 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single event class with the embedded objects.
+    Returns a single class with the embedded objects.
   """
   @spec class_ex(atom() | String.t()) :: nil | Cache.class_t()
   def class_ex(id),

@@ -796,12 +796,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get an event class by name.
+  Get an class by name.
   get /api/classes/:name
   """
   swagger_path :class do
     get("/api/classes/{name}")
-    summary("Event class")
+    summary("Class")
 
     description(
       "Get OASF schema class by name. The class name may contain an extension name." <>
@@ -817,7 +817,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(404, "Event class <code>name</code> not found")
+    response(404, "Class <code>name</code> not found")
   end
 
   @spec class(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -830,7 +830,7 @@ defmodule SchemaWeb.SchemaController do
 
     case Schema.class(extension, id, parse_options(profiles(params))) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Event class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Class #{id} not found"})
 
       data ->
         class = add_objects(data, params)
@@ -1264,12 +1264,12 @@ defmodule SchemaWeb.SchemaController do
   # -----------------
 
   @doc """
-  Get JSON schema definitions for a given event class.
+  Get JSON schema definitions for a given class.
   get /schema/classes/:name
   """
   swagger_path :json_class do
     get("/schema/classes/{name}")
-    summary("Event class")
+    summary("Class")
 
     description(
       "Get OASF schema class by name, using JSON schema Draft-07 format " <>
@@ -1287,7 +1287,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(404, "Event class <code>name</code> not found")
+    response(404, "Class <code>name</code> not found")
   end
 
   @spec json_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1296,7 +1296,7 @@ defmodule SchemaWeb.SchemaController do
 
     case class_ex(id, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Event class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Class #{id} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
@@ -1713,7 +1713,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Event sample data")
 
     description(
-      "This API returns randomly generated sample data for the given event class name. The class" <>
+      "This API returns randomly generated sample data for the given class name. The class" <>
         " name may contain an extension name. For example, \"dev/cpu_usage\"."
     )
 
@@ -1726,7 +1726,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(404, "Event class <code>name</code> not found")
+    response(404, "Class <code>name</code> not found")
   end
 
   @spec sample_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1742,7 +1742,7 @@ defmodule SchemaWeb.SchemaController do
 
     case Schema.class(extension, id) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Event class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Class #{id} not found"})
 
       class ->
         event =

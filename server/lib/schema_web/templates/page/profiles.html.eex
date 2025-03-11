@@ -13,7 +13,7 @@ limitations under the License.
   <div class="col-md move-up">
     <h3>Profiles</h3>
     <div class="text-secondary">
-      The OASF Profiles. A profile is an optional overlay on event classes and objects that reference it.
+      The OASF Profiles. A profile is an optional overlay on classes and objects that reference it.
     </div>
   </div>
   <div class="col-md-auto fixed-right mt-2">

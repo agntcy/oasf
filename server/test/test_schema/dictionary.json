@@ -87,7 +87,7 @@
     },
     "class_name": {
       "caption": "Class",
-      "description": "The event class name, as defined by class_uid value.",
+      "description": "The class name, as defined by class_uid value.",
       "type": "string_t"
     },
     "class_uid": {

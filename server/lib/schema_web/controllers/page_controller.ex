@@ -250,7 +250,7 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Renders event classes.
+  Renders classes.
   """
   @spec classes(Plug.Conn.t(), any) :: Plug.Conn.t()
   def classes(conn, %{"id" => id} = params) do

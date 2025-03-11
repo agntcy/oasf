@@ -30,7 +30,7 @@ defmodule Schema.Translator do
     translate_event(Schema.find_class(class_uid), data, options)
   end
 
-  # unknown event class, thus cannot translate the event
+  # unknown class, thus cannot translate the event
   defp translate_event(nil, data, _options), do: data
 
   defp translate_event(type, data, options) do

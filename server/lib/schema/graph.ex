@@ -9,7 +9,7 @@
 # limitations under the License.
 defmodule Schema.Graph do
   @moduledoc """
-  This module generates graph data to display event class diagram.
+  This module generates graph data to display class diagram.
   """
 
   @doc """

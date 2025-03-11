@@ -1038,7 +1038,7 @@ defmodule Schema.Cache do
     |> put_in([:attributes, :class_uid, :_source], name)
     |> put_in(
       [:attributes, :class_name, :description],
-      "The event class name, as defined by class_uid value: <code>#{class_name}</code>."
+      "The class name, as defined by class_uid value: <code>#{class_name}</code>."
     )
   end
 

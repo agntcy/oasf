@@ -1,6 +1,6 @@
 {
   "caption": "RPG Alpha",
-  "description": "Patch extends of the Alpha example event class.",
+  "description": "Patch extends of the Alpha example class.",
   "extends": "alpha",
   "profiles": [],
   "references": [

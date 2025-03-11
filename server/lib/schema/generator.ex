@@ -163,7 +163,7 @@ defmodule Schema.Generator do
   end
 
   @doc """
-  Generate new event class uid values for a given category.
+  Generate new class uid values for a given category.
   """
   @spec update_classes(binary(), integer()) :: any()
   def update_classes(path, uid) when is_binary(path) and is_integer(uid) do
