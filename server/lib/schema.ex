@@ -94,6 +94,36 @@ defmodule Schema do
     do: get_category(extensions, Utils.to_uid(extension, id))
 
   @doc """
+    Returns the main skills.
+  """
+  @spec main_skills :: map()
+  def main_skills(), do: Repo.main_skills()
+
+  @doc """
+    Returns the event main skills defined in the given extension set.
+  """
+  def main_skills(extensions) do
+    Map.update(Repo.main_skills(extensions), :attributes, %{}, fn attributes ->
+      Enum.into(attributes, %{}, fn {name, _main_skill} ->
+        {name, main_skill(extensions, name)}
+      end)
+    end)
+  end
+
+  @doc """
+    Returns a single main skill with its classes.
+  """
+  @spec main_skill(atom | String.t()) :: nil | Cache.category_t()
+  def main_skill(id), do: get_main_skill(Utils.to_uid(id))
+
+  @spec main_skill(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
+  def main_skill(extensions, id), do: get_main_skill(extensions, Utils.to_uid(id))
+
+  @spec main_skill(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
+  def main_skill(extensions, extension, id),
+    do: get_main_skill(extensions, Utils.to_uid(extension, id))
+
+  @doc """
     Returns the main domains.
   """
   @spec main_domains :: map()
@@ -151,7 +181,7 @@ defmodule Schema do
 
   @spec main_feature(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
   def main_feature(extensions, extension, id),
-      do: get_main_feature(extensions, Utils.to_uid(extension, id))
+    do: get_main_feature(extensions, Utils.to_uid(extension, id))
 
   @doc """
     Returns the attribute dictionary.
@@ -275,6 +305,81 @@ defmodule Schema do
   def find_class(uid) when is_integer(uid), do: Repo.find_class(uid)
 
   @doc """
+    Returns all skill classes.
+  """
+  @spec skills() :: map()
+  def skills(), do: Repo.skills()
+
+  @spec skills(Repo.extensions_t()) :: map()
+  def skills(extensions), do: Repo.skills(extensions)
+
+  @spec skills(Repo.extensions_t(), Repo.profiles_t()) :: map()
+  def skills(extensions, profiles) do
+    extensions
+    |> Repo.skills()
+    |> apply_profiles(profiles, MapSet.size(profiles))
+  end
+
+  @spec all_skills() :: map()
+  def all_skills(), do: Repo.all_skills()
+
+  @doc """
+    Returns a single skill class.
+  """
+  @spec skill(atom() | String.t()) :: nil | Cache.class_t()
+  def skill(id), do: Repo.skill(Utils.to_uid(id))
+
+  @spec skill(nil | String.t(), String.t()) :: nil | map()
+  def skill(extension, id),
+    do: Repo.skill(Utils.to_uid(extension, id))
+
+  @spec skill(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
+  def skill(extension, id, nil), do: skill(extension, id)
+
+  def skill(extension, id, profiles) do
+    case skill(extension, id) do
+      nil ->
+        nil
+
+      skill ->
+        Map.update!(skill, :attributes, fn attributes ->
+          Utils.apply_profiles(attributes, profiles)
+        end)
+    end
+  end
+
+  @doc """
+    Returns a single skill class with the embedded objects.
+  """
+  @spec skill_ex(atom() | String.t()) :: nil | Cache.skill_t()
+  def skill_ex(id),
+    do: Repo.skill_ex(Utils.to_uid(id))
+
+  @spec skill_ex(nil | String.t(), String.t()) :: nil | map()
+  def skill_ex(extension, id),
+    do: Repo.skill_ex(Utils.to_uid(extension, id))
+
+  @spec skill_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
+  def skill_ex(extension, id, nil),
+    do: skill_ex(extension, id)
+
+  def skill_ex(extension, id, profiles) do
+    case skill_ex(extension, id) do
+      nil ->
+        nil
+
+      skill ->
+        Schema.Profiles.apply_profiles(skill, profiles)
+    end
+  end
+
+  @doc """
+  Finds a skill class by the skill uid value.
+  """
+  @spec find_skill(integer()) :: nil | Cache.skill_t()
+  def find_skill(uid) when is_integer(uid), do: Repo.find_skill(uid)
+
+  @doc """
     Returns all domains.
   """
   @spec domains() :: map()
@@ -376,7 +481,7 @@ defmodule Schema do
 
   @spec feature(nil | String.t(), String.t()) :: nil | map()
   def feature(extension, id),
-      do: Repo.feature(Utils.to_uid(extension, id))
+    do: Repo.feature(Utils.to_uid(extension, id))
 
   @spec feature(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
   def feature(extension, id, nil), do: feature(extension, id)
@@ -398,15 +503,15 @@ defmodule Schema do
   """
   @spec feature_ex(atom() | String.t()) :: nil | Cache.class_t()
   def feature_ex(id),
-      do: Repo.feature_ex(Utils.to_uid(id))
+    do: Repo.feature_ex(Utils.to_uid(id))
 
   @spec feature_ex(nil | String.t(), String.t()) :: nil | map()
   def feature_ex(extension, id),
-      do: Repo.feature_ex(Utils.to_uid(extension, id))
+    do: Repo.feature_ex(Utils.to_uid(extension, id))
 
   @spec feature_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
   def feature_ex(extension, id, nil),
-      do: feature_ex(extension, id)
+    do: feature_ex(extension, id)
 
   def feature_ex(extension, id, profiles) do
     case feature_ex(extension, id) do
@@ -788,6 +893,14 @@ defmodule Schema do
 
   defp get_category(extensions, id) do
     Repo.category(extensions, id) |> reduce_category()
+  end
+
+  defp get_main_skill(id) do
+    Repo.main_skill(id) |> reduce_category()
+  end
+
+  defp get_main_skill(extensions, id) do
+    Repo.main_skill(extensions, id) |> reduce_category()
   end
 
   defp get_main_domain(id) do

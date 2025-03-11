@@ -180,8 +180,8 @@ limitations under the License.
 
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="extensions navbar-nav ml-auto">
-      <li id="categories_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/skills") %>'>Skills</a>
+      <li id="skills_id" class="nav-item">
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
       </li>
       <li id="domains_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>

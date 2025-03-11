@@ -25,19 +25,21 @@ defmodule SchemaWeb.Router do
   scope "/", SchemaWeb do
     pipe_through :browser
 
-    get "/", PageController, :categories
-    get "/categories", PageController, :categories
+    get "/", PageController, :main_skills
 
+    get "/categories", PageController, :categories
     get "/categories/:id", PageController, :categories
     get "/categories/:extension/:id", PageController, :categories
 
-    get "/main_domains", PageController, :main_domains
+    get "/main_skills", PageController, :main_skills
+    get "/main_skills/:id", PageController, :main_skills
+    get "/main_skills/:extension/:id", PageController, :main_skills
 
+    get "/main_domains", PageController, :main_domains
     get "/main_domains/:id", PageController, :main_domains
     get "/main_domains/:extension/:id", PageController, :main_domains
 
     get "/main_features", PageController, :main_features
-
     get "/main_features/:id", PageController, :main_features
     get "/main_features/:extension/:id", PageController, :main_features
 
@@ -51,6 +53,10 @@ defmodule SchemaWeb.Router do
 
     get "/class/graph/:id", PageController, :class_graph
     get "/class/graph/:extension/:id", PageController, :class_graph
+
+    get "/skills", PageController, :skills
+    get "/skills/:id", PageController, :skills
+    get "/skills/:extension/:id", PageController, :skills
 
     get "/domains", PageController, :domains
     get "/domains/:id", PageController, :domains
@@ -79,11 +85,6 @@ defmodule SchemaWeb.Router do
     get "/data_types", PageController, :data_types
 
     get "/agent_model", PageController, :agent_model
-
-    get "/skills", PageController, :categories
-
-    get "/skills/:id", PageController, :categories
-    get "/skills/:extension/:id", PageController, :categories
   end
 
   # Other scopes may use custom stacks.
@@ -100,6 +101,10 @@ defmodule SchemaWeb.Router do
     get "/categories/:id", SchemaController, :category
     get "/categories/:extension/:id", SchemaController, :category
 
+    get "/main_skills", SchemaController, :main_skills
+    get "/main_skills/:id", SchemaController, :main_skill
+    get "/main_skills/:extension/:id", SchemaController, :main_skill
+
     get "/main_domains", SchemaController, :main_domains
     get "/main_domains/:id", SchemaController, :main_domain
     get "/main_domains/:extension/:id", SchemaController, :main_domain
@@ -114,6 +119,10 @@ defmodule SchemaWeb.Router do
     get "/classes", SchemaController, :classes
     get "/classes/:id", SchemaController, :class
     get "/classes/:extension/:id", SchemaController, :class
+
+    get "/skills", SchemaController, :skills
+    get "/skills/:id", SchemaController, :skill
+    get "/skills/:extension/:id", SchemaController, :skill
 
     get "/domains", SchemaController, :domains
     get "/domains/:id", SchemaController, :domain
@@ -144,6 +153,9 @@ defmodule SchemaWeb.Router do
 
     get "/classes/:id", SchemaController, :json_class
     get "/classes/:extension/:id", SchemaController, :json_class
+
+    get "/skills/:id", SchemaController, :json_class
+    get "/skills/:extension/:id", SchemaController, :json_class
 
     get "/domains/:id", SchemaController, :json_class
     get "/domains/:extension/:id", SchemaController, :json_class
@@ -176,11 +188,11 @@ defmodule SchemaWeb.Router do
     get "/classes/:extension/:id", SchemaController, :sample_class
   end
 
-  #scope "/doc" do
+  # scope "/doc" do
   #  forward "/", PhoenixSwagger.Plug.SwaggerUI,
   #    otp_app: :schema_server,
   #    swagger_file: "swagger.json"
-  #end
+  # end
 
   def swagger_info do
     %{

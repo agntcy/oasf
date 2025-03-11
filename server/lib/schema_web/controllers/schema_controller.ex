@@ -582,6 +582,85 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
+  Get the schema main skills.
+  """
+  swagger_path :main_skills do
+    get("/api/main_skills")
+    summary("List main skills")
+    description("Get OASF schema main skills.")
+    produces("application/json")
+    tag("skills")
+
+    parameters do
+      extensions(:query, :array, "Related extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @doc """
+  Returns the list of main skills.
+  """
+  @spec main_skills(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_skills(conn, params) do
+    send_json_resp(conn, main_skills(params))
+  end
+
+  @spec main_skills(map()) :: map()
+  def main_skills(params) do
+    parse_options(extensions(params)) |> Schema.main_skills()
+  end
+
+  @doc """
+  Get the skills defined in a given main skill.
+  """
+  swagger_path :main_skill do
+    get("/api/main_skills/{name}")
+    summary("List sub skills of main skill")
+
+    description(
+      "Get OASF schema skills defined in the named main skill. The main skill name may contain an" <>
+        " extension name. For example, \"dev/policy\"."
+    )
+
+    produces("application/json")
+    tag("skills")
+
+    parameters do
+      name(:path, :string, "Main skill name", required: true)
+
+      extensions(:query, :array, "Related extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+    response(404, "Main skill <code>name</code> not found")
+  end
+
+  @spec main_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_skill(conn, %{"id" => id} = params) do
+    case main_skill_skills(params) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Main skill #{id} not found"})
+
+      data ->
+        send_json_resp(conn, data)
+    end
+  end
+
+  @spec main_skill_skills(map()) :: map() | nil
+  def main_skill_skills(params) do
+    name = params["id"]
+    extension = extension(params)
+    extensions = parse_options(extensions(params))
+
+    Schema.main_skill(extensions, extension, name)
+  end
+
+  @doc """
   Get the schema main domains.
   """
   swagger_path :main_domains do
@@ -882,6 +961,96 @@ defmodule SchemaWeb.SchemaController do
 
       profiles ->
         Schema.classes(extensions, profiles)
+    end
+  end
+
+  @doc """
+  Get a skill by name.
+  get /api/skills/:name
+  """
+  swagger_path :skill do
+    get("/api/skills/{name}")
+    summary("skill")
+
+    description(
+      "Get OASF schema skill by name. The skill name may contain an extension name." <>
+        " For example, \"dev/cpu_usage\"."
+    )
+
+    produces("application/json")
+    tag("skills")
+
+    parameters do
+      name(:path, :string, "skill name", required: true)
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success")
+    response(404, "skill <code>name</code> not found")
+  end
+
+  @spec skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def skill(conn, %{"id" => id} = params) do
+    skill(conn, id, params)
+  end
+
+  defp skill(conn, id, params) do
+    extension = extension(params)
+
+    case Schema.skill(extension, id, parse_options(profiles(params))) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "skill #{id} not found"})
+
+      data ->
+        skill = add_objects(data, params)
+        send_json_resp(conn, skill)
+    end
+  end
+
+  @doc """
+  Get the schema skill.
+  """
+  swagger_path :skills do
+    get("/api/skills")
+    summary("List skills")
+    description("Get OASF schema skills.")
+    produces("application/json")
+    tag("skills")
+
+    parameters do
+      extensions(:query, :array, "Related extensions to include in response.",
+        items: [type: :string]
+      )
+
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success", :skillDesc)
+  end
+
+  @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def skills(conn, params) do
+    skills =
+      Enum.map(skills(params), fn {_name, skill} ->
+        Schema.reduce_class(skill)
+      end)
+
+    send_json_resp(conn, skills)
+  end
+
+  @doc """
+  Returns the list of skills.
+  """
+  @spec skills(map) :: map
+  def skills(params) do
+    extensions = parse_options(extensions(params))
+
+    case parse_options(profiles(params)) do
+      nil ->
+        Schema.skills(extensions)
+
+      profiles ->
+        Schema.skills(extensions, profiles)
     end
   end
 

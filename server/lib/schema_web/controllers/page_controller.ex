@@ -146,6 +146,47 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
+  Renders main skills or the skills in a given main skill.
+  """
+  @spec main_skills(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_skills(conn, %{"id" => id} = params) do
+    case SchemaController.main_skill_skills(params) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      data ->
+        skills = sort_by(data[:classes], :uid)
+
+        data =
+          Map.put(data, :classes, skills)
+          |> Map.put(:class_type, "skill")
+          |> Map.put(:classes_path, "skills")
+
+        render(conn, "category.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: data
+        )
+    end
+  end
+
+  def main_skills(conn, params) do
+    data =
+      Map.put_new(params, "extensions", "")
+      |> SchemaController.main_skills()
+      |> sort_attributes(:uid)
+      |> sort_classes()
+      |> Map.put(:categories_path, "main_skills")
+      |> Map.put(:classes_path, "skills")
+
+    render(conn, "index.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: data
+    )
+  end
+
+  @doc """
   Renders main domains or the domains in a given main domain.
   """
   @spec main_domains(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -283,6 +324,49 @@ defmodule SchemaWeb.PageController do
       title: "Classes",
       description: "The OASF classes",
       classes_path: "classes"
+    }
+
+    render(conn, "classes.html",
+      extensions: Schema.extensions(),
+      profiles: SchemaController.get_profiles(params),
+      data: data
+    )
+  end
+
+  @doc """
+  Renders skills.
+  """
+  @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def skills(conn, %{"id" => id} = params) do
+    extension = params["extension"]
+
+    case Schema.skill(extension, id) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      data ->
+        data =
+          data
+          |> sort_attributes()
+          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:class_type, "skill")
+
+        render(conn, "class.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: data
+        )
+    end
+  end
+
+  def skills(conn, params) do
+    data = %{
+      classes:
+        SchemaController.skills(params)
+        |> sort_by(:uid),
+      title: "Skills",
+      description: "The OASF skills",
+      classes_path: "skills"
     }
 
     render(conn, "classes.html",

@@ -25,11 +25,13 @@ limitations under the License.
 <div class="row">
   <div class="col-md move-up">
     <%
-    class_type = if @data[:class_type] == "class", do: "skill", else: @data[:class_type]
+    class_type = @data[:class_type]
 
     path = case class_type do
-      "skill" ->
+      "class" ->
         Routes.static_path(@conn, "/categories/" <> category)
+      "skill" ->
+        Routes.static_path(@conn, "/main_skills/" <> category)
       "feature" ->
         Routes.static_path(@conn, "/main_features/" <> category)
       "domain" ->

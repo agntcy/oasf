@@ -285,6 +285,7 @@ defmodule SchemaWeb.PageView do
     all_classes =
       case class_type do
         "class" -> Schema.all_classes()
+        "skill" -> Schema.all_skills()
         "domain" -> Schema.all_domains()
         "feature" -> Schema.all_features()
       end

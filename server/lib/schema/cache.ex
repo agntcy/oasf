@@ -309,6 +309,60 @@ defmodule Schema.Cache do
   @spec all_skills(__MODULE__.t()) :: map()
   def all_skills(%__MODULE__{all_skills: all_skills}), do: all_skills
 
+  @spec export_skills(__MODULE__.t()) :: map()
+  def export_skills(%__MODULE__{skills: skills, dictionary: dictionary}) do
+    Enum.into(skills, Map.new(), fn {name, skill} ->
+      {name, enrich(skill, dictionary[:attributes])}
+    end)
+  end
+
+  @spec skill(__MODULE__.t(), atom()) :: nil | class_t()
+  def skill(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
+    enrich(base_class, dictionary[:attributes])
+  end
+
+  def skill(%__MODULE__{dictionary: dictionary, skills: skills}, id) do
+    case Map.get(skills, id) do
+      nil ->
+        nil
+
+      skill ->
+        enrich(skill, dictionary[:attributes])
+    end
+  end
+
+  @doc """
+  Returns extended skill definition, which includes all objects referred by the skill.
+  """
+  @spec skill_ex(__MODULE__.t(), atom()) :: nil | class_t()
+  def skill_ex(
+        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
+        :base_class
+      ) do
+    skill_ex(base_class, dictionary, objects)
+  end
+
+  def skill_ex(%__MODULE__{dictionary: dictionary, skills: skills, objects: objects}, id) do
+    Map.get(skills, id) |> skill_ex(dictionary, objects)
+  end
+
+  defp skill_ex(nil, _dictionary, _objects) do
+    nil
+  end
+
+  defp skill_ex(skill, dictionary, objects) do
+    {skill_ex, ref_objects} = enrich_ex(skill, dictionary[:attributes], objects, Map.new())
+    Map.put(skill_ex, :objects, Map.to_list(ref_objects))
+  end
+
+  @spec find_skill(Schema.Cache.t(), any) :: nil | map
+  def find_skill(%__MODULE__{dictionary: dictionary, skills: skills}, uid) do
+    case Enum.find(skills, fn {_, skill} -> skill[:uid] == uid end) do
+      {_, skill} -> enrich(skill, dictionary[:attributes])
+      nil -> nil
+    end
+  end
+
   @spec domains(__MODULE__.t()) :: map()
   def domains(%__MODULE__{domains: domains}), do: domains
 

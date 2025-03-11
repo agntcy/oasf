@@ -81,6 +81,41 @@ defmodule Schema.Repo do
     end)
   end
 
+  @spec main_skills :: map()
+  def main_skills() do
+    Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
+  end
+
+  @spec main_skills(extensions_t() | nil) :: map()
+  def main_skills(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
+  end
+
+  def main_skills(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      Cache.main_skills(schema)
+      |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
+    end)
+  end
+
+  @spec main_skill(atom) :: nil | Cache.main_skill_t()
+  def main_skill(id) do
+    main_skill(nil, id)
+  end
+
+  @spec main_skill(extensions_t() | nil, atom) :: nil | Cache.main_skill_t()
+  def main_skill(extensions, id) do
+    Agent.get(__MODULE__, fn schema ->
+      case Cache.main_skill(schema, id) do
+        nil ->
+          nil
+
+        main_skill ->
+          add_skills(extensions, {id, main_skill}, Cache.skills(schema))
+      end
+    end)
+  end
+
   @spec main_domains :: map()
   def main_domains() do
     Agent.get(__MODULE__, fn schema -> Cache.main_domains(schema) end)
@@ -194,6 +229,25 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.all_classes(schema) end)
   end
 
+  @spec skills() :: map()
+  def skills() do
+    Agent.get(__MODULE__, fn schema -> Cache.skills(schema) end)
+  end
+
+  @spec skills(extensions_t() | nil) :: map()
+  def skills(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.skills(schema) end)
+  end
+
+  def skills(extensions) do
+    Agent.get(__MODULE__, fn schema -> Cache.skills(schema) |> filter(extensions) end)
+  end
+
+  @spec all_skills() :: map()
+  def all_skills() do
+    Agent.get(__MODULE__, fn schema -> Cache.all_skills(schema) end)
+  end
+
   @spec domains() :: map()
   def domains() do
     Agent.get(__MODULE__, fn schema -> Cache.domains(schema) end)
@@ -303,6 +357,21 @@ defmodule Schema.Repo do
   @spec find_class(any) :: nil | map
   def find_class(uid) do
     Agent.get(__MODULE__, fn schema -> Cache.find_class(schema, uid) end)
+  end
+
+  @spec skill(atom) :: nil | Cache.class_t()
+  def skill(id) do
+    Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end)
+  end
+
+  @spec skill_ex(atom) :: nil | Cache.class_t()
+  def skill_ex(id) do
+    Agent.get(__MODULE__, fn schema -> Cache.skill_ex(schema, id) end)
+  end
+
+  @spec find_skill(any) :: nil | map
+  def find_skill(uid) do
+    Agent.get(__MODULE__, fn schema -> Cache.find_skill(schema, uid) end)
   end
 
   @spec domain(atom) :: nil | Cache.class_t()
@@ -478,6 +547,52 @@ defmodule Schema.Repo do
       )
 
     Map.put(category, :classes, list)
+  end
+
+  defp add_skills(nil, {id, main_skill}, skills) do
+    main_skill_uid = Atom.to_string(id)
+
+    list =
+      skills
+      |> Stream.filter(fn {_name, skill} ->
+        md = Map.get(skill, :category)
+        md == main_skill_uid or Utils.to_uid(skill[:extension], md) == id
+      end)
+      |> Stream.map(fn {name, skill} ->
+        skill =
+          skill
+          |> Map.delete(:category)
+          |> Map.delete(:category_name)
+
+        {name, skill}
+      end)
+      |> Enum.to_list()
+
+    Map.put(main_skill, :classes, list)
+    |> Map.put(:name, main_skill_uid)
+  end
+
+  defp add_skills(extensions, {id, main_skill}, skills) do
+    main_skill_uid = Atom.to_string(id)
+
+    list =
+      Enum.filter(
+        skills,
+        fn {_name, skill} ->
+          md = skill[:category]
+
+          case skill[:extension] do
+            nil ->
+              md == main_skill_uid
+
+            ext ->
+              MapSet.member?(extensions, ext) and
+                (md == main_skill_uid or Utils.to_uid(ext, md) == id)
+          end
+        end
+      )
+
+    Map.put(main_skill, :classes, list)
   end
 
   defp add_domains(nil, {id, main_domain}, domains) do
