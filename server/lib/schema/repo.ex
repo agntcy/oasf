@@ -98,12 +98,12 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_domain(atom) :: nil | Cache.main_domain_t()
+  @spec main_domain(atom) :: nil | Cache.category_t()
   def main_domain(id) do
     main_domain(nil, id)
   end
 
-  @spec main_domain(extensions_t() | nil, atom) :: nil | Cache.main_domain_t()
+  @spec main_domain(extensions_t() | nil, atom) :: nil | Cache.category_t()
   def main_domain(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
       case Cache.main_domain(schema, id) do
@@ -133,12 +133,12 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_feature(atom) :: nil | Cache.main_feature_t()
+  @spec main_feature(atom) :: nil | Cache.category_t()
   def main_feature(id) do
     main_feature(nil, id)
   end
 
-  @spec main_feature(extensions_t() | nil, atom) :: nil | Cache.main_feature_t()
+  @spec main_feature(extensions_t() | nil, atom) :: nil | Cache.category_t()
   def main_feature(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
       case Cache.main_feature(schema, id) do
@@ -305,12 +305,12 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.find_class(schema, uid) end)
   end
 
-  @spec domain(atom) :: nil | Cache.domain_t()
+  @spec domain(atom) :: nil | Cache.class_t()
   def domain(id) do
     Agent.get(__MODULE__, fn schema -> Cache.domain(schema, id) end)
   end
 
-  @spec domain_ex(atom) :: nil | Cache.domain_t()
+  @spec domain_ex(atom) :: nil | Cache.class_t()
   def domain_ex(id) do
     Agent.get(__MODULE__, fn schema -> Cache.domain_ex(schema, id) end)
   end
@@ -320,12 +320,12 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.find_domain(schema, uid) end)
   end
 
-  @spec feature(atom) :: nil | Cache.feature_t()
+  @spec feature(atom) :: nil | Cache.class_t()
   def feature(id) do
     Agent.get(__MODULE__, fn schema -> Cache.feature(schema, id) end)
   end
 
-  @spec feature_ex(atom) :: nil | Cache.feature_t()
+  @spec feature_ex(atom) :: nil | Cache.class_t()
   def feature_ex(id) do
     Agent.get(__MODULE__, fn schema -> Cache.feature_ex(schema, id) end)
   end

@@ -113,13 +113,13 @@ defmodule Schema do
   @doc """
     Returns a single main domain with its classes.
   """
-  @spec main_domain(atom | String.t()) :: nil | Cache.main_domain_t()
+  @spec main_domain(atom | String.t()) :: nil | Cache.category_t()
   def main_domain(id), do: get_main_domain(Utils.to_uid(id))
 
-  @spec main_domain(Repo.extensions_t(), String.t()) :: nil | Cache.main_domain_t()
+  @spec main_domain(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
   def main_domain(extensions, id), do: get_main_domain(extensions, Utils.to_uid(id))
 
-  @spec main_domain(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.main_domain_t()
+  @spec main_domain(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
   def main_domain(extensions, extension, id),
     do: get_main_domain(extensions, Utils.to_uid(extension, id))
 
@@ -143,13 +143,13 @@ defmodule Schema do
   @doc """
     Returns a single main feature with its classes.
   """
-  @spec main_feature(atom | String.t()) :: nil | Cache.main_feature_t()
+  @spec main_feature(atom | String.t()) :: nil | Cache.category_t()
   def main_feature(id), do: get_main_feature(Utils.to_uid(id))
 
-  @spec main_feature(Repo.extensions_t(), String.t()) :: nil | Cache.main_feature_t()
+  @spec main_feature(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
   def main_feature(extensions, id), do: get_main_feature(extensions, Utils.to_uid(id))
 
-  @spec main_feature(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.main_feature_t()
+  @spec main_feature(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
   def main_feature(extensions, extension, id),
       do: get_main_feature(extensions, Utils.to_uid(extension, id))
 
@@ -296,7 +296,7 @@ defmodule Schema do
   @doc """
     Returns a single domain.
   """
-  @spec domain(atom() | String.t()) :: nil | Cache.domain_t()
+  @spec domain(atom() | String.t()) :: nil | Cache.class_t()
   def domain(id), do: Repo.domain(Utils.to_uid(id))
 
   @spec domain(nil | String.t(), String.t()) :: nil | map()
@@ -321,7 +321,7 @@ defmodule Schema do
   @doc """
     Returns a single domain with the embedded objects.
   """
-  @spec domain_ex(atom() | String.t()) :: nil | Cache.domain_t()
+  @spec domain_ex(atom() | String.t()) :: nil | Cache.class_t()
   def domain_ex(id),
     do: Repo.domain_ex(Utils.to_uid(id))
 
@@ -346,7 +346,7 @@ defmodule Schema do
   @doc """
   Finds a domain by the domain uid value.
   """
-  @spec find_domain(integer()) :: nil | Cache.domain_t()
+  @spec find_domain(integer()) :: nil | Cache.class_t()
   def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
 
   @doc """
@@ -371,7 +371,7 @@ defmodule Schema do
   @doc """
     Returns a single feature.
   """
-  @spec feature(atom() | String.t()) :: nil | Cache.feature_t()
+  @spec feature(atom() | String.t()) :: nil | Cache.class_t()
   def feature(id), do: Repo.feature(Utils.to_uid(id))
 
   @spec feature(nil | String.t(), String.t()) :: nil | map()
@@ -396,7 +396,7 @@ defmodule Schema do
   @doc """
     Returns a single feature with the embedded objects.
   """
-  @spec feature_ex(atom() | String.t()) :: nil | Cache.feature_t()
+  @spec feature_ex(atom() | String.t()) :: nil | Cache.class_t()
   def feature_ex(id),
       do: Repo.feature_ex(Utils.to_uid(id))
 
@@ -421,7 +421,7 @@ defmodule Schema do
   @doc """
   Finds a feature by the feature uid value.
   """
-  @spec find_feature(integer()) :: nil | Cache.feature_t()
+  @spec find_feature(integer()) :: nil | Cache.class_t()
   def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
 
   @doc """

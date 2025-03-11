@@ -48,12 +48,8 @@ defmodule Schema.Cache do
 
   @type t() :: %__MODULE__{}
   @type class_t() :: map()
-  @type domain_t() :: map()
-  @type feature_t() :: map()
   @type object_t() :: map()
   @type category_t() :: map()
-  @type main_feature_t() :: map()
-  @type main_domain_t() :: map()
   @type dictionary_t() :: map()
 
   @main_skills_file "main_skills.json"
@@ -226,7 +222,7 @@ defmodule Schema.Cache do
   @spec main_domains(__MODULE__.t()) :: map()
   def main_domains(%__MODULE__{main_domains: main_domains}), do: main_domains
 
-  @spec main_domain(__MODULE__.t(), any) :: nil | main_domain_t()
+  @spec main_domain(__MODULE__.t(), any) :: nil | category_t()
   def main_domain(%__MODULE__{main_domains: main_domains}, id) do
     Map.get(main_domains[:attributes], id)
   end
@@ -234,7 +230,7 @@ defmodule Schema.Cache do
   @spec main_features(__MODULE__.t()) :: map()
   def main_features(%__MODULE__{main_features: main_features}), do: main_features
 
-  @spec main_feature(__MODULE__.t(), any) :: nil | main_feature_t()
+  @spec main_feature(__MODULE__.t(), any) :: nil | category_t()
   def main_feature(%__MODULE__{main_features: main_features}, id) do
     Map.get(main_features[:attributes], id)
   end
@@ -326,7 +322,7 @@ defmodule Schema.Cache do
     end)
   end
 
-  @spec domain(__MODULE__.t(), atom()) :: nil | domain_t()
+  @spec domain(__MODULE__.t(), atom()) :: nil | class_t()
   def domain(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
     enrich(base_class, dictionary[:attributes])
   end
@@ -344,7 +340,7 @@ defmodule Schema.Cache do
   @doc """
   Returns extended domain definition, which includes all objects referred by the domain.
   """
-  @spec domain_ex(__MODULE__.t(), atom()) :: nil | domain_t()
+  @spec domain_ex(__MODULE__.t(), atom()) :: nil | class_t()
   def domain_ex(
         %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
         :base_class
@@ -386,7 +382,7 @@ defmodule Schema.Cache do
     end)
   end
 
-  @spec feature(__MODULE__.t(), atom()) :: nil | feature_t()
+  @spec feature(__MODULE__.t(), atom()) :: nil | class_t()
   def feature(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
     enrich(base_class, dictionary[:attributes])
   end
@@ -404,7 +400,7 @@ defmodule Schema.Cache do
   @doc """
   Returns extended feature definition, which includes all objects referred by the feature.
   """
-  @spec feature_ex(__MODULE__.t(), atom()) :: nil | feature_t()
+  @spec feature_ex(__MODULE__.t(), atom()) :: nil | class_t()
   def feature_ex(
         %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
         :base_class
