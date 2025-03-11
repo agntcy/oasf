@@ -791,19 +791,19 @@ defmodule Schema do
   end
 
   defp get_main_domain(id) do
-    Repo.main_domain(id) |> reduce_main_domain()
+    Repo.main_domain(id) |> reduce_category()
   end
 
   defp get_main_domain(extensions, id) do
-    Repo.main_domain(extensions, id) |> reduce_main_domain()
+    Repo.main_domain(extensions, id) |> reduce_category()
   end
 
   defp get_main_feature(id) do
-    Repo.main_feature(id) |> reduce_main_feature()
+    Repo.main_feature(id) |> reduce_category()
   end
 
   defp get_main_feature(extensions, id) do
-    Repo.main_feature(extensions, id) |> reduce_main_feature()
+    Repo.main_feature(extensions, id) |> reduce_category()
   end
 
   defp reduce_category(nil) do
@@ -814,30 +814,6 @@ defmodule Schema do
     Map.update(data, :classes, [], fn classes ->
       Enum.into(classes, %{}, fn {name, class} ->
         {name, reduce_class(class)}
-      end)
-    end)
-  end
-
-  defp reduce_main_domain(nil) do
-    nil
-  end
-
-  defp reduce_main_domain(data) do
-    Map.update(data, :classes, [], fn domains ->
-      Enum.into(domains, %{}, fn {name, domain} ->
-        {name, reduce_class(domain)}
-      end)
-    end)
-  end
-
-  defp reduce_main_feature(nil) do
-    nil
-  end
-
-  defp reduce_main_feature(data) do
-    Map.update(data, :classes, [], fn features ->
-      Enum.into(features, %{}, fn {name, feature} ->
-        {name, reduce_class(feature)}
       end)
     end)
   end
