@@ -58,6 +58,9 @@ defmodule SchemaWeb.Router do
     get "/skills/:id", PageController, :skills
     get "/skills/:extension/:id", PageController, :skills
 
+    get "/skill/graph/:id", PageController, :skill_graph
+    get "/skill/graph/:extension/:id", PageController, :skill_graph
+
     get "/domains", PageController, :domains
     get "/domains/:id", PageController, :domains
     get "/domains/:extension/:id", PageController, :domains
