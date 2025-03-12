@@ -31,30 +31,6 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  def domain_path(conn, data) do
-    domain_name = data[:name]
-
-    case data[:extension] do
-      nil ->
-        Routes.static_path(conn, "/domains/" <> domain_name)
-
-      extension ->
-        Routes.static_path(conn, "/domains/" <> extension <> "/" <> domain_name)
-    end
-  end
-
-  def feature_path(conn, data) do
-    feature_name = data[:name]
-
-    case data[:extension] do
-      nil ->
-        Routes.static_path(conn, "/features/" <> feature_name)
-
-      extension ->
-        Routes.static_path(conn, "/features/" <> extension <> "/" <> feature_name)
-    end
-  end
-
   def object_graph_path(conn, data) do
     object_name = data[:name]
 
