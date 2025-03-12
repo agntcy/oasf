@@ -1478,6 +1478,21 @@ defmodule SchemaWeb.SchemaController do
     Schema.class_ex(extension, id, parse_options(profiles(params)))
   end
 
+  def skill_ex(id, params) do
+    extension = extension(params)
+    Schema.skill_ex(extension, id, parse_options(profiles(params)))
+  end
+
+  def domain_ex(id, params) do
+    extension = extension(params)
+    Schema.domain_ex(extension, id, parse_options(profiles(params)))
+  end
+
+  def feature_ex(id, params) do
+    extension = extension(params)
+    Schema.feature_ex(extension, id, parse_options(profiles(params)))
+  end
+
   @doc """
   Get JSON schema definitions for a given event object.
   get /schema/classes/:name

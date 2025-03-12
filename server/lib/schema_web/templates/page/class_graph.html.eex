@@ -15,7 +15,7 @@ limitations under the License.
 
 <div class="row">
   <div class="col-md move-up">
-    <% path = Routes.static_path(@conn, "/categories/" <> category) %>
+    <% path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> category) %>
     <h3 class="extensions">
       <%= class[:caption] %>
       <span class="text-secondary">[<a href="<%= class_path(@conn, class)  %>"><%= class[:uid] %></a>]<sup><%= extension || "" %></sup>

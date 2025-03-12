@@ -98,12 +98,12 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_skill(atom) :: nil | Cache.main_skill_t()
+  @spec main_skill(atom) :: nil | Cache.category_t()
   def main_skill(id) do
     main_skill(nil, id)
   end
 
-  @spec main_skill(extensions_t() | nil, atom) :: nil | Cache.main_skill_t()
+  @spec main_skill(extensions_t() | nil, atom) :: nil | Cache.category_t()
   def main_skill(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
       case Cache.main_skill(schema, id) do

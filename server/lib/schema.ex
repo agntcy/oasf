@@ -351,7 +351,7 @@ defmodule Schema do
   @doc """
     Returns a single skill class with the embedded objects.
   """
-  @spec skill_ex(atom() | String.t()) :: nil | Cache.skill_t()
+  @spec skill_ex(atom() | String.t()) :: nil | Cache.class_t()
   def skill_ex(id),
     do: Repo.skill_ex(Utils.to_uid(id))
 
@@ -376,7 +376,7 @@ defmodule Schema do
   @doc """
   Finds a skill class by the skill uid value.
   """
-  @spec find_skill(integer()) :: nil | Cache.skill_t()
+  @spec find_skill(integer()) :: nil | Cache.class_t()
   def find_skill(uid) when is_integer(uid), do: Repo.find_skill(uid)
 
   @doc """

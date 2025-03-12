@@ -23,6 +23,61 @@ defmodule SchemaWeb.PageController do
 
       class ->
         data = Schema.Graph.build(class)
+          |> Map.put(:categories_path, "categories")
+
+        render(conn, "class_graph.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: data
+        )
+    end
+  end
+
+  @spec skill_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def skill_graph(conn, %{"id" => id} = params) do
+    case SchemaWeb.SchemaController.skill_ex(id, params) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      class ->
+        data = Schema.Graph.build(class)
+          |> Map.put(:categories_path, "main_skills")
+
+        render(conn, "class_graph.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: data
+        )
+    end
+  end
+
+  @spec domain_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def domain_graph(conn, %{"id" => id} = params) do
+    case SchemaWeb.SchemaController.domain_ex(id, params) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      class ->
+        data = Schema.Graph.build(class)
+          |> Map.put(:categories_path, "main_domains")
+
+        render(conn, "class_graph.html",
+          extensions: Schema.extensions(),
+          profiles: SchemaController.get_profiles(params),
+          data: data
+        )
+    end
+  end
+
+  @spec feature_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def feature_graph(conn, %{"id" => id} = params) do
+    case SchemaWeb.SchemaController.feature_ex(id, params) do
+      nil ->
+        send_resp(conn, 404, "Not Found: #{id}")
+
+      class ->
+        data = Schema.Graph.build(class)
+          |> Map.put(:categories_path, "main_features")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
