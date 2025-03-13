@@ -679,7 +679,7 @@ defmodule Schema.Repo do
 
             ext ->
               MapSet.member?(extensions, ext) and
-              (md == main_feature_uid or Utils.to_uid(ext, md) == id)
+                (md == main_feature_uid or Utils.to_uid(ext, md) == id)
           end
         end
       )

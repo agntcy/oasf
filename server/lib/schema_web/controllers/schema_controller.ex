@@ -9,7 +9,7 @@
 # limitations under the License.
 defmodule SchemaWeb.SchemaController do
   @moduledoc """
-  The Event Schema API.
+  The Class Schema API.
   """
 
   use SchemaWeb, :controller
@@ -35,7 +35,7 @@ defmodule SchemaWeb.SchemaController do
                                 " the response."
 
   # -------------------
-  # Event Schema API's
+  # Class Schema API's
   # -------------------
 
   def swagger_definitions do
@@ -99,7 +99,7 @@ defmodule SchemaWeb.SchemaController do
               caption: "DHCP Activity",
               category: "network",
               category_name: "Network Activity",
-              description: "DHCP Activity events report MAC to IP assignment via DHCP.",
+              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
               name: "dhcp_activity",
               profiles: [
                 "cloud",
@@ -131,7 +131,7 @@ defmodule SchemaWeb.SchemaController do
               caption: "DHCP Activity",
               main_domain: "network",
               main_domain_name: "Network Activity",
-              description: "DHCP Activity events report MAC to IP assignment via DHCP.",
+              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
               name: "dhcp_activity",
               profiles: [
                 "cloud",
@@ -163,7 +163,7 @@ defmodule SchemaWeb.SchemaController do
               caption: "DHCP Activity",
               main_feature: "network",
               main_feature_name: "Network Activity",
-              description: "DHCP Activity events report MAC to IP assignment via DHCP.",
+              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
               name: "dhcp_activity",
               profiles: [
                 "cloud",
@@ -202,10 +202,10 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
-      Event:
+      Class:
         swagger_schema do
-          title("Event")
-          description("An OASF formatted event object.")
+          title("Class")
+          description("An OASF formatted class object.")
           type(:object)
         end,
       ValidationError:
@@ -232,13 +232,13 @@ defmodule SchemaWeb.SchemaController do
 
           additional_properties(true)
         end,
-      EventValidation:
+      ClassValidation:
         swagger_schema do
-          title("Event Validation")
-          description("The errors and and warnings found when validating an event.")
+          title("Class Validation")
+          description("The errors and and warnings found when validating an class.")
 
           properties do
-            uid(:string, "The event's metadata.uid, if available")
+            uid(:string, "The class's metadata.uid, if available")
             error(:string, "Overall error message")
 
             errors(
@@ -259,32 +259,32 @@ defmodule SchemaWeb.SchemaController do
 
           additional_properties(false)
         end,
-      EventBundle:
+      ClassBundle:
         swagger_schema do
-          title("Event Bundle")
-          description("A bundle of events.")
+          title("Class Bundle")
+          description("A bundle of classes.")
 
           properties do
-            events(
+            classes(
               :array,
-              "Array of events.",
-              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Event"},
+              "Array of classes.",
+              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Class"},
               required: true
             )
 
-            start_time(:integer, "Earliest event time in Epoch milliseconds (OASF timestamp_t)")
-            end_time(:integer, "Latest event time in Epoch milliseconds (OASF timestamp_t)")
-            start_time_dt(:string, "Earliest event time in RFC 3339 format (OASF datetime_t)")
-            end_time_dt(:string, "Latest event time in RFC 3339 format (OASF datetime_t)")
-            count(:integer, "Count of events")
+            start_time(:integer, "Earliest class time in Epoch milliseconds (OASF timestamp_t)")
+            end_time(:integer, "Latest class time in Epoch milliseconds (OASF timestamp_t)")
+            start_time_dt(:string, "Earliest class time in RFC 3339 format (OASF datetime_t)")
+            end_time_dt(:string, "Latest class time in RFC 3339 format (OASF datetime_t)")
+            count(:integer, "Count of classes")
           end
 
           additional_properties(false)
         end,
-      EventBundleValidation:
+      ClassBundleValidation:
         swagger_schema do
-          title("Event Bundle Validation")
-          description("The errors and and warnings found when validating an event bundle.")
+          title("Class Bundle Validation")
+          description("The errors and and warnings found when validating an class bundle.")
 
           properties do
             error(:string, "Overall error message")
@@ -304,10 +304,10 @@ defmodule SchemaWeb.SchemaController do
             error_count(:integer, "Count of errors of the bundle itself")
             warning_count(:integer, "Count of warnings of the bundle itself")
 
-            event_validations(
+            class_validations(
               :array,
-              "Array of event validations",
-              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/EventValidation"},
+              "Array of class validations",
+              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/ClassValidation"},
               required: true
             )
           end
@@ -1479,7 +1479,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get JSON schema definitions for a given event object.
+  Get JSON schema definitions for a given class object.
   get /schema/classes/:name
   """
   swagger_path :json_object do
@@ -1531,18 +1531,18 @@ defmodule SchemaWeb.SchemaController do
   # ---------------------------------------------
 
   @doc """
-  Enrich event data by adding type_uid, enumerated text, and observables.
-  A single event is encoded as a JSON object and multiple events are encoded as JSON array of
+  Enrich class data by adding type_uid, enumerated text, and observables.
+  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   objects.
   """
   swagger_path :enrich do
     post("/api/enrich")
-    summary("Enrich Event")
+    summary("Enrich Class")
 
     description(
-      "The purpose of this API is to enrich the provided event data with <code>type_uid</code>," <>
-        " enumerated text, and <code>observables</code> array. Each event is represented as a" <>
-        " JSON object, while multiple events are encoded as a JSON array of objects."
+      "The purpose of this API is to enrich the provided class data with <code>type_uid</code>," <>
+        " enumerated text, and <code>observables</code> array. Each class is represented as a" <>
+        " JSON object, while multiple classes are encoded as a JSON array of objects."
     )
 
     produces("application/json")
@@ -1553,7 +1553,7 @@ defmodule SchemaWeb.SchemaController do
         :query,
         :boolean,
         """
-        Enhance the event data by adding the enumerated text values.<br/>
+        Enhance the class data by adding the enumerated text values.<br/>
 
         |Value|Example|
         |-----|-------|
@@ -1565,12 +1565,12 @@ defmodule SchemaWeb.SchemaController do
       _observables(
         :query,
         :boolean,
-        "<strong>TODO</strong>: Enhance the event data by adding the observables associated with" <>
-          " the event.",
+        "<strong>TODO</strong>: Enhance the class data by adding the observables associated with" <>
+          " the class.",
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Event), "The event data to be enriched.",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be enriched.",
         required: true
       )
     end
@@ -1585,11 +1585,11 @@ defmodule SchemaWeb.SchemaController do
 
     {status, result} =
       case params["_json"] do
-        # Enrich a single event
-        event when is_map(event) ->
-          {200, Schema.enrich(event, enum_text, observables)}
+        # Enrich a single class
+        class when is_map(class) ->
+          {200, Schema.enrich(class, enum_text, observables)}
 
-        # Enrich a list of events
+        # Enrich a list of classes
         list when is_list(list) ->
           {200,
            Enum.map(list, &Task.async(fn -> Schema.enrich(&1, enum_text, observables) end))
@@ -1604,15 +1604,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Translate event data. A single event is encoded as a JSON object and multiple events are encoded as JSON array of objects.
+  Translate class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
   swagger_path :translate do
     post("/api/translate")
-    summary("Translate Event")
+    summary("Translate Class")
 
     description(
-      "The purpose of this API is to translate the provided event data using the OASF schema." <>
-        " Each event is represented as a JSON object, while multiple events are encoded as a" <>
+      "The purpose of this API is to translate the provided class data using the OASF schema." <>
+        " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
         "  JSON array of objects."
     )
 
@@ -1641,7 +1641,7 @@ defmodule SchemaWeb.SchemaController do
         :string,
         """
           Controls how spaces in the translated attribute names are handled.<br/>
-          By default, the translated attribute names may contain spaces (for example, Event Time).
+          By default, the translated attribute names may contain spaces (for example, Class Time).
           You can remove the spaces or replace the spaces with another string. For example, if you
           want to forward to a database that does not support spaces.<br/>
           The format is _spaces=[&lt;empty&gt;|string].
@@ -1654,7 +1654,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Event), "The event data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be translated",
         required: true
       )
     end
@@ -1668,13 +1668,13 @@ defmodule SchemaWeb.SchemaController do
 
     {status, result} =
       case params["_json"] do
-        # Translate a single events
-        event when is_map(event) ->
-          {200, Schema.Translator.translate(event, options)}
+        # Translate a single classes
+        class when is_map(class) ->
+          {200, Schema.Translator.translate(class, options)}
 
-        # Translate a list of events
+        # Translate a list of classes
         list when is_list(list) ->
-          {200, Enum.map(list, fn event -> Schema.Translator.translate(event, options) end)}
+          {200, Enum.map(list, fn class -> Schema.Translator.translate(class, options) end)}
 
         # some other json data
         _ ->
@@ -1685,18 +1685,18 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate event data.
-  A single event is encoded as a JSON object and multiple events are encoded as JSON array of
+  Validate class data.
+  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   object.
   post /api/validate
   """
   swagger_path :validate do
     post("/api/validate")
-    summary("Validate Event")
+    summary("Validate Class")
 
     description(
-      "The primary objective of this API is to validate the provided event data against the OASF" <>
-        " schema. Each event is represented as a JSON object, while multiple events are encoded" <>
+      "The primary objective of this API is to validate the provided class data against the OASF" <>
+        " schema. Each class is represented as a JSON object, while multiple classes are encoded" <>
         " as a JSON array of objects."
     )
 
@@ -1704,7 +1704,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Tools")
 
     parameters do
-      data(:body, PhoenixSwagger.Schema.ref(:Event), "The event data to be validated",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be validated",
         required: true
       )
     end
@@ -1716,11 +1716,11 @@ defmodule SchemaWeb.SchemaController do
   def validate(conn, params) do
     {status, result} =
       case params["_json"] do
-        # Validate a single events
-        event when is_map(event) ->
-          {200, Schema.Validator.validate(event)}
+        # Validate a single classes
+        class when is_map(class) ->
+          {200, Schema.Validator.validate(class)}
 
-        # Validate a list of events
+        # Validate a list of classes
         list when is_list(list) ->
           {200,
            Enum.map(list, &Task.async(fn -> Schema.Validator.validate(&1) end))
@@ -1735,15 +1735,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate event data, version 2. Validates a single event.
+  Validate class data, version 2. Validates a single class.
   post /api/v2/validate
   """
   swagger_path :validate2 do
     post("/api/v2/validate")
-    summary("Validate Event (version 2)")
+    summary("Validate Class (version 2)")
 
     description(
-      "This API validates the provided event data against the OASF schema, returning a response" <>
+      "This API validates the provided class data against the OASF schema, returning a response" <>
         " containing validation errors and warnings."
     )
 
@@ -1760,10 +1760,10 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Event), "The event to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:EventValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
   end
 
   @spec validate2(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1781,8 +1781,8 @@ defmodule SchemaWeb.SchemaController do
     send_json_resp(conn, status, result)
   end
 
-  defp validate2_actual(event, warn_on_missing_recommended) when is_map(event) do
-    {200, Schema.Validator2.validate(event, warn_on_missing_recommended)}
+  defp validate2_actual(class, warn_on_missing_recommended) when is_map(class) do
+    {200, Schema.Validator2.validate(class, warn_on_missing_recommended)}
   end
 
   defp validate2_actual(_, _) do
@@ -1790,16 +1790,16 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate event data, version 2. Validates a single event.
+  Validate class data, version 2. Validates a single class.
   post /api/v2/validate
   """
   swagger_path :validate2_bundle do
     post("/api/v2/validate_bundle")
-    summary("Validate Event Bundle (version 2)")
+    summary("Validate Class Bundle (version 2)")
 
     description(
-      "This API validates the provided event bundle. The event bundle itself is validated, and" <>
-        " each event in the bundle's events attribute are validated."
+      "This API validates the provided class bundle. The class bundle itself is validated, and" <>
+        " each class in the bundle's classes attribute are validated."
     )
 
     produces("application/json")
@@ -1815,12 +1815,12 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:EventBundle), "The event bundle to be validated",
+      data(:body, PhoenixSwagger.Schema.ref(:ClassBundle), "The class bundle to be validated",
         required: true
       )
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:EventBundleValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
   end
 
   @spec validate2_bundle(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -1851,9 +1851,9 @@ defmodule SchemaWeb.SchemaController do
   # --------------------------
 
   @doc """
-  Returns randomly generated event sample data for the base class.
+  Returns randomly generated class sample data for the base class.
   """
-  swagger_path :sample_event do
+  swagger_path :sample_base_class do
     get("/sample/base_class")
     summary("Base sample data")
     description("This API returns randomly generated sample data for the base class.")
@@ -1867,19 +1867,19 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec sample_event(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_event(conn, params) do
+  @spec sample_base_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def sample_base_class(conn, params) do
     sample_class(conn, "base_class", params)
   end
 
   @doc """
-  Returns randomly generated event sample data for the given name.
+  Returns randomly generated class sample data for the given name.
   get /sample/classes/:name
   get /sample/classes/:extension/:name
   """
   swagger_path :sample_class do
     get("/sample/classes/{name}")
-    summary("Event sample data")
+    summary("Class sample data")
 
     description(
       "This API returns randomly generated sample data for the given class name. The class" <>
@@ -1914,20 +1914,20 @@ defmodule SchemaWeb.SchemaController do
         send_json_resp(conn, 404, %{error: "Class #{id} not found"})
 
       class ->
-        event =
+        class =
           case Map.get(options, @verbose) do
             nil ->
-              Schema.generate_event(class, profiles)
+              Schema.generate_class(class, profiles)
 
             verbose ->
-              Schema.generate_event(class, profiles)
+              Schema.generate_class(class, profiles)
               |> Schema.Translator.translate(
                 spaces: options[@spaces],
                 verbose: verbose(verbose)
               )
           end
 
-        send_json_resp(conn, event)
+        send_json_resp(conn, class)
     end
   end
 

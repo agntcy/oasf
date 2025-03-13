@@ -429,10 +429,10 @@ defmodule SchemaWeb.PageView do
   @spec field_classes(map) :: nonempty_binary
   def field_classes(field) do
     base =
-      if field[:_source] == :base_class or field[:_source] == :event do
-        "base-event "
+      if field[:_source] == :base_class or field[:_source] == :class do
+        "base-class "
       else
-        "event "
+        "class "
       end
 
     deprecation_status =

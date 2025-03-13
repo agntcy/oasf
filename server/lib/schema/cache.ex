@@ -180,7 +180,7 @@ defmodule Schema.Cache do
   end
 
   @doc """
-    Returns the event extensions.
+    Returns the class extensions.
   """
   @spec extensions :: map()
   def extensions(), do: Schema.JsonReader.extensions()
@@ -849,7 +849,7 @@ defmodule Schema.Cache do
     if Map.has_key?(object, :observables) do
       # Attribute-path observables would be tricky to implement as an machine-driven enrichment.
       # It would require tracking the relative from the point of the object down that tree of an
-      # overall OASF event.
+      # overall OASF class.
       Logger.error(
         "Illegal \"#{:observables}\" definition in object \"#{object_key}\"." <>
           " Object-specific attribute path observables are not supported." <>
@@ -1163,7 +1163,7 @@ defmodule Schema.Cache do
       )
       |> put_in(
         [:attributes, :category_name, :description],
-        "The event category name, as defined by category_uid value:" <>
+        "The class category name, as defined by category_uid value:" <>
           " <code>#{category[:caption]}</code>."
       )
     end

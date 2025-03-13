@@ -52,25 +52,25 @@ defmodule Schema do
   end
 
   @doc """
-    Reloads the event schema without the extensions.
+    Reloads the schema without the extensions.
   """
   @spec reload() :: :ok
   def reload(), do: Repo.reload()
 
   @doc """
-    Reloads the event schema with extensions from the given path.
+    Reloads the schema with extensions from the given path.
   """
   @spec reload(String.t() | list()) :: :ok
   def reload(path), do: Repo.reload(path)
 
   @doc """
-    Returns the event categories.
+    Returns the categories.
   """
   @spec categories :: map()
   def categories(), do: Repo.categories()
 
   @doc """
-    Returns the event categories defined in the given extension set.
+    Returns the categories defined in the given extension set.
   """
   def categories(extensions) do
     Map.update(Repo.categories(extensions), :attributes, %{}, fn attributes ->
@@ -94,13 +94,13 @@ defmodule Schema do
     do: get_category(extensions, Utils.to_uid(extension, id))
 
   @doc """
-    Returns the main skills.
+    Returns skill categories.
   """
   @spec main_skills :: map()
   def main_skills(), do: Repo.main_skills()
 
   @doc """
-    Returns the event main skills defined in the given extension set.
+    Returns skill categories defined in the given extension set.
   """
   def main_skills(extensions) do
     Map.update(Repo.main_skills(extensions), :attributes, %{}, fn attributes ->
@@ -111,7 +111,7 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single main skill with its classes.
+    Returns a single skill category with its classes.
   """
   @spec main_skill(atom | String.t()) :: nil | Cache.category_t()
   def main_skill(id), do: get_main_skill(Utils.to_uid(id))
@@ -130,7 +130,7 @@ defmodule Schema do
   def main_domains(), do: Repo.main_domains()
 
   @doc """
-    Returns the event main domains defined in the given extension set.
+    Returns domain categories defined in the given extension set.
   """
   def main_domains(extensions) do
     Map.update(Repo.main_domains(extensions), :attributes, %{}, fn attributes ->
@@ -141,7 +141,7 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single main domain with its classes.
+    Returns a single domain category with its classes.
   """
   @spec main_domain(atom | String.t()) :: nil | Cache.category_t()
   def main_domain(id), do: get_main_domain(Utils.to_uid(id))
@@ -154,13 +154,13 @@ defmodule Schema do
     do: get_main_domain(extensions, Utils.to_uid(extension, id))
 
   @doc """
-    Returns the main features.
+    Returns features categories.
   """
   @spec main_features :: map()
   def main_features(), do: Repo.main_features()
 
   @doc """
-    Returns the event main features defined in the given extension set.
+    Returns features categories defined in the given extension set.
   """
   def main_features(extensions) do
     Map.update(Repo.main_features(extensions), :attributes, %{}, fn attributes ->
@@ -171,7 +171,7 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single main feature with its classes.
+    Returns a single feature category with its classes.
   """
   @spec main_feature(atom | String.t()) :: nil | Cache.category_t()
   def main_feature(id), do: get_main_feature(Utils.to_uid(id))
@@ -836,7 +836,7 @@ defmodule Schema do
   end
 
   # ----------------------------#
-  # Enrich Event Data Functions #
+  # Enrich Class Data Functions #
   # ----------------------------#
 
   def enrich(data, enum_text, observables) do
@@ -848,23 +848,23 @@ defmodule Schema do
   # -------------------------------#
 
   @doc """
-  Returns a randomly generated sample event.
+  Returns a randomly generated sample class.
   """
-  @spec generate_event(Cache.class_t() | atom() | binary()) :: nil | map()
-  def generate_event(class) when is_map(class) do
-    Schema.Generator.generate_sample_event(class, nil)
+  @spec generate_class(Cache.class_t() | atom() | binary()) :: nil | map()
+  def generate_class(class) when is_map(class) do
+    Schema.Generator.generate_sample_class(class, nil)
   end
 
-  def generate_event(class) do
-    Schema.class(class) |> Schema.Generator.generate_sample_event(nil)
+  def generate_class(class) do
+    Schema.class(class) |> Schema.Generator.generate_sample_class(nil)
   end
 
   @doc """
-  Returns a randomly generated sample event, based on the spcified profiles.
+  Returns a randomly generated sample class, based on the spcified profiles.
   """
-  @spec generate_event(Cache.class_t(), Repo.profiles_t() | nil) :: map()
-  def generate_event(class, profiles) when is_map(class) do
-    Schema.Generator.generate_sample_event(class, profiles)
+  @spec generate_class(Cache.class_t(), Repo.profiles_t() | nil) :: map()
+  def generate_class(class, profiles) when is_map(class) do
+    Schema.Generator.generate_sample_class(class, profiles)
   end
 
   @doc """

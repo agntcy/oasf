@@ -9,19 +9,19 @@
 # limitations under the License.
 defmodule Schema.Helper do
   @moduledoc """
-  Provides helper functions to enrich the event data.
+  Provides helper functions to enrich the class data.
   """
   require Logger
 
   def enrich(data, enum_text, observables) when is_map(data) do
     Logger.debug(fn ->
-      "enrich event: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
+      "enrich class: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
     end)
 
     enrich_class(data["class_uid"], data, enum_text, observables)
   end
 
-  # this is not an event
+  # this is not a class
   def enrich(data, _enum_text, _observables), do: %{:error => "Not a JSON object", :data => data}
 
   # missing class_uid
@@ -31,7 +31,7 @@ defmodule Schema.Helper do
   defp enrich_class(class_uid, data, enum_text, _observables) do
     Logger.debug("enrich class: #{class_uid}")
 
-    # if observables == "true", do: 
+    # if observables == "true", do:
 
     case Schema.find_class(class_uid) do
       # invalid class ID

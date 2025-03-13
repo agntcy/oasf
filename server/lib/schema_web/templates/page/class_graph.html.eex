@@ -43,7 +43,7 @@ limitations under the License.
               data-selected-text-format="count > 3"
               data-actions-box="true"
               data-width="auto">
-              <option selected id="base-event-select" class="base-event" value="base-event" title="Base">Base Attributes
+              <option selected id="base-class-select" class="base-class" value="base-class" title="Base">Base Attributes
               </option>
               <option value="deprecated" title="Deprecated">Deprecated Attributes</option>
               <optgroup id="groups-select" label="Groups">

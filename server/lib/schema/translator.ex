@@ -9,31 +9,26 @@
 # limitations under the License.
 defmodule Schema.Translator do
   @moduledoc """
-  Translates events to more user friendly form.
+  Translates classes to more user friendly form.
   """
   require Logger
 
   def translate(data, options) when is_map(data) do
-    Logger.debug("translate event: #{inspect(data)}, options: #{inspect(options)}")
+    Logger.debug("translate class: #{inspect(data)}, options: #{inspect(options)}")
 
     translate_class(data["class_uid"], data, options)
   end
 
-  # this is not an event
+  # this is not an class
   def translate(data, _options), do: data
 
-  # missing class_uid, thus cannot translate the event
+  # missing class_uid, thus cannot translate the class
   defp translate_class(nil, data, _options), do: data
 
   defp translate_class(class_uid, data, options) do
     Logger.debug("translate class: #{class_uid}")
-    translate_event(Schema.find_class(class_uid), data, options)
-  end
 
-  # unknown class, thus cannot translate the event
-  defp translate_event(nil, data, _options), do: data
-
-  defp translate_event(type, data, options) do
+    type = Schema.find_class(class_uid)
     attributes = type[:attributes]
 
     Enum.reduce(data, %{}, fn {name, value}, acc ->
@@ -93,7 +88,7 @@ defmodule Schema.Translator do
   end
 
   defp translate_attribute("object_t", name, attribute, value, options) when is_map(value) do
-    translated = translate_event(Schema.object(attribute[:object_type]), value, options)
+    translated = translate_class(Schema.object(attribute[:object_type]), value, options)
     translate_attribute(name, attribute, translated, options)
   end
 
@@ -103,7 +98,7 @@ defmodule Schema.Translator do
         obj_type = Schema.object(attribute[:object_type])
 
         Enum.map(value, fn data ->
-          translate_event(obj_type, data, options)
+          translate_class(obj_type, data, options)
         end)
       else
         value

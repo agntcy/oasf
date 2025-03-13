@@ -250,9 +250,9 @@ defmodule Schema.JsonReader do
   end
 
   defp read_classes(home, extensions, classes_dir) do
-    events = read_schema_dir(Map.new(), home, Path.join(home, classes_dir))
+    classes = read_schema_dir(Map.new(), home, Path.join(home, classes_dir))
 
-    Enum.reduce(extensions, events, fn ext, acc ->
+    Enum.reduce(extensions, classes, fn ext, acc ->
       read_extension_dir(acc, home, ext, classes_dir)
     end)
   end

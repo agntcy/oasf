@@ -9,7 +9,7 @@
 # limitations under the License.
 defmodule Schema.Validator do
   @moduledoc """
-  OASF Event validator.
+  OASF Class validator.
   """
 
   require Logger
@@ -19,7 +19,7 @@ defmodule Schema.Validator do
   @class_uid "class_uid"
 
   @doc """
-  Validates the given event using `class_uid` value and the schema.
+  Validates the given class using `class_uid` value and the schema.
   """
   @spec validate(map()) :: map()
   def validate(data) when is_map(data), do: data[@class_uid] |> validate_class(data)

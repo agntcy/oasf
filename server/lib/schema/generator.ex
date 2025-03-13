@@ -9,7 +9,7 @@
 # limitations under the License.
 defmodule Schema.Generator do
   @moduledoc """
-  Random data generator using the event schema.
+  Random data generator using the schema.
   """
 
   use Agent
@@ -59,23 +59,23 @@ defmodule Schema.Generator do
     }
   end
 
-  @spec generate_sample_event(Schema.Cache.class_t(), Schema.Repo.profiles_t() | nil) :: map()
-  def generate_sample_event(class, nil) do
-    Logger.debug("generate sample event: #{inspect(class[:name])}")
+  @spec generate_sample_class(Schema.Cache.class_t(), Schema.Repo.profiles_t() | nil) :: map()
+  def generate_sample_class(class, nil) do
+    Logger.debug("generate sample class: #{inspect(class[:name])}")
 
-    generate_sample_event(class) |> remove_profiles()
+    generate_sample_class(class) |> remove_profiles()
   end
 
-  def generate_sample_event(class, profiles) do
+  def generate_sample_class(class, profiles) do
     Logger.debug(fn ->
-      "generate sample event: #{class[:name]}, profiles: #{MapSet.to_list(profiles) |> Enum.join(", ")})"
+      "generate sample class: #{class[:name]}, profiles: #{MapSet.to_list(profiles) |> Enum.join(", ")})"
     end)
 
     Process.put(:profiles, profiles)
-    generate_event(class, profiles, MapSet.size(profiles))
+    generate_class(class, profiles, MapSet.size(profiles))
   end
 
-  @spec generate_sample_event(Schema.Cache.object_t(), Schema.Repo.profiles_t() | nil) :: map()
+  @spec generate_sample_class(Schema.Cache.object_t(), Schema.Repo.profiles_t() | nil) :: map()
   def generate_sample_object(type, nil) do
     Logger.debug("generate sample object: #{type[:name]})")
 
@@ -91,18 +91,18 @@ defmodule Schema.Generator do
     generate_sample_object(type, profiles, MapSet.size(profiles))
   end
 
-  defp generate_event(class, _profiles, 0) do
+  defp generate_class(class, _profiles, 0) do
     Map.update!(class, :attributes, fn attributes ->
       Utils.remove_profiles(attributes)
     end)
-    |> generate_sample_event()
+    |> generate_sample_class()
   end
 
-  defp generate_event(class, profiles, size) do
+  defp generate_class(class, profiles, size) do
     Map.update!(class, :attributes, fn attributes ->
       Utils.apply_profiles(attributes, profiles, size)
     end)
-    |> generate_sample_event()
+    |> generate_sample_class()
     |> add_profiles(MapSet.to_list(profiles))
   end
 
@@ -115,7 +115,7 @@ defmodule Schema.Generator do
     map
   end
 
-  defp generate_sample_event(class) do
+  defp generate_sample_class(class) do
     data = generate_sample(class)
 
     case data[:activity_id] do

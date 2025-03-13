@@ -37,7 +37,7 @@ function set_selected_extensions(extensions) {
   localStorage.setItem("schema_extensions", JSON.stringify(extensions));
 }
 
-const defaultSelectedValues = ["base-event", "deprecated", "optional", "recommended", "classification", "context", "occurrence", "primary"];
+const defaultSelectedValues = ["base-class", "deprecated", "optional", "recommended", "classification", "context", "occurrence", "primary"];
 const storageKey = "selected-attributes"
 
 function hide(name) {
@@ -98,7 +98,7 @@ function display_attributes(options) {
 
   if (table != null) {
     // add classes that are always shown
-    options.add("event");
+    options.add("class");
     options.add("not-deprecated")
     options.add("required");
     options.add("no-group");
