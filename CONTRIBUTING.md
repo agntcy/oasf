@@ -199,11 +199,11 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
     2. Use the template available [here](https://github.com/agntcy/oasf/tree/main/schema/templates/class_name.json), to get started with the .json definition.
     3. `uid` → Select an integer in the range 0 - 99. Ensure the integer is **unique** within the category.
         * Note: Without `uid`, a class won’t be visible in the oasf server.
-    4. `caption` → Add a user-friendly name to the event_class.
+    4. `caption` → Add a user-friendly name to the class.
     5. `description` → Add a concise description to define the attributes.
     6. `name` → Add a **unique** name of the class. Ensure it matches the file name to maintain consistency.
     7. `extends` → Ensure the value container the parent class `class`.
-    8. `attributes` → Add the attributes that you want to define in the event_class,
+    8. `attributes` → Add the attributes that you want to define in the class,
         1. `group` → For each attribute ensure you add a group value. Valid values are - `classification`, `context`, `occurrence`, `primary`
         2. `requirement` → For each attribute ensure you add a requirement value. Valid values are `optional`, `required`, `recommended`
         3. `$include` → As for objects, you can also include attributes from other places; to do so, specify the list of files (relative to the root of the schema repository) that should contribute their attributes to this object.  _e.g._
