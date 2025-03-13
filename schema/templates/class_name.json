@@ -1,6 +1,6 @@
 {
     "category": "REPLACE me with the category name. For example, nlp.",
-    "description": "REPLACE me with a concise description of the events that the event_class will be describing.",
+    "description": "REPLACE me with a concise description of the class.",
     "extends": "base_class",
     "caption": "REPLACE me with a short, human friendly name of the base class.",
     "name": "REPLACE me with a name of the class. It must be unique within the category. The name is all lower case letters, combine words using underscore.",

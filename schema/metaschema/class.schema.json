@@ -1,11 +1,11 @@
 {
-    "$id": "https://schema.oasf.agntcy.org/event.schema.json",
+    "$id": "https://schema.oasf.agntcy.org/class.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "title": "Event",
-    "description": "Classes are particular sets of attributes and objects representing a log line or telemetry submission at a point in time. Classes have semantics that describe what happened: either a particular activity, disposition or both.",
+    "title": "Class",
+    "description": "Classes are particular sets of attributes and objects representing aspects of an Agent.",
     "allOf": [
         {
-            "$ref": "common-event-object.schema.json"
+            "$ref": "common-class-object.schema.json"
         },
         {
             "type": "object",
@@ -31,11 +31,11 @@
                 },
                 "category": {
                     "type": "string",
-                    "description": "The category that the event belongs to."
+                    "description": "The category that the class belongs to."
                 },
                 "uid": {
                     "type": "integer",
-                    "description": "A unique identifier for this event, must be unique within the category.",
+                    "description": "A unique identifier for this class, must be unique within the category and class level.",
                     "minimum": 0,
                     "maximum": 999
                 },

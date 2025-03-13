@@ -1,7 +1,7 @@
 {
   "caption": "Network",
   "category": "network",
-  "description": "The Network event represents a network connection.",
+  "description": "The Network class represents a network connection.",
   "name": "network",
   "extends": "alpha",
   "uid": 4,

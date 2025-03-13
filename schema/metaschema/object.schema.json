@@ -5,7 +5,7 @@
     "description": "An object is a collection of contextually related attributes, usually representing an entity, and may include other objects. Each object is also a data type in OASF. Examples of object data types are Process, Device, User, Malware, and File.",
     "allOf": [
         {
-            "$ref": "common-event-object.schema.json"
+            "$ref": "common-class-object.schema.json"
         },
         {
             "type": "object",

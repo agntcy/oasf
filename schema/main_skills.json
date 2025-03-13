@@ -26,7 +26,7 @@
     "analytical_skills": {
       "uid": 5,
       "caption": "Analytical skills",
-      "description": "Analytical skills events report the activity, existence, and/or state of analytical skills for tracking, mission planning, and other related activities."
+      "description": "Analytical skills encompass a range of capabilities that involve logical reasoning, problem-solving, and the ability to process and interpret complex data."
     },
     "retrieval_augmented_generation": {
       "uid": 6,
@@ -36,7 +36,7 @@
     "multi_modal": {
       "uid": 7,
       "caption": "Multi-modal",
-      "description": "Multi-model tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
+      "description": "Multi-modal tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
     }
   }
 }

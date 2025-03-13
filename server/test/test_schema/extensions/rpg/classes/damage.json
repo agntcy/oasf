@@ -1,7 +1,7 @@
 {
   "caption": "Damage",
   "category": "battle",
-  "description": "The Damage event represents an instance of damage taken.",
+  "description": "The Damage class represents an instance of damage taken.",
   "name": "damage",
   "extends": "base_class",
   "uid": 1,

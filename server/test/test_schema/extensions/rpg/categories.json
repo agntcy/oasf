@@ -5,7 +5,7 @@
   "attributes": {
     "battle": {
       "caption": "Battle",
-      "description": "Battle events.",
+      "description": "Battle classes.",
       "uid": 1
     }
   }

@@ -1,6 +1,6 @@
 {
   "caption": "Attribute Dictionary",
-  "description": "The Attribute Dictionary defines attributes and includes references to the events and objects in which they are used.",
+  "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
     "acp": {
@@ -90,12 +90,12 @@
     },
     "category_name": {
       "caption": "Category",
-      "description": "The event category name, as defined by category_uid value.",
+      "description": "The class category name, as defined by category_uid value.",
       "type": "string_t"
     },
     "category_uid": {
       "caption": "Category ID",
-      "description": "The category unique identifier of the event.",
+      "description": "The category unique identifier of the class.",
       "sibling": "category_name",
       "type": "integer_t"
     },
@@ -111,7 +111,7 @@
     },
     "class_uid": {
       "caption": "Class ID",
-      "description": "The unique identifier of a class. A class describes the attributes available in an event.",
+      "description": "The unique identifier of a class. A class describes the available attributes.",
       "sibling": "class_name",
       "type": "integer_t"
     },
@@ -139,7 +139,7 @@
     },
     "classifications": {
       "caption": "Classifications",
-      "description": "The list of malware classifications, normalized to the captions of the classification_id values. In the case of 'Other', they are defined by the event source.",
+      "description": "The list of malware classifications, normalized to the captions of the classification_id values. In the case of 'Other', they are defined by the source.",
       "type": "string_t",
       "is_array": true
     },
@@ -193,7 +193,7 @@
     },
     "image": {
       "caption": "Docker Image",
-      "description": "The Docker image that pertains to the event or object. See specific usage.",
+      "description": "The Docker image that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
     "domain": {
@@ -315,7 +315,7 @@
     },
     "path": {
       "caption": "Path",
-      "description": "The path that pertains to the event or object. See specific usage.",
+      "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
     "port": {
@@ -335,7 +335,7 @@
     },
     "resource_type": {
       "caption": "Resource Type",
-      "description": "The resource type as defined by the event source.",
+      "description": "The resource type as defined by the source.",
       "type": "string_t"
     },
     "result_streaming": {
@@ -400,7 +400,7 @@
     },
     "type": {
       "caption": "Type",
-      "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the event source. See specific usage.",
+      "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
       "type": "string_t"
     },
     "type_id": {
@@ -421,12 +421,12 @@
     },
     "type_name": {
       "caption": "Type Name",
-      "description": "The event/finding type name, as defined by the type_uid.",
+      "description": "The class type name, as defined by the type_uid.",
       "type": "string_t"
     },
     "type_uid": {
       "caption": "Type ID",
-      "description": "The event/finding type ID. It identifies the event's semantics and structure. The value is calculated by the logging system as: <code>class_uid * 100 + activity_id</code>.",
+      "description": "The class type ID. It identifies the class's semantics and structure. The value is calculated by the logging system as: <code>class_uid * 100 + activity_id</code>.",
       "sibling": "type_name",
       "type": "long_t"
     },
@@ -443,12 +443,12 @@
     },
     "unmapped": {
       "caption": "Unmapped Data",
-      "description": "The attributes that are not mapped to the event schema. The names and values of those attributes are specific to the event source.",
+      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
       "type": "object"
     },
     "url": {
       "caption": "URL",
-      "description": "The URL object that pertains to the event or object. See specific usage.",
+      "description": "The URL object that pertains to the class or object. See specific usage.",
       "type": "url"
     },
     "url_string": {
@@ -458,7 +458,7 @@
     },
     "version": {
       "caption": "Version",
-      "description": "The version that pertains to the event or object. See specific usage.",
+      "description": "The version that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
     "value": {
