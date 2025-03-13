@@ -1,7 +1,7 @@
 {
   "uid": 1,
   "caption": "Natural Language Understanding",
-  "description": "Natural Language Understanding (NLU) describes the ability to understand the meaning of a given situation or event.",
+  "description": "Natural Language Understanding (NLU) focuses on the ability to interpret and comprehend human language, including understanding context, semantics, and identifying key entities within text.",
   "extends": "nlp",
   "name": "nlu",
   "attributes": {}
