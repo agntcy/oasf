@@ -85,14 +85,20 @@ limitations under the License.
         case '/':
           $('#home_id').addClass("active");
           break;
-        case '/categories':
-          $('#categories_id').addClass("active");
-          break;
-        case '/classes':
+        case '/main_skills':
+          $('#skills_id').addClass("active");
           $('#classes_id').addClass("active");
           break;
-        case '/classes/base_class':
-          $('#base_class_id').addClass("active");
+        case '/main_domains':
+          $('#domains_id').addClass("active");
+          $('#classes_id').addClass("active");
+          break;
+        case '/main_features':
+          $('#features_id').addClass("active");
+          $('#classes_id').addClass("active");
+          break;
+        case '/objects/agent':
+          $('#agent_core_object_id').addClass("active");
           break;
         case '/dictionary':
           $('#dictionary_id').addClass("active");
@@ -180,6 +186,16 @@ limitations under the License.
 
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="extensions navbar-nav ml-auto">
+      <li id=classes_id class="nav-link">
+        <div class="dropdown">
+          Classes
+          <div class="dropdown-content">
+            <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
+            <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
+            <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_features") %>'>Features</a>
+          </div>
+        </div>
+      </li>
       <li id="skills_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
       </li>
@@ -189,7 +205,7 @@ limitations under the License.
       <li id="features_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_features") %>'>Features</a>
       </li>
-      <li id="base_class_id" class="nav-item">
+      <li id="agent_core_object_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Agent Core Object</a>
       </li>
       <li id="dictionary_id" class="nav-item">
@@ -213,19 +229,20 @@ limitations under the License.
         </div>
       </li>
 
-      <li class="nav-item">
-        <div id="json-schema" class="d-none">
-          <button type="button" id="btn-json-schema" class="btn btn-link btn-sm">JSON Schema</button>
-        </div>
-      </li>
-      <li class="nav-item">
-        <div id="schema" class="d-none">
-          <button type="button" id="btn-schema" class="btn btn-link btn-sm">Schema</button>
-        </div>
-      </li>
-      <li class="nav-item">
-        <div id="sample-data" class="d-none">
-          <button type="button" id="btn-sample-data" class="btn btn-link btn-sm">Sample</button>
+      <li id="schemas" class="nav-link d-none">
+        <div class="dropdown">
+          Schemas
+          <div class="dropdown-content">
+            <div id="json-schema" class="d-none">
+              <button type="button" id="btn-json-schema" class="btn btn-link btn-sm">JSON Schema</button>
+            </div>
+            <div id="schema" class="d-none">
+              <button type="button" id="btn-schema" class="btn btn-link btn-sm">Schema</button>
+            </div>
+            <div id="sample-data" class="d-none">
+              <button type="button" id="btn-sample-data" class="btn btn-link btn-sm">Sample</button>
+            </div>
+          </div>
         </div>
       </li>
     </ul>

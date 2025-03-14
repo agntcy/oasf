@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 --%>
 <script>
+  show("#schemas");
   show("#sample-data");
   show("#json-schema");
   show("#schema");

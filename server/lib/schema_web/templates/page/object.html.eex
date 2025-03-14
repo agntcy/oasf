@@ -10,6 +10,7 @@
   limitations under the License.
 --%>
 <script>
+  show("#schemas");
   show("#sample-data");
   show("#json-schema");
 </script>

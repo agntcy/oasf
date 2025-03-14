@@ -28,11 +28,11 @@ body {
   }
 
   .navbar {
-    background-color: #E3E9FB;
+    background-color: #e3e9fb;
   }
 
   .navbar.fixed-left {
-    background-color: #EFF3FC;
+    background-color: #eff3fc;
   }
 
   .navbar.fixed-left {
@@ -84,11 +84,11 @@ body {
   }
 
   .navbar-light .navbar-nav .nav-link {
-    color: #187ADC !important;
+    color: #187adc !important;
   }
 
   .btn-link {
-    color: #187ADC;
+    color: #187adc;
   }
 
   .oasf-logo {
@@ -137,8 +137,28 @@ body {
   }
 }
 
+@media (max-width: 1280px) {
+  #skills_id {
+    display: none;
+  }
+
+  #domains_id {
+    display: none;
+  }
+
+  #features_id {
+    display: none;
+  }
+}
+
+@media (min-width: 1280px) {
+  #classes_id {
+    display: none;
+  }
+}
+
 .table-striped tbody tr:nth-of-type(odd) {
-  background-color: #EFF3FC;
+  background-color: #eff3fc;
 }
 
 hr {
@@ -195,7 +215,7 @@ strong {
 }
 
 a {
-  color: #00142B;
+  color: #00142b;
 }
 
 a:hover,
@@ -271,7 +291,7 @@ table.table-borderless tr td {
 }
 
 tr.thead-color {
-  background-color: #187ADC;
+  background-color: #187adc;
   color: lightgrey;
 }
 
@@ -292,7 +312,7 @@ td.align-middle {
 }
 
 .name {
-  background-color: #E3EAFA;
+  background-color: #e3eafa;
 }
 
 .links {
@@ -365,7 +385,7 @@ input[type="checkbox"]:hover {
   display: none;
   position: absolute;
   right: 1%;
-  background-color: #F5F8FD;
+  background-color: #f5f8fd;
   min-width: 150px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
