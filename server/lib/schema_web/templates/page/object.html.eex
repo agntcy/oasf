@@ -158,9 +158,19 @@
     }
   ],
   "skills": [
-    "Text Completion [1006]",
-    "Problem Solving [1035]"
-  ]
+    {
+      "class_name": "Text Completion",
+      "category_name": "Natural Language Processing",
+      "class_uid": 10201,
+      "category_uid": 1
+    },
+    {
+      "class_name": "Problem Solving",
+      "category_name": "Natural Language Processing",
+      "class_uid": 10702,
+      "category_uid": 1
+    }
+  ],
   "extensions": [
     {
       "name": "oasf.agntcy.org/features/runtime",
