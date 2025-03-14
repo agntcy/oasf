@@ -15,8 +15,25 @@
     },
     "type": {
       "caption": "Type",
-      "description": "Describes the type of the release manifest pointed by its URI, e.g. <code>oci-image</code>, <code>docker-image</code>, <code>py-package</code>, <code>binary</code>. Allowed values MAY be defined for common manifest types.",
-      "requirement": "required"
+      "description": "Describes the type of the release manifest pointed by its URI. Allowed values MAY be defined for common manifest types.",
+      "requirement": "required",
+      "enum": {
+        "helm-chart": {
+          "caption": "Helm Chart"
+        },
+        "docker-image": {
+          "caption": "Docker Image"
+        },
+        "py-package": {
+          "caption": "Python Package"
+        },
+        "source-code": {
+          "caption": "Source Code"
+        },
+        "binary": {
+          "caption": "Binary"
+        }
+      }
     },
     "url": {
       "caption": "URL",
