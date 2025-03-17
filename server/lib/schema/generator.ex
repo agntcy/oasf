@@ -75,7 +75,7 @@ defmodule Schema.Generator do
     generate_class(class, profiles, MapSet.size(profiles))
   end
 
-  @spec generate_sample_class(Schema.Cache.object_t(), Schema.Repo.profiles_t() | nil) :: map()
+  @spec generate_sample_object(Schema.Cache.object_t(), Schema.Repo.profiles_t() | nil) :: map()
   def generate_sample_object(type, nil) do
     Logger.debug("generate sample object: #{type[:name]})")
 
@@ -104,6 +104,38 @@ defmodule Schema.Generator do
     end)
     |> generate_sample_class()
     |> add_profiles(MapSet.to_list(profiles))
+  end
+
+  defp generate_classes(n, {_name, field}) do
+    # Filter to include only children classes that are not hidden
+    valid_classes =
+      find_descendants(Schema.all_classes(), field.class_name)
+      |> Enum.map(&Schema.find_class_by_name(&1.name))
+      |> Enum.filter(&(&1 != nil))
+
+    case valid_classes do
+      [] ->
+        {:error, "No matching class found"}
+
+      _ ->
+        Enum.map(1..n, fn _ ->
+          generate_sample_class(
+            Enum.random(valid_classes),
+            Process.get(:profiles)
+          )
+        end)
+    end
+  end
+
+  defp find_descendants(classes, base_extends) do
+    classes
+    |> Enum.filter(fn {_key, class} ->
+      Map.has_key?(class, :extends) && class.extends == base_extends
+    end)
+    |> Enum.map(fn {_key, class} -> class end)
+    |> Enum.flat_map(fn class ->
+      [class | find_descendants(classes, class.name)]
+    end)
   end
 
   defp add_profiles(data, profiles) do
@@ -357,6 +389,9 @@ defmodule Schema.Generator do
     case field[:type] do
       "object_t" ->
         generate_objects(n, attribute)
+
+      "class_t" ->
+        generate_classes(n, attribute)
 
       type ->
         Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
