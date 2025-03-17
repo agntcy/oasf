@@ -363,14 +363,16 @@
       "description": "A skill that apply to an agent.",
       "type": "class_t",
       "class_path": "classes/base_skill",
-      "class_name": "Base Skill"
+      "class_name": "base_skill",
+      "class_caption": "Skill"
     },
     "skills": {
       "caption": "Skills",
       "description": "Skills that apply to an agent.",
       "type": "class_t",
       "class_path": "skills",
-      "class_name": "Skill",
+      "class_name": "base_skill",
+      "class_caption": "Skill",
       "is_array": true
     },
     "specs": {
@@ -380,7 +382,7 @@
     },
     "streaming": {
       "caption": "Streaming Modes",
-      "description": "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+      "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
       "type": "streaming_modes"
     },
     "subdomain": {

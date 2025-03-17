@@ -165,7 +165,8 @@ Sample entry in the `dictionary.json`,
       "description": "A skill that apply to an agent.",
       "type": "class_t",
       "class_path": "classes/base_skill",
-      "class_name": "Skill"
+      "class_name": "base_skill",
+      "class_caption": "Skill"
     }
 ```
 
@@ -182,8 +183,8 @@ Choose a **unique** object you want to add, `skill` in the example above and pop
       "caption": "Skills",
       "description": "Skills that apply to an agent.",
       "type": "class_t",
-      "class_path": "skills",
-      "class_name": "Skill",
+      "class_name": "base_skill",
+      "class_caption": "Skill",
       "is_array": true
     }
 ```
