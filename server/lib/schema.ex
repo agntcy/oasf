@@ -304,6 +304,9 @@ defmodule Schema do
   @spec find_class_by_uid(integer()) :: nil | Cache.class_t()
   def find_class_by_uid(uid) when is_integer(uid), do: Repo.find_class_by_uid(uid)
 
+  @spec find_class_by_name(integer()) :: nil | Cache.class_t()
+  def find_class_by_name(name) when is_bitstring(name), do: Repo.find_class_by_name(name)
+
   @doc """
     Returns all skill classes.
   """
