@@ -354,9 +354,9 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.class_ex(schema, id) end)
   end
 
-  @spec find_class(any) :: nil | map
-  def find_class(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_class(schema, uid) end)
+  @spec find_class_by_uid(integer()) :: nil | map
+  def find_class_by_uid(uid) do
+    Agent.get(__MODULE__, fn schema -> Cache.find_class_by_uid(schema, uid) end)
   end
 
   @spec skill(atom) :: nil | Cache.class_t()

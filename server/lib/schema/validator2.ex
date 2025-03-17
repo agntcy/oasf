@@ -166,7 +166,7 @@ defmodule Schema.Validator2 do
 
       cond do
         is_integer_t(class_uid) ->
-          case Schema.find_class(class_uid) do
+          case Schema.find_class_by_uid(class_uid) do
             nil ->
               {
                 add_error(

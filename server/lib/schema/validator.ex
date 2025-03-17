@@ -32,7 +32,7 @@ defmodule Schema.Validator do
 
     Logger.info("validate class: #{class_uid} using profiles: #{inspect(profiles)}")
 
-    case Schema.find_class(class_uid) do
+    case Schema.find_class_by_uid(class_uid) do
       nil ->
         class_uid = data[@class_uid]
         %{:error => "Invalid class_uid value", :value => class_uid}

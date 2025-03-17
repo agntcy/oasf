@@ -295,8 +295,8 @@ defmodule Schema.Cache do
     Map.put(class_ex, :objects, Map.to_list(ref_objects))
   end
 
-  @spec find_class(Schema.Cache.t(), any) :: nil | map
-  def find_class(%__MODULE__{dictionary: dictionary, classes: classes}, uid) do
+  @spec find_class_by_uid(Schema.Cache.t(), integer()) :: nil | map
+  def find_class_by_uid(%__MODULE__{dictionary: dictionary, classes: classes}, uid) do
     case Enum.find(classes, fn {_, class} -> class[:uid] == uid end) do
       {_, class} -> enrich(class, dictionary[:attributes])
       nil -> nil

@@ -33,7 +33,7 @@ defmodule Schema.Helper do
 
     # if observables == "true", do:
 
-    case Schema.find_class(class_uid) do
+    case Schema.find_class_by_uid(class_uid) do
       # invalid class ID
       nil ->
         %{:error => "Invalid class_uid: #{class_uid}", :data => data}
