@@ -1,8 +1,8 @@
 {
-    "uid": 3,
-    "caption": "Image Classification",
-    "description": "Assigning labels or categories to images based on their visual content.",
-    "extends": "images_computer_vision",
-    "name": "image_classification",
-    "attributes": {}
-  }
+  "uid": 3,
+  "caption": "Image Classification",
+  "description": "Assigning labels or categories to images based on their visual content.",
+  "extends": "images_computer_vision",
+  "name": "image_classification",
+  "attributes": {}
+}

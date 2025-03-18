@@ -1,8 +1,8 @@
 {
-    "uid": 10,
-    "caption": "Image-to-Image",
-    "description": "Transforming one image into another using a learned mapping, often for tasks like style transfer, colorization, or image enhancement.",
-    "extends": "images_computer_vision",
-    "name": "image_to_image",
-    "attributes": {}
-  }
+  "uid": 10,
+  "caption": "Image-to-Image",
+  "description": "Transforming one image into another using a learned mapping, often for tasks like style transfer, colorization, or image enhancement.",
+  "extends": "images_computer_vision",
+  "name": "image_to_image",
+  "attributes": {}
+}

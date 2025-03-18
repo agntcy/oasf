@@ -1,8 +1,8 @@
 {
-    "uid": 4,
-    "caption": "Object Detection",
-    "description": "Identifying and locating specific objects within an image or video, often by drawing bounding boxes around them.",
-    "extends": "images_computer_vision",
-    "name": "object_detection",
-    "attributes": {}
-  }
+  "uid": 4,
+  "caption": "Object Detection",
+  "description": "Identifying and locating specific objects within an image or video, often by drawing bounding boxes around them.",
+  "extends": "images_computer_vision",
+  "name": "object_detection",
+  "attributes": {}
+}

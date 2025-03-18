@@ -1,8 +1,8 @@
 {
-    "uid": 2,
-    "caption": "Video Classification",
-    "description": "Assigning labels or categories to entire videos or segments based on their visual and audio content.",
-    "extends": "images_computer_vision",
-    "name": "video_classification",
-    "attributes": {}
-  }
+  "uid": 2,
+  "caption": "Video Classification",
+  "description": "Assigning labels or categories to entire videos or segments based on their visual and audio content.",
+  "extends": "images_computer_vision",
+  "name": "video_classification",
+  "attributes": {}
+}

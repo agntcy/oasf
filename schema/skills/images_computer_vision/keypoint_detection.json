@@ -1,8 +1,8 @@
 {
-    "uid": 5,
-    "caption": "Keypoint Detection",
-    "description": "Identifying and locating specific points of interest within an image or object.",
-    "extends": "images_computer_vision",
-    "name": "keypoint_detection",
-    "attributes": {}
-  }
+  "uid": 5,
+  "caption": "Keypoint Detection",
+  "description": "Identifying and locating specific points of interest within an image or object.",
+  "extends": "images_computer_vision",
+  "name": "keypoint_detection",
+  "attributes": {}
+}

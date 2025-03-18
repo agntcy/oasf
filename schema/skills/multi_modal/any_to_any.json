@@ -1,8 +1,8 @@
 {
-    "uid": 3,
-    "caption": "Any to Any Transformation",
-    "description": "Converting between any supported modalities (text, image, audio, video, or 3D).",
-    "extends": "multi_modal",
-    "name": "any_to_any",
-    "attributes": {}
+  "uid": 3,
+  "caption": "Any to Any Transformation",
+  "description": "Converting between any supported modalities (text, image, audio, video, or 3D).",
+  "extends": "multi_modal",
+  "name": "any_to_any",
+  "attributes": {}
 }

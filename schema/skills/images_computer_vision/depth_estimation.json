@@ -1,8 +1,8 @@
 {
-    "uid": 7,
-    "caption": "Depth Estimation",
-    "description": "Predicting the distance or depth of objects within a scene from a single image or multiple images.",
-    "extends": "images_computer_vision",
-    "name": "depth_estimation",
-    "attributes": {}
-  }
+  "uid": 7,
+  "caption": "Depth Estimation",
+  "description": "Predicting the distance or depth of objects within a scene from a single image or multiple images.",
+  "extends": "images_computer_vision",
+  "name": "depth_estimation",
+  "attributes": {}
+}

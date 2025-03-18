@@ -1,8 +1,8 @@
 {
-    "uid": 1,
-    "caption": "Image Segmentation",
-    "description": "Assigning labels or categories to images based on their visual content.",
-    "extends": "images_computer_vision",
-    "name": "image_segmentation",
-    "attributes": {}
-  }
+  "uid": 1,
+  "caption": "Image Segmentation",
+  "description": "Assigning labels or categories to images based on their visual content.",
+  "extends": "images_computer_vision",
+  "name": "image_segmentation",
+  "attributes": {}
+}
