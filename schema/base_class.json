@@ -4,17 +4,9 @@
   "description": "The base class is a generic and concrete class for all categories.",
   "name": "base_class",
   "attributes": {
-    "name": {
-      "group": "classification",
-      "description": "The name of the category.",
-      "requirement": "required"
-    },
-    "annotations": {
-      "group": "classification",
-      "requirement": "optional"
-    },
     "category_name": {
       "group": "classification",
+      "description": "The name of the category.",
       "requirement": "optional"
     },
     "category_uid": {
