@@ -8,6 +8,11 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "acp"
     },
+    "active_agents": {
+      "caption": "Active Agents",
+      "description": "Number of currently active agents in the system",
+      "type": "integer_t"
+    },
     "agent": {
       "caption": "Agent",
       "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
@@ -26,8 +31,8 @@
     "agent_list": {
       "caption": "Agent List",
       "description": "A list of <code>agent</code> objects associated with a device, endpoint, or resource.",
-      "type": "agent",
-      "is_array": true
+      "is_array": true,
+      "type": "agent"
     },
     "algorithm": {
       "caption": "Algorithm",
@@ -37,8 +42,6 @@
     "algorithm_id": {
       "caption": "Algorithm ID",
       "description": "The normalized identifier of the algorithm. See specific usage.",
-      "sibling": "algorithm",
-      "type": "integer_t",
       "enum": {
         "0": {
           "caption": "Unknown",
@@ -48,13 +51,15 @@
           "caption": "Other",
           "description": "The algorithm is not mapped. See the <code>algorithm</code> attribute, which contains a data source specific value."
         }
-      }
+      },
+      "sibling": "algorithm",
+      "type": "integer_t"
     },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with this release manifest.",
-      "type": "key_value_object",
-      "is_array": true
+      "is_array": true,
+      "type": "key_value_object"
     },
     "authentication": {
       "caption": "Authentication",
@@ -64,8 +69,8 @@
     "authors": {
       "caption": "Author",
       "description": "Specifies the authors list of an agent. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
-      "type": "string_t",
-      "is_array": true
+      "is_array": true,
+      "type": "string_t"
     },
     "callbacks": {
       "caption": "Callback Support",
@@ -123,8 +128,6 @@
     "classification_ids": {
       "caption": "Classification IDs",
       "description": "The list of normalized classification identifiers. See specific usage.",
-      "sibling": "classifications",
-      "type": "integer_t",
       "enum": {
         "0": {
           "caption": "Unknown",
@@ -135,18 +138,25 @@
           "description": "The classification is not mapped. See the <code>classifications</code> attribute, which contains a data source specific value."
         }
       },
-      "is_array": true
+      "is_array": true,
+      "sibling": "classifications",
+      "type": "integer_t"
     },
     "classifications": {
       "caption": "Classifications",
       "description": "The list of malware classifications, normalized to the captions of the classification_id values. In the case of 'Other', they are defined by the source.",
-      "type": "string_t",
-      "is_array": true
+      "is_array": true,
+      "type": "string_t"
     },
     "config": {
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
       "type": "json_t"
+    },
+    "connection_reliability": {
+      "caption": "Connection Reliability",
+      "description": "Measure of agent connection stability (0.0-100.0)",
+      "type": "float_t"
     },
     "created_at": {
       "caption": "Created Time",
@@ -166,35 +176,30 @@
     "dependencies": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
-      "type": "agent_manifest_ref",
-      "is_array": true
+      "is_array": true,
+      "type": "agent_manifest_ref"
     },
     "deployment_options": {
       "caption": "Deployment Options",
       "description": "List of possible methods to instantiate or consume the agent.  Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
-      "type": "object",
-      "is_array": true,
       "enum": {
-        "source_code_deployment": {
-          "caption": "Source Code Deployment"
-        },
         "agent_deployment": {
           "caption": "Agent Deployment"
         },
         "docker_deployment": {
           "caption": "Docker Deployment"
+        },
+        "source_code_deployment": {
+          "caption": "Source Code Deployment"
         }
-      }
+      },
+      "is_array": true,
+      "type": "object"
     },
     "digest": {
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "fingerprint"
-    },
-    "image": {
-      "caption": "Docker Image",
-      "description": "The Docker image that pertains to the class or object. See specific usage.",
-      "type": "string_t"
     },
     "domain": {
       "caption": "Domain",
@@ -209,8 +214,18 @@
     "extensions": {
       "caption": "Schema Extensions",
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
-      "type": "extension",
-      "is_array": true
+      "is_array": true,
+      "type": "extension"
+    },
+    "failure_count": {
+      "caption": "Failure Count",
+      "description": "Number of agent failures recorded",
+      "type": "integer_t"
+    },
+    "fault_detection_ms": {
+      "caption": "Fault Detection Time",
+      "description": "Average time in milliseconds to detect faulty agent behavior",
+      "type": "long_t"
     },
     "fingerprint": {
       "caption": "Fingerprint",
@@ -220,21 +235,21 @@
     "fingerprints": {
       "caption": "Fingerprints",
       "description": "An array of digital fingerprint objects.",
-      "type": "fingerprint",
-      "is_array": true
+      "is_array": true,
+      "type": "fingerprint"
     },
     "framework_config": {
       "caption": "Agentic Framework Config",
       "description": "Config for an agent of an agentic framework.",
-      "type": "object",
       "enum": {
-        "llamaindex_config": {
-          "caption": "Llamaindex Config"
-        },
         "langgraph_config": {
           "caption": "LangGraph Config"
+        },
+        "llamaindex_config": {
+          "caption": "Llamaindex Config"
         }
-      }
+      },
+      "type": "object"
     },
     "framework_type": {
       "caption": "Framework Type",
@@ -256,15 +271,30 @@
       "description": "The hostname of an endpoint or a device.",
       "type": "hostname_t"
     },
+    "image": {
+      "caption": "Docker Image",
+      "description": "The Docker image that pertains to the class or object. See specific usage.",
+      "type": "string_t"
+    },
     "in": {
       "caption": "In",
       "description": "A location",
       "type": "string_t"
     },
+    "inactive_agents": {
+      "caption": "Inactive Agents",
+      "description": "Number of deprecated or inactive agents",
+      "type": "integer_t"
+    },
     "input": {
       "caption": "Input",
       "description": "A json input.",
       "type": "json_t"
+    },
+    "interpretation_score": {
+      "caption": "Interpretation Score",
+      "description": "Measure of agent's ability to interpret instructions correctly (0.0-100.0)",
+      "type": "float_t"
     },
     "interrupt_payload": {
       "caption": "Interrupt Payload",
@@ -284,8 +314,13 @@
     "interrupts": {
       "caption": "Interrupts",
       "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
-      "type": "interrupts",
-      "is_array": true
+      "is_array": true,
+      "type": "interrupts"
+    },
+    "latency_ms": {
+      "caption": "Latency",
+      "description": "Time taken for agent operations in milliseconds",
+      "type": "long_t"
     },
     "locator": {
       "caption": "Agent Locator",
@@ -295,8 +330,8 @@
     "locators": {
       "caption": "Agent Locators",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
-      "type": "locator",
-      "is_array": true
+      "is_array": true,
+      "type": "locator"
     },
     "name": {
       "caption": "Name",
@@ -307,6 +342,11 @@
       "caption": "Output",
       "description": "A json output.",
       "type": "json_t"
+    },
+    "parallelism_score": {
+      "caption": "Parallelism Score",
+      "description": "Measure of concurrent agent operations (0.0-100.0)",
+      "type": "float_t"
     },
     "parent_uid": {
       "caption": "Parent Unique ID",
@@ -360,18 +400,18 @@
     },
     "skill": {
       "caption": "Skill",
-      "description": "A skill that apply to an agent.",
-      "type": "class_t",
+      "class_name": "Base Skill",
       "class_path": "classes/base_skill",
-      "class_name": "Base Skill"
+      "description": "A skill that apply to an agent.",
+      "type": "class_t"
     },
     "skills": {
       "caption": "Skills",
-      "description": "Skills that apply to an agent.",
-      "type": "class_t",
-      "class_path": "skills",
       "class_name": "Skill",
-      "is_array": true
+      "class_path": "skills",
+      "description": "Skills that apply to an agent.",
+      "is_array": true,
+      "type": "class_t"
     },
     "specs": {
       "caption": "Specifications",
@@ -398,6 +438,16 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
+    "token_count": {
+      "caption": "Token Count",
+      "description": "Number of LLM tokens processed in the interaction",
+      "type": "integer_t"
+    },
+    "topology_dynamism": {
+      "caption": "Topology Dynamism",
+      "description": "Measure of how frequently the agent network topology changes (0.0-100.0)",
+      "type": "float_t"
+    },
     "type": {
       "caption": "Type",
       "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
@@ -406,8 +456,6 @@
     "type_id": {
       "caption": "Type ID",
       "description": "The normalized type identifier of an object. See specific usage.",
-      "sibling": "type",
-      "type": "integer_t",
       "enum": {
         "0": {
           "caption": "Unknown",
@@ -417,7 +465,9 @@
           "caption": "Other",
           "description": "The type is not mapped. See the <code>type</code> attribute, which contains a data source specific value."
         }
-      }
+      },
+      "sibling": "type",
+      "type": "integer_t"
     },
     "type_name": {
       "caption": "Type Name",
@@ -433,8 +483,8 @@
     "types": {
       "caption": "Types",
       "description": "The type/s of an entity. See specific usage.",
-      "type": "string_t",
-      "is_array": true
+      "is_array": true,
+      "type": "string_t"
     },
     "uid": {
       "caption": "Unique ID",
@@ -456,15 +506,20 @@
       "description": "The URL string. See RFC 1738. For example: <code>http://www.example.com/download/trouble.exe</code>.",
       "type": "url_t"
     },
+    "value": {
+      "caption": "Value",
+      "description": "The value associated to an attribute. See specific usage.",
+      "type": "string_t"
+    },
     "version": {
       "caption": "Version",
       "description": "The version that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
-    "value": {
-      "caption": "Value",
-      "description": "The value associated to an attribute. See specific usage.",
-      "type": "string_t"
+    "workflow_determinism": {
+      "caption": "Workflow Determinism",
+      "description": "Measure of how deterministic the agent workflow is (0.0-100.0)",
+      "type": "float_t"
     }
   },
   "types": {
