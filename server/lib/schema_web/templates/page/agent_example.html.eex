@@ -1,0 +1,117 @@
+<script defer src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+<div class="row">
+  <div class="col-md move-up">
+    <h3 class="extensions">
+      Example
+    </h3>
+
+    <div class="text-secondary">
+      Example representation of an agent in a JSON format.
+    </div>
+    <div class="text-secondary mt-2">
+<pre class="prettyprint" style="white-space: break-spaces; word-break: break-word; height: 400px">
+{
+  "name": "directory.agntcy.org/cisco/marketing-strategy",
+  "version": "v1.0.0",
+  "authors": [
+    "Cisco Systems <dev@cisco.com>"
+  ],
+  "created_at": 1740148371,
+  "digest": {
+    "value": "68e656b251e67e8358bef8483ab0d51c6619f3e7a1a9f0e75838d41ff368f728",
+    "algorithm": "SHA-256",
+    "algorithm_id": 3
+  },
+  "locators": [
+    {
+      "type": "docker-image",
+      "source": {
+        "url": "https://ghcr.io/agntcy/marketing-strategy"
+      }
+    }
+  ],
+  "skills": [
+    {
+      "class_name": "Text Completion",
+      "category_name": "Natural Language Processing",
+      "class_uid": 10201,
+      "category_uid": 1
+    },
+    {
+      "class_name": "Problem Solving",
+      "category_name": "Natural Language Processing",
+      "class_uid": 10702,
+      "category_uid": 1
+    }
+  ],
+  "extensions": [
+    {
+      "name": "oasf.agntcy.org/features/runtime",
+      "version": "v0.0.0",
+      "specs": {
+        "language": "python",
+        "version": "<=3.11,>3.13",
+        "config": {},
+        "interrupts": [],
+        "deployments": [
+          {
+            "type": "source_code",
+            "name": "src",
+            "url": "file://.",
+            "framework_config": {
+              "framework_type": "llamaindex",
+              "name": "./workflows",
+              "path": "workflows:run"
+            }
+          }
+        ],
+        "sbom": {
+          "packages": [
+            {
+              "name": "crewai",
+              "version": "0.55.2"
+            },
+            {
+              "name": "langchain",
+              "version": "0.2.16"
+            },
+            {
+              "name": "langchain-ollama",
+              "version": "0.1.3"
+            },
+            {
+              "name": "langchain-openai",
+              "version": "0.1.25"
+            },
+            {
+              "name": "langgraph",
+              "version": "0.2.34"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "oasf.agntcy.org/features/framework",
+      "version": "v0.0.0",
+      "specs": {
+        "type": "crewai",
+        "version": "v0.55.2",
+        "tasks": {},
+        "config": {}
+      }
+    },
+    {
+      "name": "oasf.agntcy.org/features/observability/logging",
+      "version": "v0.0.0",
+      "specs": {
+        "config": {}
+      }
+    }
+  ]
+}
+</pre>
+    </div>
+  </div>
+</div>
