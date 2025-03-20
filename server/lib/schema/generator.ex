@@ -520,7 +520,7 @@ defmodule Schema.Generator do
   defp generate_data(_name, "datetime_t", _field),
     do: DateTime.utc_now() |> DateTime.to_iso8601()
 
-  defp generate_data(_name, "hostname_t", _field), do: domain()
+  defp generate_data(_name, "url_t", _field), do: url()
   defp generate_data(_name, "ip_t", _field), do: ipv4()
   defp generate_data(_name, "subnet_t", _field), do: subnet()
   defp generate_data(_name, "mac_t", _field), do: mac()
@@ -666,6 +666,10 @@ defmodule Schema.Generator do
 
   def domain() do
     [word(), extension()] |> Enum.join(".")
+  end
+
+  def url() do
+    ["https://www", word(), extension()] |> Enum.join(".")
   end
 
   def uuid() do
