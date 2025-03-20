@@ -8,6 +8,11 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "acp"
     },
+    "agp": {
+      "caption": "AGP",
+      "description": "Indicates support for AGP communication protocol.",
+      "type": "boolean"
+    },
     "agent": {
       "caption": "Agent",
       "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
@@ -18,16 +23,36 @@
       "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
       "type": "agent_deployment"
     },
+    "agent_discovery_errors": {
+      "caption": "Agent Discovery Errors",
+      "description": "Tracks errors in agent discovery.",
+      "type": "integer"
+    },
     "agent_id": {
       "caption": "Agent Identifier",
       "description": "Agent identifier",
       "type": "uuid_t"
+    },
+    "agent_interaction_efficiency": {
+        "caption": "Agent Interaction Efficiency",
+        "description": "Measures the efficiency of agent interactions.",
+        "type": "float"
+    },
+    "agent_interaction_parallelism": {
+        "caption": "Agent Interaction Parallelism",
+        "description": "Measures the parallelism of agent interactions.",
+        "type": "float"
     },
     "agent_list": {
       "caption": "Agent List",
       "description": "A list of <code>agent</code> objects associated with a device, endpoint, or resource.",
       "type": "agent",
       "is_array": true
+    },
+    "agentic_graph": {
+        "caption": "Agentic Graph",
+        "description": "Represents the agentic graph for controllability.",
+        "type": "string"
     },
     "algorithm": {
       "caption": "Algorithm",
@@ -50,6 +75,11 @@
         }
       }
     },
+    "anomaly_detection": {
+        "caption": "Anomaly Detection",
+        "description": "Tracks anomalies in the system.",
+        "type": "string"
+    },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with this release manifest.",
@@ -66,6 +96,21 @@
       "description": "Specifies the authors list of an agent. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
       "type": "string_t",
       "is_array": true
+    },
+    "average_time_needed_to_detect_faulty_agent": {
+        "caption": "Average Time Needed to Detect Faulty Agent",
+        "description": "Measures the average time required to detect a faulty agent.",
+        "type": "float"
+    },
+    "bias": {
+        "caption": "Bias",
+        "description": "Represents bias in the system.",
+        "type": "string"
+    },
+    "carbon_footprint_analysis": {
+        "caption": "Carbon Footprint Analysis",
+        "description": "Evaluates the greenhouse gas emissions associated with AI workflows.",
+        "type": "float"
     },
     "callbacks": {
       "caption": "Callback Support",
@@ -98,6 +143,11 @@
       "description": "The category unique identifier of the class.",
       "sibling": "category_name",
       "type": "integer_t"
+    },
+    "chain_completion_time": {
+        "caption": "Chain Completion Time",
+        "description": "Represents the chain completion time.",
+        "type": "float"
     },
     "class": {
       "caption": "Class",
@@ -143,15 +193,75 @@
       "type": "string_t",
       "is_array": true
     },
+    "completion_rate": {
+        "caption": "Completion Rate",
+        "description": "Tracks the completion rate of tasks.",
+        "type": "float"
+    },
+    "completion_time": {
+        "caption": "Completion Time",
+        "description": "Represents the completion time.",
+        "type": "float"
+    },
+    "competition": {
+        "caption": "Competition",
+        "description": "Represents competition concerns.",
+        "type": "string"
+    },
     "config": {
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
       "type": "json_t"
     },
+    "connection_reliability": {
+        "caption": "Connection Reliability",
+        "description": "Measures the reliability of connections.",
+        "type": "float"
+    },
+    "conversational_g_eval": {
+        "caption": "Conversational G-Eval",
+        "description": "Represents the conversational evaluation metric.",
+        "type": "float"
+    },
+    "cost_efficiency_per_agent": {
+        "caption": "Cost Efficiency Per Agent",
+        "description": "Represents the cost efficiency per agent.",
+        "type": "float"
+    },
+    "cost_efficiency_per_run": {
+        "caption": "Cost Efficiency Per Run",
+        "description": "Represents the cost efficiency per run.",
+        "type": "float"
+    },
+    "cost_efficiency_per_task": {
+        "caption": "Cost Efficiency Per Task",
+        "description": "Represents the cost efficiency per task.",
+        "type": "float"
+    },
+    "cost_per_agent": {
+        "caption": "Cost Per Agent",
+        "description": "Tracks the cost per agent.",
+        "type": "float"
+    },
+    "cost_per_run": {
+        "caption": "Cost Per Run",
+        "description": "Tracks the cost per run.",
+        "type": "float"
+    },
+    "cost_per_task": {
+        "caption": "Cost Per Task",
+        "description": "Tracks the cost per task.",
+        "type": "float"
+    },
     "created_at": {
       "caption": "Created Time",
       "description": "The time when the object was created. See specific usage.",
       "type": "timestamp_t"
+    },
+    "custom_alert": {
+        "caption": "Custom Alert",
+        "description": "Tracks custom alerts in the system.",
+        "type": "string"
     },
     "custom_objects_streaming": {
       "caption": "Custom Objects Streaming",
@@ -162,6 +272,26 @@
       "caption": "Custom Streaming Update",
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
+    },
+    "data_compliance_adherence": {
+        "caption": "Data Compliance Adherence",
+        "description": "Tracks adherence to data compliance.",
+        "type": "boolean"
+    },
+    "decision_accuracy": {
+        "caption": "Decision Accuracy",
+        "description": "Represents the accuracy of decisions.",
+        "type": "float"
+    },
+    "decision_success_rate": {
+        "caption": "Decision Success Rate",
+        "description": "Represents the success rate of decisions.",
+        "type": "float"
+    },
+    "debug": {
+        "caption": "Debug",
+        "description": "Represents the debug level of observability.",
+        "type": "string"
     },
     "dependencies": {
       "caption": "Agent Dependencies",
@@ -191,15 +321,30 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "fingerprint"
     },
-    "image": {
-      "caption": "Docker Image",
-      "description": "The Docker image that pertains to the class or object. See specific usage.",
-      "type": "string_t"
-    },
     "domain": {
       "caption": "Domain",
       "description": "The name of the domain. See specific usage.",
       "type": "string_t"
+    },
+    "error_frequency_count_per_agent": {
+        "caption": "Error Frequency Count Per Agent",
+        "description": "Tracks the frequency of errors per agent.",
+        "type": "integer"
+    },
+    "errors": {
+        "caption": "Errors",
+        "description": "Represents the error level of observability.",
+        "type": "string"
+    },
+    "events": {
+        "caption": "Events",
+        "description": "Tracks events in the system.",
+        "type": "string"
+    },
+    "excessive_agency": {
+        "caption": "Excessive Agency",
+        "description": "Represents excessive agency concerns.",
+        "type": "string"
     },
     "extension": {
       "caption": "Schema Extension",
@@ -211,6 +356,16 @@
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
       "type": "extension",
       "is_array": true
+    },
+    "export_format": {
+        "caption": "Export Format",
+        "description": "Specifies the export format for observability data.",
+        "type": "string"
+    },
+    "feedback_integration": {
+        "caption": "Feedback Integration",
+        "description": "Represents the integration of feedback into decision-making.",
+        "type": "float"
     },
     "fingerprint": {
       "caption": "Fingerprint",
@@ -241,10 +396,25 @@
       "description": "Agent framework type.",
       "type": "string_t"
     },
+    "general_uptime_and_availability_measure_of_the_agent": {
+        "caption": "General Uptime and Availability Measure of the Agent",
+        "description": "Measures the uptime and availability of agents.",
+        "type": "float"
+    },
+    "graphic_content": {
+        "caption": "Graphic Content",
+        "description": "Represents graphic content concerns.",
+        "type": "string"
+    },
     "graph": {
       "caption": "Graph",
       "description": "Graph of the framework config.",
       "type": "string_t"
+    },
+    "grpc": {
+        "caption": "gRPC",
+        "description": "Indicates support for gRPC communication protocol.",
+        "type": "boolean"
     },
     "hash": {
       "caption": "Hash",
@@ -256,6 +426,26 @@
       "description": "The hostname of an endpoint or a device.",
       "type": "hostname_t"
     },
+    "http_1_1": {
+        "caption": "HTTP 1.1",
+        "description": "Indicates support for HTTP version 1.1.",
+        "type": "boolean"
+    },
+    "illegal_activity": {
+        "caption": "Illegal Activity",
+        "description": "Represents illegal activity in the system.",
+        "type": "string"
+    },
+    "image": {
+      "caption": "Docker Image",
+      "description": "The Docker image that pertains to the class or object. See specific usage.",
+      "type": "string_t"
+    },
+    "info": {
+        "caption": "Info",
+        "description": "Represents the informational level of observability.",
+        "type": "string"
+    },
     "in": {
       "caption": "In",
       "description": "A location",
@@ -265,6 +455,36 @@
       "caption": "Input",
       "description": "A json input.",
       "type": "json_t"
+    },
+    "input_output_pii": {
+        "caption": "Input & Output PII",
+        "description": "Represents PII in input and output.",
+        "type": "string"
+    },
+    "input_output_sexism": {
+        "caption": "Input & Output Sexism",
+        "description": "Represents sexism in input and output.",
+        "type": "string"
+    },
+    "input_output_tone": {
+        "caption": "Input & Output Tone",
+        "description": "Represents tone in input and output.",
+        "type": "string"
+    },
+    "input_output_toxicity": {
+        "caption": "Input & Output Toxicity",
+        "description": "Represents toxicity in input and output.",
+        "type": "string"
+    },
+    "insights_predictions": {
+        "caption": "Predictions",
+        "description": "Tracks predictions made by the system.",
+        "type": "string"
+    },
+    "intellectual_property": {
+        "caption": "Intellectual Property",
+        "description": "Represents intellectual property concerns.",
+        "type": "string"
     },
     "interrupt_payload": {
       "caption": "Interrupt Payload",
@@ -287,6 +507,101 @@
       "type": "interrupts",
       "is_array": true
     },
+    "latency": {
+        "caption": "Latency",
+        "description": "Measures latency in the system.",
+        "type": "float"
+    },
+    "llm_accuracy": {
+        "caption": "LLM Accuracy",
+        "description": "Represents the accuracy of the language model.",
+        "type": "float"
+    },
+    "llm_answer_correctness": {
+        "caption": "LLM Answer Correctness",
+        "description": "Represents the correctness of the answers provided by the language model.",
+        "type": "float"
+    },
+    "llm_aspect_critic": {
+        "caption": "LLM Aspect Critic",
+        "description": "Represents the aspect critic evaluation of the language model.",
+        "type": "float"
+    },
+    "llm_bias": {
+        "caption": "LLM Bias",
+        "description": "Represents the bias in the language model.",
+        "type": "float"
+    },
+    "llm_context_entity_recall": {
+        "caption": "LLM Context Entity Recall",
+        "description": "Represents the recall of context entities by the language model.",
+        "type": "float"
+    },
+    "llm_context_precision": {
+        "caption": "LLM Context Precision",
+        "description": "Represents the precision of context entities by the language model.",
+        "type": "float"
+    },
+    "llm_context_recall": {
+        "caption": "LLM Context Recall",
+        "description": "Represents the recall of context by the language model.",
+        "type": "float"
+    },
+    "llm_error_rate": {
+        "caption": "LLM Error Rate",
+        "description": "Represents the error rate of the language model.",
+        "type": "float"
+    },
+    "llm_factual_correctness": {
+        "caption": "LLM Factual Correctness",
+        "description": "Represents the factual correctness of the language model's output.",
+        "type": "float"
+    },
+    "llm_faithfulness": {
+        "caption": "LLM Faithfulness",
+        "description": "Represents the faithfulness of the language model's output.",
+        "type": "float"
+    },
+    "llm_hallucination": {
+        "caption": "LLM Hallucination",
+        "description": "Represents the hallucination rate of the language model.",
+        "type": "float"
+    },
+    "llm_noise_sensitivity": {
+        "caption": "LLM Noise Sensitivity",
+        "description": "Represents the sensitivity of the language model to noise.",
+        "type": "float"
+    },
+    "llm_relevance": {
+        "caption": "LLM Relevance",
+        "description": "Represents the relevance of the language model's output.",
+        "type": "float"
+    },
+    "llm_response_relevancy": {
+        "caption": "LLM Response Relevancy",
+        "description": "Represents the relevancy of the responses provided by the language model.",
+        "type": "float"
+    },
+    "llm_semantic_similarity": {
+        "caption": "LLM Semantic Similarity",
+        "description": "Represents the semantic similarity of the language model's output.",
+        "type": "float"
+    },
+    "llm_summarisation": {
+        "caption": "LLM Summarisation",
+        "description": "Represents the summarisation capability of the language model.",
+        "type": "float"
+    },
+    "llm_toxicity": {
+        "caption": "LLM Toxicity",
+        "description": "Represents the toxicity in the language model's output.",
+        "type": "float"
+    },
+    "load_distribution_accuracy": {
+        "caption": "Load Distribution Accuracy",
+        "description": "Measures the accuracy of load distribution.",
+        "type": "float"
+    },
     "locator": {
       "caption": "Agent Locator",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
@@ -298,15 +613,130 @@
       "type": "locator",
       "is_array": true
     },
+    "logs": {
+        "caption": "Logs",
+        "description": "Tracks logs in the system.",
+        "type": "string"
+    },
+    "measure_for_degree_of_determinism_of_agentic_workflow": {
+        "caption": "Measure for Degree of Determinism of Agentic Workflow",
+        "description": "Measures the determinism of agentic workflows.",
+        "type": "float"
+    },
+    "measure_for_dynamism_of_topology": {
+        "caption": "Measure for Dynamism of Topology",
+        "description": "Evaluates the dynamism of the topology.",
+        "type": "float"
+    },
+    "misinformation": {
+        "caption": "Misinformation",
+        "description": "Represents misinformation in the system.",
+        "type": "string"
+    },
+    "most_active_agents": {
+        "caption": "Most Active Agents",
+        "description": "Tracks the most active agents in collaboration.",
+        "type": "string"
+    },
+    "most_failing_agents": {
+        "caption": "Most Failing Agents",
+        "description": "Identifies the agents that fail most frequently.",
+        "type": "string"
+    },
+    "most_frequently_used_agents": {
+        "caption": "Most Frequently Used Agents",
+        "description": "Identifies the most frequently used agents.",
+        "type": "string"
+    },
+    "most_frequent_agent_to_agent_interactions": {
+        "caption": "Most Frequent Agent-to-Agent Interactions",
+        "description": "Tracks the most frequent interactions between agents.",
+        "type": "string"
+    },
+    "multimodal_answer_relevancy": {
+        "caption": "Multimodal Answer Relevancy",
+        "description": "Represents the relevancy of multimodal answers.",
+        "type": "float"
+    },
+    "multimodal_contextual_precision": {
+        "caption": "Multimodal Contextual Precision",
+        "description": "Represents the contextual precision of multimodal answers.",
+        "type": "float"
+    },
+    "multimodal_contextual_recall": {
+        "caption": "Multimodal Contextual Recall",
+        "description": "Represents the contextual recall of multimodal answers.",
+        "type": "float"
+    },
+    "multimodal_contextual_relevancy": {
+        "caption": "Multimodal Contextual Relevancy",
+        "description": "Represents the contextual relevancy of multimodal answers.",
+        "type": "float"
+    },
+    "multimodal_faithfulness": {
+        "caption": "Multimodal Faithfulness",
+        "description": "Represents the faithfulness of multimodal answers.",
+        "type": "float"
+    },
     "name": {
       "caption": "Name",
       "description": "The name of the entity. See specific usage.",
       "type": "string_t"
     },
+    "number_of_active_agents": {
+        "caption": "Number of Active Agents",
+        "description": "Tracks the number of active agents in the system.",
+        "type": "integer"
+    },
+    "number_of_deprecated_or_inactive_agents": {
+        "caption": "Number of Deprecated or Inactive Agents",
+        "description": "Tracks the number of deprecated or inactive agents.",
+        "type": "integer"
+    },
+    "number_of_tokens": {
+        "caption": "Number of Tokens",
+        "description": "Tracks the number of tokens used.",
+        "type": "integer"
+    },
+    "number_of_unauthorised_calls_blocked_per_agent": {
+        "caption": "Number of Unauthorised Calls Blocked Per Agent",
+        "description": "Tracks the number of unauthorised calls blocked per agent.",
+        "type": "integer"
+    },
+    "otel_otp_v1": {
+        "caption": "Otel OTP v1",
+        "description": "Indicates support for OpenTelemetry OTP version 1.",
+        "type": "boolean"
+    },
     "output": {
       "caption": "Output",
       "description": "A json output.",
       "type": "json_t"
+    },
+    "output_completeness": {
+        "caption": "Output Completeness",
+        "description": "Represents the completeness of the output.",
+        "type": "float"
+    },
+    "output_correctness": {
+        "caption": "Output Correctness",
+        "description": "Represents the correctness of the output.",
+        "type": "float"
+    },
+    "output_ground_truth_adherence": {
+        "caption": "Output Ground Truth Adherence",
+        "description": "Represents adherence to the ground truth in the output.",
+        "type": "float"
+    },
+    "output_instruction_adherence": {
+        "caption": "Output Instruction Adherence",
+        "description": "Represents adherence to the provided instructions in the output.",
+        "type": "float"
+    },
+    "output_uncertainty": {
+        "caption": "Output Uncertainty",
+        "description": "Represents the uncertainty in the output.",
+        "type": "float"
     },
     "parent_uid": {
       "caption": "Parent Unique ID",
@@ -318,10 +748,70 @@
       "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
+    "performance_discovery": {
+        "caption": "Discovery",
+        "description": "Tracks discovery-related metrics.",
+        "type": "string"
+    },
+    "performance_errors": {
+        "caption": "Errors",
+        "description": "Tracks errors in the system.",
+        "type": "integer"
+    },
+    "personal_safety": {
+        "caption": "Personal Safety",
+        "description": "Represents personal safety concerns.",
+        "type": "string"
+    },
+    "pii_leakage": {
+        "caption": "PII Leakage",
+        "description": "Represents leakage of personally identifiable information.",
+        "type": "string"
+    },
+    "planning_multi_agent_collaboration_success": {
+        "caption": "Multi-Agent Collaboration Success",
+        "description": "Represents the success of multi-agent collaboration in planning.",
+        "type": "float"
+    },
+    "planning_plan_execution_success": {
+        "caption": "Plan Execution Success",
+        "description": "Represents the success of plan execution in planning.",
+        "type": "float"
+    },
+    "planning_task_delegation_accuracy": {
+        "caption": "Task Delegation Accuracy",
+        "description": "Represents the accuracy of task delegation in planning.",
+        "type": "float"
+    },
     "port": {
       "caption": "Port",
       "description": "The TCP/UDP port number associated with a connection. See specific usage.",
       "type": "port_t"
+    },
+    "predefined_alert": {
+        "caption": "Predefined Alert",
+        "description": "Tracks predefined alerts in the system.",
+        "type": "string"
+    },
+    "prompt_injection": {
+        "caption": "Prompt Injection",
+        "description": "Represents prompt injection concerns.",
+        "type": "string"
+    },
+    "prompt_leakage": {
+        "caption": "Prompt Leakage",
+        "description": "Represents leakage of prompts.",
+        "type": "string"
+    },
+    "prompt_perplexity": {
+        "caption": "Prompt Perplexity",
+        "description": "Represents the perplexity of the input prompt.",
+        "type": "float"
+    },
+    "prompt_robustness": {
+        "caption": "Prompt Robustness",
+        "description": "Represents the robustness of the input prompt.",
+        "type": "string"
     },
     "protocol": {
       "caption": "ACP Endpoint",
@@ -332,6 +822,91 @@
       "caption": "HTTP Query String",
       "description": "The query portion of the URL. For example: the query portion of the URL <code>http://www.example.com/search?q=bad&sort=date</code> is <code>q=bad&sort=date</code>.",
       "type": "string_t"
+    },
+    "rag_answer_relevancy": {
+        "caption": "Answer Relevancy",
+        "description": "Represents the relevancy of answers in RAG (Retrieval-Augmented Generation).",
+        "type": "float"
+    },
+    "rag_chunk_attribution": {
+        "caption": "Chunk Attribution",
+        "description": "Represents the attribution of chunks in RAG.",
+        "type": "float"
+    },
+    "rag_chunk_utilisation": {
+        "caption": "Chunk Utilisation",
+        "description": "Represents the utilisation of chunks in RAG.",
+        "type": "float"
+    },
+    "rag_context_adherence": {
+        "caption": "Context Adherence",
+        "description": "Represents adherence to context in RAG.",
+        "type": "float"
+    },
+    "rag_contextual_precision": {
+        "caption": "Contextual Precision",
+        "description": "Represents the contextual precision of answers in RAG.",
+        "type": "float"
+    },
+    "rag_contextual_recall": {
+        "caption": "Contextual Recall",
+        "description": "Represents the contextual recall of answers in RAG.",
+        "type": "float"
+    },
+    "rag_contextual_relevancy": {
+        "caption": "Contextual Relevancy",
+        "description": "Represents the contextual relevancy of answers in RAG.",
+        "type": "float"
+    },
+    "rag_faithfulness": {
+        "caption": "Faithfulness",
+        "description": "Represents the faithfulness of answers in RAG.",
+        "type": "float"
+    },
+    "rating_overall_cost_score": {
+        "caption": "Overall Cost Score",
+        "description": "Represents the overall cost score in rating.",
+        "type": "float"
+    },
+    "rating_overall_quality_score": {
+        "caption": "Overall Quality Score",
+        "description": "Represents the overall quality score in rating.",
+        "type": "float"
+    },
+    "rating_overall_security_score": {
+        "caption": "Overall Security Score",
+        "description": "Represents the overall security score in rating.",
+        "type": "float"
+    },
+    "rating_referred_datasets": {
+        "caption": "Referred Datasets",
+        "description": "Represents the referred datasets in rating.",
+        "type": "float"
+    },
+    "rating_referred_evaluations": {
+        "caption": "Referred Evaluations",
+        "description": "Represents the referred evaluations in rating.",
+        "type": "float"
+    },
+    "rating_referred_metrics": {
+        "caption": "Referred Metrics",
+        "description": "Represents the referred metrics in rating.",
+        "type": "float"
+    },
+    "rating_referred_scores": {
+        "caption": "Referred Scores",
+        "description": "Represents the referred scores in rating.",
+        "type": "float"
+    },
+    "recovery_rate_from_failures": {
+        "caption": "Recovery Rate from Failures",
+        "description": "Tracks the recovery rate from failures.",
+        "type": "float"
+    },
+    "response_latency": {
+        "caption": "Response Latency",
+        "description": "Represents the response latency.",
+        "type": "float"
     },
     "resource_type": {
       "caption": "Resource Type",
@@ -347,6 +922,26 @@
       "caption": "Resume Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
+    },
+    "risk_assessment": {
+        "caption": "Risk Assessment",
+        "description": "Tracks risk assessments in the system.",
+        "type": "string"
+    },
+    "robustness": {
+        "caption": "Robustness",
+        "description": "Represents robustness of the system.",
+        "type": "string"
+    },
+    "robustness_to_adversarial_attacks": {
+        "caption": "Robustness to Adversarial Attacks",
+        "description": "Represents robustness to adversarial attacks.",
+        "type": "string"
+    },
+    "role_adherence": {
+        "caption": "Role Adherence",
+        "description": "Represents adherence to the assigned role in a conversation.",
+        "type": "float"
     },
     "scheme": {
       "caption": "Scheme",
@@ -380,6 +975,16 @@
       "description": "Generic specification schema of this extension.",
       "type": "object"
     },
+    "stability_algorithmic_transparency": {
+        "caption": "Stability Algorithmic Transparency",
+        "description": "Represents the transparency of algorithms in stability.",
+        "type": "float"
+    },
+    "stability_behaviour_consistency": {
+        "caption": "Stability Behaviour Consistency",
+        "description": "Represents the consistency of behaviour in stability.",
+        "type": "float"
+    },
     "streaming": {
       "caption": "Streaming Modes",
       "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
@@ -390,15 +995,50 @@
       "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
       "type": "string_t"
     },
-    "thread_state": {
-      "caption": "ThreadState",
-      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
-      "type": "json_t"
+    "task_delegation_accuracy": {
+        "caption": "Task Delegation Accuracy",
+        "description": "Measures the accuracy of task delegation.",
+        "type": "float"
+    },
+    "text_to_image": {
+        "caption": "Text to Image",
+        "description": "Represents the quality of text-to-image generation.",
+        "type": "float"
     },
     "threads": {
       "caption": "Threads",
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
+    },
+    "thread_state": {
+      "caption": "ThreadState",
+      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
+      "type": "json_t"
+    },
+    "top_failure_points_in_agent_execution": {
+        "caption": "Top Failure Points in Agent Execution",
+        "description": "Identifies the top failure points in agent execution.",
+        "type": "string"
+    },
+    "tool_use": {
+        "caption": "Tool Use",
+        "description": "Represents the effectiveness of tool usage.",
+        "type": "float"
+    },
+    "toxicity": {
+        "caption": "Toxicity",
+        "description": "Represents toxicity in the system.",
+        "type": "string"
+    },
+    "traces": {
+        "caption": "Traces",
+        "description": "Tracks traces in the system.",
+        "type": "string"
+    },
+    "tracks_failed_tool_or_api_calls": {
+        "caption": "Tracks Failed Tool/API Calls",
+        "description": "Tracks failed tool or API calls.",
+        "type": "integer"
     },
     "type": {
       "caption": "Type",
@@ -443,6 +1083,16 @@
       "description": "The unique identifier. See specific usage.",
       "type": "string_t"
     },
+    "unauthorized_access": {
+        "caption": "Unauthorized Access",
+        "description": "Represents unauthorized access attempts.",
+        "type": "string"
+    },
+    "unauthorized_agent_calls_blocked": {
+        "caption": "Number of Unauthorized Agent Calls Blocked",
+        "description": "Represents the number of unauthorized agent calls blocked.",
+        "type": "integer"
+    },
     "unmapped": {
       "caption": "Unmapped Data",
       "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
@@ -458,6 +1108,11 @@
       "description": "The URL string. See RFC 1738. For example: <code>http://www.example.com/download/trouble.exe</code>.",
       "type": "url_t"
     },
+    "verbose": {
+        "caption": "Verbose",
+        "description": "Represents the verbose level of observability.",
+        "type": "string"
+    },
     "version": {
       "caption": "Version",
       "description": "The version that pertains to the class or object. See specific usage.",
@@ -467,6 +1122,11 @@
       "caption": "Value",
       "description": "The value associated to an attribute. See specific usage.",
       "type": "string_t"
+    },
+    "warning": {
+        "caption": "Warning",
+        "description": "Represents the warning level of observability.",
+        "type": "string"
     }
   },
   "types": {
