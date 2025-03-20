@@ -196,11 +196,6 @@
       "description": "The Docker image that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
-    "domain": {
-      "caption": "Domain",
-      "description": "The name of the domain. See specific usage.",
-      "type": "string_t"
-    },
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
@@ -250,11 +245,6 @@
       "caption": "Hash",
       "description": "The hash attribute is the value of a digital fingerprint including information about its algorithm.",
       "type": "fingerprint"
-    },
-    "hostname": {
-      "caption": "Hostname",
-      "description": "The hostname of an endpoint or a device.",
-      "type": "hostname_t"
     },
     "in": {
       "caption": "In",
@@ -318,25 +308,10 @@
       "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
-    "port": {
-      "caption": "Port",
-      "description": "The TCP/UDP port number associated with a connection. See specific usage.",
-      "type": "port_t"
-    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
-    },
-    "query_string": {
-      "caption": "HTTP Query String",
-      "description": "The query portion of the URL. For example: the query portion of the URL <code>http://www.example.com/search?q=bad&sort=date</code> is <code>q=bad&sort=date</code>.",
-      "type": "string_t"
-    },
-    "resource_type": {
-      "caption": "Resource Type",
-      "description": "The resource type as defined by the source.",
-      "type": "string_t"
     },
     "result_streaming": {
       "caption": "Result Streaming",
@@ -347,11 +322,6 @@
       "caption": "Resume Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
-    },
-    "scheme": {
-      "caption": "Scheme",
-      "description": "The scheme portion of the URL. For example: <code>http</code>, <code>https</code>, <code>ftp</code>, or <code>sftp</code>.",
-      "type": "string_t"
     },
     "size": {
       "caption": "Size",
@@ -384,11 +354,6 @@
       "caption": "Streaming Modes",
       "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
       "type": "streaming_modes"
-    },
-    "subdomain": {
-      "caption": "Subdomain",
-      "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
-      "type": "string_t"
     },
     "thread_state": {
       "caption": "ThreadState",
@@ -449,11 +414,6 @@
       "type": "object"
     },
     "url": {
-      "caption": "URL",
-      "description": "The URL object that pertains to the class or object. See specific usage.",
-      "type": "url"
-    },
-    "url_string": {
       "caption": "URL String",
       "description": "The URL string. See RFC 1738. For example: <code>http://www.example.com/download/trouble.exe</code>.",
       "type": "url_t"
@@ -523,13 +483,6 @@
       "float_t": {
         "caption": "Float",
         "description": "Real floating-point value. For example:<br><code>3.14</code>."
-      },
-      "hostname_t": {
-        "observable": 1,
-        "caption": "Hostname",
-        "description": "Unique name assigned to a device connected to a computer network. It may be a fully qualified domain name (FQDN). For example:<br><code>r2-d2.example.com.</code>,<br><code>mx.example.com</code>.",
-        "type": "string_t",
-        "type_name": "String"
       },
       "integer_t": {
         "caption": "Integer",
