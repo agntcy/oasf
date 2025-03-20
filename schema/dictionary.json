@@ -34,27 +34,6 @@
       "description": "Generates notifications or warnings based on predefined thresholds or detected anomalies in multi-agent operations.",
       "type": "object"
     },
-    "algorithm": {
-      "caption": "Algorithm",
-      "description": "The applicable algorithm, normalized to the caption of 'algorithm_id'. See specific usage.",
-      "type": "string_t"
-    },
-    "algorithm_id": {
-      "caption": "Algorithm ID",
-      "description": "The normalized identifier of the algorithm. See specific usage.",
-      "sibling": "algorithm",
-      "type": "integer_t",
-      "enum": {
-        "0": {
-          "caption": "Unknown",
-          "description": "The algorithm is unknown."
-        },
-        "99": {
-          "caption": "Other",
-          "description": "The algorithm is not mapped. See the <code>algorithm</code> attribute, which contains a data source specific value."
-        }
-      }
-    },
     "anomaly_detection": {
       "caption": "Anomaly Detection",
       "description": "Identifies unusual patterns or behaviors in multi-agent systems, enabling proactive issue resolution.",
@@ -260,7 +239,7 @@
     "digest": {
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
-      "type": "fingerprint"
+      "type": "file_hash_t"
     },
     "discovery": {
       "caption": "Discovery",
@@ -297,17 +276,6 @@
       "type": "extension",
       "is_array": true
     },
-    "fingerprint": {
-      "caption": "Fingerprint",
-      "description": "The digital fingerprint associated with an object.",
-      "type": "fingerprint"
-    },
-    "fingerprints": {
-      "caption": "Fingerprints",
-      "description": "An array of digital fingerprint objects.",
-      "type": "fingerprint",
-      "is_array": true
-    },
     "framework_config": {
       "caption": "Agentic Framework Config",
       "description": "Config for an agent of an agentic framework.",
@@ -330,11 +298,6 @@
       "caption": "Graph",
       "description": "Graph of the framework config.",
       "type": "string_t"
-    },
-    "hash": {
-      "caption": "Hash",
-      "description": "The hash attribute is the value of a digital fingerprint including information about its algorithm.",
-      "type": "fingerprint"
     },
     "in": {
       "caption": "In",
