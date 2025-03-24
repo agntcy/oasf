@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule SchemaWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :schema_server
 

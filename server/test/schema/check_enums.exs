@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule Schema.CheckEnums do
   def classes() do
     Enum.each(Schema.classes(), fn {name, _class} ->
@@ -42,7 +45,7 @@ defmodule Schema.CheckEnums do
 
   defp check_enum(attributes, name, attribute, acc) do
     enum = Map.get(attribute, :enum)
-    key = Schema.Enums.sibling(name, attribute) 
+    key = Schema.Enums.sibling(name, attribute)
 
     case Map.get(attributes, key) do
       nil ->

@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule Schema.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications

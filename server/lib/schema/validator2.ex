@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule Schema.Validator2 do
   @moduledoc """
   OASF Class validator, version 2.

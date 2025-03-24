@@ -1,3 +1,8 @@
+/*
+ *  Copyright AGNTCY Contributors (https://github.com/agntcy)
+ *  SPDX-License-Identifier: Apache-2.0
+ */
+
 function reset_home_page() {
   set_selected_extensions({});
   set_selected_profiles([]);

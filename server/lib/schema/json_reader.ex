@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule Schema.JsonReader do
   @moduledoc """
     Provides functions to read, parse, merge json files, and resolving the included files.

@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 import Config
 
 # cache_static_manifest: "priv/static/cache_manifest.json"

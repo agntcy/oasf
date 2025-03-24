@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule Schema.Repo do
   @moduledoc """
   This module keeps a cache of the schema files.

@@ -1,3 +1,6 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 defmodule Schema.JsonSchema do
   @moduledoc """
   Json schema generator. This module defines functions that generate JSON schema (see http://json-schema.org) schemas for OASF schema.

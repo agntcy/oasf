@@ -8,3 +8,4 @@ Copyright AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 
 1. Cisco Systems Inc.
+2. OASF a Series of LF Projects, LLC
