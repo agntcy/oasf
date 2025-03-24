@@ -1,3 +1,8 @@
+<%!--
+Copyright AGNTCY Contributors (https://github.com/agntcy)
+SPDX-License-Identifier: Apache-2.0
+---%>
+
 <% class = @data[:class] %>
 <% name = class[:caption] %>
 <% extension = class[:extension] %>
