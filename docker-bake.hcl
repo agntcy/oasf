@@ -1,6 +1,5 @@
-// Copyright AGNTCY Contributors (https://github.com/agntcy)
-// SPDX-License-Identifier: Apache-2.0
-
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
 # Documentation available at: https://docs.docker.com/build/bake/
 
 # Docker build args
