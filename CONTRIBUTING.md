@@ -397,6 +397,30 @@ We expect new pull requests to include tests for any affected behavior, and, as
 we follow semantic versioning, we may reserve breaking changes until the next
 major version release.
 
+## Developer’s Certificate of Origin
+
+To improve tracking of who did what, we have introduced a “sign-off” procedure.
+The sign-off is a line at the end of the explanation for the commit, which
+certifies that you wrote it or otherwise have the right to pass it on as open
+source work. We use the Developer Certificate of Origin (see
+https://developercertificate.org/) for our sign-off procedure. You must include
+a sign-off in the commit message of your pull request for it to be accepted. The
+format for a sign-off is:
+
+```
+Signed-off-by: Random J Developer
+<random@developer.example.org>
+```
+
+You can use the -s when you do a git commit to simplify including a properly
+formatted sign-off in your commits. If you need to add your sign-off to a commit
+you have already made, you will need to amend:
+
+```
+git commit --amend --signoff
+
+```
+
 ## Other Ways to Contribute
 
 We welcome anyone that wants to contribute to OASF to triage and
