@@ -479,21 +479,27 @@ defmodule Schema.Generator do
   defp generate_data(:facility, _type, _field), do: facility()
   defp generate_data(:mime_type, _type, _field), do: path_name(2)
 
-  defp generate_data(key, "string_t", _field) do
+  defp generate_data(key, "string_t", field) do
     name = Atom.to_string(key)
 
-    if String.ends_with?(name, "_uid") do
-      uuid()
-    else
-      if String.ends_with?(name, "_ver") do
-        version()
-      else
-        if String.ends_with?(name, "_code") do
-          word()
+    case field[:enum] do
+      nil ->
+        if String.ends_with?(name, "_uid") do
+          uuid()
         else
-          sentence(3)
+          if String.ends_with?(name, "_ver") do
+            version()
+          else
+            if String.ends_with?(name, "_code") do
+              word()
+            else
+              sentence(3)
+            end
+          end
         end
-      end
+
+      enum ->
+        random_enum_value(enum)
     end
   end
 
