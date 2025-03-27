@@ -1,0 +1,16 @@
+{
+  "caption": "Sustainability",
+  "description": "Defines sustainability metrics and tools for multi-agent applications, focusing on energy efficiency and environmental impact.",
+  "extends": "object",
+  "name": "sustainability",
+  "attributes": {
+    "energy_monitoring": {
+      "caption": "Energy Monitoring",
+      "description": "Tracks energy consumption during the operation of multi-agent systems, including training and inference, to identify inefficiencies and optimize resource usage."
+    },
+    "carbon_footprint_analysis": {
+      "caption": "Carbon Footprint Analysis",
+      "description": "Evaluates the greenhouse gas emissions associated with the workflows of multi-agent systems, enabling strategies for reducing environmental impact."
+    }
+  }
+}

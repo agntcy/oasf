@@ -1,0 +1,34 @@
+{
+  "caption": "Performance",
+  "description": "Defines performance metrics and attributes for multi-agent applications, focusing on load distribution, controllability, discovery, error handling, and system-level efficiency.",
+  "extends": "object",
+  "name": "performance",
+  "attributes": {
+    "load_distribution": {
+      "caption": "Load Distribution",
+      "description": "Measures how computational and operational workloads are distributed across agents to ensure balanced resource utilization and prevent bottlenecks."
+    },
+    "controllability": {
+      "caption": "Controllability",
+      "description": "Evaluates the ability to manage and control the behavior of agents in the system, ensuring predictable and efficient operations."
+    },
+    "discovery": {
+      "caption": "Discovery",
+      "description": "Tracks the efficiency and accuracy of discovering agents, services, or resources within the multi-agent system."
+    },
+    "errors": {
+      "caption": "Errors",
+      "description": "Monitors the frequency, types, and impact of errors encountered during multi-agent operations, enabling proactive issue resolution."
+    },
+    "system_level": {
+      "caption": "System-Level",
+      "description": "Analyzes the overall performance of the multi-agent system, including throughput, latency, and scalability metrics."
+    }
+  },
+  "references": [
+    {
+      "description": "OpenTelemetry Specification",
+      "url": "https://opentelemetry.io/docs/specs/otel/metrics/"
+    }
+  ]
+}

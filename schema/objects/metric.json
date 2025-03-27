@@ -1,0 +1,51 @@
+{
+  "caption": "Metric",
+  "description": "Defines a metric applicable to an agent, capturing quantitative data for analysis and monitoring.",
+  "extends": "object",
+  "name": "metric",
+  "attributes": {
+    "name": {
+      "caption": "Metric Name",
+      "requirement": "required",
+      "description": "The unique name of the metric, identifying the specific measurement being captured (e.g., 'CPU Usage', 'Response Time')."
+    },
+    "attributes": {
+      "caption": "Attributes",
+      "requirement": "recommended",
+      "description": "Additional metadata or dimensions associated with the metric, such as tags or labels (e.g., 'region', 'agent_id')."
+    },
+    "type": {
+      "caption": "Type",
+      "requirement": "required",
+      "description": "Specifies the type of metric, such as 'counter', 'gauge', or 'histogram', which determines how the metric data is aggregated and interpreted."
+    },
+    "unit_of_measurement": {
+      "caption": "Unit of Measurement",
+      "requirement": "required",
+      "description": "The unit in which the metric value is reported. Follows the format described by <a target='_blank' href='http://unitsofmeasure.org/ucum.html'>UCUM (Unified Code for Units of Measure)</a> (e.g., 'seconds', 'bytes', 'percentage').",
+      "references": [
+        {
+          "description": "UCUM Specification",
+          "url": "http://unitsofmeasure.org/ucum.html"
+        }
+      ]
+    },
+    "data_points": {
+      "caption": "Data Points",
+      "requirement": "required",
+      "description": "The actual data points collected for the metric, which can be a single value or a collection of values over time.",
+      "references": [
+        {
+          "description": "OpenTelemetry Specification",
+          "url": "https://opentelemetry.io/docs/specs/otel/metrics/data-model/#point-kinds"
+        }
+      ]
+    }
+  },
+  "references": [
+    {
+      "description": "OpenTelemetry Specification",
+      "url": "https://opentelemetry.io/docs/specs/otel/metrics/data-model/#model-details"
+    }
+  ]
+}
