@@ -247,6 +247,7 @@
 <div class="footer">
   OASF Server version <%= Schema.build_version() %>.
   Copyright &copy; 2025 Cisco and/or its affiliates.
+  <a href="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html">Terms & Conditions</a> | <a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html">Privacy Policy</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
