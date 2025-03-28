@@ -105,6 +105,38 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
+      SkillDesc:
+        swagger_schema do
+          title("Skill Descriptor")
+          description("Schema skill descriptor.")
+
+          properties do
+            name(:string, "skill name", required: true)
+            caption(:string, "skill caption", required: true)
+            description(:string, "skill description", required: true)
+            main_skill(:string, "skill's main skill", required: true)
+            main_skill_name(:string, "omain's main skill's caption", required: true)
+            profiles(:array, "skill profiles", items: %PhoenixSwagger.Schema{type: :string})
+            uid(:integer, "skill unique identifier", required: true)
+          end
+
+          example([
+            %{
+              caption: "DHCP Activity",
+              main_skill: "network",
+              main_skill_name: "Network Activity",
+              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
+              name: "dhcp_activity",
+              profiles: [
+                "cloud",
+                "datetime",
+                "host",
+                "file_security"
+              ],
+              uid: 4004
+            }
+          ])
+        end,
       DomainDesc:
         swagger_schema do
           title("Domain Descriptor")
@@ -583,7 +615,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List main skills")
     description("Get OASF schema main skills.")
     produces("application/json")
-    tag("skills")
+    tag("Skills")
 
     parameters do
       extensions(:query, :array, "Related extensions to include in response.",
@@ -620,7 +652,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("skills")
+    tag("Skills")
 
     parameters do
       name(:path, :string, "Main skill name", required: true)
@@ -774,7 +806,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema features defined in the named main feature. The main feature name may contain an" <>
-      " extension name. For example, \"dev/policy\"."
+        " extension name. For example, \"dev/policy\"."
     )
 
     produces("application/json")
@@ -972,7 +1004,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("skills")
+    tag("Skills")
 
     parameters do
       name(:path, :string, "skill name", required: true)
@@ -980,7 +1012,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(404, "skill <code>name</code> not found")
+    response(404, "Skill <code>name</code> not found")
   end
 
   @spec skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1009,7 +1041,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List skills")
     description("Get OASF schema skills.")
     produces("application/json")
-    tag("skills")
+    tag("Skills")
 
     parameters do
       extensions(:query, :array, "Related extensions to include in response.",
@@ -1019,7 +1051,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :skillDesc)
+    response(200, "Success", :SkillDesc)
   end
 
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1148,7 +1180,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema feature by name. The feature name may contain an extension name." <>
-      " For example, \"dev/cpu_usage\"."
+        " For example, \"dev/cpu_usage\"."
     )
 
     produces("application/json")
