@@ -7,12 +7,12 @@
     "name": {
       "caption": "Metric Name",
       "requirement": "required",
-      "description": "The unique name of the metric, identifying the specific measurement being captured (e.g., 'CPU Usage', 'Response Time')."
+      "description": "The unique name of the metric, identifying the specific measurement being captured (for example, 'CPU Usage' or 'Response Time')."
     },
     "attributes": {
       "caption": "Attributes",
       "requirement": "recommended",
-      "description": "Additional metadata or dimensions associated with the metric, such as tags or labels (e.g., 'region', 'agent_id')."
+      "description": "Additional metadata or dimensions associated with the metric, such as tags or labels (for example, 'region' or 'agent_id')."
     },
     "type": {
       "caption": "Type",
@@ -22,7 +22,7 @@
     "unit_of_measurement": {
       "caption": "Unit of Measurement",
       "requirement": "required",
-      "description": "The unit in which the metric value is reported. Follows the format described by <a target='_blank' href='http://unitsofmeasure.org/ucum.html'>UCUM (Unified Code for Units of Measure)</a> (e.g., 'seconds', 'bytes', 'percentage').",
+      "description": "The unit in which the metric value is reported. Follows the format described by <a target='_blank' href='http://unitsofmeasure.org/ucum.html'>UCUM (Unified Code for Units of Measure)</a> (for example, 'seconds', 'bytes', or 'percentage').",
       "references": [
         {
           "description": "UCUM Specification",

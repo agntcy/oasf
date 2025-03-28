@@ -1,6 +1,6 @@
 {
   "caption": "Observability",
-  "description": "Defines the schema for observing and monitoring multi-agent applications, enabling insights into their behavior, performance, and interactions.",
+  "description": "Defines the schema for observing and monitoring multi-agent applications to enable insights into their behavior, performance, and interactions.",
   "extends": "object",
   "name": "observability",
   "attributes": {

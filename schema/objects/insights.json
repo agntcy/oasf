@@ -9,46 +9,46 @@
       "description": "Measures the ability of multi-agent systems to recover from failures and maintain operational continuity.",
       "enum": {
         "top_failure_points": {
-          "caption": "Top failure points in agent execution"
+          "caption": "Top failure points in agent execution."
         },
         "error_frequency_per_agent": {
-          "caption": "Error frequency count per agent"
+          "caption": "Error frequency count per agent."
         },
         "general_uptime": {
-          "caption": "General uptime and availability measure of the agent"
+          "caption": "General uptime and availability measure of the agent."
         },
         "recovery_rate": {
-          "caption": "Recovery rate from failures"
+          "caption": "Recovery rate from failures."
         },
         "agent_recovery_rate": {
-          "caption": "Recovery rate of an agent in terms of any failures"
+          "caption": "Recovery rate of an agent in case of failures."
         },
         "failed_tool_calls": {
-          "caption": "Tracks failed tool/API calls"
+          "caption": "Tracks failed tool or API calls."
         }
       }
     },
     "security_and_compliance": {
       "caption": "Security and Compliance",
-      "description": "Tracks adherence to security standards and regulatory compliance, ensuring the safety and integrity of multi-agent systems.",
+      "description": "Tracks adherence to security standards and regulatory compliance and ensuring the safety and integrity of multi-agent systems.",
       "enum": {
         "data_compliance_adherence": {
-          "caption": "Data compliance adherence"
+          "caption": "Data compliance adherence."
         }
       }
     },
     "success": {
       "caption": "Success",
-      "description": "Evaluates the achievement of goals and objectives within multi-agent workflows, providing metrics for effectiveness.",
+      "description": "Evaluates the achievement of goals and objectives within multi-agent workflows providing metrics for effectiveness.",
       "enum": {
         "completion_rate": {
-          "caption": "Completion rate of tasks or objectives"
+          "caption": "Completion rate of tasks or objectives."
         },
         "success_rate": {
-          "caption": "Success rate of agent interactions"
+          "caption": "Success rate of agent interactions."
         },
         "task_completion_time": {
-          "caption": "Average time taken to complete tasks"
+          "caption": "Average time taken to complete tasks."
         }
       }
     },
@@ -57,19 +57,19 @@
       "description": "Analyzes the coordination and planning efficiency among agents to optimize teamwork and resource allocation.",
       "enum": {
         "task_delegation_accuracy": {
-          "caption": "Task delegation accuracy"
+          "caption": "Task delegation accuracy."
         },
         "load_distribution_accuracy": {
-          "caption": "Load distribution accuracy"
+          "caption": "Load distribution accuracy."
         },
         "parallelism": {
-          "caption": "Degree of parallelism in task execution"
+          "caption": "Degree of parallelism in task execution."
         }
       }
     },
     "anomaly_detection": {
       "caption": "Anomaly Detection",
-      "description": "Identifies unusual patterns or behaviors in multi-agent systems, enabling proactive issue resolution."
+      "description": "Identifies unusual patterns or behaviors in multi-agent systems enabling proactive issue resolution."
     },
     "alerting": {
       "caption": "Alerting",
@@ -84,19 +84,19 @@
       "description": "Monitors and analyzes the financial expenditure associated with multi-agent operations to ensure cost efficiency.",
       "enum": {
         "cost_per_run": {
-          "caption": "Cost per run of the multi-agent system"
+          "caption": "Cost per run of the multi-agent system."
         },
         "cost_per_task": {
-          "caption": "Cost per task executed by the agents"
+          "caption": "Cost per task executed by the agents."
         },
         "cost_per_agent": {
-          "caption": "Cost associated with each agent"
+          "caption": "Cost associated with each agent."
         }
       }
     },
     "risk_assessment": {
       "caption": "Risk Assessment",
-      "description": "Evaluates potential risks and vulnerabilities in multi-agent workflows, enabling mitigation strategies."
+      "description": "Evaluates potential risks and vulnerabilities in multi-agent workflows to enable mitigation strategies."
     }
   },
   "references": [

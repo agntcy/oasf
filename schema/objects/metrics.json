@@ -25,7 +25,7 @@
       "description": "Tracks adherence to security standards and regulatory compliance requirements.",
       "enum": {
         "number_of_unauthorized_calls_blocked_per_agent": {
-          "caption": "Number of unauthorised calls blocked per agent"
+          "caption": "Number of unauthorized calls blocked per agent."
         }
       }
     }
