@@ -299,6 +299,11 @@
       "description": "Graph of the framework config.",
       "type": "string_t"
     },
+    "image": {
+      "caption": "Docker Image",
+      "description": "The Docker image that pertains to the class or object. See specific usage.",
+      "type": "string_t"
+    },
     "in": {
       "caption": "In",
       "description": "A location",
@@ -550,7 +555,7 @@
     "success": {
       "caption": "Success",
       "description": "Evaluates the achievement of goals and objectives within multi-agent workflows to provide metrics for effectiveness.",
-      "type": "metric", 
+      "type": "metric",
       "is_array": true
     },
     "system_level": {
