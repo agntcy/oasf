@@ -213,7 +213,7 @@
             <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
             <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
             <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>OASF Data Types</a>
-            <!--<a class="nav-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>-->
+            <a class="nav-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
           </div>
         </div>
       </li>
