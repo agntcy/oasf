@@ -208,7 +208,7 @@ defmodule SchemaWeb.Router do
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        version: "1.0.0"
+        version: "0.1.0"
       }
     }
   end
