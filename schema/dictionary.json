@@ -90,7 +90,7 @@
     },
     "carbon_footprint_analysis": {
       "caption": "Carbon Footprint Analysis",
-      "description": "Evaluates the greenhouse gas emissions associated with the workflows of multi-agent systems, enabling strategies for reducing environmental impact.",
+      "description": "Evaluates the greenhouse gas emissions associated with the workflows of multi-agent systems to enable strategies for reducing environmental impact.",
       "type": "metric",
       "is_array": true
     },
@@ -363,7 +363,7 @@
     },
     "insights": {
       "caption": "Insights",
-      "description": "Defines actionable insights derived from observability data for multi-agent applications, enabling improved performance, security, and collaboration.",
+      "description": "Defines actionable insights derived from observability data for multi-agent applications to enable improved performance, security, and collaboration.",
       "type": "insights"
     },
     "interrupt_payload": {
@@ -394,16 +394,16 @@
       "is_array": true,
       "enum": {
         "number_of_active_agents": {
-          "caption": "Number of active agents"
+          "caption": "Number of active agents."
         },
         "most_frequently_used_agents": {
-          "caption": "Most frequently used agents"
+          "caption": "Most frequently used agents."
         },
         "agent_interaction_efficiency": {
-          "caption": "Agent-interaction: efficiency"
+          "caption": "Agent-interaction: efficiency."
         },
         "agent_interaction_parallelism": {
-          "caption": "Agent-interaction: parallelism"
+          "caption": "Agent-interaction: parallelism."
         }
       }
     },
@@ -446,16 +446,16 @@
       "is_array": true,
       "enum": {
         "most_active_agents": {
-          "caption": "Most active agents"
+          "caption": "Most active agents."
         },
         "agent_discovery_errors": {
-          "caption": "Agent discovery errors"
+          "caption": "Agent discovery errors."
         },
         "task_delegation_accuracy": {
-          "caption": "Task delegation accuracy"
+          "caption": "Task delegation accuracy."
         },
         "load_distribution_accuracy": {
-          "caption": "Load distribution accuracy"
+          "caption": "Load distribution accuracy."
         },
         "Parallelism": {
           "caption": "Parallelism"
@@ -568,7 +568,7 @@
     },
     "risk_assessment": {
       "caption": "Risk Assessment",
-      "description": "Evaluates potential risks and vulnerabilities in multi-agent workflows, enabling mitigation strategies.",
+      "description": "Evaluates potential risks and vulnerabilities in multi-agent workflows and therefre enabling mitigation strategies.",
       "type": "object"
     },
     "scheme": {
@@ -621,7 +621,7 @@
     },
     "success": {
       "caption": "Success",
-      "description": "Evaluates the achievement of goals and objectives within multi-agent workflows, providing metrics for effectiveness.",
+      "description": "Evaluates the achievement of goals and objectives within multi-agent workflows to provide metrics for effectiveness.",
       "type": "metric", 
       "is_array": true
     },
@@ -730,7 +730,7 @@
     },
     "unit_of_measurement": {
       "caption": "Unit of Measurement",
-      "description": "The unit in which the metric is measured (e.g., 'seconds', 'bytes', 'percentage').",
+      "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
       "type": "string_t"
     },
     "url_string": {
