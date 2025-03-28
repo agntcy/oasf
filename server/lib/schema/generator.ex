@@ -593,27 +593,33 @@ defmodule Schema.Generator do
   end
 
   def blake2() do
-    :crypto.hash(:blake2s, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:blake2s, Schema.Generator.word()) |> Base.encode16()
+    "blake2s:" <> hash
   end
 
   def blake2b() do
-    :crypto.hash(:blake2b, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:blake2b, Schema.Generator.word()) |> Base.encode16()
+    "blake2b:" <> hash
   end
 
   def sha512() do
-    :crypto.hash(:sha512, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:sha512, Schema.Generator.word()) |> Base.encode16()
+    "sha512:" <> hash
   end
 
   def sha256() do
-    :crypto.hash(:sha256, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:sha256, Schema.Generator.word()) |> Base.encode16()
+    "sha256:" <> hash
   end
 
   def sha1() do
-    :crypto.hash(:sha, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:sha, Schema.Generator.word()) |> Base.encode16()
+    "sha1:" <> hash
   end
 
   def md5() do
-    :crypto.hash(:md5, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:md5, Schema.Generator.word()) |> Base.encode16()
+    "md5:" <> hash
   end
 
   def shell() do
