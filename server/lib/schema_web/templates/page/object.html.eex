@@ -118,8 +118,6 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 <% end %>
 
-<%= if @data[:name] == "agent" do render "agent_example.html" end %>
-
 <div class="extensions">
   <%= raw class_profiles(@conn, @data, @profiles) %>
 <div>
