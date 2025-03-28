@@ -1,9 +1,0 @@
-{
-    "uid": 9,
-    "caption": "Traces",
-    "description": "Values: List of traced events",
-    "extends": "observability",
-    "name": "traces",
-    "attributes": {}
-}
-

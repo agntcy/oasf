@@ -1,9 +1,0 @@
-{
-    "uid": 6,
-    "caption": "Coverage",
-    "description": "Values: LLM calls\nAgent Input/Output\nTool calls\nAgent-to-Agent interactions\nAgent-to-Agent connectivity",
-    "extends": "observability",
-    "name": "coverage",
-    "attributes": {}
-}
-
