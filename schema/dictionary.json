@@ -227,6 +227,11 @@
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
     },
+    "data": {
+      "caption": "Data",
+      "description": "Supported data type.",
+      "type": "object"
+    },
     "data_platform_integrations": {
       "caption": "Data Platform Integrations",
       "description": "Data platforms supported by the agent for observability.",
