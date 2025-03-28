@@ -1,8 +1,0 @@
-{
-    "uid": 12,
-    "caption": "System-level",
-    "description": "Values: Load distribution\nNumber of active agents.\nMost frequently used agents.\nAgent-interaction: efficiency.\nAgent-interaction: parallelism.\nControllability:\nAgentic graph\nMeasure for dynamism of topology.\nMeasure for degree of determinism of agentic workflow.\nSynchronicity:\nTransfer timing accuracy.\nConnectivity:\nMost frequent agent-to-agent interactions.\nConnection Reliability.\nAgent Interpretation Score (whether data exchanged between agents is in correct format).\nFault-detection:\nNumber of deprecated or inactive agents.\nAverage time needed to detect faulty agent.\nMost commonly failing agents.",
-    "extends": "observability",
-    "name": "system_level",
-    "attributes": {}
-}

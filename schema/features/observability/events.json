@@ -1,9 +1,0 @@
-{
-    "uid": 10,
-    "caption": "Events",
-    "description": "Values: List of collected events",
-    "extends": "observability",
-    "name": "events",
-    "attributes": {}
-}
-

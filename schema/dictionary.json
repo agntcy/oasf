@@ -34,27 +34,6 @@
       "description": "Generates notifications or warnings based on predefined thresholds or detected anomalies in multi-agent operations.",
       "type": "object"
     },
-    "algorithm": {
-      "caption": "Algorithm",
-      "description": "The applicable algorithm, normalized to the caption of 'algorithm_id'. See specific usage.",
-      "type": "string_t"
-    },
-    "algorithm_id": {
-      "caption": "Algorithm ID",
-      "description": "The normalized identifier of the algorithm. See specific usage.",
-      "sibling": "algorithm",
-      "type": "integer_t",
-      "enum": {
-        "0": {
-          "caption": "Unknown",
-          "description": "The algorithm is unknown."
-        },
-        "99": {
-          "caption": "Other",
-          "description": "The algorithm is not mapped. See the <code>algorithm</code> attribute, which contains a data source specific value."
-        }
-      }
-    },
     "anomaly_detection": {
       "caption": "Anomaly Detection",
       "description": "Identifies unusual patterns or behaviors in multi-agent systems, enabling proactive issue resolution.",
@@ -165,6 +144,26 @@
       "type": "string_t",
       "is_array": true
     },
+    "communication_protocols": {
+      "caption": "Communication Protocols",
+      "description": "Communication protocols supported.",
+      "type": "string_t",
+      "enum": {
+        "Otel_OTP_v1": {
+          "caption": "Otel OTP v1"
+        },
+        "HTTP_1.1": {
+          "caption": "HTTP 1.1"
+        },
+        "gRPC": {
+          "caption": "gRPC"
+        },
+        "AGP": {
+          "caption": "AGP"
+        }
+      },
+      "is_array": true
+    },
     "config": {
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
@@ -228,11 +227,27 @@
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
     },
+    "data": {
+      "caption": "Data",
+      "description": "Supported data type.",
+      "type": "object"
+    },
+    "data_platform_integrations": {
+      "caption": "Data Platform Integrations",
+      "description": "Data platforms supported by the agent for observability.",
+      "type": "string_t",
+      "is_array": true
+    },
     "data_points": {
       "caption": "Data Points",
       "description": "The actual data points collected for the metric, which can be a single value or a collection of values over time.",
       "type": "object",
       "is_array": true
+    },
+    "data_schema": {
+      "caption": "Supported Data Schema",
+      "description": "Data schema supported by the agent for observability.",
+      "type": "data_schema"
     },
     "dependencies": {
       "caption": "Agent Dependencies",
@@ -260,18 +275,13 @@
     "digest": {
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
-      "type": "fingerprint"
+      "type": "file_hash_t"
     },
     "discovery": {
       "caption": "Discovery",
       "description": "",
       "type": "metric",
       "is_array": true
-    },
-    "domain": {
-      "caption": "Domain",
-      "description": "The name of the domain. See specific usage.",
-      "type": "string_t"
     },
     "energy_monitoring": {
       "caption": "Energy Monitoring",
@@ -291,26 +301,26 @@
       "type": "object",
       "is_array": true
     },
+    "export_format": {
+      "caption": "Export Format",
+      "description": "Format used by the agent for exporting observability data.",
+      "type": "string_t"
+    },
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
-      "type": "extension"
+      "type": "class_t",
+      "class_path": "features",
+      "class_name": "base_feature",
+      "class_caption": "Extension"
     },
     "extensions": {
       "caption": "Schema Extensions",
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
-      "type": "extension",
-      "is_array": true
-    },
-    "fingerprint": {
-      "caption": "Fingerprint",
-      "description": "The digital fingerprint associated with an object.",
-      "type": "fingerprint"
-    },
-    "fingerprints": {
-      "caption": "Fingerprints",
-      "description": "An array of digital fingerprint objects.",
-      "type": "fingerprint",
+      "type": "class_t",
+      "class_path": "features",
+      "class_name": "base_feature",
+      "class_caption": "Extension",
       "is_array": true
     },
     "framework_config": {
@@ -335,16 +345,6 @@
       "caption": "Graph",
       "description": "Graph of the framework config.",
       "type": "string_t"
-    },
-    "hash": {
-      "caption": "Hash",
-      "description": "The hash attribute is the value of a digital fingerprint including information about its algorithm.",
-      "type": "fingerprint"
-    },
-    "hostname": {
-      "caption": "Hostname",
-      "description": "The hostname of an endpoint or a device.",
-      "type": "hostname_t"
     },
     "image": {
       "caption": "Docker Image",
@@ -540,21 +540,11 @@
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
     },
-    "query_string": {
-      "caption": "HTTP Query String",
-      "description": "The query portion of the URL. For example: the query portion of the URL <code>http://www.example.com/search?q=bad&sort=date</code> is <code>q=bad&sort=date</code>.",
-      "type": "string_t"
-    },
     "resiliency": {
       "caption": "Resiliency",
       "description": "Measures the ability of multi-agent systems to recover from failures and maintain operational continuity.",
       "type": "metric",
       "is_array": true
-    },
-    "resource_type": {
-      "caption": "Resource Type",
-      "description": "The resource type as defined by the source.",
-      "type": "string_t"
     },
     "result_streaming": {
       "caption": "Result Streaming",
@@ -570,11 +560,6 @@
       "caption": "Risk Assessment",
       "description": "Evaluates potential risks and vulnerabilities in multi-agent workflows and therefre enabling mitigation strategies.",
       "type": "object"
-    },
-    "scheme": {
-      "caption": "Scheme",
-      "description": "The scheme portion of the URL. For example: <code>http</code>, <code>https</code>, <code>ftp</code>, or <code>sftp</code>.",
-      "type": "string_t"
     },
     "security_and_compliance": {
       "caption": "Security and Compliance",
@@ -614,15 +599,10 @@
       "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
       "type": "streaming_modes"
     },
-    "subdomain": {
-      "caption": "Subdomain",
-      "description": "The subdomain portion of the URL. For example: <code>sub</code> in <code>https://sub.example.com</code> or <code>sub2.sub1</code> in <code>https://sub2.sub1.example.com</code>.",
-      "type": "string_t"
-    },
     "success": {
       "caption": "Success",
       "description": "Evaluates the achievement of goals and objectives within multi-agent workflows to provide metrics for effectiveness.",
-      "type": "metric", 
+      "type": "metric",
       "is_array": true
     },
     "system_level": {
@@ -726,17 +706,12 @@
     "url": {
       "caption": "URL",
       "description": "The URL object that pertains to the class or object. See specific usage.",
-      "type": "url"
+      "type": "url_t"
     },
     "unit_of_measurement": {
       "caption": "Unit of Measurement",
       "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
       "type": "string_t"
-    },
-    "url_string": {
-      "caption": "URL String",
-      "description": "The URL string. See RFC 1738. For example: <code>http://www.example.com/download/trouble.exe</code>.",
-      "type": "url_t"
     },
     "version": {
       "caption": "Version",
@@ -803,13 +778,6 @@
       "float_t": {
         "caption": "Float",
         "description": "Real floating-point value. For example:<br><code>3.14</code>."
-      },
-      "hostname_t": {
-        "observable": 1,
-        "caption": "Hostname",
-        "description": "Unique name assigned to a device connected to a computer network. It may be a fully qualified domain name (FQDN). For example:<br><code>r2-d2.example.com.</code>,<br><code>mx.example.com</code>.",
-        "type": "string_t",
-        "type_name": "String"
       },
       "integer_t": {
         "caption": "Integer",

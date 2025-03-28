@@ -181,7 +181,6 @@ defmodule Schema.Generator do
     Logger.debug("generate #{type[:name]} (#{type[:caption]})")
 
     case type[:name] do
-      "fingerprint" -> fingerprint(type)
       "location" -> location()
       "file" -> generate_sample(type) |> update_file_path()
       _type -> generate_sample(type)
@@ -367,12 +366,6 @@ defmodule Schema.Generator do
     Enum.map(1..random(@max_array_size), fn _ -> file_name(4) end)
   end
 
-  defp generate_array({:fingerprints, type}) do
-    1..random(@max_array_size)
-    |> Enum.map(fn _ -> fingerprint(find_object(type)) end)
-    |> Enum.uniq_by(fn map -> Map.get(map, :algorithm_id) end)
-  end
-
   defp generate_array({:image_labels, _field}) do
     words(5)
   end
@@ -486,21 +479,27 @@ defmodule Schema.Generator do
   defp generate_data(:facility, _type, _field), do: facility()
   defp generate_data(:mime_type, _type, _field), do: path_name(2)
 
-  defp generate_data(key, "string_t", _field) do
+  defp generate_data(key, "string_t", field) do
     name = Atom.to_string(key)
 
-    if String.ends_with?(name, "_uid") do
-      uuid()
-    else
-      if String.ends_with?(name, "_ver") do
-        version()
-      else
-        if String.ends_with?(name, "_code") do
-          word()
+    case field[:enum] do
+      nil ->
+        if String.ends_with?(name, "_uid") do
+          uuid()
         else
-          sentence(3)
+          if String.ends_with?(name, "_ver") do
+            version()
+          else
+            if String.ends_with?(name, "_code") do
+              word()
+            else
+              sentence(3)
+            end
+          end
         end
-      end
+
+      enum ->
+        random_enum_value(enum)
     end
   end
 
@@ -520,7 +519,8 @@ defmodule Schema.Generator do
   defp generate_data(_name, "datetime_t", _field),
     do: DateTime.utc_now() |> DateTime.to_iso8601()
 
-  defp generate_data(_name, "hostname_t", _field), do: domain()
+  defp generate_data(_name, "file_hash_t", _field), do: sha256()
+  defp generate_data(_name, "url_t", _field), do: url()
   defp generate_data(_name, "ip_t", _field), do: ipv4()
   defp generate_data(_name, "subnet_t", _field), do: subnet()
   defp generate_data(_name, "mac_t", _field), do: mac()
@@ -599,27 +599,33 @@ defmodule Schema.Generator do
   end
 
   def blake2() do
-    :crypto.hash(:blake2s, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:blake2s, Schema.Generator.word()) |> Base.encode16()
+    "blake2s:" <> hash
   end
 
   def blake2b() do
-    :crypto.hash(:blake2b, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:blake2b, Schema.Generator.word()) |> Base.encode16()
+    "blake2b:" <> hash
   end
 
   def sha512() do
-    :crypto.hash(:sha512, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:sha512, Schema.Generator.word()) |> Base.encode16()
+    "sha512:" <> hash
   end
 
   def sha256() do
-    :crypto.hash(:sha256, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:sha256, Schema.Generator.word()) |> Base.encode16()
+    "sha256:" <> hash
   end
 
   def sha1() do
-    :crypto.hash(:sha, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:sha, Schema.Generator.word()) |> Base.encode16()
+    "sha1:" <> hash
   end
 
   def md5() do
-    :crypto.hash(:md5, Schema.Generator.word()) |> Base.encode16()
+    hash = :crypto.hash(:md5, Schema.Generator.word()) |> Base.encode16()
+    "md5:" <> hash
   end
 
   def shell() do
@@ -668,6 +674,10 @@ defmodule Schema.Generator do
     [word(), extension()] |> Enum.join(".")
   end
 
+  def url() do
+    ["https://www", word(), extension()] |> Enum.join(".")
+  end
+
   def uuid() do
     UUID.uuid1()
   end
@@ -701,46 +711,6 @@ defmodule Schema.Generator do
   end
 
   def random_float(n, r), do: Float.ceil(r - :rand.uniform_real() * n, 4)
-
-  def fingerprint(type) do
-    algorithm_id = get_in(type, [:attributes, :algorithm_id])
-
-    fingerprint =
-      generate_enum_data(
-        :algorithm_id,
-        algorithm_id[:sibling],
-        algorithm_id[:enum],
-        Map.new()
-      )
-
-    algorithm = fingerprint[:algorithm_id]
-
-    value =
-      case algorithm do
-        @other ->
-          blake2()
-
-        1 ->
-          md5()
-
-        2 ->
-          sha1()
-
-        3 ->
-          sha256()
-
-        _ ->
-          blake2b()
-      end
-
-    fingerprint = Map.put(fingerprint, :value, value)
-
-    if algorithm == @other do
-      Map.put(fingerprint, :algorithm, "magic")
-    else
-      fingerprint
-    end
-  end
 
   defp random_enum_int_value(enum) do
     random_enum_value(enum) |> String.to_integer()

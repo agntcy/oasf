@@ -1,9 +1,0 @@
-{
-    "uid": 3,
-    "caption": "Supported Data Schema",
-    "description": "Values: OpenLLMetry, Otel extensions",
-    "extends": "observability",
-    "name": "supported_data_schema",
-    "attributes": {}
-}
-

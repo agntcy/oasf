@@ -1,9 +1,0 @@
-{
-    "uid": 13,
-    "caption": "Insights/Derived features",
-    "description": "Values: Error Handling\ntop failure points in agent execution\nagent discovery errors\nSecurity and Compliance\nnumber of unauthorised calls blocked per agent\nData compliance adherence\nSuccess rate\nCompletion rate\nAnomaly Detection\nAlerting\npredefined\ncustom\nPredictions\nRisk assessment",
-    "extends": "observability",
-    "name": "insights_derived_features",
-    "attributes": {}
-}
-

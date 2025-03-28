@@ -1,9 +1,0 @@
-{
-    "uid": 8,
-    "caption": "Logs",
-    "description": "Values: Agentic function/ Task/ LLM/ Agent / Agents interaction logs",
-    "extends": "observability",
-    "name": "logs",
-    "attributes": {}
-}
-
