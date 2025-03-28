@@ -144,6 +144,26 @@
       "type": "string_t",
       "is_array": true
     },
+    "communication_protocols": {
+      "caption": "Communication Protocols",
+      "description": "Communication protocols supported.",
+      "type": "string_t",
+      "enum": {
+        "Otel_OTP_v1": {
+          "caption": "Otel OTP v1"
+        },
+        "HTTP_1.1": {
+          "caption": "HTTP 1.1"
+        },
+        "gRPC": {
+          "caption": "gRPC"
+        },
+        "AGP": {
+          "caption": "AGP"
+        }
+      },
+      "is_array": true
+    },
     "config": {
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
@@ -207,11 +227,22 @@
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
     },
+    "data_platform_integrations": {
+      "caption": "Data Platform Integrations",
+      "description": "Data platforms supported by the agent for observability.",
+      "type": "string_t",
+      "is_array": true
+    },
     "data_points": {
       "caption": "Data Points",
       "description": "The actual data points collected for the metric, which can be a single value or a collection of values over time.",
       "type": "object",
       "is_array": true
+    },
+    "data_schema": {
+      "caption": "Supported Data Schema",
+      "description": "Data schema supported by the agent for observability.",
+      "type": "data_schema"
     },
     "dependencies": {
       "caption": "Agent Dependencies",
@@ -264,6 +295,11 @@
       "description": "An event object that describes the event.",
       "type": "object",
       "is_array": true
+    },
+    "export_format": {
+      "caption": "Export Format",
+      "description": "Format used by the agent for exporting observability data.",
+      "type": "string_t"
     },
     "extension": {
       "caption": "Schema Extension",
