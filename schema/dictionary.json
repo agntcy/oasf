@@ -309,12 +309,18 @@
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
-      "type": "extension"
+      "type": "class_t",
+      "class_path": "features",
+      "class_name": "base_feature",
+      "class_caption": "Extension"
     },
     "extensions": {
       "caption": "Schema Extensions",
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
-      "type": "extension",
+      "type": "class_t",
+      "class_path": "features",
+      "class_name": "base_feature",
+      "class_caption": "Extension",
       "is_array": true
     },
     "framework_config": {
