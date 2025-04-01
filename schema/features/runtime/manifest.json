@@ -5,15 +5,13 @@
   "extends": "runtime",
   "name": "manifest",
   "attributes": {
-    "acp": {
-      "caption": "Agent Connect Protocol Specs",
-      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
-      "requirement": "required"
-    },
-    "agent_deployment": {
-      "caption": "Agent Workflow Server Deployment Manifest",
-      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
-      "requirement": "required"
+    "data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for runtime manifest.",
+      "requirement": "required",
+      "type:": "object_t",
+      "object_type": "manifest_data",
+      "object_name": "Manifest Data"
     }
   }
 }
