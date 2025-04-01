@@ -1,0 +1,39 @@
+{
+  "caption": "Observability Data",
+  "description": "Data supported by the agent extension for observability.",
+  "extends": "object",
+  "name": "observability_data",
+  "attributes": {
+    "data_schema": {
+      "caption": "Supported Data Schema",
+      "description": "Data schema supported by the agent for observability.",
+      "requirement": "required"
+    },
+    "export_format": {
+      "caption": "Export Format",
+      "description": "Format used by the agent for exporting observability data.",
+      "requirement": "required",
+      "enum": {
+        "json": {
+          "caption": "JSON"
+        },
+        "xml": {
+          "caption": "XML"
+        },
+        "csv": {
+          "caption": "CSV"
+        }
+      }
+    },
+    "communication_protocols": {
+      "caption": "Communication Protocols",
+      "description": "Communication protocols supported by the agent for observability.",
+      "requirement": "required"
+    },
+    "data_platform_integrations": {
+      "caption": "Data Platform Integrations",
+      "description": "Data platforms supported by the agent for observability.",
+      "requirement": "required"
+    }
+  }
+}

@@ -1,41 +1,17 @@
 {
-    "uid": 1,
-    "caption": "Formats",
-    "description": "Formats used by the agent for observability.",
-    "extends": "observability",
-    "name": "formats",
-    "attributes": {
-        "data_schema": {
-            "caption": "Supported Data Schema",
-            "description": "Data schema supported by the agent for observability.",
-            "requirement": "required"
-        },
-        "export_format": {
-            "caption": "Export Format",
-            "description": "Format used by the agent for exporting observability data.",
-            "requirement": "required",
-            "enum": {
-                "json": {
-                    "caption": "JSON"
-                },
-                "xml": {
-                    "caption": "XML"
-                },
-                "csv": {
-                    "caption": "CSV"
-                }
-            }
-        },
-        "communication_protocols": {
-            "caption": "Communication Protocols",
-            "description": "Communication protocols supported by the agent for observability.",
-            "requirement": "required"
-        },
-        "data_platform_integrations": {
-            "caption": "Data Platform Integrations",
-            "description": "Data platforms supported by the agent for observability.",
-            "requirement": "required"
-        }
+  "uid": 1,
+  "caption": "Formats",
+  "description": "Formats used by the agent for observability.",
+  "extends": "observability",
+  "name": "formats",
+  "attributes": {
+    "data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for observability.",
+      "requirement": "required",
+      "type:": "object_t",
+      "object_type": "observability_data",
+      "object_name": "Observability Data"
     }
+  }
 }
-
