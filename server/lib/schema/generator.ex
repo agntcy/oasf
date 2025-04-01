@@ -201,34 +201,6 @@ defmodule Schema.Generator do
     end
   end
 
-  @doc """
-  Generate new domain uid values for a given main domain.
-  """
-  @spec update_domains(binary(), integer()) :: any()
-  def update_domains(path, uid) when is_binary(path) and is_integer(uid) do
-    if File.dir?(path) do
-      read_domains(nil, path, [])
-      |> Enum.sort()
-      |> Enum.reduce(uid, fn {_, file}, next -> update_domains(file, next) end)
-    else
-      update_domain_uid(path, uid)
-    end
-  end
-
-  @doc """
-  Generate new feature uid values for a given main feature.
-  """
-  @spec update_features(binary(), integer()) :: any()
-  def update_features(path, uid) when is_binary(path) and is_integer(uid) do
-    if File.dir?(path) do
-      read_features(nil, path, [])
-      |> Enum.sort()
-      |> Enum.reduce(uid, fn {_, file}, next -> update_features(file, next) end)
-    else
-      update_feature_uid(path, uid)
-    end
-  end
-
   defp put_type_name(data, uid, class) do
     case get_in(class, [:attributes, :type_uid, :enum]) do
       nil ->
@@ -824,88 +796,6 @@ defmodule Schema.Generator do
   end
 
   defp update_class_uid(file, uid) do
-    data = File.read!(file) |> Jason.decode!()
-
-    case Map.get(data, "uid") do
-      nil ->
-        uid
-
-      _uid ->
-        Map.put(data, "uid", uid) |> write_json(file)
-        uid + 1
-    end
-  end
-
-  def read_domains(path) do
-    if File.dir?(path) do
-      read_domains(nil, path, []) |> Enum.sort()
-    else
-      []
-    end
-  end
-
-  defp read_domains(name, path, list) do
-    if File.dir?(path) do
-      case File.ls(path) do
-        {:ok, files} ->
-          Enum.reduce(files, list, fn file, acc ->
-            read_domains(file, Path.join(path, file), acc)
-          end)
-
-        error ->
-          exit(error)
-      end
-    else
-      if Path.extname(name) == ".json" do
-        [{name, path} | list]
-      else
-        list
-      end
-    end
-  end
-
-  defp update_domain_uid(file, uid) do
-    data = File.read!(file) |> Jason.decode!()
-
-    case Map.get(data, "uid") do
-      nil ->
-        uid
-
-      _uid ->
-        Map.put(data, "uid", uid) |> write_json(file)
-        uid + 1
-    end
-  end
-
-  def read_features(path) do
-    if File.dir?(path) do
-      read_features(nil, path, []) |> Enum.sort()
-    else
-      []
-    end
-  end
-
-  defp read_features(name, path, list) do
-    if File.dir?(path) do
-      case File.ls(path) do
-        {:ok, files} ->
-          Enum.reduce(files, list, fn file, acc ->
-            read_features(file, Path.join(path, file), acc)
-          end)
-
-        error ->
-          exit(error)
-      end
-    else
-      if Path.extname(name) == ".json" do
-        [{name, path} | list]
-      else
-        list
-      end
-    end
-  end
-
-  defp update_feature_uid(file, uid) do
     data = File.read!(file) |> Jason.decode!()
 
     case Map.get(data, "uid") do
