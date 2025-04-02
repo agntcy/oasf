@@ -437,7 +437,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List categories")
     description("Get OASF schema categories.")
     produces("application/json")
-    tag("Categories and Classes")
+    tag("All Categories and Classes")
 
     parameters do
       extensions(:query, :array, "Related extensions to include in response.",
@@ -474,7 +474,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories and Classes")
+    tag("All Categories and Classes")
 
     parameters do
       name(:path, :string, "Category name", required: true)
@@ -787,7 +787,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Base class")
     description("Get OASF schema base class.")
     produces("application/json")
-    tag("Categories and Classes")
+    tag("All Categories and Classes")
 
     parameters do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
@@ -815,7 +815,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories and Classes")
+    tag("All Categories and Classes")
 
     parameters do
       name(:path, :string, "Class name", required: true)
@@ -852,7 +852,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List classes")
     description("Get OASF schema classes.")
     produces("application/json")
-    tag("Categories and Classes")
+    tag("All Categories and Classes")
 
     parameters do
       extensions(:query, :array, "Related extensions to include in response.",
