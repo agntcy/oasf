@@ -142,7 +142,9 @@ defmodule Schema.Generator do
   end
 
   defp generate_sample_class(class) do
-    data = generate_sample(class)
+    data =
+      generate_sample(class)
+      |> generate_class_name(class)
 
     case data[:activity_id] do
       nil ->
@@ -160,6 +162,16 @@ defmodule Schema.Generator do
         |> put_type_name(uid, class)
         |> Map.delete(:raw_data)
         |> Map.delete(:unmapped)
+    end
+  end
+
+  defp generate_class_name(data, class) do
+    if data[:name] == nil do
+      data
+    else
+      Map.update!(data, :name, fn _name ->
+        Types.class_name(class[:family], class[:category], class[:name])
+      end)
     end
   end
 
@@ -432,7 +444,7 @@ defmodule Schema.Generator do
   defp generate_data(:ref_time, _type, _field),
     do: DateTime.utc_now() |> DateTime.to_iso8601()
 
-  defp generate_data(:version, _type, _field), do: Schema.version()
+  defp generate_data(:version, _type, _field), do: "v" <> Schema.version()
   defp generate_data(:lang, _type, _field), do: "en"
   defp generate_data(:uuid, _type, _field), do: uuid()
   defp generate_data(:uid, _type, _field), do: uuid()

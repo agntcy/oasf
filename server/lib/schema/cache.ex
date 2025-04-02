@@ -48,10 +48,15 @@ defmodule Schema.Cache do
 
   @main_skills_file "main_skills.json"
   @skills_dir "skills"
+  @skill_family "skill"
+
   @main_domains_file "main_domains.json"
   @domains_dir "domains"
+  @domain_family "domain"
+
   @main_features_file "main_features.json"
   @features_dir "features"
+  @feature_family "feature"
 
   @doc """
   Load the schema files and initialize the cache.
@@ -64,13 +69,25 @@ defmodule Schema.Cache do
     base_class = JsonReader.read_base_class()
 
     {skills, all_skills, observable_type_id_map, main_skills} =
-      read_classes(base_class, @main_skills_file, @skills_dir)
+      read_classes(base_class, @main_skills_file, @skills_dir, @skill_family, version[:version])
 
     {domains, all_domains, _observable_domains_type_id_map, main_domains} =
-      read_classes(base_class, @main_domains_file, @domains_dir)
+      read_classes(
+        base_class,
+        @main_domains_file,
+        @domains_dir,
+        @domain_family,
+        version[:version]
+      )
 
     {features, all_features, _observable_features_type_id_map, main_features} =
-      read_classes(base_class, @main_features_file, @features_dir)
+      read_classes(
+        base_class,
+        @main_features_file,
+        @features_dir,
+        @feature_family,
+        version[:version]
+      )
 
     # Merge skills, domains and features classes and categories
     classes = Utils.merge_classes([skills, domains, features])
@@ -605,7 +622,7 @@ defmodule Schema.Cache do
     end
   end
 
-  defp read_classes(base_class, categories_file, classes_dir) do
+  defp read_classes(base_class, categories_file, classes_dir, class_family, version) do
     categories = JsonReader.read_categories(categories_file) |> update_categories()
     categories_attributes = categories[:attributes]
 
@@ -642,8 +659,9 @@ defmodule Schema.Cache do
       classes
       # remove intermediate hidden classes
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
+      |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
-        enrich_class(class_tuple, categories_attributes, classes)
+        enrich_class(class_tuple, categories_attributes, classes, version)
       end)
 
     {classes, all_classes, observable_type_id_map, categories}
@@ -1026,12 +1044,14 @@ defmodule Schema.Cache do
   end
 
   # Add category_uid, class_uid, and type_uid
-  defp enrich_class({class_key, class}, categories, classes) do
+  defp enrich_class({class_key, class}, categories, classes, version) do
     class =
       class
       |> update_class_uid(categories, classes)
       |> add_class_uid(class_key)
       |> add_category_uid(class_key, categories)
+      |> add_class_name()
+      |> add_class_version(version)
 
     {class_key, class}
   end
@@ -1177,6 +1197,37 @@ defmodule Schema.Cache do
         )
       end
       |> put_in([:attributes, :category_uid, :_source], name)
+    end
+  end
+
+  defp add_class_family(classes, family) do
+    Enum.into(classes, %{}, fn {key, class_data} ->
+      updated_class_data = Map.put(class_data, :family, family)
+      {key, updated_class_data}
+    end)
+  end
+
+  defp add_class_name(class) do
+    if class[:attributes][:name] == nil do
+      class
+    else
+      class
+      |> put_in(
+        [:attributes, :name, :description],
+        "The schema extension name: <code>#{Types.class_name(class[:family], class[:category], class[:name])}</code>"
+      )
+    end
+  end
+
+  defp add_class_version(class, version) do
+    if class[:attributes][:version] == nil do
+      class
+    else
+      class
+      |> put_in(
+        [:attributes, :version, :description],
+        "The schema extension version: <code>v#{version}"
+      )
     end
   end
 

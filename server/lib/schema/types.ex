@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule Schema.Types do
+  @schema_addr "oasf.agntcy.org"
+
   @moduledoc """
   Schema types and helpers functions to make unique identifiers.
   """
@@ -42,4 +44,10 @@ defmodule Schema.Types do
     class <> ": " <> name
   end
 
+  @doc """
+  Makes class name from class type/family, category and name.
+  """
+  def class_name(family, category, name) do
+    "#{@schema_addr}/#{family}/#{category}/#{name}"
+  end
 end
