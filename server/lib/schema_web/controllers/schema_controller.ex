@@ -19,7 +19,7 @@ defmodule SchemaWeb.SchemaController do
   @observables "_observables"
 
   @extensions_param_description "When included in request, filters response to included only the" <>
-                                  " supplied extensions, or no extensions if this parameter has" <>
+                                  " supplied schema extensions, or no extensions if this parameter has" <>
                                   " no value. When not included, all extensions are returned in" <>
                                   " the response."
 
@@ -336,7 +336,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :extensions do
     get("/api/extensions")
-    summary("List extensions")
+    summary("List schema extensions")
     description("Get OASF schema extensions.")
     produces("application/json")
     tag("Schema")
@@ -395,7 +395,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Profile")
 
     description(
-      "Get OASF schema profile by name. The profile name may contain an extension name." <>
+      "Get OASF schema profile by name. The profile name may contain a schema extension name." <>
         " For example, \"linux/linux_users\"."
     )
 
@@ -440,7 +440,7 @@ defmodule SchemaWeb.SchemaController do
     tag("All Categories and Classes")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -470,7 +470,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema classes defined in the named category. The category name may contain an" <>
-        " extension name. For example, \"dev/policy\"."
+        " schema extension name. For example, \"dev/policy\"."
     )
 
     produces("application/json")
@@ -479,7 +479,7 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       name(:path, :string, "Category name", required: true)
 
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -519,7 +519,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Skills")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -549,7 +549,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema skills defined in the named main skill. The main skill name may contain an" <>
-        " extension name. For example, \"dev/policy\"."
+        " schema extension name. For example, \"dev/policy\"."
     )
 
     produces("application/json")
@@ -558,7 +558,7 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       name(:path, :string, "Main skill name", required: true)
 
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -598,7 +598,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Domains")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -628,7 +628,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema domains defined in the named main domain. The main domain name may contain an" <>
-        " extension name. For example, \"dev/policy\"."
+        " schema extension name. For example, \"dev/policy\"."
     )
 
     produces("application/json")
@@ -637,7 +637,7 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       name(:path, :string, "Main domain name", required: true)
 
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -677,7 +677,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Features")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -707,7 +707,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema features defined in the named main feature. The main feature name may contain an" <>
-        " extension name. For example, \"dev/policy\"."
+        " schema extension name. For example, \"dev/policy\"."
     )
 
     produces("application/json")
@@ -716,7 +716,7 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       name(:path, :string, "Main feature name", required: true)
 
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -756,7 +756,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Dictionary")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -810,7 +810,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Class")
 
     description(
-      "Get OASF schema class by name. The class name may contain an extension name." <>
+      "Get OASF schema class by name. The class name may contain a schema extension name." <>
         " For example, \"dev/cpu_usage\"."
     )
 
@@ -855,7 +855,7 @@ defmodule SchemaWeb.SchemaController do
     tag("All Categories and Classes")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
 
@@ -945,7 +945,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Skills")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
 
@@ -1035,7 +1035,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Domains")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
 
@@ -1125,7 +1125,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Features")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
 
@@ -1171,7 +1171,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Object")
 
     description(
-      "Get OASF schema object by name. The object name may contain an extension name." <>
+      "Get OASF schema object by name. The object name may contain a schema extension name." <>
         " For example, \"dev/os_service\"."
     )
 
@@ -1181,7 +1181,7 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       name(:path, :string, "Object name", required: true)
 
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
 
@@ -1214,7 +1214,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Objects and Types")
 
     parameters do
-      extensions(:query, :array, "Related extensions to include in response.",
+      extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
     end
@@ -1369,7 +1369,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF schema class by name, using JSON schema Draft-07 format " <>
-        "(see http://json-schema.org). The class name may contain an extension name. " <>
+        "(see http://json-schema.org). The class name may contain a schema extension name. " <>
         "For example, \"dev/cpu_usage\"."
     )
 
@@ -1430,7 +1430,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "Get OASF object by name, using JSON schema Draft-07 format (see http://json-schema.org)." <>
-        " The object name may contain an extension name. For example, \"dev/printer\"."
+        " The object name may contain a schema extension name. For example, \"dev/printer\"."
     )
 
     produces("application/json")
@@ -1825,7 +1825,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "This API returns randomly generated sample data for the given class name. The class" <>
-        " name may contain an extension name. For example, \"dev/cpu_usage\"."
+        " name may contain a schema extension name. For example, \"dev/cpu_usage\"."
     )
 
     produces("application/json")
@@ -1884,7 +1884,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "This API returns randomly generated sample data for the given object name. The object" <>
-        " name may contain an extension name. For example, \"dev/os_service\"."
+        " name may contain a schema extension name. For example, \"dev/os_service\"."
     )
 
     produces("application/json")
