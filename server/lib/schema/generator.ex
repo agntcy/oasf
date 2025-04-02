@@ -436,6 +436,7 @@ defmodule Schema.Generator do
   defp generate_data(:lang, _type, _field), do: "en"
   defp generate_data(:uuid, _type, _field), do: uuid()
   defp generate_data(:uid, _type, _field), do: uuid()
+  defp generate_data(:authors, _type, _field), do: full_name(2)
   defp generate_data(:creator, _type, _field), do: full_name(2)
   defp generate_data(:accessor, _type, _field), do: full_name(2)
   defp generate_data(:modifier, _type, _field), do: full_name(2)
