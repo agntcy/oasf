@@ -90,21 +90,15 @@ defmodule SchemaWeb.SchemaController do
 
           example([
             %{
-              caption: "DHCP Activity",
-              category: "network",
-              category_name: "Network Activity",
-              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
-              name: "dhcp_activity",
-              profiles: [
-                "cloud",
-                "datetime",
-                "host",
-                "file_security"
-              ],
-              uid: 4004
-            }
-          ])
-        end,
+              name: "problem_solving",
+              description:
+                "Assisting with solving problems by generating potential solutions or strategies.",
+              category: "nlp",
+              extends: "analytical_reasoning",
+              uid: 10702,
+              caption: "Problem Solving",
+              category_name: "Natural Language Processing",
+              category_uid: 1
             }
           ])
         end,
