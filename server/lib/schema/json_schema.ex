@@ -5,7 +5,7 @@ defmodule Schema.JsonSchema do
   @moduledoc """
   Json schema generator. This module defines functions that generate JSON schema (see http://json-schema.org) schemas for OASF schema.
   """
-  @schema_base_uri "https://schema.oasf.io/schema/classes"
+  @schema_base_uri "https://schema.oasf.agntcy.org/schema/classes"
   @schema_version "http://json-schema.org/draft-07/schema#"
 
   @doc """
