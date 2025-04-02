@@ -105,99 +105,6 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
-      SkillDesc:
-        swagger_schema do
-          title("Skill Descriptor")
-          description("Schema skill descriptor.")
-
-          properties do
-            name(:string, "skill name", required: true)
-            caption(:string, "skill caption", required: true)
-            description(:string, "skill description", required: true)
-            main_skill(:string, "skill's main skill", required: true)
-            main_skill_name(:string, "omain's main skill's caption", required: true)
-            profiles(:array, "skill profiles", items: %PhoenixSwagger.Schema{type: :string})
-            uid(:integer, "skill unique identifier", required: true)
-          end
-
-          example([
-            %{
-              caption: "DHCP Activity",
-              main_skill: "network",
-              main_skill_name: "Network Activity",
-              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
-              name: "dhcp_activity",
-              profiles: [
-                "cloud",
-                "datetime",
-                "host",
-                "file_security"
-              ],
-              uid: 4004
-            }
-          ])
-        end,
-      DomainDesc:
-        swagger_schema do
-          title("Domain Descriptor")
-          description("Schema domain descriptor.")
-
-          properties do
-            name(:string, "Domain name", required: true)
-            caption(:string, "Domain caption", required: true)
-            description(:string, "Domain description", required: true)
-            main_domain(:string, "Domain's main domain", required: true)
-            main_domain_name(:string, "omain's main domain's caption", required: true)
-            profiles(:array, "Domain profiles", items: %PhoenixSwagger.Schema{type: :string})
-            uid(:integer, "Domain unique identifier", required: true)
-          end
-
-          example([
-            %{
-              caption: "DHCP Activity",
-              main_domain: "network",
-              main_domain_name: "Network Activity",
-              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
-              name: "dhcp_activity",
-              profiles: [
-                "cloud",
-                "datetime",
-                "host",
-                "file_security"
-              ],
-              uid: 4004
-            }
-          ])
-        end,
-      FeatureDesc:
-        swagger_schema do
-          title("Feature Descriptor")
-          description("Schema feature descriptor.")
-
-          properties do
-            name(:string, "Feature name", required: true)
-            caption(:string, "Feature caption", required: true)
-            description(:string, "Feature description", required: true)
-            main_feature(:string, "Feature's main feature", required: true)
-            main_feature_name(:string, "Feature's main feature's caption", required: true)
-            profiles(:array, "Feature profiles", items: %PhoenixSwagger.Schema{type: :string})
-            uid(:integer, "Feature unique identifier", required: true)
-          end
-
-          example([
-            %{
-              caption: "DHCP Activity",
-              main_feature: "network",
-              main_feature_name: "Network Activity",
-              description: "DHCP Activity classes report MAC to IP assignment via DHCP.",
-              name: "dhcp_activity",
-              profiles: [
-                "cloud",
-                "datetime",
-                "host",
-                "file_security"
-              ],
-              uid: 4004
             }
           ])
         end,
@@ -1051,7 +958,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :SkillDesc)
+    response(200, "Success", :ClassDesc)
   end
 
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1141,7 +1048,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :DomainDesc)
+    response(200, "Success", :ClassDesc)
   end
 
   @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1231,7 +1138,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :FeatureDesc)
+    response(200, "Success", :ClassDesc)
   end
 
   @spec features(Plug.Conn.t(), map()) :: Plug.Conn.t()
