@@ -1,7 +1,7 @@
 {
   "caption": "LangGraph Config",
   "description": "Describes an agent deployment config for the LangGraph framework.",
-  "extends": "object",
+  "extends": "agentic_framework_config",
   "name": "langgraph_config",
   "attributes": {
     "framework_type": {

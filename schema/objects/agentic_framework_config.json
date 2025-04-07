@@ -1,0 +1,7 @@
+{
+  "caption": "Agentic Framework Config",
+  "description": "Describes an agent deployment config for an agentic framework.",
+  "extends": "object",
+  "name": "agentic_framework_config",
+  "attributes": {}
+}

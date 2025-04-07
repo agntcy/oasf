@@ -316,15 +316,8 @@
     "framework_config": {
       "caption": "Agentic Framework Config",
       "description": "Config for an agent of an agentic framework.",
-      "type": "object",
-      "enum": {
-        "llamaindex_config": {
-          "caption": "Llamaindex Config"
-        },
-        "langgraph_config": {
-          "caption": "LangGraph Config"
-        }
-      }
+      "type": "agentic_framework_config",
+      "is_enum": true
     },
     "framework_type": {
       "caption": "Framework Type",
