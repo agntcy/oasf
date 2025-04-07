@@ -634,6 +634,7 @@ defmodule SchemaWeb.PageView do
   defp append_source_references(html, prefix_html, obj) do
     source = obj[:source]
     references = obj[:references]
+    enum = obj[:is_enum]
 
     source_html =
       if source != nil do
@@ -653,8 +654,38 @@ defmodule SchemaWeb.PageView do
         ""
       end
 
-    if source_html != "" or refs_html != "" do
-      [html, prefix_html, "<dd>", source_html, refs_html, "</dd>"]
+    options_html =
+      case obj[:type] do
+        "object_t" ->
+          children = Schema.Utils.find_children(Schema.objects(), obj[:object_type])
+
+          if children != nil do
+            [
+              "<dt>Options<dd class=\"ml-3\">",
+              Enum.map(children, fn child ->
+                [
+                  "<div>",
+                  "<a href=\"",
+                  "#{child[:name]}",
+                  "\">",
+                  child[:caption]
+                  |> Phoenix.HTML.html_escape()
+                  |> Phoenix.HTML.safe_to_string(),
+                  "</a>",
+                  "</div>"
+                ]
+              end)
+            ]
+          else
+            ""
+          end
+
+        _ ->
+          ""
+      end
+
+    if source_html != "" or refs_html != "" or enum do
+      [html, prefix_html, "<dd>", source_html, refs_html, options_html, "</dd>"]
     else
       html
     end
