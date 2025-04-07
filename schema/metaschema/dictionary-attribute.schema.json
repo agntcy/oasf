@@ -35,6 +35,10 @@
             "type": "boolean",
             "description": "A flag used when the attribute represents an array of values rather than a single value."
         },
+        "is_enum": {
+            "type": "boolean",
+            "description": "A flag used when the attribute represents a limited scope of objects/classes, extending a parent object/class rather than a single value. Can be applied only for object and class types."
+        },
         "suppress_checks": {
           "type": "array",
           "items": {
