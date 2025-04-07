@@ -208,6 +208,10 @@ defmodule Schema.Generator do
           "object_t" ->
             generate_object(field[:requirement], name, attribute, map)
 
+          "class_t" ->
+            get_valid_class(field)
+            |> generate_sample_class(Process.get(:profiles))
+
           nil ->
             Logger.warning("Invalid type name: #{name}")
             map
