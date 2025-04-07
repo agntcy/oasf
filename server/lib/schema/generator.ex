@@ -376,11 +376,7 @@ defmodule Schema.Generator do
   end
 
   defp generate_object({_name, field}) do
-    find_object(field) |> generate_sample_object(Process.get(:profiles))
-  end
-
-  defp find_object(field) do
-    Schema.object(field[:object_type])
+    get_valid_object(field) |> generate_sample_object(Process.get(:profiles))
   end
 
   defp generate_file_object(field) do
@@ -411,12 +407,9 @@ defmodule Schema.Generator do
   end
 
   defp generate_objects(n, {_name, field}) do
-    object =
-      field[:object_type]
-      |> String.to_atom()
-      |> Schema.object()
-
-    Enum.map(1..n, fn _ -> generate_sample_object(object, Process.get(:profiles)) end)
+    Enum.map(1..n, fn _ ->
+      get_valid_object(field) |> generate_sample_object(Process.get(:profiles))
+    end)
   end
 
   defp generate_data(:ref_time, _type, _field),
@@ -816,6 +809,31 @@ defmodule Schema.Generator do
 
       _ ->
         Enum.random(valid_classes)
+    end
+  end
+
+  defp get_valid_object(field) do
+    valid_objects =
+      if field[:is_enum] do
+        Utils.find_children(Schema.objects(), field[:object_type])
+        |> Enum.map(fn descendant ->
+          descendant[:name]
+          |> String.to_atom()
+          |> Schema.object()
+        end)
+      else
+        field[:object_type]
+        |> String.to_atom()
+        |> Schema.object()
+        |> List.wrap()
+      end
+
+    case valid_objects do
+      [] ->
+        Logger.error("No matching object found for #{field[:object_type]}")
+
+      _ ->
+        Enum.random(valid_objects)
     end
   end
 
