@@ -258,19 +258,9 @@
     "deployment_options": {
       "caption": "Deployment Options",
       "description": "List of possible methods to instantiate or consume the agent.  Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
-      "type": "object",
-      "is_array": true,
-      "enum": {
-        "source_code_deployment": {
-          "caption": "Source Code Deployment"
-        },
-        "agent_deployment": {
-          "caption": "Agent Deployment"
-        },
-        "docker_deployment": {
-          "caption": "Docker Deployment"
-        }
-      }
+      "type": "deployment_option",
+      "is_enum": true,
+      "is_array": true
     },
     "digest": {
       "caption": "Digest",

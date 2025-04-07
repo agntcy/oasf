@@ -1,7 +1,7 @@
 {
   "caption": "Docker Deployment",
   "description": "Describes the docker deployment for this agent.",
-  "extends": "object",
+  "extends": "deployment_option",
   "name": "docker_deployment",
   "attributes": {
     "type": {

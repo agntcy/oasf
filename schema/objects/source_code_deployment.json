@@ -1,7 +1,7 @@
 {
   "caption": "Source Code Deployment",
   "description": "Describes the source code where the agent is available. It specifies also the type of deployer that it supports.",
-  "extends": "object",
+  "extends": "deployment_option",
   "name": "source_code_deployment",
   "attributes": {
     "type": {

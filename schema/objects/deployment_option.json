@@ -1,0 +1,7 @@
+{
+  "caption": "Deployment Option",
+  "description": "Describes a deployment option for an agent.",
+  "extends": "object",
+  "name": "deployment_option",
+  "attributes": {}
+}
