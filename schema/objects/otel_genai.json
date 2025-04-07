@@ -1,0 +1,592 @@
+{
+    "metrics": [
+      {
+        "metric_name": "gen_ai.client.token.usage",
+        "instrument_type": "Counter",
+        "unit": "1 (count)",
+        "description": "Counts the number of input and output tokens used by the generative AI client.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.operation.duration",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Measures the duration of operations initiated by the generative AI client.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.server.request.duration",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Measures the duration of requests processed by the generative AI server.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.server.time_per_output_token",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Measures the time taken to generate each output token after the first one.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.server.time_to_first_token",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Measures the time taken to generate the first token in a successful response.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.response_latency",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Measures the end-to-end response time for the client to receive agent execution results.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.response_latency",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Time taken by the agent to complete its execution and return a result.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.end_to_end_chain_completion_time",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Time taken by an agent to complete a full sequence of chained tasks in a workflow.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.execution_success_rate",
+        "instrument_type": "Gauge",
+        "unit": "1 (ratio)",
+        "description": "Fraction of agent executions that complete successfully without errors.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.error_count",
+        "instrument_type": "Counter",
+        "unit": "1 (count)",
+        "description": "Total number of errors encountered by the agent.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.uptime_and_availability",
+        "instrument_type": "Gauge",
+        "unit": "%",
+        "description": "Percentage of time the agent is operational and available.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.error_recovery_rate",
+        "instrument_type": "Gauge",
+        "unit": "1 (ratio)",
+        "description": "Fraction of agent failures that successfully recover without external intervention.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.task_delegation_accuracy",
+        "instrument_type": "Gauge",
+        "unit": "1 (ratio)",
+        "description": "Measures how accurately the semantic router delegates tasks to the correct agent.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.connection_reliability",
+        "instrument_type": "Gauge",
+        "unit": "1 (ratio)",
+        "description": "Success rate of establishing authenticated connections between agents.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.transfer_time_accuracy",
+        "instrument_type": "Gauge",
+        "unit": "1 (ratio)",
+        "description": "Measures the accuracy and timeliness of data transfer between agents.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.client.ioa.agent.collaboration.success_rate",
+        "instrument_type": "Gauge",
+        "unit": "1 (ratio)",
+        "description": "Fraction of multi-agent collaborations that complete successfully.",
+        "stability": "Experimental"
+      },
+      {
+        "metric_name": "gen_ai.server.ioa.agp.chain_completion_time",
+        "instrument_type": "Histogram",
+        "unit": "s",
+        "description": "Time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway.",
+        "stability": "Experimental"
+      },
+      {
+         "metric_name": "gen_ai.server.ioa.agp.connection_latency",
+         "instrument_type": "Histogram",
+         "unit": "s",
+         "description": "Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions.",
+         "stability": "Experimental"
+       },
+       {
+         "metric_name": "gen_ai.server.ioa.agp.error_rates",
+         "instrument_type": "Counter",
+         "unit": "1 (count)",
+         "description": "Total number of errors encountered within the AGP layer (e.g., message handling, routing failures).",
+         "stability": "Experimental"
+       },
+       {
+         "metric_name": "gen_ai.server.ioa.agp.message_throughput",
+         "instrument_type": "UpDownCounter",
+         "unit": "1/s",
+         "description": "Tracks the rate of messages sent and received over the AGP, reflecting communication load.",
+         "stability": "Experimental"
+       }
+    ],
+    "attributes": [
+      {
+        "attribute": "gen_ai.operation.name",
+        "type": "string",
+        "description": "The name of the operation being performed. [1]",
+        "examples": "chat; text_completion; embeddings",
+        "requirement_level": "Required",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.system",
+        "type": "string",
+        "description": "The Generative AI product as identified by the client or server instrumentation. [2]",
+        "examples": "openai",
+        "requirement_level": "Required",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "error.type",
+        "type": "string",
+        "description": "Describes a class of error the operation ended with. [3]",
+        "examples": "timeout; java.net.UnknownHostException; server_certificate_invalid; 500",
+        "requirement_level": "Conditionally Required if the operation ended in an error",
+        "stability": "Stable"
+      },
+      {
+        "attribute": "gen_ai.agent.description",
+        "type": "string",
+        "description": "Free-form description of the GenAI agent provided by the application.",
+        "examples": "Helps with math problems; Generates fiction stories",
+        "requirement_level": "Conditionally Required If provided by the application.",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.agent.id",
+        "type": "string",
+        "description": "The unique identifier of the GenAI agent.",
+        "examples": "asst_5j66UpCpwteGg4YSxUnt7lPY",
+        "requirement_level": "Conditionally Required if applicable.",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.agent.name",
+        "type": "string",
+        "description": "Human-readable name of the GenAI agent provided by the application.",
+        "examples": "Math Tutor; Fiction Writer",
+        "requirement_level": "Conditionally Required If provided by the application.",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.output.type",
+        "type": "string",
+        "description": "Represents the content type requested by the client. [4]",
+        "examples": "text; json; image",
+        "requirement_level": "Conditionally Required [5]",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.choice.count",
+        "type": "int",
+        "description": "The target number of candidate completions to return.",
+        "examples": "3",
+        "requirement_level": "Conditionally Required if available, in the request, and !=1",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.model",
+        "type": "string",
+        "description": "The name of the GenAI model a request is being made to. [6]",
+        "examples": "gpt-4",
+        "requirement_level": "Conditionally Required If provided by the application.",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.seed",
+        "type": "int",
+        "description": "Requests with same seed value more likely to return same result.",
+        "examples": "100",
+        "requirement_level": "Conditionally Required if applicable and if the request includes a seed",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.temperature",
+        "type": "double",
+        "description": "The temperature setting for the GenAI request.",
+        "examples": "0.0",
+        "requirement_level": "Conditionally Required If provided by the application.",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.top_p",
+        "type": "double",
+        "description": "The top_p sampling setting for the GenAI request.",
+        "examples": "1.0",
+        "requirement_level": "Conditionally Required If provided by the application.",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "server.port",
+        "type": "int",
+        "description": "GenAI server port. [7]",
+        "examples": "80; 8080; 443",
+        "requirement_level": "Conditionally Required If `server.address` is set.",
+        "stability": "Stable"
+      },
+      {
+        "attribute": "gen_ai.request.encoding_formats",
+        "type": "string[]",
+        "description": "The encoding formats requested in an embeddings operation, if specified. [8]",
+        "examples": "[\"base64\"]; [\"float\", \"binary\"]",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.frequency_penalty",
+        "type": "double",
+        "description": "The frequency penalty setting for the GenAI request.",
+        "examples": "0.1",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.max_tokens",
+        "type": "int",
+        "description": "The maximum number of tokens the model generates for a request.",
+        "examples": "100",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.presence_penalty",
+        "type": "double",
+        "description": "The presence penalty setting for the GenAI request.",
+        "examples": "0.1",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.request.stop_sequences",
+        "type": "string[]",
+        "description": "List of sequences that the model will use to stop generating further tokens.",
+        "examples": "[\"forest\", \"lived\"]",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.response.finish_reasons",
+        "type": "string[]",
+        "description": "Array of reasons the model stopped generating tokens, corresponding to each generation received.",
+        "examples": "[\"stop\"]; [\"stop\", \"length\"]",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.response.id",
+        "type": "string",
+        "description": "The unique identifier for the completion.",
+        "examples": "chatcmpl-123",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.response.model",
+        "type": "string",
+        "description": "The name of the model that generated the response. [9]",
+        "examples": "gpt-4-0613",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.usage.input_tokens",
+        "type": "int",
+        "description": "The number of tokens used in the GenAI input (prompt).",
+        "examples": "100",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "gen_ai.usage.output_tokens",
+        "type": "int",
+        "description": "The number of tokens used in the GenAI response (completion).",
+        "examples": "180",
+        "requirement_level": "Recommended",
+        "stability": "Experimental"
+      },
+      {
+        "attribute": "server.address",
+        "type": "string",
+        "description": "GenAI server address. [10]",
+        "examples": "example.com; 10.1.2.80; /tmp/my.sock",
+        "requirement_level": "Recommended",
+        "stability": "Stable"
+      },
+      {
+         "attribute": "gen_ai.ioa.agp.message_trace",
+         "type": "string",
+         "description": "Track the path of a message from sending to receiving, which can help in diagnosing delays or failures in message routing.",
+         "examples": null,
+         "requirement_level": "Recommended",
+         "stability": null
+       },
+       {
+         "attribute": "gen_ai.ioa.agp.performance_trace",
+         "type": "string",
+         "description": "Tracing to capture performance-related data, like processing time for different operations within the gateway and agent.",
+         "examples": null,
+         "requirement_level": "Recommended",
+         "stability": null
+       }
+    ],
+    "attribute_values": [
+      {
+        "attribute": "gen_ai.operation.name",
+        "values": [
+          {
+            "value": "chat",
+            "description": "Chat completion operation",
+            "stability": "Experimental"
+          },
+          {
+            "value": "text_completion",
+            "description": "Text completions operation",
+            "stability": "Experimental"
+          },
+          {
+            "value": "embeddings",
+            "description": "Embeddings operation",
+            "stability": "Experimental"
+          },
+          {
+            "value": "create_agent",
+            "description": "Create GenAI agent",
+            "stability": "Experimental"
+          },
+          {
+            "value": "execute_tool",
+            "description": "Execute a tool",
+            "stability": "Experimental"
+          }
+        ]
+      },
+      {
+        "attribute": "gen_ai.system",
+        "values": [
+          {
+            "value": "anthropic",
+            "description": "Anthropic",
+            "stability": "Experimental"
+          },
+          {
+            "value": "cohere",
+            "description": "Cohere",
+            "stability": "Experimental"
+          },
+          {
+            "value": "openai",
+            "description": "OpenAI",
+            "stability": "Experimental"
+          },
+          {
+            "value": "vertex_ai",
+            "description": "Vertex AI",
+            "stability": "Experimental"
+          },
+          {
+            "value": "az.ai.inference",
+            "description": "Azure AI Inference",
+            "stability": "Experimental"
+          }
+        ]
+      },
+      {
+        "attribute": "gen_ai.token.type",
+        "values": [
+          {
+            "value": "input",
+            "description": "Input tokens (prompt, input, etc.)",
+            "stability": "Experimental"
+          },
+          {
+            "value": "output",
+            "description": "Output tokens (completion, response, etc.)",
+            "stability": "Experimental"
+          }
+        ]
+      },
+      {
+        "attribute": "error.type",
+        "values": [
+          {
+            "value": "_OTHER",
+            "description": "A fallback error value for undefined custom errors",
+            "stability": "Stable"
+          }
+        ]
+      },
+      {
+        "attribute": "gen_ai.output.type",
+        "values": [
+          {
+            "value": "image",
+            "description": "Image",
+            "stability": "Experimental"
+          },
+          {
+            "value": "json",
+            "description": "JSON object with known or unknown schema",
+            "stability": "Experimental"
+          },
+          {
+            "value": "speech",
+            "description": "Speech",
+            "stability": "Experimental"
+          },
+          {
+            "value": "text",
+            "description": "Plain text",
+            "stability": "Experimental"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "event_name": "gen_ai.system.message",
+        "description": "Describes the instructions passed to the Generative AI model",
+        "attributes": {
+          "role": "string: Role of the message author.",
+          "content": "AnyValue: The message content."
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.user.message",
+        "description": "Describes the user-specified prompt message",
+        "attributes": {
+          "role": "string: Role of the message author.",
+          "content": "AnyValue: The message content."
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.choice",
+        "description": "Describes model-generated chat response (choice)",
+        "attributes": {
+          "finish_reason": "string: Why the model stopped generating tokens.",
+          "index": "int: Index of the choice in the list.",
+          "message": "object: Response message including `role`, `content`, and `tool_calls`."
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.tool.message",
+        "description": "This event describes the response from a tool or function call passed to the GenAI model.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.client.ioa.agent.tool_use_errors",
+        "description": "Tracks failed tool/API calls",
+        "attributes": {
+          "error_message": "string: Error msg associated with the agent.",
+          "status_code": "int: If applicable.",
+          "agent_id": "string: The ID of the agent"
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.security.number_of_unauthorized_access_attempts",
+        "description": "Ensures only authorized agents interact with each other.",
+        "attributes": {
+          "agent_id": "string: The ID of the agent"
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.schema_inconsistencies",
+        "description": "Tracks IOA components to refine integrations with external APIs.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.schema_transformations",
+        "description": "Shows how often IO Mapper is needed to normalize agent data.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.agent.discovery_errors",
+        "description": "Identifies common developer frustrations when searching for agents.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.graph_determinism_score",
+        "description": "Measuring Determinism in Agentic Workflows",
+        "attributes": {
+          "score": "int"
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.graph_dynamism",
+        "description": "If nodes frequently change how many connections they have, the topology is dynamic.",
+        "attributes": {
+          "score": "int"
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.agp.subscription_events",
+        "description": "Record successful or failed subscription attempts to the gateway.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.agp.connection_events",
+        "description": "Log when connections to the gateway are established or terminated.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.agp.message_send_receive_events",
+        "description": "Capture when a message is sent or received, along with the sender and receiver details.",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.runtime_graph",
+        "description": "Topology of the runtime graph",
+        "attributes": {
+          "topology": "object: The graph topology"
+        },
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.agent.commonly_failing_agents",
+        "description": "Identify problematic agents that need debugging or better training data",
+        "attributes": {},
+        "stability": "Experimental"
+      },
+      {
+        "event_name": "gen_ai.ioa.agent.most_frequent_agent_to_agent_interactions",
+        "description": "Identifies which agents work well together for multi-agent tasks",
+        "attributes": {},
+        "stability": "Experimental"
+      }
+    ]
+  }
