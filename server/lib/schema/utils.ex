@@ -95,7 +95,23 @@ defmodule Schema.Utils do
   def update_objects(objects, dictionary) do
     Enum.into(objects, %{}, fn {name, object} ->
       links = object_links(dictionary, Atom.to_string(name))
-      {name, Map.put(object, :_links, links)}
+
+      children =
+        find_children(objects, Atom.to_string(name))
+        |> Enum.map(fn child ->
+          child
+          |> Map.put(:object_name, child[:caption])
+          |> Map.put(:type, Atom.to_string(:object_t))
+          |> Map.put(:object_type, child[:name])
+        end)
+        |> Enum.into(%{}, fn child ->
+          {child.name, child}
+        end)
+
+      object
+      |> Map.put(:_links, links)
+      |> Map.put(:_children, children)
+      |> (&{name, &1}).()
     end)
   end
 
