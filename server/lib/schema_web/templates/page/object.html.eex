@@ -77,7 +77,11 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 
+<%= if Enum.empty?(@data[:attributes]) do %>
+<div></div>
+<% else %>
 <div class="mt-4">
+  <h5>Attributes</h5>
   <table id="data-table" class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
@@ -101,6 +105,35 @@ SPDX-License-Identifier: Apache-2.0
     </tbody>
   </table>
 </div>
+<% end %>
+
+<%= if Enum.empty?(@data[:_children]) do %>
+<div></div>
+<% else %>
+<div class="mt-4">
+  <h5>Children objects</h5>
+  <table id="data-table" class="table table-bordered sortable">
+    <thead>
+      <tr class="thead-color">
+        <th style="width: 12%">Caption</th>
+        <th style="width: 12%">Name</th>
+        <th style="width: 12%">Type</th>
+        <th style="width: 34%">Description</th>
+      </tr>
+    </thead>
+    <tbody class="searchable">
+      <%= for {key, field} <- @data[:_children] do %>
+      <tr class="<%= field_classes(field)%>">
+        <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
+        <td data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:key], field) %>"><%= raw format_attribute_name(key) %></td>
+        <td class="extensions"><%= raw format_type(@conn, field) %></td>
+        <td><%= raw format_desc(key, field) %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<% end %>
 
 <% links = @data[:_links] %>
 <%= if Enum.empty?(links) do %>
