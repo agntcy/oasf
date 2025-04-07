@@ -493,4 +493,16 @@ defmodule Schema.Utils do
       {nil, nil}
     end
   end
+
+  @spec find_children(map(), String.t()) :: [map()]
+  def find_children(map, parent_name) do
+    map
+    |> Enum.filter(fn {_key, elem} ->
+      Map.has_key?(elem, :extends) && elem[:extends] == parent_name
+    end)
+    |> Enum.map(fn {_key, elem} -> elem end)
+    |> Enum.flat_map(fn elem ->
+      [elem | find_children(map, elem[:name])]
+    end)
+  end
 end

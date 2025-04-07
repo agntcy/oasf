@@ -536,10 +536,10 @@ defmodule SchemaWeb.PageView do
           end
 
         "class_t" ->
-          class = Map.get(field, :class_path)
+          class = Map.get(field, :path)
           class_path = SchemaWeb.Router.Helpers.static_path(conn, "/#{class}")
 
-          case Map.get(field, :class_caption) do
+          case Map.get(field, :caption) do
             nil ->
               "<a href='#{class_path}'>#{format_type(conn, class)}</a>"
 
@@ -548,7 +548,7 @@ defmodule SchemaWeb.PageView do
           end
 
         _type ->
-          Map.get(field, :type_name) || ""
+          Map.get(field, :type_name) || Map.get(field, :name) || ""
       end
 
     array? = Map.get(field, :is_array)

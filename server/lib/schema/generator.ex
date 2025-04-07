@@ -101,34 +101,8 @@ defmodule Schema.Generator do
   end
 
   defp generate_classes(n, {_name, field}) do
-    # Filter to include only children classes that are not hidden
-    valid_classes =
-      find_descendants(Schema.all_classes(), field.class_name)
-      |> Enum.map(&Schema.find_class_by_name(&1.name))
-      |> Enum.filter(&(&1 != nil))
-
-    case valid_classes do
-      [] ->
-        {:error, "No matching class found"}
-
-      _ ->
-        Enum.map(1..n, fn _ ->
-          generate_sample_class(
-            Enum.random(valid_classes),
-            Process.get(:profiles)
-          )
-        end)
-    end
-  end
-
-  defp find_descendants(classes, base_extends) do
-    classes
-    |> Enum.filter(fn {_key, class} ->
-      Map.has_key?(class, :extends) && class.extends == base_extends
-    end)
-    |> Enum.map(fn {_key, class} -> class end)
-    |> Enum.flat_map(fn class ->
-      [class | find_descendants(classes, class.name)]
+    Enum.map(1..n, fn _ ->
+      get_valid_class(field) |> generate_sample_class(Process.get(:profiles))
     end)
   end
 
@@ -818,6 +792,26 @@ defmodule Schema.Generator do
       _uid ->
         Map.put(data, "uid", uid) |> write_json(file)
         uid + 1
+    end
+  end
+
+  defp get_valid_class(field) do
+    valid_classes =
+      if field[:is_enum] do
+        # Filter to include only children classes that are not hidden
+        Utils.find_children(Schema.all_classes(), field[:class_type])
+        |> Enum.map(&Schema.find_class_by_name(&1.name))
+        |> Enum.filter(&(&1 != nil))
+      else
+        Schema.find_class_by_name(field[:class_type]) |> List.wrap()
+      end
+
+    case valid_classes do
+      [] ->
+        Logger.error("No matching class found for #{field[:class_type]}")
+
+      _ ->
+        Enum.random(valid_classes)
     end
   end
 
