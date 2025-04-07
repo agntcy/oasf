@@ -335,15 +335,19 @@ defmodule Schema.Generator do
   defp generate_array({name, field} = attribute) do
     n = random(@max_array_size)
 
-    case field[:type] do
-      "object_t" ->
-        generate_objects(n, attribute)
+    if n > 0 do
+      case field[:type] do
+        "object_t" ->
+          generate_objects(n, attribute)
 
-      "class_t" ->
-        generate_classes(n, attribute)
+        "class_t" ->
+          generate_classes(n, attribute)
 
-      type ->
-        Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
+        type ->
+          Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
+      end
+    else
+      []
     end
   end
 
