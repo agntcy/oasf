@@ -1,4 +1,5 @@
 {
+  "uid": 2,
   "caption": "Finance and Business",
   "description": "Management of money, investments, and business operations, alongside the development and delivery of products and services in various industries.",
   "extends": "base_domain",
