@@ -1,8 +1,18 @@
 {
+  "uid": 1,
   "caption": "Observability",
+  "description": "Agent extension describing how the agent can be observed",
   "category": "observability",
-  "description": "The ability to gain actionable insights into the inner workings of an agent by analysing the inputs and outputs of different components, as they flow through the operational pipeline.",
   "extends": "base_feature",
   "name": "observability",
-  "attributes": {}
+  "attributes": {
+    "data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for observability.",
+      "requirement": "required",
+      "type:": "object_t",
+      "object_type": "observability_data",
+      "object_name": "Observability Data"
+    }
+  }
 }
