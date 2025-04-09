@@ -1,8 +1,0 @@
-{
-  "uid": 1,
-  "caption": "MAA_Agent",
-  "description": "Values: Scores values",
-  "extends": "quality",
-  "name": "maa_agent",
-  "attributes": {}
-}

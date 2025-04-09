@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Trust and Safety(/MAA_Agent)",
-  "description": "Values: Bias\nMisinformation\nToxicity\nIllegal Activity\nPersonal Safety\nPII Leakage\nPrompt Leakage\nUnauthorized Access\nIntellectual Property\nExcessive Agency\nRobustness\nGraphic Content\nCompetition\nInput & Output PII\nInput & Output Tone\nInput & Output Toxicity\nInput & Output Sexism\nPrompt Injection\nNumber of unauthorized agent calls blocked.\nData compliance adherence (GDPR, HIPAA, etc.)\nRobustness to adversarial attacks",
-  "extends": "evaluation",
-  "name": "trust_and_safety_feature",
-  "attributes": {}
-}

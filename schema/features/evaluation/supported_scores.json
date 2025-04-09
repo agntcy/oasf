@@ -1,8 +1,0 @@
-{
-  "uid": 4,
-  "caption": "Supported Scores",
-  "description": "Values: (Names of scores used / definition/pointers)\nBLEU\nROUGE\nStandard ML metrics:\nF1\nExact Match\nDistance scores:\nEuclidean Distance (Embedding)\nCosine Distance (Embedding)\nReciprocal Rank\nNDCG\nKL Divergence\nCross Entropy\nPSI",
-  "extends": "evaluation",
-  "name": "supported_scores",
-  "attributes": {}
-}

@@ -1,8 +1,0 @@
-{
-  "uid": 6,
-  "caption": "Referred Evaluations(/MAA_Agent)",
-  "description": "Values: Number of refs evals\nTools/Methodology leveraged in ref.evals",
-  "extends": "rating",
-  "name": "referred_evaluations_maa_agent",
-  "attributes": {}
-}

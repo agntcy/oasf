@@ -1,8 +1,0 @@
-{
-  "uid": 7,
-  "caption": "Referred Datasets(/MAA_Agent)",
-  "description": "Values: Pointers to Datasets used per ref. evals",
-  "extends": "rating",
-  "name": "referred_datasets_maa_agent",
-  "attributes": {}
-}

@@ -1,8 +1,0 @@
-{
-  "uid": 9,
-  "caption": "Behaviour Consistency(/MAA_Agent)",
-  "description": "Tracks consistency in agent performance under similar conditions.",
-  "extends": "performance",
-  "name": "behaviour_consistency_maa_agent",
-  "attributes": {}
-}

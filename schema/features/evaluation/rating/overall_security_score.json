@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Overall security score",
-  "description": "Values: LLM(s), Prompt(s)",
-  "extends": "rating",
-  "name": "overall_security_score",
-  "attributes": {}
-}

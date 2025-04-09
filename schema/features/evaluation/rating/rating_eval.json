@@ -1,8 +1,0 @@
-{
-  "uid": 1,
-  "caption": "Rating",
-  "description": "MAA (if applicable)",
-  "extends": "rating",
-  "name": "rating_eval",
-  "attributes": {}
-}

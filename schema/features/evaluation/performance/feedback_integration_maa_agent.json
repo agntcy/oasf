@@ -1,8 +1,0 @@
-{
-  "uid": 11,
-  "caption": "Feedback integration(/MAA_Agent)",
-  "description": "Evaluates how effectively user or external feedback is used to improve agent performance.",
-  "extends": "performance",
-  "name": "feedback_integration_maa_agent",
-  "attributes": {}
-}

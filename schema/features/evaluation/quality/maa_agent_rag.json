@@ -1,8 +1,0 @@
-{
-  "uid": 6,
-  "caption": "MAA_Agent_RAG",
-  "description": "Values: Answer Relevancy\nFaithfulness\nContextual Relevancy\nContextual Precision\nContextual Recall\nContext Adherence (Closed Domain Hallucinations)\nContext Adherence Luna: Scorers.context_adherence_luna\nContext Adherence Plus: Scorers.context_adherence_plus\nChunk Attribution\nChunk Attribution Luna: Scorers.chunk_attribution_utilization_luna\nChunk Attribution Plus: Scorers.chunk_attribution_utilization_plus\nChunk Utilization\nChunk Utilization Luna: Scorers.chunk_attribution_utilization_luna\nChunk Utilization Plus: Scorers.chunk_attribution_utilization_plus",
-  "extends": "quality",
-  "name": "maa_agent_rag",
-  "attributes": {}
-}

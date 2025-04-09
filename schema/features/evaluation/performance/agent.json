@@ -1,8 +1,0 @@
-{
-  "uid": 1,
-  "caption": "Agent",
-  "description": "Values:\nAverage response time\nStability\nExecution success rate",
-  "extends": "performance",
-  "name": "agent",
-  "attributes": {}
-}

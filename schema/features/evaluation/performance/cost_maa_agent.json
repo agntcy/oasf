@@ -1,8 +1,0 @@
-{
-  "uid": 4,
-  "caption": "Cost/MAA_Agent",
-  "description": "Values: latency",
-  "extends": "performance",
-  "name": "cost_maa_agent",
-  "attributes": {}
-}
