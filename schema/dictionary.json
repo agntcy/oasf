@@ -206,6 +206,11 @@
         }
       ]
     },
+    "cost_score": {
+      "caption": "Cost Score",
+      "description": "Cost score.",
+      "type": "float_t"
+    },
     "cost_tracking": {
       "caption": "Cost Tracking",
       "description": "Monitors and analyzes the financial expenditure associated with multi-agent operations to ensure cost efficiency.",
@@ -488,6 +493,16 @@
       "description": "A json output.",
       "type": "json_t"
     },
+    "overall_rating": {
+      "caption": "Overall Rating",
+      "description": "Overall rating.",
+      "type": "float_t"
+    },
+    "overall_scores": {
+      "caption": "Overall Scores",
+      "description": "Overall scores of the Agent across all evaluation.",
+      "type": "overall_scores"
+    },
     "parent_uid": {
       "caption": "Parent Unique ID",
       "description": "The unique identifier of an object's parent object. See specific usage.",
@@ -523,6 +538,11 @@
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
     },
+    "quality_score": {
+      "caption": "Quality Score",
+      "description": "Overall score.",
+      "type": "float_t"
+    },
     "resiliency": {
       "caption": "Resiliency",
       "description": "Measures the ability of multi-agent systems to recover from failures and maintain operational continuity.",
@@ -549,6 +569,11 @@
       "description": "",
       "type": "metric",
       "is_array": true
+    },
+    "security_score": {
+      "caption": "Security Score",
+      "description": "Security score.",
+      "type": "float_t"
     },
     "size": {
       "caption": "Size",

@@ -1,0 +1,18 @@
+{
+  "caption": "Evaluation Data",
+  "description": "Data supported by the agent extension for evaluation.",
+  "extends": "object",
+  "name": "evaluation_data",
+  "attributes": {
+    "overall_rating": {
+      "caption": "Overall Rating",
+      "description": "Overall rating of the Agent across all evaluation.",
+      "requirement": "required"
+    },
+    "overall_scores": {
+      "caption": "Overall Scores",
+      "description": "Overall scores of the Agent across all evaluation.",
+      "requirement": "required"
+    }
+  }
+}

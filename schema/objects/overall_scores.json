@@ -1,0 +1,22 @@
+{
+  "caption": "Overall Scores",
+  "description": "Overall evaluation scores for an agent.",
+  "name": "overall_scores",
+  "attributes": {
+    "quality_score": {
+      "caption": "Quality Score",
+      "description": "Overall quality score of the agent's performance.",
+      "requirement": "recommended"
+    },
+    "cost_score": {
+      "caption": "Cost Score",
+      "description": "Overall cost score of the agent's operation.",
+      "requirement": "recommended"
+    },
+    "security_score": {
+      "caption": "Security Score",
+      "description": "Overall security score of the agent's deployment.",
+      "requirement": "recommended"
+    }
+  }
+}
