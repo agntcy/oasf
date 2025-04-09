@@ -13,6 +13,11 @@
       "caption": "Version",
       "description": "Data schema version.",
       "requirement": "required"
+    },
+    "url": {
+      "caption": "URL",
+      "description": "URL of the data schema.",
+      "requirement": "required"
     }
   }
 }
