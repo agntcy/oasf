@@ -659,7 +659,7 @@ defmodule SchemaWeb.PageView do
         "object_t" ->
           children = Schema.Utils.find_children(Schema.objects(), obj[:object_type])
 
-          if children != nil do
+          if children != nil and !Enum.empty?(children) do
             [
               "<dt>Options<dd class=\"ml-3\">",
               Enum.map(children, fn child ->
@@ -684,7 +684,7 @@ defmodule SchemaWeb.PageView do
           ""
       end
 
-    if source_html != "" or refs_html != "" or enum do
+    if source_html != "" or refs_html != "" or options_html != "" do
       [html, prefix_html, "<dd>", source_html, refs_html, options_html, "</dd>"]
     else
       html
