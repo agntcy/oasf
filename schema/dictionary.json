@@ -237,6 +237,12 @@
       "description": "Supported data type.",
       "type": "object"
     },
+    "datasets": {
+      "caption": "Datasets",
+      "description": "Datasets array.",
+      "type": "dataset",
+      "is_array": true
+    },
     "data_platform_integrations": {
       "caption": "Data Platform Integrations",
       "description": "Data platforms supported by the agent for observability.",
@@ -246,7 +252,7 @@
     "data_points": {
       "caption": "Data Points",
       "description": "The actual data points collected for the metric, which can be a single value or a collection of values over time.",
-      "type": "object",
+      "type": "key_value_object",
       "is_array": true
     },
     "data_schema": {
@@ -289,6 +295,11 @@
       "description": "",
       "type": "metric",
       "is_array": true
+    },
+    "evaluation_report": {
+      "caption": "Evaluation report",
+      "description": "The report of an evaluation.",
+      "type": "evaluation_report"
     },
     "events": {
       "caption": "Events",
@@ -417,6 +428,12 @@
       "description": "Captures metrics, events, logs, and traces to monitor the performance, interactions, and behavior of multi-agent systems.",
       "type": "melt_telemetry"
     },
+    "metadata": {
+      "caption": "Metadata",
+      "description": "Metadata.",
+      "type": "key_value_object",
+      "is_array": true
+    },
     "metric": {
       "caption": "Metric",
       "description": "",
@@ -425,7 +442,8 @@
     "metrics": {
       "caption": "Metrics",
       "description": "Defines the key metrics used to evaluate system performance, cost, and other critical factors.",
-      "type": "metrics"
+      "type": "metric",
+      "is_array": true
     },
     "multi_agent_collaboration": {
       "caption": "Multi-agent Collaboration",
@@ -538,10 +556,21 @@
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
     },
+    "publisher": {
+      "caption": "Publisher",
+      "description": "Publisher.",
+      "type": "publisher"
+    },
     "quality_score": {
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
+    },
+    "referred_evaluations": {
+      "caption": "Referred evaluations",
+      "description": "Evaluations associated to the Agent.",
+      "type": "referred_evaluation",
+      "is_array": true
     },
     "resiliency": {
       "caption": "Resiliency",

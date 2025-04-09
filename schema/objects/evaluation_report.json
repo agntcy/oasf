@@ -1,0 +1,17 @@
+{
+  "caption": "Evaluation report",
+  "description": "The report of an evaluation.",
+  "name": "evaluation_report",
+  "attributes": {
+    "overall_scores": {
+      "caption": "Scores",
+      "description": "The scores of the associated evaluation.",
+      "requirement": "required"
+    },
+    "metrics": {
+      "caption": "Metrics",
+      "description": "The metrics of the associated evaluation.",
+      "requirement": "required"
+    }
+  }
+}

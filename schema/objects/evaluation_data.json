@@ -13,6 +13,11 @@
       "caption": "Overall Scores",
       "description": "Overall scores of the Agent across all evaluation.",
       "requirement": "required"
+    },
+    "referred_evaluations": {
+      "caption": "Referred evaluations",
+      "description": "Evaluations associated to the Agent.",
+      "requirement": "required"
     }
   }
 }
