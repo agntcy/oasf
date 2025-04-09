@@ -1,0 +1,23 @@
+{
+  "caption": "Agntcy Observability Data Schema",
+  "description": "Describes OASF Observability Data Schema",
+  "extends": "data_schema",
+  "name": "agntcy_observability_data_schema",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Agntcy Observability Data Schema",
+      "requirement": "required"
+    },
+    "version": {
+      "caption": "Version",
+      "description": "v0.0.1",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "URL",
+      "description": "<a target='_blank' href='https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability_data_schema.json'>Agntcy Observability Data Schema</a>",
+      "requirement": "required"
+    }
+  }
+}

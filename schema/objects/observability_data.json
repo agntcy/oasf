@@ -7,7 +7,8 @@
     "data_schema": {
       "caption": "Supported Data Schema",
       "description": "Data schema supported by the agent for observability.",
-      "requirement": "required"
+      "requirement": "required",
+      "is_enum": true
     },
     "export_format": {
       "caption": "Export Format",
