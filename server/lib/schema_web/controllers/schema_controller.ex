@@ -1307,6 +1307,81 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
+  Export the OASF skill classes.
+  """
+  swagger_path :export_skills do
+    get("/export/skills")
+    summary("Export skill classes")
+    description("Get OASF schema skill classes.")
+    produces("application/json")
+    tag("Schema Export")
+
+    parameters do
+      extensions(:query, :array, @extensions_param_description, items: [type: :string])
+      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  def export_skills(conn, params) do
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    classes = Schema.export_skills(extensions, profiles)
+    send_json_resp(conn, classes)
+  end
+
+  @doc """
+  Export the OASF domain classes.
+  """
+  swagger_path :export_domains do
+    get("/export/domains")
+    summary("Export domain classes")
+    description("Get OASF schema domain classes.")
+    produces("application/json")
+    tag("Schema Export")
+
+    parameters do
+      extensions(:query, :array, @extensions_param_description, items: [type: :string])
+      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  def export_domains(conn, params) do
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    classes = Schema.export_domains(extensions, profiles)
+    send_json_resp(conn, classes)
+  end
+
+  @doc """
+  Export the OASF feature classes.
+  """
+  swagger_path :export_features do
+    get("/export/features")
+    summary("Export feature classes")
+    description("Get OASF schema feature classes.")
+    produces("application/json")
+    tag("Schema Export")
+
+    parameters do
+      extensions(:query, :array, @extensions_param_description, items: [type: :string])
+      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  def export_features(conn, params) do
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    classes = Schema.export_features(extensions, profiles)
+    send_json_resp(conn, classes)
+  end
+
+  @doc """
   Export the OASF base  class.
   """
   swagger_path :export_base_class do

@@ -747,7 +747,23 @@ defmodule Schema do
   end
 
   @doc """
-    Exports the domains.
+    Exports the skill classes.
+  """
+  @spec export_skills() :: map()
+  def export_skills(), do: Repo.export_skills() |> reduce_objects()
+
+  @spec export_skills(Repo.extensions_t()) :: map()
+  def export_skills(extensions), do: Repo.export_skills(extensions) |> reduce_objects()
+
+  @spec export_skills(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def export_skills(extensions, nil), do: export_skills(extensions)
+
+  def export_skills(extensions, profiles) do
+    Repo.export_skills(extensions) |> update_exported_classes(profiles)
+  end
+
+  @doc """
+    Exports the domain classes.
   """
   @spec export_domains() :: map()
   def export_domains(), do: Repo.export_domains() |> reduce_objects()
@@ -759,11 +775,11 @@ defmodule Schema do
   def export_domains(extensions, nil), do: export_domains(extensions)
 
   def export_domains(extensions, profiles) do
-    Repo.export_domains(extensions) |> update_exported_domains(profiles)
+    Repo.export_domains(extensions) |> update_exported_classes(profiles)
   end
 
   @doc """
-    Exports the features.
+    Exports the feature classes.
   """
   @spec export_features() :: map()
   def export_features(), do: Repo.export_features() |> reduce_objects()
@@ -775,7 +791,7 @@ defmodule Schema do
   def export_features(extensions, nil), do: export_features(extensions)
 
   def export_features(extensions, profiles) do
-    Repo.export_features(extensions) |> update_exported_features(profiles)
+    Repo.export_features(extensions) |> update_exported_classes(profiles)
   end
 
   @spec export_base_class() :: map()
@@ -804,14 +820,6 @@ defmodule Schema do
 
   defp update_exported_classes(classes, profiles) do
     apply_profiles(classes, profiles, MapSet.size(profiles)) |> reduce_objects()
-  end
-
-  defp update_exported_domains(domains, profiles) do
-    apply_profiles(domains, profiles, MapSet.size(profiles)) |> reduce_objects()
-  end
-
-  defp update_exported_features(features, profiles) do
-    apply_profiles(features, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
 
   @doc """

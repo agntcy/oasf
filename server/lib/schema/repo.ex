@@ -301,6 +301,22 @@ defmodule Schema.Repo do
     end)
   end
 
+  @spec export_skills() :: map()
+  def export_skills() do
+    Agent.get(__MODULE__, fn schema -> Cache.export_skills(schema) end)
+  end
+
+  @spec export_skills(extensions_t() | nil) :: map()
+  def export_skills(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.export_skills(schema) end)
+  end
+
+  def export_skills(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_skills(schema) |> filter(extensions)
+    end)
+  end
+
   @spec export_domains() :: map()
   def export_domains() do
     Agent.get(__MODULE__, fn schema -> Cache.export_domains(schema) end)

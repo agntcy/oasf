@@ -169,6 +169,9 @@ defmodule SchemaWeb.Router do
 
     get "/base_class", SchemaController, :export_base_class
     get "/classes", SchemaController, :export_classes
+    get "/skills", SchemaController, :export_skills
+    get "/domains", SchemaController, :export_domains
+    get "/features", SchemaController, :export_features
     get "/objects", SchemaController, :export_objects
     get "/schema", SchemaController, :export_schema
   end
