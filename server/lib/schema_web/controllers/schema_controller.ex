@@ -1702,65 +1702,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate class data.
-  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
-  object.
-  post /api/validate
+  Validate class data, version 2. Validates a single class.
+  post /api/validate/skill
   """
   swagger_path :validate do
-    post("/api/validate")
-    summary("Validate Class")
+    post("/api/validate/skill")
+    summary("Validate Skill Class")
 
     description(
-      "The primary objective of this API is to validate the provided class data against the OASF" <>
-        " schema. Each class is represented as a JSON object, while multiple classes are encoded" <>
-        " as a JSON array of objects."
-    )
-
-    produces("application/json")
-    tag("Tools")
-
-    parameters do
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be validated",
-        required: true
-      )
-    end
-
-    response(200, "Success")
-  end
-
-  @spec validate(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def validate(conn, params) do
-    {status, result} =
-      case params["_json"] do
-        # Validate a single classes
-        class when is_map(class) ->
-          {200, Schema.Validator.validate(class)}
-
-        # Validate a list of classes
-        list when is_list(list) ->
-          {200,
-           Enum.map(list, &Task.async(fn -> Schema.Validator.validate(&1) end))
-           |> Enum.map(&Task.await/1)}
-
-        # some other json data
-        _ ->
-          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
-      end
-
-    send_json_resp(conn, status, result)
-  end
-
-  @doc """
-  Validate class data, version 2. Validates a single class.
-  post /api/v2/validate
-  """
-  swagger_path :validate2 do
-    post("/api/v2/validate")
-    summary("Validate Class (version 2)")
-
-    description(
-      "This API validates the provided class data against the OASF schema, returning a response" <>
+      "This API validates the provided skill class data against the OASF schema, returning a response" <>
         " containing validation errors and warnings."
     )
 
@@ -1783,8 +1733,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
   end
 
-  @spec validate2(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate2(conn, params) do
+  @spec validate(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate(conn, params) do
     warn_on_missing_recommended =
       case conn.query_params["missing_recommended"] do
         "true" -> true
@@ -1793,29 +1743,29 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate2_actual(params["_json"], warn_on_missing_recommended)
+    {status, result} = validate_actual(params["_json"], warn_on_missing_recommended)
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate2_actual(class, warn_on_missing_recommended) when is_map(class) do
-    {200, Schema.Validator2.validate(class, warn_on_missing_recommended)}
+  defp validate_actual(class, warn_on_missing_recommended) when is_map(class) do
+    {200, Schema.Validator.validate(class, warn_on_missing_recommended)}
   end
 
-  defp validate2_actual(_, _) do
+  defp validate_actual(_, _) do
     {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
   @doc """
-  Validate class data, version 2. Validates a single class.
-  post /api/v2/validate
+  Validate skill class data. Validates a bundle of skill classes.
+  post /api/validate_bundle/skill
   """
-  swagger_path :validate2_bundle do
-    post("/api/v2/validate_bundle")
-    summary("Validate Class Bundle (version 2)")
+  swagger_path :validate_bundle do
+    post("/api/validate_bundle/skill")
+    summary("Validate Skill Class Bundle")
 
     description(
-      "This API validates the provided class bundle. The class bundle itself is validated, and" <>
+      "This API validates the provided skill class bundle. The class bundle itself is validated, and" <>
         " each class in the bundle's classes attribute are validated."
     )
 
@@ -1840,8 +1790,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
   end
 
-  @spec validate2_bundle(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def validate2_bundle(conn, params) do
+  @spec validate_bundle(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def validate_bundle(conn, params) do
     warn_on_missing_recommended =
       case conn.query_params["missing_recommended"] do
         "true" -> true
@@ -1850,16 +1800,16 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate2_bundle_actual(params["_json"], warn_on_missing_recommended)
+    {status, result} = validate_bundle_actual(params["_json"], warn_on_missing_recommended)
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate2_bundle_actual(bundle, warn_on_missing_recommended) when is_map(bundle) do
-    {200, Schema.Validator2.validate_bundle(bundle, warn_on_missing_recommended)}
+  defp validate_bundle_actual(bundle, warn_on_missing_recommended) when is_map(bundle) do
+    {200, Schema.Validator.validate_bundle(bundle, warn_on_missing_recommended)}
   end
 
-  defp validate2_bundle_actual(_, _) do
+  defp validate_bundle_actual(_, _) do
     {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
