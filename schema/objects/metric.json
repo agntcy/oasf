@@ -25,6 +25,11 @@
         }
       ]
     },
+    "url": {
+      "caption": "Reference",
+      "description": "The reference for this metric, giving some explainability for it.",
+      "requirement": "recommended"
+    },
     "data_points": {
       "caption": "Data Points",
       "requirement": "required",
