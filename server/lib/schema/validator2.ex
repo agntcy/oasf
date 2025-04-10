@@ -15,7 +15,7 @@ defmodule Schema.Validator2 do
 
   @spec validate(map(), boolean()) :: map()
   def validate(data, warn_on_missing_recommended) when is_map(data) do
-    validate_class(data, warn_on_missing_recommended, Schema.dictionary())
+    validate_input(data, warn_on_missing_recommended, Schema.dictionary())
   end
 
   @spec validate_bundle(map(), boolean()) :: map()
@@ -44,28 +44,28 @@ defmodule Schema.Validator2 do
             add_error(
               response,
               "attribute_unknown",
-              "Unknown attribute \"#{key}\" in class bundle.",
+              "Unknown attribute \"#{key}\" in input bundle.",
               %{attribute_path: key, attribute: key}
             )
           end
         end
       )
 
-    # TODO: validate the bundle times and count against classes
+    # TODO: validate the bundle times and count against inputs
 
-    # Next validate the classes in the bundle
+    # Next validate the inputs in the bundle
     response =
-      validate_bundle_classes(response, bundle, warn_on_missing_recommended, Schema.dictionary())
+      validate_bundle_inputs(response, bundle, warn_on_missing_recommended, Schema.dictionary())
 
     finalize_response(response)
   end
 
-  # Returns structure of an class bundle.
-  # See "Bundling" here: https://github.com/oasf/examples/blob/main/encodings/json/README.md
+  # Returns structure of an input bundle.
+  # See "Bundling" here: https://github.com/OASF/examples/blob/main/encodings/json/README.md
   @spec get_bundle_structure() :: map()
   defp get_bundle_structure() do
     %{
-      "classes" => {:required, "array", &is_list/1},
+      "inputs" => {:required, "array", &is_list/1},
       "start_time" => {:optional, "timestamp_t (long_t)", &is_long_t/1},
       "end_time" => {:optional, "timestamp_t (long_t)", &is_long_t/1},
       "start_time_dt" => {:optional, "datetime_t (string_t)", &is_binary/1},
@@ -97,24 +97,24 @@ defmodule Schema.Validator2 do
     end
   end
 
-  @spec validate_bundle_classes(map(), map(), boolean(), map()) :: map()
-  defp validate_bundle_classes(response, bundle, warn_on_missing_recommended, dictionary) do
-    classes = bundle["classes"]
+  @spec validate_bundle_inputs(map(), map(), boolean(), map()) :: map()
+  defp validate_bundle_inputs(response, bundle, warn_on_missing_recommended, dictionary) do
+    inputs = bundle["inputs"]
 
-    if is_list(classes) do
+    if is_list(inputs) do
       Map.put(
         response,
-        :class_validations,
+        :input_validations,
         Enum.map(
-          classes,
-          fn class ->
-            if is_map(class) do
-              validate_class(class, warn_on_missing_recommended, dictionary)
+          inputs,
+          fn input ->
+            if is_map(input) do
+              validate_input(input, warn_on_missing_recommended, dictionary)
             else
-              {type, type_extra} = type_of(class)
+              {type, type_extra} = type_of(input)
 
               %{
-                error: "Class has wrong type; expected object, got #{type}#{type_extra}.",
+                error: "input has wrong type; expected object, got #{type}#{type_extra}.",
                 type: type,
                 expected_type: "object"
               }
@@ -127,19 +127,19 @@ defmodule Schema.Validator2 do
     end
   end
 
-  @spec validate_class(map(), boolean(), map()) :: map()
-  defp validate_class(class, warn_on_missing_recommended, dictionary) do
-    response = new_response(class)
+  @spec validate_input(map(), boolean(), map()) :: map()
+  defp validate_input(input, warn_on_missing_recommended, dictionary) do
+    response = new_response(input)
 
-    {response, class} = validate_class_uid_and_return_class(response, class)
+    {response, class} = validate_class_uid_and_return_class(response, input)
 
     response =
       if class do
-        {response, profiles} = validate_and_return_profiles(response, class)
+        {response, profiles} = validate_and_return_profiles(response, input)
 
-        validate_class_against_class(
+        validate_input_against_class(
           response,
-          class,
+          input,
           class,
           profiles,
           warn_on_missing_recommended,
@@ -154,9 +154,9 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
-  defp validate_class_uid_and_return_class(response, class) do
-    if Map.has_key?(class, "class_uid") do
-      class_uid = class["class_uid"]
+  defp validate_class_uid_and_return_class(response, input) do
+    if Map.has_key?(input, "class_uid") do
+      class_uid = input["class_uid"]
 
       cond do
         is_integer_t(class_uid) ->
@@ -190,8 +190,8 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_and_return_profiles(map(), map()) :: {map(), list(String.t())}
-  defp validate_and_return_profiles(response, class) do
-    metadata = class["metadata"]
+  defp validate_and_return_profiles(response, input) do
+    metadata = input["metadata"]
 
     if is_map(metadata) do
       profiles = metadata["profiles"]
@@ -245,7 +245,7 @@ defmodule Schema.Validator2 do
 
   # This is similar to Schema.Utils.apply_profiles however this gives a result appropriate for
   # validation rather than for display in the web UI. Specifically, the Schema.Utils variation
-  # returns _all_ attributes when the profiles parameter is nil, whereas for an class we want to
+  # returns _all_ attributes when the profiles parameter is nil, whereas for an input we want to
   # _always_ filter profile-specific attributes.
   @spec filter_with_profiles(Enum.t(), nil | list()) :: list()
   def filter_with_profiles(attributes, nil) do
@@ -263,11 +263,11 @@ defmodule Schema.Validator2 do
     end)
   end
 
-  @spec validate_class_against_class(map(), map(), map(), list(String.t()), boolean(), map()) ::
+  @spec validate_input_against_class(map(), map(), map(), list(String.t()), boolean(), map()) ::
           map()
-  defp validate_class_against_class(
+  defp validate_input_against_class(
          response,
-         class,
+         input,
          class,
          profiles,
          warn_on_missing_recommended,
@@ -275,11 +275,11 @@ defmodule Schema.Validator2 do
        ) do
     response
     |> validate_class_deprecated(class)
-    |> validate_attributes(class, nil, class, profiles, warn_on_missing_recommended, dictionary)
-    |> validate_version(class)
-    |> validate_type_uid(class)
-    |> validate_constraints(class, class)
-    |> validate_observables(class, class, profiles)
+    |> validate_attributes(input, nil, class, profiles, warn_on_missing_recommended, dictionary)
+    |> validate_version(input)
+    |> validate_type_uid(input)
+    |> validate_constraints(input, class)
+    |> validate_observables(input, class, profiles)
   end
 
   @spec validate_class_deprecated(map(), map()) :: map()
@@ -292,8 +292,8 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_version(map(), map()) :: map()
-  defp validate_version(response, class) do
-    metadata = class["metadata"]
+  defp validate_version(response, input) do
+    metadata = input["metadata"]
 
     if is_map(metadata) do
       version = metadata["version"]
@@ -327,10 +327,10 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_type_uid(map(), map()) :: map()
-  defp validate_type_uid(response, class) do
-    class_uid = class["class_uid"]
-    activity_id = class["activity_id"]
-    type_uid = class["type_uid"]
+  defp validate_type_uid(response, input) do
+    class_uid = input["class_uid"]
+    activity_id = input["activity_id"]
+    type_uid = input["type_uid"]
 
     if is_integer(class_uid) and is_integer(activity_id) and is_integer(type_uid) do
       expected_type_uid = class_uid * 100 + activity_id
@@ -341,7 +341,7 @@ defmodule Schema.Validator2 do
         add_error(
           response,
           "type_uid_incorrect",
-          "Class's \"type_uid\" value of #{type_uid}" <>
+          "input's \"type_uid\" value of #{type_uid}" <>
             " does not match expected value of #{expected_type_uid}" <>
             " (class_uid #{class_uid} * 100 + activity_id #{activity_id} = #{expected_type_uid}).",
           %{
@@ -359,7 +359,7 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_constraints(map(), map(), map(), nil | String.t()) :: map()
-  defp validate_constraints(response, class_item, schema_item, attribute_path \\ nil) do
+  defp validate_constraints(response, input_item, schema_item, attribute_path \\ nil) do
     if Map.has_key?(schema_item, :constraints) do
       Enum.reduce(
         schema_item[:constraints],
@@ -368,7 +368,7 @@ defmodule Schema.Validator2 do
           case constraint_key do
             :at_least_one ->
               # constraint_details is a list of keys where at least one must exist
-              if Enum.any?(constraint_details, fn key -> Map.has_key?(class_item, key) end) do
+              if Enum.any?(constraint_details, fn key -> Map.has_key?(input_item, key) end) do
                 response
               else
                 {description, extra} =
@@ -378,7 +378,7 @@ defmodule Schema.Validator2 do
                   response,
                   "constraint_failed",
                   "Constraint failed: #{description};" <>
-                    " expected at least one constraint attribute, bot got none.",
+                    " expected at least one constraint attribute, but got none.",
                   extra
                 )
               end
@@ -390,7 +390,7 @@ defmodule Schema.Validator2 do
                   constraint_details,
                   0,
                   fn key, count ->
-                    if Map.has_key?(class_item, key), do: count + 1, else: count
+                    if Map.has_key?(input_item, key), do: count + 1, else: count
                   end
                 )
 
@@ -460,14 +460,14 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_observables(map(), map(), map(), list(String.t())) :: map()
-  defp validate_observables(response, class, class, profiles) do
+  defp validate_observables(response, input, class, profiles) do
     # TODO: There is no check of the "type_id" values. This gets slightly tricky (but possible).
 
     # TODO: There is no check to make sure the values of "name" refers to something actually in the
-    #       class and has same (stringified) value. This would be a tricky check due to navigation
+    #       input and has same (stringified) value. This would be a tricky check due to navigation
     #       through arrays (though possible with some effort).
 
-    observables = class["observables"]
+    observables = input["observables"]
 
     if is_list(observables) do
       {response, _} =
@@ -547,7 +547,7 @@ defmodule Schema.Validator2 do
     end
   end
 
-  # Validates attributes of class or object (class_item parameter)
+  # Validates attributes of input or object (input_item parameter)
   # against schema's class or object (schema_item parameter).
   @spec validate_attributes(
           map(),
@@ -560,7 +560,7 @@ defmodule Schema.Validator2 do
         ) :: map()
   defp validate_attributes(
          response,
-         class_item,
+         input_item,
          parent_attribute_path,
          schema_item,
          profiles,
@@ -571,7 +571,7 @@ defmodule Schema.Validator2 do
 
     response
     |> validate_attributes_types(
-      class_item,
+      input_item,
       parent_attribute_path,
       schema_attributes,
       profiles,
@@ -579,16 +579,16 @@ defmodule Schema.Validator2 do
       dictionary
     )
     |> validate_attributes_unknown_keys(
-      class_item,
+      input_item,
       parent_attribute_path,
       schema_item,
       schema_attributes
     )
-    |> validate_attributes_enums(class_item, parent_attribute_path, schema_attributes)
+    |> validate_attributes_enums(input_item, parent_attribute_path, schema_attributes)
   end
 
   # Validate unknown attributes
-  # Scan class_item's attributes making sure each exists in schema_item's attributes
+  # Scan input_item's attributes making sure each exists in schema_item's attributes
   @spec validate_attributes_types(
           map(),
           map(),
@@ -600,7 +600,7 @@ defmodule Schema.Validator2 do
         ) :: map()
   defp validate_attributes_types(
          response,
-         class_item,
+         input_item,
          parent_attribute_path,
          schema_attributes,
          profiles,
@@ -613,7 +613,7 @@ defmodule Schema.Validator2 do
       fn {attribute_key, attribute_details}, response ->
         attribute_name = Atom.to_string(attribute_key)
         attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
-        value = class_item[attribute_name]
+        value = input_item[attribute_name]
 
         validate_attribute(
           response,
@@ -638,7 +638,7 @@ defmodule Schema.Validator2 do
         ) :: map()
   defp validate_attributes_unknown_keys(
          response,
-         class_item,
+         input_item,
          parent_attribute_path,
          schema_item,
          schema_attributes
@@ -650,7 +650,7 @@ defmodule Schema.Validator2 do
       response
     else
       Enum.reduce(
-        Map.keys(class_item),
+        Map.keys(input_item),
         response,
         fn key, response ->
           if has_attribute?(schema_attributes, key) do
@@ -700,7 +700,7 @@ defmodule Schema.Validator2 do
   end
 
   @spec validate_attributes_enums(map(), map(), nil | String.t(), list(tuple())) :: map()
-  defp validate_attributes_enums(response, class_item, parent_attribute_path, schema_attributes) do
+  defp validate_attributes_enums(response, input_item, parent_attribute_path, schema_attributes) do
     enum_attributes = Enum.filter(schema_attributes, fn {_ak, ad} -> Map.has_key?(ad, :enum) end)
 
     Enum.reduce(
@@ -709,11 +709,11 @@ defmodule Schema.Validator2 do
       fn {attribute_key, attribute_details}, response ->
         attribute_name = Atom.to_string(attribute_key)
 
-        if Map.has_key?(class_item, attribute_name) do
+        if Map.has_key?(input_item, attribute_name) do
           if attribute_details[:is_array] == true do
             {response, _} =
               Enum.reduce(
-                class_item[attribute_name],
+                input_item[attribute_name],
                 {response, 0},
                 fn value, {response, index} ->
                   value_str = to_string(value)
@@ -724,7 +724,7 @@ defmodule Schema.Validator2 do
                     response =
                       response
                       |> validate_enum_array_sibling(
-                        class_item,
+                        input_item,
                         parent_attribute_path,
                         index,
                         value,
@@ -769,7 +769,7 @@ defmodule Schema.Validator2 do
           else
             # The enum values are always strings, so rather than use elaborate conversions,
             # we just use Kernel.to_string/1. (The value is type checked elsewhere anyway.)
-            value = class_item[attribute_name]
+            value = input_item[attribute_name]
             value_str = to_string(value)
             value_atom = String.to_atom(value_str)
 
@@ -777,7 +777,7 @@ defmodule Schema.Validator2 do
               # The enum value is good - check sibling and deprecation
               response
               |> validate_enum_sibling(
-                class_item,
+                input_item,
                 parent_attribute_path,
                 value,
                 value_atom,
@@ -825,24 +825,46 @@ defmodule Schema.Validator2 do
         ) :: map()
   defp validate_enum_sibling(
          response,
-         class_item,
+         input_item,
          parent_attribute_path,
-         class_enum_value,
-         class_enum_value_atom,
+         input_enum_value,
+         input_enum_value_atom,
          attribute_name,
          attribute_details
        ) do
-    if class_enum_value == 99 do
-      # Enum value is the integer 99 (Other). The enum sibling, if present, can be anything.
-      response
-    else
-      sibling_name = attribute_details[:sibling]
+    sibling_name = attribute_details[:sibling]
 
-      if Map.has_key?(class_item, sibling_name) do
-        # Sibling is present - make sure the string value matches up
-        enum_caption = attribute_details[:enum][class_enum_value_atom][:caption]
-        sibling_value = class_item[sibling_name]
+    if Map.has_key?(input_item, sibling_name) do
+      # Sibling is present - make sure the string value matches up
+      enum_caption = attribute_details[:enum][input_enum_value_atom][:caption]
+      sibling_value = input_item[sibling_name]
 
+      if input_enum_value == 99 do
+        # Enum value is the integer 99 (Other). The enum sibling should _not_ match the
+        if enum_caption == sibling_value do
+          enum_attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
+          sibling_attribute_path = make_attribute_path(parent_attribute_path, sibling_name)
+
+          add_warning(
+            response,
+            "attribute_enum_sibling_suspicious_other",
+            "Attribute \"#{sibling_attribute_path}\" enum sibling value" <>
+              " #{inspect(sibling_value)} suspiciously matches the caption of" <>
+              " enum \"#{enum_attribute_path}\" value 99 (#{inspect(enum_caption)})." <>
+              " Note: the recommendation is to use the original source value for" <>
+              " 99 (#{inspect(enum_caption)}), so this should only match in the edge case" <>
+              " where #{inspect(sibling_value)} is actually the original source value.",
+            %{
+              attribute_path: sibling_attribute_path,
+              attribute: sibling_name,
+              value: sibling_value
+            }
+          )
+        else
+          # The 99 (Other) sibling value looks good
+          response
+        end
+      else
         if enum_caption == sibling_value do
           # Sibling has correct value
           response
@@ -850,13 +872,14 @@ defmodule Schema.Validator2 do
           enum_attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
           sibling_attribute_path = make_attribute_path(parent_attribute_path, sibling_name)
 
-          add_error(
+          add_warning(
             response,
             "attribute_enum_sibling_incorrect",
             "Attribute \"#{sibling_attribute_path}\" enum sibling value" <>
-              " #{inspect(sibling_value)} is incorrect for" <>
-              " enum \"#{enum_attribute_path}\" value #{inspect(class_enum_value)};" <>
-              " expected \"#{enum_caption}\", got #{inspect(sibling_value)}.",
+              " #{inspect(sibling_value)} does not match the caption of" <>
+              " enum \"#{enum_attribute_path}\" value #{inspect(input_enum_value)};" <>
+              " expected \"#{enum_caption}\", got #{inspect(sibling_value)}." <>
+              " Note: matching is recommended but not required.",
             %{
               attribute_path: sibling_attribute_path,
               attribute: sibling_name,
@@ -865,10 +888,10 @@ defmodule Schema.Validator2 do
             }
           )
         end
-      else
-        # Sibling not present, which is OK
-        response
       end
+    else
+      # Sibling not present, which is OK
+      response
     end
   end
 
@@ -884,24 +907,24 @@ defmodule Schema.Validator2 do
         ) :: map()
   defp validate_enum_array_sibling(
          response,
-         class_item,
+         input_item,
          parent_attribute_path,
          index,
-         class_enum_value,
-         class_enum_value_atom,
+         input_enum_value,
+         input_enum_value_atom,
          attribute_name,
          attribute_details
        ) do
-    if class_enum_value == 99 do
+    if input_enum_value == 99 do
       # Enum value is the integer 99 (Other). The enum sibling, if present, can be anything.
       response
     else
       sibling_name = attribute_details[:sibling]
 
-      if Map.has_key?(class_item, sibling_name) do
+      if Map.has_key?(input_item, sibling_name) do
         # Sibling array is present - make sure value exists and matches up
-        enum_caption = attribute_details[:enum][class_enum_value_atom][:caption]
-        sibling_array = class_item[sibling_name]
+        enum_caption = attribute_details[:enum][input_enum_value_atom][:caption]
+        sibling_array = input_item[sibling_name]
         sibling_value = Enum.at(sibling_array, index)
 
         if sibling_value == nil do
@@ -918,7 +941,7 @@ defmodule Schema.Validator2 do
             "attribute_enum_array_sibling_missing",
             "Attribute \"#{sibling_attribute_path}\" enum array sibling value" <>
               " is missing (array is not long enough) for" <>
-              " enum array \"#{enum_attribute_path}\" value #{inspect(class_enum_value)}.",
+              " enum array \"#{enum_attribute_path}\" value #{inspect(input_enum_value)}.",
             %{
               attribute_path: sibling_attribute_path,
               attribute: sibling_name,
@@ -943,7 +966,7 @@ defmodule Schema.Validator2 do
               "attribute_enum_array_sibling_incorrect",
               "Attribute \"#{sibling_attribute_path}\" enum array sibling value" <>
                 " #{inspect(sibling_value)} is incorrect for" <>
-                " enum array \"#{enum_attribute_path}\" value #{inspect(class_enum_value)};" <>
+                " enum array \"#{enum_attribute_path}\" value #{inspect(input_enum_value)};" <>
                 " expected \"#{enum_caption}\", got #{inspect(sibling_value)}.",
               %{
                 attribute_path: sibling_attribute_path,
@@ -972,24 +995,24 @@ defmodule Schema.Validator2 do
   defp validate_enum_value_deprecated(
          response,
          parent_attribute_path,
-         class_enum_value,
-         class_enum_value_atom,
+         input_enum_value,
+         input_enum_value_atom,
          attribute_name,
          attribute_details
        ) do
-    if Map.has_key?(attribute_details[:enum][class_enum_value_atom], :"@deprecated") do
+    if Map.has_key?(attribute_details[:enum][input_enum_value_atom], :"@deprecated") do
       attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
-      deprecated = attribute_details[:enum][class_enum_value_atom][:"@deprecated"]
+      deprecated = attribute_details[:enum][input_enum_value_atom][:"@deprecated"]
 
       add_warning(
         response,
         "attribute_enum_value_deprecated",
         "Deprecated enum value at \"#{attribute_path}\";" <>
-          " value #{inspect(class_enum_value)} is deprecated. #{deprecated[:message]}",
+          " value #{inspect(input_enum_value)} is deprecated. #{deprecated[:message]}",
         %{
           attribute_path: attribute_path,
           attribute: attribute_name,
-          value: class_enum_value,
+          value: input_enum_value,
           since: deprecated[:since]
         }
       )
@@ -1011,27 +1034,27 @@ defmodule Schema.Validator2 do
          response,
          parent_attribute_path,
          index,
-         class_enum_value,
-         class_enum_value_atom,
+         input_enum_value,
+         input_enum_value_atom,
          attribute_name,
          attribute_details
        ) do
-    if Map.has_key?(attribute_details[:enum][class_enum_value_atom], :"@deprecated") do
+    if Map.has_key?(attribute_details[:enum][input_enum_value_atom], :"@deprecated") do
       attribute_path =
         make_attribute_path(parent_attribute_path, attribute_name)
         |> make_attribute_path_array_element(index)
 
-      deprecated = attribute_details[:enum][class_enum_value_atom][:"@deprecated"]
+      deprecated = attribute_details[:enum][input_enum_value_atom][:"@deprecated"]
 
       add_warning(
         response,
         "attribute_enum_array_value_deprecated",
         "Deprecated enum array value at \"#{attribute_path}\";" <>
-          " value #{inspect(class_enum_value)} is deprecated. #{deprecated[:message]}",
+          " value #{inspect(input_enum_value)} is deprecated. #{deprecated[:message]}",
         %{
           attribute_path: attribute_path,
           attribute: attribute_name,
-          value: class_enum_value,
+          value: input_enum_value,
           since: deprecated[:since]
         }
       )
@@ -1077,7 +1100,7 @@ defmodule Schema.Validator2 do
           attribute_details
         )
 
-      # Check class_item attribute value type
+      # Check input_item attribute value type
       attribute_type_key = String.to_atom(attribute_details[:type])
 
       if attribute_type_key == :object_t or
@@ -1281,7 +1304,7 @@ defmodule Schema.Validator2 do
         ) :: map()
   defp validate_map_against_object(
          response,
-         class_object,
+         input_object,
          attribute_path,
          attribute_name,
          schema_object,
@@ -1292,14 +1315,14 @@ defmodule Schema.Validator2 do
     response
     |> validate_object_deprecated(attribute_path, attribute_name, schema_object)
     |> validate_attributes(
-      class_object,
+      input_object,
       attribute_path,
       schema_object,
       profiles,
       warn_on_missing_recommended,
       dictionary
     )
-    |> validate_constraints(class_object, schema_object, attribute_path)
+    |> validate_constraints(input_object, schema_object, attribute_path)
   end
 
   @spec validate_object_deprecated(map(), String.t(), String.t(), map()) :: map()
@@ -1487,7 +1510,7 @@ defmodule Schema.Validator2 do
 
       _ ->
         # Unhandled type (schema bug)
-        # This should never happen for published schemas (oasf-validator catches this) but
+        # This should never happen for published schemas (OASF-validator catches this) but
         # _could_ happen for a schema that's in development or with a private extension,
         # and presumably running on a local / private OASF Server instance.
         Logger.warning(
@@ -1894,8 +1917,8 @@ defmodule Schema.Validator2 do
   end
 
   @spec new_response(map()) :: map()
-  defp new_response(class) do
-    metadata = class["metadata"]
+  defp new_response(input) do
+    metadata = input["metadata"]
 
     if is_map(metadata) do
       uid = metadata["uid"]
