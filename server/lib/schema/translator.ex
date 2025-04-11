@@ -22,7 +22,7 @@ defmodule Schema.Translator do
   defp translate_class(class_uid, data, options) do
     Logger.debug("translate class: #{class_uid}")
 
-    type = Schema.find_class_by_uid(class_uid)
+    type = Schema.find_skill(class_uid)
     attributes = type[:attributes]
 
     Enum.reduce(data, %{}, fn {name, value}, acc ->
