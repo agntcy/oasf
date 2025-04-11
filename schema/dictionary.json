@@ -29,24 +29,8 @@
       "type": "agent",
       "is_array": true
     },
-    "alerting": {
-      "caption": "Alerting",
-      "description": "Generates notifications or warnings based on predefined thresholds or detected anomalies in multi-agent operations.",
-      "type": "object"
-    },
-    "anomaly_detection": {
-      "caption": "Anomaly Detection",
-      "description": "Identifies unusual patterns or behaviors in multi-agent systems, enabling proactive issue resolution.",
-      "type": "object"
-    },
     "annotations": {
       "caption": "Annotations",
-      "description": "Provides additional metadata associated with this release manifest.",
-      "type": "key_value_object",
-      "is_array": true
-    },
-    "attributes": {
-      "caption": "Attributes",
       "description": "Provides additional metadata associated with this release manifest.",
       "type": "key_value_object",
       "is_array": true
@@ -66,12 +50,6 @@
       "caption": "Callback Support",
       "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`.",
       "type": "boolean_t"
-    },
-    "carbon_footprint_analysis": {
-      "caption": "Carbon Footprint Analysis",
-      "description": "Evaluates the greenhouse gas emissions associated with the workflows of multi-agent systems to enable strategies for reducing environmental impact.",
-      "type": "metric",
-      "is_array": true
     },
     "capabilities": {
       "caption": "Capabilities",
@@ -169,53 +147,10 @@
       "description": "This object contains an instance of an OpenAPI schema object.",
       "type": "json_t"
     },
-    "controllability": {
-      "caption": "Controllability",
-      "description": "",
-      "type": "metric",
-      "is_array": true,
-      "enum": {
-        "agentic_graph": {
-          "caption": "Agentic graph"
-        },
-        "topology_dynamism": {
-          "caption": "Measure for dynamism of topology."
-        },
-        "agentic_workflow_determinism": {
-          "caption": "Measure for degree of determinism of agentic workflow."
-        }
-      }
-    },
-    "cost": {
-      "caption": "Cost",
-      "description": "Cost related metrics that apply to an agent.",
-      "type": "metric",
-      "is_array": true,
-      "enum": {
-        "number_of_tokens": {
-          "caption": "Number of tokens"
-        },
-        "latency": {
-          "caption": "Latency"
-        }
-      },
-      "references": [
-        {
-          "description": "OpenTelemetry Specification",
-          "url": "https://opentelemetry.io/docs/specs/otel/metrics/"
-        }
-      ]
-    },
     "cost_score": {
       "caption": "Cost Score",
       "description": "Cost score.",
       "type": "float_t"
-    },
-    "cost_tracking": {
-      "caption": "Cost Tracking",
-      "description": "Monitors and analyzes the financial expenditure associated with multi-agent operations to ensure cost efficiency.",
-      "type": "metric",
-      "is_array": true
     },
     "created_at": {
       "caption": "Created Time",
@@ -277,18 +212,6 @@
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
-    },
-    "discovery": {
-      "caption": "Discovery",
-      "description": "",
-      "type": "metric",
-      "is_array": true
-    },
-    "energy_monitoring": {
-      "caption": "Energy Monitoring",
-      "description": "Tracks energy consumption during the operation of multi-agent systems, including training and inference, to identify inefficiencies and optimize resource usage.",
-      "type": "metric",
-      "is_array": true
     },
     "errors": {
       "caption": "Errors",
@@ -360,11 +283,6 @@
       "description": "A json input.",
       "type": "json_t"
     },
-    "insights": {
-      "caption": "Insights",
-      "description": "Defines actionable insights derived from observability data for multi-agent applications to enable improved performance, security, and collaboration.",
-      "type": "insights"
-    },
     "interrupt_payload": {
       "caption": "Interrupt Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
@@ -386,26 +304,6 @@
       "type": "interrupts",
       "is_array": true
     },
-    "load_distribution": {
-      "caption": "Load distribution",
-      "description": "",
-      "type": "metric",
-      "is_array": true,
-      "enum": {
-        "number_of_active_agents": {
-          "caption": "Number of active agents."
-        },
-        "most_frequently_used_agents": {
-          "caption": "Most frequently used agents."
-        },
-        "agent_interaction_efficiency": {
-          "caption": "Agent-interaction: efficiency."
-        },
-        "agent_interaction_parallelism": {
-          "caption": "Agent-interaction: parallelism."
-        }
-      }
-    },
     "locator": {
       "caption": "Agent Locator",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
@@ -417,17 +315,6 @@
       "type": "locator",
       "is_array": true
     },
-    "logs": {
-      "caption": "Logs",
-      "description": "An array of log objects.",
-      "type": "object",
-      "is_array": true
-    },
-    "melt_telemetry": {
-      "caption": "MELT Telemetry",
-      "description": "Captures metrics, events, logs, and traces to monitor the performance, interactions, and behavior of multi-agent systems.",
-      "type": "melt_telemetry"
-    },
     "metadata": {
       "caption": "Metadata",
       "description": "Metadata.",
@@ -436,7 +323,7 @@
     },
     "metric": {
       "caption": "Metric",
-      "description": "",
+      "description": "Defines a metric used to evaluate system performance, cost, and other critical factors.",
       "type": "metric"
     },
     "metrics": {
@@ -445,66 +332,10 @@
       "type": "metric",
       "is_array": true
     },
-    "multi_agent_collaboration": {
-      "caption": "Multi-agent Collaboration",
-      "description": "",
-      "type": "metric",
-      "is_array": true,
-      "enum": {
-        "most_active_agents": {
-          "caption": "Most active agents."
-        },
-        "agent_discovery_errors": {
-          "caption": "Agent discovery errors."
-        },
-        "task_delegation_accuracy": {
-          "caption": "Task delegation accuracy."
-        },
-        "load_distribution_accuracy": {
-          "caption": "Load distribution accuracy."
-        },
-        "Parallelism": {
-          "caption": "Parallelism"
-        }
-      }
-    },
     "name": {
       "caption": "Name",
       "description": "The name of the entity. See specific usage.",
       "type": "string_t"
-    },
-    "observability_level": {
-      "caption": "Observability Level",
-      "description": "The normalized caption of 'observability_level_id'.",
-      "type": "string_t"
-    },
-    "observability_level_id": {
-      "caption": "Observability Level ID",
-      "description": "Defines the granularity of information captured for multi-agent applications.",
-      "sibling": "observability_level",
-      "type": "integer_t",
-      "enum": {
-        "0": {
-          "caption": "Verbose",
-          "description": ""
-        },
-        "1": {
-          "caption": "Debug",
-          "description": ""
-        },
-        "2": {
-          "caption": "Info",
-          "description": ""
-        },
-        "3": {
-          "caption": "Warning",
-          "description": ""
-        },
-        "4": {
-          "caption": "Error",
-          "description": ""
-        }
-      }
     },
     "output": {
       "caption": "Output",
@@ -531,25 +362,10 @@
       "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
-    "performance": {
-      "caption": "Performance",
-      "description": "",
-      "type": "performance"
-    },
-    "planning_and_collaboration": {
-      "caption": "Planning and Collaboration",
-      "description": "Analyzes the coordination and planning efficiency among agents to optimize teamwork and resource allocation.",
-      "type": "object"
-    },
     "port": {
       "caption": "Port",
       "description": "The TCP/UDP port number associated with a connection. See specific usage.",
       "type": "port_t"
-    },
-    "predictions": {
-      "caption": "Predictions",
-      "description": "Provides forecasts and trend analysis based on historical observability data to support decision-making in multi-agent systems.",
-      "type": "object"
     },
     "protocol": {
       "caption": "ACP Endpoint",
@@ -572,12 +388,6 @@
       "type": "referred_evaluation",
       "is_array": true
     },
-    "resiliency": {
-      "caption": "Resiliency",
-      "description": "Measures the ability of multi-agent systems to recover from failures and maintain operational continuity.",
-      "type": "metric",
-      "is_array": true
-    },
     "result_streaming": {
       "caption": "Result Streaming",
       "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
@@ -587,17 +397,6 @@
       "caption": "Resume Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
-    },
-    "risk_assessment": {
-      "caption": "Risk Assessment",
-      "description": "Evaluates potential risks and vulnerabilities in multi-agent workflows and therefre enabling mitigation strategies.",
-      "type": "object"
-    },
-    "security_and_compliance": {
-      "caption": "Security and Compliance",
-      "description": "",
-      "type": "metric",
-      "is_array": true
     },
     "security_score": {
       "caption": "Security Score",
@@ -626,55 +425,10 @@
       "is_enum": true,
       "is_array": true
     },
-    "specs": {
-      "caption": "Specifications",
-      "description": "Generic specification schema of this extension.",
-      "type": "object"
-    },
     "streaming": {
       "caption": "Streaming Modes",
       "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
       "type": "streaming_modes"
-    },
-    "success": {
-      "caption": "Success",
-      "description": "Evaluates the achievement of goals and objectives within multi-agent workflows to provide metrics for effectiveness.",
-      "type": "metric",
-      "is_array": true
-    },
-    "system_level": {
-      "caption": "System Level Metrics",
-      "description": "",
-      "type": "metric",
-      "is_array": true,
-      "enum": {
-        "most_frequent_agent_interactions": {
-          "caption": "Most frequent agent-to-agent interactions."
-        },
-        "most_failing_agents": {
-          "caption": "Most failing agents."
-        },
-        "transfer_timing_accuracy": {
-          "caption": "Transfer timing accuracy."
-        },
-        "connection_reliability": {
-          "caption": "Connection Reliability."
-        },
-        "agent_interpretation_score": {
-          "caption": "Agent Interpretation Score (whether data exchanged between agents is in correct format)."
-        },
-        "deprecated_or_inactive_agents_count": {
-          "caption": "Number of deprecated or inactive agents."
-        },
-        "average_fault_detection_time": {
-          "caption": "Average time needed to detect faulty agent."
-        }
-      }
-    },
-    "sustainability": {
-      "caption": "Sustainability",
-      "description": "Defines sustainability metrics and tools for multi-agent applications, focusing on energy efficiency and environmental impact.",
-      "type": "sustainability"
     },
     "thread_state": {
       "caption": "ThreadState",
@@ -685,12 +439,6 @@
       "caption": "Threads",
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
-    },
-    "traces": {
-      "caption": "Traces",
-      "description": "An array of trace objects.",
-      "type": "object",
-      "is_array": true
     },
     "type": {
       "caption": "Type",
