@@ -1548,16 +1548,16 @@ defmodule SchemaWeb.SchemaController do
   # ---------------------------------------------
 
   @doc """
-  Enrich class data by adding type_uid, enumerated text, and observables.
+  Enrich skill class data by adding type_uid, enumerated text, and observables.
   A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   objects.
   """
   swagger_path :enrich do
-    post("/api/enrich")
-    summary("Enrich Class")
+    post("/api/enrich/skill")
+    summary("Enrich Skill Class")
 
     description(
-      "The purpose of this API is to enrich the provided class data with <code>type_uid</code>," <>
+      "The purpose of this API is to enrich the provided skill class data with <code>type_uid</code>," <>
         " enumerated text, and <code>observables</code> array. Each class is represented as a" <>
         " JSON object, while multiple classes are encoded as a JSON array of objects."
     )
@@ -1582,12 +1582,12 @@ defmodule SchemaWeb.SchemaController do
       _observables(
         :query,
         :boolean,
-        "<strong>TODO</strong>: Enhance the class data by adding the observables associated with" <>
+        "<strong>TODO</strong>: Enhance the skill class data by adding the observables associated with" <>
           " the class.",
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be enriched.",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The skill class data to be enriched.",
         required: true
       )
     end
@@ -1621,14 +1621,14 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Translate class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  Translate skill class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
   swagger_path :translate do
-    post("/api/translate")
-    summary("Translate Class")
+    post("/api/translate/skill")
+    summary("Translate Skill Class")
 
     description(
-      "The purpose of this API is to translate the provided class data using the OASF schema." <>
+      "The purpose of this API is to translate the provided skill class data using the OASF schema." <>
         " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
         "  JSON array of objects."
     )
@@ -1671,7 +1671,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The skill class data to be translated",
         required: true
       )
     end
