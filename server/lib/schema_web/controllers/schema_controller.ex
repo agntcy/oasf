@@ -1552,7 +1552,7 @@ defmodule SchemaWeb.SchemaController do
   A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   objects.
   """
-  swagger_path :enrich do
+  swagger_path :enrich_skill do
     post("/api/enrich/skill")
     summary("Enrich Skill Class")
 
@@ -1595,8 +1595,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec enrich(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def enrich(conn, params) do
+  @spec enrich_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def enrich_skill(conn, params) do
     enum_text = conn.query_params[@enum_text]
     observables = conn.query_params[@observables]
 
@@ -1604,12 +1604,15 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Enrich a single class
         class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, observables)}
+          {200, Schema.enrich(class, enum_text, observables, "skill")}
 
         # Enrich a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, &Task.async(fn -> Schema.enrich(&1, enum_text, observables) end))
+           Enum.map(
+             list,
+             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, "skill") end)
+           )
            |> Enum.map(&Task.await/1)}
 
         # something other than json data
@@ -1623,7 +1626,7 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Translate skill class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
-  swagger_path :translate do
+  swagger_path :translate_skill do
     post("/api/translate/skill")
     summary("Translate Skill Class")
 
@@ -1679,19 +1682,20 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec translate(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def translate(conn, params) do
+  @spec translate_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_skill(conn, params) do
     options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
 
     {status, result} =
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options)}
+          {200, Schema.Translator.translate(class, options, "skill")}
 
         # Translate a list of classes
         list when is_list(list) ->
-          {200, Enum.map(list, fn class -> Schema.Translator.translate(class, options) end)}
+          {200,
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, "skill") end)}
 
         # some other json data
         _ ->
@@ -1702,10 +1706,10 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate class data, version 2. Validates a single class.
+  Validate skill class data. Validates a single class.
   post /api/validate/skill
   """
-  swagger_path :validate do
+  swagger_path :validate_skill do
     post("/api/validate/skill")
     summary("Validate Skill Class")
 
@@ -1733,8 +1737,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
   end
 
-  @spec validate(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate(conn, params) do
+  @spec validate_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_skill(conn, params) do
     warn_on_missing_recommended =
       case conn.query_params["missing_recommended"] do
         "true" -> true
@@ -1743,16 +1747,16 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], warn_on_missing_recommended)
+    {status, result} = validate_actual(params["_json"], warn_on_missing_recommended, "skill")
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate_actual(class, warn_on_missing_recommended) when is_map(class) do
-    {200, Schema.Validator.validate(class, warn_on_missing_recommended)}
+  defp validate_actual(input, warn_on_missing_recommended, type) when is_map(input) do
+    {200, Schema.Validator.validate(input, warn_on_missing_recommended, type)}
   end
 
-  defp validate_actual(_, _) do
+  defp validate_actual(_, _, _) do
     {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
@@ -1760,7 +1764,7 @@ defmodule SchemaWeb.SchemaController do
   Validate skill class data. Validates a bundle of skill classes.
   post /api/validate_bundle/skill
   """
-  swagger_path :validate_bundle do
+  swagger_path :validate_bundle_skill do
     post("/api/validate_bundle/skill")
     summary("Validate Skill Class Bundle")
 
@@ -1790,8 +1794,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
   end
 
-  @spec validate_bundle(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def validate_bundle(conn, params) do
+  @spec validate_bundle_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def validate_bundle_skill(conn, params) do
     warn_on_missing_recommended =
       case conn.query_params["missing_recommended"] do
         "true" -> true
@@ -1800,16 +1804,17 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_bundle_actual(params["_json"], warn_on_missing_recommended)
+    {status, result} =
+      validate_bundle_actual(params["_json"], warn_on_missing_recommended, "skill")
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate_bundle_actual(bundle, warn_on_missing_recommended) when is_map(bundle) do
-    {200, Schema.Validator.validate_bundle(bundle, warn_on_missing_recommended)}
+  defp validate_bundle_actual(bundle, warn_on_missing_recommended, type) when is_map(bundle) do
+    {200, Schema.Validator.validate_bundle(bundle, warn_on_missing_recommended, type)}
   end
 
-  defp validate_bundle_actual(_, _) do
+  defp validate_bundle_actual(_, _, _) do
     {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
@@ -1882,17 +1887,7 @@ defmodule SchemaWeb.SchemaController do
 
       class ->
         class =
-          case Map.get(options, @verbose) do
-            nil ->
-              Schema.generate_class(class, profiles)
-
-            verbose ->
-              Schema.generate_class(class, profiles)
-              |> Schema.Translator.translate(
-                spaces: options[@spaces],
-                verbose: verbose(verbose)
-              )
-          end
+          Schema.generate_class(class, profiles)
 
         send_json_resp(conn, class)
     end

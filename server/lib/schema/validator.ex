@@ -13,13 +13,13 @@ defmodule Schema.Validator do
 
   require Logger
 
-  @spec validate(map(), boolean()) :: map()
-  def validate(data, warn_on_missing_recommended) when is_map(data) do
-    validate_input(data, warn_on_missing_recommended, Schema.dictionary())
+  @spec(validate(map(), boolean(), String.t()) :: map())
+  def validate(data, warn_on_missing_recommended, type) when is_map(data) do
+    validate_input(data, warn_on_missing_recommended, Schema.dictionary(), type)
   end
 
-  @spec validate_bundle(map(), boolean()) :: map()
-  def validate_bundle(bundle, warn_on_missing_recommended) when is_map(bundle) do
+  @spec validate_bundle(map(), boolean(), String.t()) :: map()
+  def validate_bundle(bundle, warn_on_missing_recommended, type) when is_map(bundle) do
     bundle_structure = get_bundle_structure()
 
     # First validate the bundle itself
@@ -55,7 +55,7 @@ defmodule Schema.Validator do
 
     # Next validate the inputs in the bundle
     response =
-      validate_bundle_inputs(response, bundle, warn_on_missing_recommended, Schema.dictionary())
+      validate_bundle_inputs(response, bundle, warn_on_missing_recommended, Schema.dictionary(), type)
 
     finalize_response(response)
   end
@@ -97,8 +97,8 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_bundle_inputs(map(), map(), boolean(), map()) :: map()
-  defp validate_bundle_inputs(response, bundle, warn_on_missing_recommended, dictionary) do
+  @spec validate_bundle_inputs(map(), map(), boolean(), map(), String.t()) :: map()
+  defp validate_bundle_inputs(response, bundle, warn_on_missing_recommended, dictionary, type) do
     inputs = bundle["inputs"]
 
     if is_list(inputs) do
@@ -109,7 +109,7 @@ defmodule Schema.Validator do
           inputs,
           fn input ->
             if is_map(input) do
-              validate_input(input, warn_on_missing_recommended, dictionary)
+              validate_input(input, warn_on_missing_recommended, dictionary, type)
             else
               {type, type_extra} = type_of(input)
 
@@ -127,34 +127,47 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_input(map(), boolean(), map()) :: map()
-  defp validate_input(input, warn_on_missing_recommended, dictionary) do
+  @spec(validate_input(map(), boolean(), map(), String.t()) :: map())
+  defp validate_input(input, warn_on_missing_recommended, dictionary, type) do
     response = new_response(input)
 
-    {response, class} = validate_class_uid_and_return_class(response, input)
-
     response =
-      if class do
-        {response, profiles} = validate_and_return_profiles(response, input)
+      case type do
+        "skill" ->
+          # Validate a skill input
+          {response, class} = validate_skill_class_uid_and_return_class(response, input)
 
-        validate_input_against_class(
-          response,
-          input,
-          class,
-          profiles,
-          warn_on_missing_recommended,
-          dictionary
-        )
-      else
-        # Can't continue if we can't find the class
-        response
+          if class do
+            {response, profiles} = validate_and_return_profiles(response, input)
+
+            validate_input_against_class(
+              response,
+              input,
+              class,
+              profiles,
+              warn_on_missing_recommended,
+              dictionary
+            )
+          else
+            # Can't continue if we can't find the class
+            response
+          end
+
+        _ ->
+          # Unknown type; return error
+          add_error(
+            response,
+            "input_type_unknown",
+            "Unknown input type \"#{type}\".",
+            %{attribute_path: "type", attribute: "type", value: type}
+          )
       end
 
     finalize_response(response)
   end
 
-  @spec validate_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
-  defp validate_class_uid_and_return_class(response, input) do
+  @spec validate_skill_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
+  defp validate_skill_class_uid_and_return_class(response, input) do
     if Map.has_key?(input, "class_uid") do
       class_uid = input["class_uid"]
 

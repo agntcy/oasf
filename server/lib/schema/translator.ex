@@ -7,56 +7,62 @@ defmodule Schema.Translator do
   """
   require Logger
 
-  def translate(data, options) when is_map(data) do
-    Logger.debug("translate class: #{inspect(data)}, options: #{inspect(options)}")
+  def translate(data, options, type) when is_map(data) do
+    Logger.debug("translate #{type}: #{inspect(data)}, options: #{inspect(options)}")
 
-    translate_class(data["class_uid"], data, options)
+    translate_class(data, options, type)
   end
 
   # this is not an class
-  def translate(data, _options), do: data
+  def translate(data, _options, _type), do: data
 
-  # missing class_uid, thus cannot translate the class
-  defp translate_class(nil, data, _options), do: data
+  defp translate_class(data, options, type) do
+    case type do
+      "skill" ->
+        class_uid = data["class_uid"]
+        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
+        Logger.debug("translate class: #{class_uid}")
 
-  defp translate_class(class_uid, data, options) do
-    Logger.debug("translate class: #{class_uid}")
+        type = Schema.find_skill(class_uid)
+        attributes = type[:attributes]
 
-    type = Schema.find_skill(class_uid)
-    attributes = type[:attributes]
+        Enum.reduce(data, %{}, fn {name, value}, acc ->
+          Logger.debug("translate attribute: #{name} = #{inspect(value)}")
 
-    Enum.reduce(data, %{}, fn {name, value}, acc ->
-      Logger.debug("translate attribute: #{name} = #{inspect(value)}")
+          key = to_atom(name)
 
-      key = to_atom(name)
+          case attributes[key] do
+            nil ->
+              # Attribute name is not defined in the schema
+              Map.put(acc, name, value)
 
-      case attributes[key] do
-        nil ->
-          # Attribute name is not defined in the schema
-          Map.put(acc, name, value)
+            attribute ->
+              {name, text} =
+                translate_attribute(attribute[:type], name, attribute, value, options)
 
-        attribute ->
-          {name, text} = translate_attribute(attribute[:type], name, attribute, value, options)
+              verbose = Keyword.get(options, :verbose)
 
-          verbose = Keyword.get(options, :verbose)
+              if Map.has_key?(attribute, :enum) and (verbose == 1 or verbose == 2) do
+                Logger.debug("translated enum: #{name} = #{text}")
 
-          if Map.has_key?(attribute, :enum) and (verbose == 1 or verbose == 2) do
-            Logger.debug("translated enum: #{name} = #{text}")
+                case sibling(attribute[:sibling], attributes, options, verbose) do
+                  nil ->
+                    Map.put_new(acc, name, value)
 
-            case sibling(attribute[:sibling], attributes, options, verbose) do
-              nil ->
-                Map.put_new(acc, name, value)
+                  sibling ->
+                    Logger.debug("translated name: #{sibling}")
 
-              sibling ->
-                Logger.debug("translated name: #{sibling}")
-
-                Map.put_new(acc, name, value) |> Map.put_new(sibling, text)
-            end
-          else
-            Map.put(acc, name, text)
+                    Map.put_new(acc, name, value) |> Map.put_new(sibling, text)
+                end
+              else
+                Map.put(acc, name, text)
+              end
           end
-      end
-    end)
+        end)
+
+      _ ->
+        %{:error => "Unknown type", :data => data}
+    end
   end
 
   defp sibling(nil, _attributes, _options, _verbose) do

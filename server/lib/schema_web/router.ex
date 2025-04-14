@@ -138,10 +138,10 @@ defmodule SchemaWeb.Router do
 
     get "/data_types", SchemaController, :data_types
 
-    post "/enrich/skill", SchemaController, :enrich
-    post "/translate/skill", SchemaController, :translate
-    post "/validate/skill", SchemaController, :validate
-    post "/validate_bundle/skill", SchemaController, :validate_bundle
+    post "/enrich/skill", SchemaController, :enrich_skill
+    post "/translate/skill", SchemaController, :translate_skill
+    post "/validate/skill", SchemaController, :validate_skill
+    post "/validate_bundle/skill", SchemaController, :validate_bundle_skill
   end
 
   scope "/schema", SchemaWeb do

@@ -841,8 +841,8 @@ defmodule Schema do
   # Enrich Class Data Functions #
   # ----------------------------#
 
-  def enrich(data, enum_text, observables) do
-    Schema.Helper.enrich(data, enum_text, observables)
+  def enrich(data, enum_text, observables, type) do
+    Schema.Helper.enrich(data, enum_text, observables, type)
   end
 
   # -------------------------------#

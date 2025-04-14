@@ -7,39 +7,42 @@ defmodule Schema.Helper do
   """
   require Logger
 
-  def enrich(data, enum_text, observables) when is_map(data) do
+  def enrich(data, enum_text, observables, type) when is_map(data) do
     Logger.debug(fn ->
-      "enrich class: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
+      "enrich #{type}: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
     end)
 
-    enrich_class(data["class_uid"], data, enum_text, observables)
+    enrich_class(data, enum_text, observables, type)
   end
 
   # this is not a class
-  def enrich(data, _enum_text, _observables), do: %{:error => "Not a JSON object", :data => data}
+  def enrich(data, _enum_text, _observables, _type),
+    do: %{:error => "Not a JSON object", :data => data}
 
-  # missing class_uid
-  defp enrich_class(nil, data, _enum_text, _observables),
-    do: %{:error => "Missing class_uid", :data => data}
+  defp enrich_class(data, enum_text, _observables, type) do
+    case type do
+      "skill" ->
+        class_uid = data["class_uid"]
+        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
+        Logger.debug("enrich class: #{class_uid}")
 
-  defp enrich_class(class_uid, data, enum_text, _observables) do
-    Logger.debug("enrich class: #{class_uid}")
+        case Schema.find_skill(class_uid) do
+          # invalid class ID
+          nil ->
+            %{:error => "Invalid class_uid: #{class_uid}", :data => data}
 
-    # if observables == "true", do:
+          class ->
+            data = type_uid(class_uid, data)
 
-    case Schema.find_skill(class_uid) do
-      # invalid class ID
-      nil ->
-        %{:error => "Invalid class_uid: #{class_uid}", :data => data}
-
-      class ->
-        data = type_uid(class_uid, data)
-
-        if enum_text == "true" do
-          enrich_type(class, data)
-        else
-          data
+            if enum_text == "true" do
+              enrich_type(class, data)
+            else
+              data
+            end
         end
+
+      _ ->
+        %{:error => "Unknown type", :data => data}
     end
   end
 
