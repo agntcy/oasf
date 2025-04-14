@@ -60,6 +60,48 @@ defmodule Schema.Translator do
           end
         end)
 
+      "domain" ->
+        class_uid = data["class_uid"]
+        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
+        Logger.debug("translate class: #{class_uid}")
+
+        type = Schema.find_domain(class_uid)
+        attributes = type[:attributes]
+
+        Enum.reduce(data, %{}, fn {name, value}, acc ->
+          Logger.debug("translate attribute: #{name} = #{inspect(value)}")
+
+          key = to_atom(name)
+
+          case attributes[key] do
+            nil ->
+              # Attribute name is not defined in the schema
+              Map.put(acc, name, value)
+
+            attribute ->
+              {name, text} =
+                translate_attribute(attribute[:type], name, attribute, value, options)
+
+              verbose = Keyword.get(options, :verbose)
+
+              if Map.has_key?(attribute, :enum) and (verbose == 1 or verbose == 2) do
+                Logger.debug("translated enum: #{name} = #{text}")
+
+                case sibling(attribute[:sibling], attributes, options, verbose) do
+                  nil ->
+                    Map.put_new(acc, name, value)
+
+                  sibling ->
+                    Logger.debug("translated name: #{sibling}")
+
+                    Map.put_new(acc, name, value) |> Map.put_new(sibling, text)
+                end
+              else
+                Map.put(acc, name, text)
+              end
+          end
+        end)
+
       _ ->
         %{:error => "Unknown type", :data => data}
     end

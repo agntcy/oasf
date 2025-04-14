@@ -153,6 +153,26 @@ defmodule Schema.Validator do
             response
           end
 
+        "domain" ->
+          # Validate a domain input
+          {response, class} = validate_domain_class_uid_and_return_class(response, input)
+
+          if class do
+            {response, profiles} = validate_and_return_profiles(response, input)
+
+            validate_input_against_class(
+              response,
+              input,
+              class,
+              profiles,
+              warn_on_missing_recommended,
+              dictionary
+            )
+          else
+            # Can't continue if we can't find the class
+            response
+          end
+
         _ ->
           # Unknown type; return error
           add_error(
@@ -174,6 +194,42 @@ defmodule Schema.Validator do
       cond do
         is_integer_t(class_uid) ->
           case Schema.find_skill(class_uid) do
+            nil ->
+              {
+                add_error(
+                  response,
+                  "class_uid_unknown",
+                  "Unknown \"class_uid\" value; no class is defined for #{class_uid}.",
+                  %{attribute_path: "class_uid", attribute: "class_uid", value: class_uid}
+                ),
+                nil
+              }
+
+            class ->
+              {response, class}
+          end
+
+        true ->
+          {
+            # We need to add error here; no further validation will occur (nil returned for class).
+            add_error_wrong_type(response, "class_uid", "class_uid", class_uid, "integer_t"),
+            nil
+          }
+      end
+    else
+      # We need to add error here; no further validation will occur (nil returned for class).
+      {add_error_required_attribute_missing(response, "class_uid", "class_uid"), nil}
+    end
+  end
+
+  @spec validate_domain_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
+  defp validate_domain_class_uid_and_return_class(response, input) do
+    if Map.has_key?(input, "class_uid") do
+      class_uid = input["class_uid"]
+
+      cond do
+        is_integer_t(class_uid) ->
+          case Schema.find_domain(class_uid) do
             nil ->
               {
                 add_error(

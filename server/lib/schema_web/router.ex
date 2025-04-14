@@ -142,6 +142,11 @@ defmodule SchemaWeb.Router do
     post "/translate/skill", SchemaController, :translate_skill
     post "/validate/skill", SchemaController, :validate_skill
     post "/validate_bundle/skill", SchemaController, :validate_bundle_skill
+
+    post "/enrich/domain", SchemaController, :enrich_domain
+    post "/translate/domain", SchemaController, :translate_domain
+    post "/validate/domain", SchemaController, :validate_domain
+    post "/validate_bundle/domain", SchemaController, :validate_bundle_domain
   end
 
   scope "/schema", SchemaWeb do
