@@ -520,8 +520,8 @@ defmodule Schema do
   @doc """
   Finds a feature by the feature uid value.
   """
-  @spec find_feature(integer()) :: nil | Cache.class_t()
-  def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
+  @spec find_feature(String.t()) :: nil | Cache.class_t()
+  def find_feature(name) when is_bitstring(name), do: Repo.find_feature(name)
 
   @doc """
     Returns all objects.

@@ -487,8 +487,8 @@ defmodule Schema.Cache do
   end
 
   @spec find_feature(Schema.Cache.t(), any) :: nil | map
-  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, uid) do
-    case Enum.find(features, fn {_, feature} -> feature[:uid] == uid end) do
+  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, name) do
+    case Enum.find(features, fn {_, feature} -> feature[:name] == name end) do
       {_, feature} -> enrich(feature, dictionary[:attributes])
       nil -> nil
     end
