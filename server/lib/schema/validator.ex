@@ -13,7 +13,7 @@ defmodule Schema.Validator do
 
   require Logger
 
-  @spec(validate(map(), boolean(), String.t()) :: map())
+  @spec validate(map(), boolean(), String.t()) :: map()
   def validate(data, warn_on_missing_recommended, type) when is_map(data) do
     validate_input(data, warn_on_missing_recommended, Schema.dictionary(), type)
   end
@@ -55,7 +55,13 @@ defmodule Schema.Validator do
 
     # Next validate the inputs in the bundle
     response =
-      validate_bundle_inputs(response, bundle, warn_on_missing_recommended, Schema.dictionary(), type)
+      validate_bundle_inputs(
+        response,
+        bundle,
+        warn_on_missing_recommended,
+        Schema.dictionary(),
+        type
+      )
 
     finalize_response(response)
   end
@@ -127,7 +133,7 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec(validate_input(map(), boolean(), map(), String.t()) :: map())
+  @spec validate_input(map(), boolean(), map(), String.t()) :: map()
   defp validate_input(input, warn_on_missing_recommended, dictionary, type) do
     response = new_response(input)
 
