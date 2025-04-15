@@ -33,6 +33,11 @@ defmodule Schema.Translator do
           Logger.debug("translate class: #{class_uid}")
           Schema.find_domain(class_uid)
 
+        "feature" ->
+          class_name = data["name"]
+          if class_name == nil, do: data
+          Logger.debug("translate class: #{class_name}")
+          Schema.find_feature(class_name)
 
         _ ->
           # invalid class ID
