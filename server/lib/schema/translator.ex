@@ -3,108 +3,83 @@
 
 defmodule Schema.Translator do
   @moduledoc """
-  Translates classes to more user friendly form.
+  Translates inputs to more user friendly form.
   """
   require Logger
 
   def translate(data, options, type) when is_map(data) do
-    Logger.debug("translate #{type}: #{inspect(data)}, options: #{inspect(options)}")
+    Logger.debug(
+      "translate input: #{inspect(data)}, options: #{inspect(options)}, type: #{type}}"
+    )
 
     translate_class(data, options, type)
   end
 
-  # this is not an class
+  # this is not a valid input
   def translate(data, _options, _type), do: data
 
   defp translate_class(data, options, type) do
-    case type do
-      "skill" ->
-        class_uid = data["class_uid"]
-        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
-        Logger.debug("translate class: #{class_uid}")
+    type =
+      case type do
+        "skill" ->
+          class_uid = data["class_uid"]
+          if class_uid == nil, do: data
+          Logger.debug("translate class: #{class_uid}")
+          Schema.find_skill(class_uid)
 
-        type = Schema.find_skill(class_uid)
-        attributes = type[:attributes]
+        "domain" ->
+          class_uid = data["class_uid"]
+          if class_uid == nil, do: data
+          Logger.debug("translate class: #{class_uid}")
+          Schema.find_domain(class_uid)
 
-        Enum.reduce(data, %{}, fn {name, value}, acc ->
-          Logger.debug("translate attribute: #{name} = #{inspect(value)}")
 
-          key = to_atom(name)
+        _ ->
+          # invalid class ID
+          %{:error => "Unknown type", :data => data}
+      end
 
-          case attributes[key] do
-            nil ->
-              # Attribute name is not defined in the schema
-              Map.put(acc, name, value)
+    translate_input(type, data, options)
+  end
 
-            attribute ->
-              {name, text} =
-                translate_attribute(attribute[:type], name, attribute, value, options)
+  # unknown input class, thus cannot translate the input
+  defp translate_input(nil, data, _options), do: data
 
-              verbose = Keyword.get(options, :verbose)
+  defp translate_input(type, data, options) do
+    attributes = type[:attributes]
 
-              if Map.has_key?(attribute, :enum) and (verbose == 1 or verbose == 2) do
-                Logger.debug("translated enum: #{name} = #{text}")
+    Enum.reduce(data, %{}, fn {name, value}, acc ->
+      Logger.debug("translate attribute: #{name} = #{inspect(value)}")
 
-                case sibling(attribute[:sibling], attributes, options, verbose) do
-                  nil ->
-                    Map.put_new(acc, name, value)
+      key = to_atom(name)
 
-                  sibling ->
-                    Logger.debug("translated name: #{sibling}")
+      case attributes[key] do
+        nil ->
+          # Attribute name is not defined in the schema
+          Map.put(acc, name, value)
 
-                    Map.put_new(acc, name, value) |> Map.put_new(sibling, text)
-                end
-              else
-                Map.put(acc, name, text)
-              end
+        attribute ->
+          {name, text} = translate_attribute(attribute[:type], name, attribute, value, options)
+
+          verbose = Keyword.get(options, :verbose)
+
+          if Map.has_key?(attribute, :enum) and (verbose == 1 or verbose == 2) do
+            Logger.debug("translated enum: #{name} = #{text}")
+
+            case sibling(attribute[:sibling], attributes, options, verbose) do
+              nil ->
+                Map.put_new(acc, name, value)
+
+              sibling ->
+                Logger.debug("translated name: #{sibling}")
+
+                Map.put_new(acc, name, value) |> Map.put_new(sibling, text)
+            end
+          else
+            Map.put(acc, name, text)
           end
-        end)
-
-      "domain" ->
-        class_uid = data["class_uid"]
-        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
-        Logger.debug("translate class: #{class_uid}")
-
-        type = Schema.find_domain(class_uid)
-        attributes = type[:attributes]
-
-        Enum.reduce(data, %{}, fn {name, value}, acc ->
-          Logger.debug("translate attribute: #{name} = #{inspect(value)}")
-
-          key = to_atom(name)
-
-          case attributes[key] do
-            nil ->
-              # Attribute name is not defined in the schema
-              Map.put(acc, name, value)
-
-            attribute ->
-              {name, text} =
-                translate_attribute(attribute[:type], name, attribute, value, options)
-
-              verbose = Keyword.get(options, :verbose)
-
-              if Map.has_key?(attribute, :enum) and (verbose == 1 or verbose == 2) do
-                Logger.debug("translated enum: #{name} = #{text}")
-
-                case sibling(attribute[:sibling], attributes, options, verbose) do
-                  nil ->
-                    Map.put_new(acc, name, value)
-
-                  sibling ->
-                    Logger.debug("translated name: #{sibling}")
-
-                    Map.put_new(acc, name, value) |> Map.put_new(sibling, text)
-                end
-              else
-                Map.put(acc, name, text)
-              end
-          end
-        end)
-
-      _ ->
-        %{:error => "Unknown type", :data => data}
-    end
+      end
+    end)
   end
 
   defp sibling(nil, _attributes, _options, _verbose) do
@@ -130,7 +105,7 @@ defmodule Schema.Translator do
   end
 
   defp translate_attribute("object_t", name, attribute, value, options) when is_map(value) do
-    translated = translate_class(Schema.object(attribute[:object_type]), value, options)
+    translated = translate_input(Schema.object(attribute[:object_type]), value, options)
     translate_attribute(name, attribute, translated, options)
   end
 
@@ -140,7 +115,7 @@ defmodule Schema.Translator do
         obj_type = Schema.object(attribute[:object_type])
 
         Enum.map(value, fn data ->
-          translate_class(obj_type, data, options)
+          translate_input(obj_type, data, options)
         end)
       else
         value
