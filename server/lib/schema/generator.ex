@@ -144,7 +144,7 @@ defmodule Schema.Generator do
       data
     else
       Map.update!(data, :name, fn _name ->
-        Types.class_name(class[:family], class[:category], class[:name])
+        Types.long_class_name(class[:family], class[:category], class[:name])
       end)
     end
   end

@@ -34,8 +34,9 @@ defmodule Schema.Translator do
           Schema.find_domain(class_uid)
 
         "feature" ->
-          class_name = data["name"]
-          if class_name == nil, do: data
+          name = data["name"]
+          if name == nil, do: data
+          class_name = Schema.Types.extract_class_name(name)
           Logger.debug("translate class: #{class_name}")
           Schema.find_feature(class_name)
 

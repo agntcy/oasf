@@ -1206,7 +1206,7 @@ defmodule Schema.Cache do
       class
       |> put_in(
         [:attributes, :name, :description],
-        "The schema extension name: <code>#{Types.class_name(class[:family], class[:category], class[:name])}</code>"
+        "The schema extension name: <code>#{Types.long_class_name(class[:family], class[:category], class[:name])}</code>"
       )
     end
   end
