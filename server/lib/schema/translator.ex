@@ -22,29 +22,45 @@ defmodule Schema.Translator do
     type =
       case type do
         :skill ->
-          class_uid = data["class_uid"]
-          if class_uid == nil, do: data
-          Logger.debug("translate class: #{class_uid}")
-          Schema.find_skill(class_uid)
+          case Map.get(data, "class_uid") do
+            nil ->
+              data
+
+            class_uid ->
+              Logger.debug("translate class: #{class_uid}")
+              Schema.find_skill(class_uid)
+          end
 
         :domain ->
-          class_uid = data["class_uid"]
-          if class_uid == nil, do: data
-          Logger.debug("translate class: #{class_uid}")
-          Schema.find_domain(class_uid)
+          case Map.get(data, "class_uid") do
+            nil ->
+              data
+
+            class_uid ->
+              Logger.debug("translate class: #{class_uid}")
+              Schema.find_domain(class_uid)
+          end
 
         :feature ->
-          name = data["name"]
-          if name == nil, do: data
-          class_name = Schema.Types.extract_class_name(name)
-          Logger.debug("translate class: #{class_name}")
-          Schema.find_feature(class_name)
+          case Map.get(data, "name") do
+            nil ->
+              data
+
+            name ->
+              class_name = Schema.Types.extract_class_name(name)
+              Logger.debug("translate class: #{class_name}")
+              Schema.find_feature(class_name)
+          end
 
         :object ->
-          object_name = Keyword.get(options, :name)
-          if object_name == nil, do: data
-          Logger.debug("translate object: #{object_name}")
-          Schema.object(object_name)
+          case Keyword.get(options, :name) do
+            nil ->
+              data
+
+            object_name ->
+              Logger.debug("translate object: #{object_name}")
+              Schema.object(object_name)
+          end
 
         _ ->
           # invalid class ID

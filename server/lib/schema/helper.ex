@@ -20,49 +20,38 @@ defmodule Schema.Helper do
     do: %{:error => "Not a JSON object", :data => data}
 
   defp enrich_class(data, enum_text, _observables, type) do
-    case type do
-      :skill ->
-        class_uid = data["class_uid"]
-        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
-        Logger.debug("enrich class: #{class_uid}")
+    class_uid = data["class_uid"]
+    if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
+    Logger.debug("enrich class: #{class_uid}")
 
-        case Schema.find_skill(class_uid) do
-          # invalid class ID
-          nil ->
-            %{:error => "Invalid class_uid: #{class_uid}", :data => data}
+    class =
+      case type do
+        :skill ->
+          Schema.find_skill(class_uid)
 
-          class ->
-            data = type_uid(class_uid, data)
+        :domain ->
+          Schema.find_domain(class_uid)
 
-            if enum_text == "true" do
-              enrich_type(class, data)
-            else
-              data
-            end
+        _ ->
+          {:error, "Unknown type", data}
+      end
+
+    case class do
+      {:error, message, data} ->
+        %{:error => message, :data => data}
+
+      # invalid class ID
+      nil ->
+        %{:error => "Invalid class_uid: #{class_uid}", :data => data}
+
+      class ->
+        data = type_uid(class_uid, data)
+
+        if enum_text == "true" do
+          enrich_type(class, data)
+        else
+          data
         end
-
-      :domain ->
-        class_uid = data["class_uid"]
-        if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
-        Logger.debug("enrich class: #{class_uid}")
-
-        case Schema.find_domain(class_uid) do
-          # invalid class ID
-          nil ->
-            %{:error => "Invalid class_uid: #{class_uid}", :data => data}
-
-          class ->
-            data = type_uid(class_uid, data)
-
-            if enum_text == "true" do
-              enrich_type(class, data)
-            else
-              data
-            end
-        end
-
-      _ ->
-        %{:error => "Unknown type", :data => data}
     end
   end
 

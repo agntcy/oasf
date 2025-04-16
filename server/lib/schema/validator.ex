@@ -137,87 +137,19 @@ defmodule Schema.Validator do
   defp validate_input(input, options, dictionary, type) do
     response = new_response(input)
 
-    response =
+    {response, class} =
       case type do
         :skill ->
-          # Validate a skill input
-          {response, class} = validate_skill_class_uid_and_return_class(response, input)
-
-          if class do
-            {response, profiles} = validate_and_return_profiles(response, input)
-
-            validate_input_against_class(
-              response,
-              input,
-              class,
-              profiles,
-              options,
-              dictionary
-            )
-          else
-            # Can't continue if we can't find the class
-            response
-          end
+          validate_skill_class_uid_and_return_class(response, input)
 
         :domain ->
-          # Validate a domain input
-          {response, class} = validate_domain_class_uid_and_return_class(response, input)
-
-          if class do
-            {response, profiles} = validate_and_return_profiles(response, input)
-
-            validate_input_against_class(
-              response,
-              input,
-              class,
-              profiles,
-              options,
-              dictionary
-            )
-          else
-            # Can't continue if we can't find the class
-            response
-          end
+          validate_domain_class_uid_and_return_class(response, input)
 
         :feature ->
-          # Validate a feature input
-          {response, class} = validate_feature_class_name_and_return_class(response, input)
-
-          if class do
-            {response, profiles} = validate_and_return_profiles(response, input)
-
-            validate_input_against_class(
-              response,
-              input,
-              class,
-              profiles,
-              options,
-              dictionary
-            )
-          else
-            # Can't continue if we can't find the class
-            response
-          end
+          validate_feature_class_name_and_return_class(response, input)
 
         :object ->
-          # Validate a object input
-          {response, object} = validate_object_name_and_return_object(response, options)
-
-          if object do
-            {response, profiles} = validate_and_return_profiles(response, input)
-
-            validate_input_against_class(
-              response,
-              input,
-              object,
-              profiles,
-              options,
-              dictionary
-            )
-          else
-            # Can't continue if we can't find the class
-            response
-          end
+          validate_object_name_and_return_object(response, options)
 
         _ ->
           # Unknown type; return error
@@ -227,6 +159,23 @@ defmodule Schema.Validator do
             "Unknown input type \"#{type}\".",
             %{attribute_path: "type", attribute: "type", value: type}
           )
+      end
+
+    response =
+      if class do
+        {response, profiles} = validate_and_return_profiles(response, input)
+
+        validate_input_against_class(
+          response,
+          input,
+          class,
+          profiles,
+          options,
+          dictionary
+        )
+      else
+        # Can't continue if we can't find the class
+        response
       end
 
     finalize_response(response)
