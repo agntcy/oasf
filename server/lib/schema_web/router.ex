@@ -151,6 +151,9 @@ defmodule SchemaWeb.Router do
     post "/translate/feature", SchemaController, :translate_feature
     post "/validate/feature", SchemaController, :validate_feature
     post "/validate_bundle/feature", SchemaController, :validate_bundle_feature
+
+    post "/translate/object", SchemaController, :translate_object
+    post "/validate/object", SchemaController, :validate_object
   end
 
   scope "/schema", SchemaWeb do

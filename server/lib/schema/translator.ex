@@ -40,6 +40,12 @@ defmodule Schema.Translator do
           Logger.debug("translate class: #{class_name}")
           Schema.find_feature(class_name)
 
+        "object" ->
+          object_name = Keyword.get(options, :name)
+          if object_name == nil, do: data
+          Logger.debug("translate object: #{object_name}")
+          Schema.object(object_name)
+
         _ ->
           # invalid class ID
           %{:error => "Unknown type", :data => data}

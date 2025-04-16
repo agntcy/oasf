@@ -199,6 +199,26 @@ defmodule Schema.Validator do
             response
           end
 
+        "object" ->
+          # Validate a object input
+          {response, object} = validate_object_name_and_return_object(response, options)
+
+          if object do
+            {response, profiles} = validate_and_return_profiles(response, input)
+
+            validate_input_against_class(
+              response,
+              input,
+              object,
+              profiles,
+              options,
+              dictionary
+            )
+          else
+            # Can't continue if we can't find the class
+            response
+          end
+
         _ ->
           # Unknown type; return error
           add_error(
@@ -317,6 +337,42 @@ defmodule Schema.Validator do
     else
       # We need to add error here; no further validation will occur (nil returned for class).
       {add_error_required_attribute_missing(response, "class_name", "class_name"), nil}
+    end
+  end
+
+  @spec validate_object_name_and_return_object(map(), map()) :: {map(), nil | map()}
+  defp validate_object_name_and_return_object(response, options) do
+    if Keyword.has_key?(options, :name) do
+      object_name = Keyword.get(options, :name)
+
+      cond do
+        is_bitstring(object_name) ->
+          case Schema.object(object_name) do
+            nil ->
+              {
+                add_error(
+                  response,
+                  "name_unknown",
+                  "Unknown \"name\" value; no object is defined for #{object_name}.",
+                  %{attribute_path: "name", attribute: "name", value: object_name}
+                ),
+                nil
+              }
+
+            object ->
+              {response, object}
+          end
+
+        true ->
+          {
+            # We need to add error here; no further validation will occur (nil returned for class).
+            add_error_wrong_type(response, "name", "name", object_name, "string_t"),
+            nil
+          }
+      end
+    else
+      # We need to add error here; no further validation will occur (nil returned for class).
+      {add_error_required_attribute_missing(response, "object_name", "object_name"), nil}
     end
   end
 

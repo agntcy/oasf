@@ -14,6 +14,7 @@ defmodule SchemaWeb.SchemaController do
 
   @verbose "_mode"
   @spaces "_spaces"
+  @name "_name"
   @missing_recommended "missing_recommended"
 
   @enum_text "_enum_text"
@@ -1947,6 +1948,104 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
+  Translate object data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  """
+  swagger_path :translate_object do
+    post("/api/translate/object")
+    summary("Translate object")
+
+    description(
+      "The purpose of this API is to translate the provided object data using the OASF schema." <>
+        " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
+        "  JSON array of objects."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      _name(
+        :query,
+        :string,
+        """
+        Name of the object to be translated as it appears under the <code>Name</code> in the <a target='_blank' href='https://schema.oasf.agntcy.org/objects' >list of objects</a>.<br/>
+        The default name is "agent".
+        """,
+        default: "agent",
+        required: true,
+        allowEmptyValue: false
+      )
+
+      _mode(
+        :query,
+        :number,
+        """
+        Controls how attribute names and enumerated values are translated.<br/>
+        The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
+        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        """,
+        default: 1
+      )
+
+      _spaces(
+        :query,
+        :string,
+        """
+          Controls how spaces in the translated attribute names are handled.<br/>
+          By default, the translated attribute names may contain spaces (for example, Class Time).
+          You can remove the spaces or replace the spaces with another string. For example, if you
+          want to forward to a database that does not support spaces.<br/>
+          The format is _spaces=[&lt;empty&gt;|string].
+
+          |Value|Description|Example|
+          |-----|-----------|-------|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+        """,
+        allowEmptyValue: true
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The object data to be translated",
+        required: true
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_object(conn, params) do
+    options = [
+      name: conn.query_params[@name],
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose])
+    ]
+
+    {status, result} =
+      case params["_json"] do
+        # Translate a single classes
+        class when is_map(class) ->
+          {200, Schema.Translator.translate(class, options, "object")}
+
+        # Translate a list of classes
+        list when is_list(list) ->
+          {200,
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, "object") end)}
+
+        # some other json data
+        _ ->
+          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
+      end
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
   Validate skill class data. Validates a single class.
   post /api/validate/skill
   """
@@ -2089,6 +2188,68 @@ defmodule SchemaWeb.SchemaController do
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} = validate_actual(params["_json"], options, "feature")
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Validate object data. Validates a single class.
+  post /api/validate/object
+  """
+  swagger_path :validate_object do
+    post("/api/validate/object")
+    summary("Validate object")
+
+    description(
+      "This API validates the provided object data against the OASF schema, returning a response" <>
+        " containing validation errors and warnings."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      _name(
+        :query,
+        :string,
+        """
+        Name of the object to be translated as it appears under the <code>Name</code> in the <a target='_blank' href='https://schema.oasf.agntcy.org/objects' >list of objects</a>.<br/>
+        The default name is "agent".
+        """,
+        default: "agent",
+        required: true,
+        allowEmptyValue: false
+      )
+
+      missing_recommended(
+        :query,
+        :boolean,
+        """
+        When true, warnings are created for missing recommended attributes, otherwise recommended attributes are treated the same as optional.
+        """,
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+    end
+
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+  end
+
+  @spec validate_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_object(conn, params) do
+    options = [
+      name: conn.query_params[@name],
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
+
+    # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
+    # endpoint.ex.
+    {status, result} = validate_actual(params["_json"], options, "object")
 
     send_json_resp(conn, status, result)
   end
