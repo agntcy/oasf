@@ -13,13 +13,13 @@ defmodule Schema.Validator do
 
   require Logger
 
-  @spec validate(map(), boolean(), String.t()) :: map()
-  def validate(data, warn_on_missing_recommended, type) when is_map(data) do
-    validate_input(data, warn_on_missing_recommended, Schema.dictionary(), type)
+  @spec validate(map(), list(), String.t()) :: map()
+  def validate(data, options, type) when is_map(data) do
+    validate_input(data, options, Schema.dictionary(), type)
   end
 
-  @spec validate_bundle(map(), boolean(), String.t()) :: map()
-  def validate_bundle(bundle, warn_on_missing_recommended, type) when is_map(bundle) do
+  @spec validate_bundle(map(), list(), String.t()) :: map()
+  def validate_bundle(bundle, options, type) when is_map(bundle) do
     bundle_structure = get_bundle_structure()
 
     # First validate the bundle itself
@@ -58,7 +58,7 @@ defmodule Schema.Validator do
       validate_bundle_inputs(
         response,
         bundle,
-        warn_on_missing_recommended,
+        options,
         Schema.dictionary(),
         type
       )
@@ -103,8 +103,8 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_bundle_inputs(map(), map(), boolean(), map(), String.t()) :: map()
-  defp validate_bundle_inputs(response, bundle, warn_on_missing_recommended, dictionary, type) do
+  @spec validate_bundle_inputs(map(), map(), list(), map(), String.t()) :: map()
+  defp validate_bundle_inputs(response, bundle, options, dictionary, type) do
     inputs = bundle["inputs"]
 
     if is_list(inputs) do
@@ -115,7 +115,7 @@ defmodule Schema.Validator do
           inputs,
           fn input ->
             if is_map(input) do
-              validate_input(input, warn_on_missing_recommended, dictionary, type)
+              validate_input(input, options, dictionary, type)
             else
               {type, type_extra} = type_of(input)
 
@@ -133,8 +133,8 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_input(map(), boolean(), map(), String.t()) :: map()
-  defp validate_input(input, warn_on_missing_recommended, dictionary, type) do
+  @spec validate_input(map(), list(), map(), String.t()) :: map()
+  defp validate_input(input, options, dictionary, type) do
     response = new_response(input)
 
     response =
@@ -151,7 +151,7 @@ defmodule Schema.Validator do
               input,
               class,
               profiles,
-              warn_on_missing_recommended,
+              options,
               dictionary
             )
           else
@@ -171,7 +171,7 @@ defmodule Schema.Validator do
               input,
               class,
               profiles,
-              warn_on_missing_recommended,
+              options,
               dictionary
             )
           else
@@ -191,7 +191,7 @@ defmodule Schema.Validator do
               input,
               class,
               profiles,
-              warn_on_missing_recommended,
+              options,
               dictionary
             )
           else
@@ -394,19 +394,26 @@ defmodule Schema.Validator do
     end)
   end
 
-  @spec validate_input_against_class(map(), map(), map(), list(String.t()), boolean(), map()) ::
+  @spec validate_input_against_class(map(), map(), map(), list(String.t()), list(), map()) ::
           map()
   defp validate_input_against_class(
          response,
          input,
          class,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     response
     |> validate_class_deprecated(class)
-    |> validate_attributes(input, nil, class, profiles, warn_on_missing_recommended, dictionary)
+    |> validate_attributes(
+      input,
+      nil,
+      class,
+      profiles,
+      Keyword.get(options, :warn_on_missing_recommended),
+      dictionary
+    )
     |> validate_version(input)
     |> validate_type_uid(input)
     |> validate_constraints(input, class)

@@ -14,6 +14,7 @@ defmodule SchemaWeb.SchemaController do
 
   @verbose "_mode"
   @spaces "_spaces"
+  @missing_recommended "missing_recommended"
 
   @enum_text "_enum_text"
   @observables "_observables"
@@ -1979,15 +1980,17 @@ defmodule SchemaWeb.SchemaController do
 
   @spec validate_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def validate_skill(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], warn_on_missing_recommended, "skill")
+    {status, result} = validate_actual(params["_json"], options, "skill")
 
     send_json_resp(conn, status, result)
   end
@@ -2026,25 +2029,19 @@ defmodule SchemaWeb.SchemaController do
 
   @spec validate_domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def validate_domain(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], warn_on_missing_recommended, "domain")
+    {status, result} = validate_actual(params["_json"], options, "domain")
 
     send_json_resp(conn, status, result)
-  end
-
-  defp validate_actual(input, warn_on_missing_recommended, type) when is_map(input) do
-    {200, Schema.Validator.validate(input, warn_on_missing_recommended, type)}
-  end
-
-  defp validate_actual(_, _, _) do
-    {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
   @doc """
@@ -2081,17 +2078,27 @@ defmodule SchemaWeb.SchemaController do
 
   @spec validate_feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def validate_feature(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], warn_on_missing_recommended, "feature")
+    {status, result} = validate_actual(params["_json"], options, "feature")
 
     send_json_resp(conn, status, result)
+  end
+
+  defp validate_actual(input, options, type) when is_map(input) do
+    {200, Schema.Validator.validate(input, options, type)}
+  end
+
+  defp validate_actual(_, _, _) do
+    {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
   @doc """
@@ -2130,16 +2137,18 @@ defmodule SchemaWeb.SchemaController do
 
   @spec validate_bundle_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
   def validate_bundle_skill(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], warn_on_missing_recommended, "skill")
+      validate_bundle_actual(params["_json"], options, "skill")
 
     send_json_resp(conn, status, result)
   end
@@ -2180,16 +2189,18 @@ defmodule SchemaWeb.SchemaController do
 
   @spec validate_bundle_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
   def validate_bundle_domain(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], warn_on_missing_recommended, "domain")
+      validate_bundle_actual(params["_json"], options, "domain")
 
     send_json_resp(conn, status, result)
   end
@@ -2230,22 +2241,24 @@ defmodule SchemaWeb.SchemaController do
 
   @spec validate_bundle_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
   def validate_bundle_feature(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], warn_on_missing_recommended, "feature")
+      validate_bundle_actual(params["_json"], options, "feature")
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate_bundle_actual(bundle, warn_on_missing_recommended, type) when is_map(bundle) do
-    {200, Schema.Validator.validate_bundle(bundle, warn_on_missing_recommended, type)}
+  defp validate_bundle_actual(bundle, options, type) when is_map(bundle) do
+    {200, Schema.Validator.validate_bundle(bundle, options, type)}
   end
 
   defp validate_bundle_actual(_, _, _) do
