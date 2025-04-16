@@ -21,7 +21,7 @@ defmodule Schema.Helper do
 
   defp enrich_class(data, enum_text, _observables, type) do
     case type do
-      "skill" ->
+      :skill ->
         class_uid = data["class_uid"]
         if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
         Logger.debug("enrich class: #{class_uid}")
@@ -41,7 +41,7 @@ defmodule Schema.Helper do
             end
         end
 
-      "domain" ->
+      :domain ->
         class_uid = data["class_uid"]
         if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
         Logger.debug("enrich class: #{class_uid}")

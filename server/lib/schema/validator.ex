@@ -13,12 +13,12 @@ defmodule Schema.Validator do
 
   require Logger
 
-  @spec validate(map(), list(), String.t()) :: map()
+  @spec validate(map(), list(), atom()) :: map()
   def validate(data, options, type) when is_map(data) do
     validate_input(data, options, Schema.dictionary(), type)
   end
 
-  @spec validate_bundle(map(), list(), String.t()) :: map()
+  @spec validate_bundle(map(), list(), atom()) :: map()
   def validate_bundle(bundle, options, type) when is_map(bundle) do
     bundle_structure = get_bundle_structure()
 
@@ -103,8 +103,8 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_bundle_inputs(map(), map(), list(), map(), String.t()) :: map()
-  defp validate_bundle_inputs(response, bundle, options, dictionary, type) do
+  @spec validate_bundle_inputs(map(), map(), list(), map(), atom()) :: map()
+  defp validate_bundle_inputs(response, bundle, options, dictionary, class_type) do
     inputs = bundle["inputs"]
 
     if is_list(inputs) do
@@ -115,7 +115,7 @@ defmodule Schema.Validator do
           inputs,
           fn input ->
             if is_map(input) do
-              validate_input(input, options, dictionary, type)
+              validate_input(input, options, dictionary, class_type)
             else
               {type, type_extra} = type_of(input)
 
@@ -133,13 +133,13 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_input(map(), list(), map(), String.t()) :: map()
+  @spec validate_input(map(), list(), map(), atom()) :: map()
   defp validate_input(input, options, dictionary, type) do
     response = new_response(input)
 
     response =
       case type do
-        "skill" ->
+        :skill ->
           # Validate a skill input
           {response, class} = validate_skill_class_uid_and_return_class(response, input)
 
@@ -159,7 +159,7 @@ defmodule Schema.Validator do
             response
           end
 
-        "domain" ->
+        :domain ->
           # Validate a domain input
           {response, class} = validate_domain_class_uid_and_return_class(response, input)
 
@@ -179,7 +179,7 @@ defmodule Schema.Validator do
             response
           end
 
-        "feature" ->
+        :feature ->
           # Validate a feature input
           {response, class} = validate_feature_class_name_and_return_class(response, input)
 
@@ -199,7 +199,7 @@ defmodule Schema.Validator do
             response
           end
 
-        "object" ->
+        :object ->
           # Validate a object input
           {response, object} = validate_object_name_and_return_object(response, options)
 

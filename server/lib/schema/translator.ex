@@ -21,26 +21,26 @@ defmodule Schema.Translator do
   defp translate_class(data, options, type) do
     type =
       case type do
-        "skill" ->
+        :skill ->
           class_uid = data["class_uid"]
           if class_uid == nil, do: data
           Logger.debug("translate class: #{class_uid}")
           Schema.find_skill(class_uid)
 
-        "domain" ->
+        :domain ->
           class_uid = data["class_uid"]
           if class_uid == nil, do: data
           Logger.debug("translate class: #{class_uid}")
           Schema.find_domain(class_uid)
 
-        "feature" ->
+        :feature ->
           name = data["name"]
           if name == nil, do: data
           class_name = Schema.Types.extract_class_name(name)
           Logger.debug("translate class: #{class_name}")
           Schema.find_feature(class_name)
 
-        "object" ->
+        :object ->
           object_name = Keyword.get(options, :name)
           if object_name == nil, do: data
           Logger.debug("translate object: #{object_name}")

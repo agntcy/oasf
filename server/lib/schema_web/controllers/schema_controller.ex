@@ -1606,14 +1606,14 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Enrich a single class
         class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, observables, "skill")}
+          {200, Schema.enrich(class, enum_text, observables, :skill)}
 
         # Enrich a list of classes
         list when is_list(list) ->
           {200,
            Enum.map(
              list,
-             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, "skill") end)
+             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, :skill) end)
            )
            |> Enum.map(&Task.await/1)}
 
@@ -1682,14 +1682,14 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Enrich a single class
         class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, observables, "domain")}
+          {200, Schema.enrich(class, enum_text, observables, :domain)}
 
         # Enrich a list of classes
         list when is_list(list) ->
           {200,
            Enum.map(
              list,
-             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, "domain") end)
+             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, :domain) end)
            )
            |> Enum.map(&Task.await/1)}
 
@@ -1768,12 +1768,12 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options, "skill")}
+          {200, Schema.Translator.translate(class, options, :skill)}
 
         # Translate a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, fn class -> Schema.Translator.translate(class, options, "skill") end)}
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :skill) end)}
 
         # some other json data
         _ ->
@@ -1850,12 +1850,12 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options, "domain")}
+          {200, Schema.Translator.translate(class, options, :domain)}
 
         # Translate a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, fn class -> Schema.Translator.translate(class, options, "domain") end)}
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :domain) end)}
 
         # some other json data
         _ ->
@@ -1932,12 +1932,12 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options, "feature")}
+          {200, Schema.Translator.translate(class, options, :feature)}
 
         # Translate a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, fn class -> Schema.Translator.translate(class, options, "feature") end)}
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :feature) end)}
 
         # some other json data
         _ ->
@@ -2030,12 +2030,12 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options, "object")}
+          {200, Schema.Translator.translate(class, options, :object)}
 
         # Translate a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, fn class -> Schema.Translator.translate(class, options, "object") end)}
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :object) end)}
 
         # some other json data
         _ ->
@@ -2089,7 +2089,7 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], options, "skill")
+    {status, result} = validate_actual(params["_json"], options, :skill)
 
     send_json_resp(conn, status, result)
   end
@@ -2138,7 +2138,7 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], options, "domain")
+    {status, result} = validate_actual(params["_json"], options, :domain)
 
     send_json_resp(conn, status, result)
   end
@@ -2187,7 +2187,7 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], options, "feature")
+    {status, result} = validate_actual(params["_json"], options, :feature)
 
     send_json_resp(conn, status, result)
   end
@@ -2249,7 +2249,7 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], options, "object")
+    {status, result} = validate_actual(params["_json"], options, :object)
 
     send_json_resp(conn, status, result)
   end
@@ -2309,7 +2309,7 @@ defmodule SchemaWeb.SchemaController do
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], options, "skill")
+      validate_bundle_actual(params["_json"], options, :skill)
 
     send_json_resp(conn, status, result)
   end
@@ -2361,7 +2361,7 @@ defmodule SchemaWeb.SchemaController do
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], options, "domain")
+      validate_bundle_actual(params["_json"], options, :domain)
 
     send_json_resp(conn, status, result)
   end
@@ -2413,7 +2413,7 @@ defmodule SchemaWeb.SchemaController do
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], options, "feature")
+      validate_bundle_actual(params["_json"], options, :feature)
 
     send_json_resp(conn, status, result)
   end
