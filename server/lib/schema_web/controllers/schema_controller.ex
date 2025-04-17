@@ -323,7 +323,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Data types")
     description("Get OASF schema data types.")
     produces("application/json")
-    tag("Objects and Types")
+    tag("Dictionary and Types")
     response(200, "Success")
   end
 
@@ -754,7 +754,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Dictionary")
     description("Get OASF schema dictionary.")
     produces("application/json")
-    tag("Dictionary")
+    tag("Dictionary and Types")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1177,7 +1177,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Objects and Types")
+    tag("Objects")
 
     parameters do
       name(:path, :string, "Object name", required: true)
@@ -1212,7 +1212,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List objects")
     description("Get OASF schema objects.")
     produces("application/json")
-    tag("Objects and Types")
+    tag("Objects")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1564,7 +1564,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Skills")
 
     parameters do
       _enum_text(
@@ -1640,7 +1640,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Domains")
 
     parameters do
       _enum_text(
@@ -1714,7 +1714,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Skills")
 
     parameters do
       _mode(
@@ -1796,7 +1796,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Domains")
 
     parameters do
       _mode(
@@ -1878,7 +1878,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Features")
 
     parameters do
       _mode(
@@ -1960,7 +1960,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Objects")
 
     parameters do
       name(:path, :string, "Object name", required: true)
@@ -2048,7 +2048,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Skills")
 
     parameters do
       missing_recommended(
@@ -2097,7 +2097,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Domains")
 
     parameters do
       missing_recommended(
@@ -2146,7 +2146,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Features")
 
     parameters do
       missing_recommended(
@@ -2195,7 +2195,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Objects")
 
     parameters do
       name(:path, :string, "Object name", required: true)
@@ -2255,7 +2255,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Skills")
 
     parameters do
       missing_recommended(
@@ -2307,7 +2307,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Domains")
 
     parameters do
       missing_recommended(
@@ -2359,7 +2359,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Tools")
+    tag("Features")
 
     parameters do
       missing_recommended(
