@@ -1575,7 +1575,7 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Example|
         |-----|-------|
-        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0,"activity_id": 0,"severity_id": 5,"status": "Something else","status_id": 99,"time": 1689125893360905}</code><br/><br/>Translated:<br/><code>{"activity_name": "Unknown", "activity_id": 0, "category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0, "severity": "Critical", "severity_id": 5, "status": "Something else", "status_id": 99, "time": 1689125893360905, "type_name": "Base Class: Unknown", "type_uid": 0}</code>|
+        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0}</code>|
         """,
         default: false
       )
@@ -1651,7 +1651,7 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Example|
         |-----|-------|
-        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0,"activity_id": 0,"severity_id": 5,"status": "Something else","status_id": 99,"time": 1689125893360905}</code><br/><br/>Translated:<br/><code>{"activity_name": "Unknown", "activity_id": 0, "category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0, "severity": "Critical", "severity_id": 5, "status": "Something else", "status_id": 99, "time": 1689125893360905, "type_name": "Base Class: Unknown", "type_uid": 0}</code>|
+        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0}</code>|
         """,
         default: false
       )
@@ -1726,9 +1726,9 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Description|Example|
         |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 10101}</code><br/><br/>Translated:<br/><code>{"class_name": "Contextual Comprehension", "class_uid": 10101}</code>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 10101}</code><br/><br/>Translated:<br/><code>{"Class": "Contextual Comprehension", "Class ID": 10101}</code>|
+        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 10101}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "Contextual Comprehension","name": "Class ID","type": "integer_t","value": 10101}}</code>|
         """,
         default: 1
       )
@@ -1745,8 +1745,8 @@ defmodule SchemaWeb.SchemaController do
 
           |Value|Description|Example|
           |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 10101}</code><br/><br/>Translated:<br/><code>{"ClassID": "Contextual Comprehension"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 10101}</code><br/><br/>Translated:<br/><code>{"Class_ID": "Contextual Comprehension"}</code>|
         """,
         allowEmptyValue: true
       )
@@ -1808,9 +1808,9 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Description|Example|
         |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 101}</code><br/><br/>Translated:<br/><code>{"class_name": "Internet of Things (IoT)", "class_uid": 101}</code>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 101}</code><br/><br/>Translated:<br/><code>{"Class": "Internet of Things (IoT)", "Class ID": 101}</code>|
+        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 101}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "Internet of Things (IoT)","name": "Class ID","type": "integer_t","value": 101}}</code>|
         """,
         default: 1
       )
@@ -1827,8 +1827,8 @@ defmodule SchemaWeb.SchemaController do
 
           |Value|Description|Example|
           |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 101}</code><br/><br/>Translated:<br/><code>{"ClassID": "Internet of Things (IoT)"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 101}</code><br/><br/>Translated:<br/><code>{"Class_ID": "Internet of Things (IoT)"}</code>|
         """,
         allowEmptyValue: true
       )
@@ -1888,11 +1888,11 @@ defmodule SchemaWeb.SchemaController do
         Controls how attribute names and enumerated values are translated.<br/>
         The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
 
-        |Value|Description|Example|
-        |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        |Value|Description|
+        |-----|-----------|
+        |1|Translate only the enumerated values|
+        |2|Translate enumerated values and attribute names|
+        |3|Verbose translation|
         """,
         default: 1
       )
@@ -1907,10 +1907,10 @@ defmodule SchemaWeb.SchemaController do
           want to forward to a database that does not support spaces.<br/>
           The format is _spaces=[&lt;empty&gt;|string].
 
-          |Value|Description|Example|
-          |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+          |Value|Description|
+          |-----|-----------|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|
+          |string|The spaces in the translated names are replaced with the given string.|
         """,
         allowEmptyValue: true
       )
@@ -1972,11 +1972,11 @@ defmodule SchemaWeb.SchemaController do
         Controls how attribute names and enumerated values are translated.<br/>
         The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
 
-        |Value|Description|Example|
-        |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        |Value|Description|
+        |-----|-----------|
+        |1|Translate only the enumerated values|
+        |2|Translate enumerated values and attribute names|
+        |3|Verbose translation|
         """,
         default: 1
       )
@@ -1991,10 +1991,10 @@ defmodule SchemaWeb.SchemaController do
           want to forward to a database that does not support spaces.<br/>
           The format is _spaces=[&lt;empty&gt;|string].
 
-          |Value|Description|Example|
-          |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+          |Value|Description|
+          |-----|-----------|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|
+          |string|The spaces in the translated names are replaced with the given string.|
         """,
         allowEmptyValue: true
       )
