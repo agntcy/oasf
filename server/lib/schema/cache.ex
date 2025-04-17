@@ -306,14 +306,6 @@ defmodule Schema.Cache do
     Map.put(class_ex, :objects, Map.to_list(ref_objects))
   end
 
-  @spec find_class_by_name(Schema.Cache.t(), String.t()) :: nil | map
-  def find_class_by_name(%__MODULE__{dictionary: dictionary, classes: classes}, name) do
-    case Enum.find(classes, fn {_, class} -> class[:name] == name end) do
-      {_, class} -> enrich(class, dictionary[:attributes])
-      nil -> nil
-    end
-  end
-
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
 

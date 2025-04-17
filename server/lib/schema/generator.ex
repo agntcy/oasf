@@ -797,10 +797,10 @@ defmodule Schema.Generator do
       if field[:is_enum] do
         # Filter to include only children classes that are not hidden
         Utils.find_children(Schema.all_classes(), field[:class_type])
-        |> Enum.map(&Schema.find_class_by_name(&1.name))
+        |> Enum.map(&Schema.class(&1.name))
         |> Enum.filter(&(&1 != nil))
       else
-        Schema.find_class_by_name(field[:class_type]) |> List.wrap()
+        Schema.class(field[:class_type]) |> List.wrap()
       end
 
     case valid_classes do
