@@ -478,14 +478,6 @@ defmodule Schema.Cache do
     Map.put(feature_ex, :objects, Map.to_list(ref_objects))
   end
 
-  @spec find_feature(Schema.Cache.t(), any) :: nil | map
-  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, name) do
-    case Enum.find(features, fn {_, feature} -> feature[:name] == name end) do
-      {_, feature} -> enrich(feature, dictionary[:attributes])
-      nil -> nil
-    end
-  end
-
   @spec objects(__MODULE__.t()) :: map()
   def objects(%__MODULE__{objects: objects}), do: objects
 

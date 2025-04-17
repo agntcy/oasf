@@ -404,11 +404,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.feature_ex(schema, id) end)
   end
 
-  @spec find_feature(any) :: nil | map
-  def find_feature(name) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_feature(schema, name) end)
-  end
-
   @spec objects() :: map()
   def objects() do
     Agent.get(__MODULE__, fn schema -> Cache.objects(schema) end)

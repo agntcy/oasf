@@ -49,7 +49,7 @@ defmodule Schema.Translator do
             name ->
               class_name = Schema.Types.extract_class_name(name)
               Logger.debug("translate class: #{class_name}")
-              Schema.find_feature(class_name)
+              Schema.feature(class_name)
           end
 
         :object ->

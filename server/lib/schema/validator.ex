@@ -256,11 +256,12 @@ defmodule Schema.Validator do
   @spec validate_feature_class_name_and_return_class(map(), map()) :: {map(), nil | map()}
   defp validate_feature_class_name_and_return_class(response, input) do
     if Map.has_key?(input, "name") do
-      class_name = input["name"]
+      name = input["name"]
+      class_name = Schema.Types.extract_class_name(name)
 
       cond do
         is_bitstring(class_name) ->
-          case Schema.find_feature(class_name) do
+          case Schema.feature(class_name) do
             nil ->
               {
                 add_error(
