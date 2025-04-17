@@ -1436,7 +1436,7 @@ defmodule SchemaWeb.SchemaController do
   # -----------------
 
   @doc """
-  Get JSON schema definitions for a given class.
+  Get JSON schema definitions for a given skill, domain or feature class.
   get /schema/classes/:name
   """
   swagger_path :json_class do
@@ -1444,7 +1444,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Class")
 
     description(
-      "Get OASF schema class by name, using JSON schema Draft-07 format " <>
+      "Get OASF schema skill, domain or feature class by name, using JSON schema Draft-07 format " <>
         "(see http://json-schema.org). The class name may contain a schema extension name. " <>
         "For example, \"dev/cpu_usage\"."
     )
@@ -1497,8 +1497,8 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get JSON schema definitions for a given class object.
-  get /schema/classes/:name
+  Get JSON schema definitions for a given object.
+  get /schema/objects/:name
   """
   swagger_path :json_object do
     get("/schema/objects/{name}")
@@ -2432,7 +2432,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Returns randomly generated class sample data for the given name.
+  Returns randomly generated skill, domain or feature class sample data for the given name.
   get /sample/classes/:name
   get /sample/classes/:extension/:name
   """
@@ -2441,7 +2441,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Class sample data")
 
     description(
-      "This API returns randomly generated sample data for the given class name. The class" <>
+      "This API returns randomly generated sample data for the given skill, domain or feature class name. The class" <>
         " name may contain a schema extension name. For example, \"dev/cpu_usage\"."
     )
 
