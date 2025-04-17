@@ -14,7 +14,6 @@ defmodule SchemaWeb.SchemaController do
 
   @verbose "_mode"
   @spaces "_spaces"
-  @name "_name"
   @missing_recommended "missing_recommended"
 
   @enum_text "_enum_text"
@@ -1951,7 +1950,7 @@ defmodule SchemaWeb.SchemaController do
   Translate object data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
   swagger_path :translate_object do
-    post("/api/translate/object")
+    post("/api/translate/object/{name}")
     summary("Translate object")
 
     description(
@@ -1964,17 +1963,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Tools")
 
     parameters do
-      _name(
-        :query,
-        :string,
-        """
-        Name of the object to be translated as it appears under the <code>Name</code> in the <a target='_blank' href='https://schema.oasf.agntcy.org/objects' >list of objects</a>.<br/>
-        The default name is "agent".
-        """,
-        default: "agent",
-        required: true,
-        allowEmptyValue: false
-      )
+      name(:path, :string, "Object name", required: true)
 
       _mode(
         :query,
@@ -2019,9 +2008,9 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def translate_object(conn, params) do
+  def translate_object(conn, %{"id" => id} = params) do
     options = [
-      name: conn.query_params[@name],
+      name: id,
       spaces: conn.query_params[@spaces],
       verbose: verbose(conn.query_params[@verbose])
     ]
@@ -2197,7 +2186,7 @@ defmodule SchemaWeb.SchemaController do
   post /api/validate/object
   """
   swagger_path :validate_object do
-    post("/api/validate/object")
+    post("/api/validate/object/{name}")
     summary("Validate object")
 
     description(
@@ -2209,17 +2198,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Tools")
 
     parameters do
-      _name(
-        :query,
-        :string,
-        """
-        Name of the object to be translated as it appears under the <code>Name</code> in the <a target='_blank' href='https://schema.oasf.agntcy.org/objects' >list of objects</a>.<br/>
-        The default name is "agent".
-        """,
-        default: "agent",
-        required: true,
-        allowEmptyValue: false
-      )
+      name(:path, :string, "Object name", required: true)
 
       missing_recommended(
         :query,
@@ -2237,9 +2216,9 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec validate_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate_object(conn, params) do
+  def validate_object(conn, %{"id" => id} = params) do
     options = [
-      name: conn.query_params[@name],
+      name: id,
       warn_on_missing_recommended:
         case conn.query_params[@missing_recommended] do
           "true" -> true
