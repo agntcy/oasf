@@ -293,15 +293,6 @@ defmodule Schema do
   end
 
   @doc """
-  Finds a class by the class uid value.
-  """
-  @spec find_class_by_uid(integer()) :: nil | Cache.class_t()
-  def find_class_by_uid(uid) when is_integer(uid), do: Repo.find_class_by_uid(uid)
-
-  @spec find_class_by_name(String.t()) :: nil | Cache.class_t()
-  def find_class_by_name(name) when is_bitstring(name), do: Repo.find_class_by_name(name)
-
-  @doc """
     Returns all skill classes.
   """
   @spec skills() :: map()
@@ -519,12 +510,6 @@ defmodule Schema do
         Schema.Profiles.apply_profiles(feature, profiles)
     end
   end
-
-  @doc """
-  Finds a feature by the feature uid value.
-  """
-  @spec find_feature(integer()) :: nil | Cache.class_t()
-  def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
 
   @doc """
     Returns all objects.
@@ -844,8 +829,8 @@ defmodule Schema do
   # Enrich Class Data Functions #
   # ----------------------------#
 
-  def enrich(data, enum_text, observables) do
-    Schema.Helper.enrich(data, enum_text, observables)
+  def enrich(data, enum_text, observables, type) do
+    Schema.Helper.enrich(data, enum_text, observables, type)
   end
 
   # -------------------------------#

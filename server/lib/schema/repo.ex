@@ -364,16 +364,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.class_ex(schema, id) end)
   end
 
-  @spec find_class_by_uid(integer()) :: nil | map
-  def find_class_by_uid(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_class_by_uid(schema, uid) end)
-  end
-
-  @spec find_class_by_name(String.t()) :: nil | map
-  def find_class_by_name(name) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_class_by_name(schema, name) end)
-  end
-
   @spec skill(atom) :: nil | Cache.class_t()
   def skill(id) do
     Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end)
@@ -412,11 +402,6 @@ defmodule Schema.Repo do
   @spec feature_ex(atom) :: nil | Cache.class_t()
   def feature_ex(id) do
     Agent.get(__MODULE__, fn schema -> Cache.feature_ex(schema, id) end)
-  end
-
-  @spec find_feature(any) :: nil | map
-  def find_feature(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_feature(schema, uid) end)
   end
 
   @spec objects() :: map()

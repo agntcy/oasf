@@ -45,9 +45,24 @@ defmodule Schema.Types do
   end
 
   @doc """
-  Makes class name from class type/family, category and name.
+  Makes longer class name from class type/family, category and name.
   """
-  def class_name(family, category, name) do
+  def long_class_name(family, category, name) do
     "#{@schema_addr}/#{family}/#{category}/#{name}"
+  end
+
+  @doc """
+  Extracts class name from longer class name.
+  """
+  def extract_class_name(name) do
+    case String.split(name, "/") do
+      [last] ->
+        # if there were no "/" characters, return the original string
+        last
+
+      list ->
+        # return the last part of the list
+        List.last(list)
+    end
   end
 end

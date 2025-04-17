@@ -306,22 +306,6 @@ defmodule Schema.Cache do
     Map.put(class_ex, :objects, Map.to_list(ref_objects))
   end
 
-  @spec find_class_by_uid(Schema.Cache.t(), integer()) :: nil | map
-  def find_class_by_uid(%__MODULE__{dictionary: dictionary, classes: classes}, uid) do
-    case Enum.find(classes, fn {_, class} -> class[:uid] == uid end) do
-      {_, class} -> enrich(class, dictionary[:attributes])
-      nil -> nil
-    end
-  end
-
-  @spec find_class_by_name(Schema.Cache.t(), String.t()) :: nil | map
-  def find_class_by_name(%__MODULE__{dictionary: dictionary, classes: classes}, name) do
-    case Enum.find(classes, fn {_, class} -> class[:name] == name end) do
-      {_, class} -> enrich(class, dictionary[:attributes])
-      nil -> nil
-    end
-  end
-
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
 
@@ -492,14 +476,6 @@ defmodule Schema.Cache do
   defp feature_ex(feature, dictionary, objects) do
     {feature_ex, ref_objects} = enrich_ex(feature, dictionary[:attributes], objects, Map.new())
     Map.put(feature_ex, :objects, Map.to_list(ref_objects))
-  end
-
-  @spec find_feature(Schema.Cache.t(), any) :: nil | map
-  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, uid) do
-    case Enum.find(features, fn {_, feature} -> feature[:uid] == uid end) do
-      {_, feature} -> enrich(feature, dictionary[:attributes])
-      nil -> nil
-    end
   end
 
   @spec objects(__MODULE__.t()) :: map()
@@ -1214,7 +1190,7 @@ defmodule Schema.Cache do
       class
       |> put_in(
         [:attributes, :name, :description],
-        "The schema extension name: <code>#{Types.class_name(class[:family], class[:category], class[:name])}</code>"
+        "The schema extension name: <code>#{Types.long_class_name(class[:family], class[:category], class[:name])}</code>"
       )
     end
   end
