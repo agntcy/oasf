@@ -62,12 +62,17 @@
       "unit": "s",
       "description": "Measures the end-to-end response time for the client to receive agent execution results.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -76,12 +81,17 @@
       "unit": "s",
       "description": "Time taken by the agent to complete its execution and return a result.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -90,12 +100,17 @@
       "unit": "s",
       "description": "Time taken by an agent to complete a full sequence of chained tasks in a workflow.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -104,12 +119,17 @@
       "unit": "1 (ratio)",
       "description": "Fraction of agent executions that complete successfully without errors.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",      
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -118,12 +138,17 @@
       "unit": "1 (count)",
       "description": "Total number of errors encountered by the agent.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -132,12 +157,17 @@
       "unit": "%",
       "description": "Percentage of time the agent is operational and available.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -146,12 +176,17 @@
       "unit": "1 (ratio)",
       "description": "Fraction of agent failures that successfully recover without external intervention.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -160,12 +195,17 @@
       "unit": "1 (ratio)",
       "description": "Measures how accurately the semantic router delegates tasks to the correct agent.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -174,12 +214,17 @@
       "unit": "1 (ratio)",
       "description": "Success rate of establishing authenticated connections between agents.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -188,12 +233,17 @@
       "unit": "1 (ratio)",
       "description": "Measures the accuracy and timeliness of data transfer between agents.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -202,12 +252,17 @@
       "unit": "1 (ratio)",
       "description": "Fraction of multi-agent collaborations that complete successfully.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -216,12 +271,17 @@
       "unit": "s",
       "description": "Time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -230,12 +290,17 @@
       "unit": "s",
       "description": "Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -244,12 +309,17 @@
       "unit": "1 (count)",
       "description": "Total number of errors encountered within the AGP layer (e.g., message handling, routing failures).",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     },
     {
@@ -258,12 +328,17 @@
       "unit": "1/s",
       "description": "Tracks the rate of messages sent and received over the AGP, reflecting communication load.",
       "stability": "Experimental",
+      "value": "Enum: int, float; The value being reported",
+      "timestamp": "string: The timestamp of the metric being reported.",
+      "metric_version": "string: The version of the metric being reported.",
       "attributes": {
-        "metric_version": "string: The version of the metric being reported.",
-        "obs_eval_level": "string; Obs or Eval type.",
-        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request, such as synchronous or asynchronous. ",
-        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported, such as per request or aggregated over a time period.",
-        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data, such as manual or automatic."
+        "additional_context": "string: Additional context about the metric, if available.",
+        "metric_category": "string; The category of the metric",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "scoring_criteria": "dictionary: The criteria used to score the metric",
+        "threshold_value": "string: The threshold value for the metric"
       }
     }
   ],
@@ -280,7 +355,7 @@
       "attribute": "gen_ai.system",
       "type": "string",
       "description": "The Generative AI product as identified by the client or server instrumentation. [2]",
-      "examples": "openai",
+      "examples": "openai, langchain",
       "requirement_level": "Required",
       "stability": "Experimental"
     },
@@ -751,7 +826,7 @@
     {
       "attribute": "gen_ai.ioa.collection_method",
       "type": "string",
-      "description": "The method used to collect the trace data, such as manual or automatic.",
+      "description": "The method used to collect the trace data",
       "examples": "manual; automatic",
       "requirement_level": "Optional",
       "stability": null
