@@ -4,7 +4,7 @@
   "extends": "object",
   "name": "manifest_data",
   "attributes": {
-    "spec": {
+    "acp_spec": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "requirement": "required"

@@ -3,11 +3,6 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
-    "acp": {
-      "caption": "Agent Connect Protocol Specs",
-      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
-      "type": "acp"
-    },
     "agent": {
       "caption": "Agent",
       "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
@@ -17,6 +12,12 @@
       "caption": "Agent Workflow Server Deployment Manifest",
       "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
       "type": "agent_deployment"
+    },
+    "agent_deps": {
+      "caption": "Agent Dependencies",
+      "description": "List of all other agents this agent depends on.",
+      "type": "agent_dependency",
+      "is_array": true
     },
     "agent_id": {
       "caption": "Agent Identifier",
@@ -195,23 +196,38 @@
       "description": "Data schema supported by the agent for observability.",
       "type": "data_schema"
     },
-    "dependencies": {
-      "caption": "Agent Dependencies",
-      "description": "List of all other agents this agent depends on.",
-      "type": "agent_dependency",
-      "is_array": true
+    "default_value": {
+      "caption": "Default Value",
+      "description": "Default value of the attribute.",
+      "type": "string_t"
+    },
+    "deployment_option": {
+      "caption": "Deployment Option",
+      "description": "Name of the method to instantiate or consume the agent.",
+      "type": "string_t"
     },
     "deployment_options": {
       "caption": "Deployment Options",
-      "description": "List of possible methods to instantiate or consume the agent.  Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
+      "description": "List of possible methods to instantiate or consume the agent. Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
       "type": "deployment_option",
       "is_enum": true,
       "is_array": true
+    },
+    "desc": {
+      "caption": "Description",
+      "description": "The description of the entity. See specific usage.",
+      "type": "string_t"
     },
     "digest": {
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
+    },
+    "env_deps": {
+      "caption": "Values for Dependencies",
+      "description": "List of environment variable values to be set for the agent dependencies.",
+      "type": "env_var_values",
+      "is_array": true
     },
     "env_vars": {
       "caption": "Environment Variables",
@@ -220,9 +236,10 @@
       "is_array": true
     },
     "env_var_values": {
-      "caption": "Environment Variables",
-      "description": "List of possible environment variables that the agent may require to be set before it can be used.",
-      "type": "env_var_values"
+      "caption": "Environment Variable Values",
+      "description": "List of values of the environment variables for a specific agent and it's dependencies.",
+      "type": "env_var_values",
+      "is_array": true
     },
     "errors": {
       "caption": "Errors",
@@ -404,6 +421,11 @@
       "type": "referred_evaluation",
       "is_array": true
     },
+    "required": {
+      "caption": "Required",
+      "description": "Indicates that environment variable is a manadatory setting for the agent.",
+      "type": "boolean_t"
+    },
     "result_streaming": {
       "caption": "Result Streaming",
       "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
@@ -440,6 +462,11 @@
       "path": "skills",
       "is_enum": true,
       "is_array": true
+    },
+    "acp_spec": {
+      "caption": "Agent Connect Protocol Specs",
+      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
+      "type": "acp"
     },
     "streaming": {
       "caption": "Streaming Modes",
@@ -523,6 +550,12 @@
       "caption": "Value",
       "description": "The value associated to an attribute. See specific usage.",
       "type": "string_t"
+    },
+    "values": {
+      "caption": "Values",
+      "description": "List of key / values pairs.",
+      "type": "key_value_object",
+      "is_array": true
     }
   },
   "types": {

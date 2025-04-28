@@ -1,20 +1,20 @@
 {
   "caption": "Environment Variable Values",
-  "description": "Describes the values of the environment variables for a specific agent and it's dependencies",
+  "description": "Describes the values of the environment variables for a specific agent and it's dependencies.",
   "extends": "object",
   "name": "env_var_values",
   "attributes": {
     "name": {
       "caption": "Name",
-      "description": "Name of the agent dependency these environment variables are for",
+      "description": "Name of the agent dependency these environment variables are for.",
       "requirement": "optional"
     },
     "values": {
       "caption": "Environment Variable Values",
-      "description": "Environment Variable Values listed as Key / Values pairs",
+      "description": "Environment Variable Values listed as Key / Values pairs.",
       "requirement": "required"
     },
-    "dependencies": {
+    "env_deps": {
       "caption": "Values for Dependencies",
       "description": "List of environment variable values to be set for the agent dependencies.",
       "requirement": "optional"

@@ -9,7 +9,7 @@
       "description": "List of possible methods to instantiate or consume the agent.  Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
       "requirement": "required"
     },
-    "dependencies": {
+    "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
       "requirement": "optional"
