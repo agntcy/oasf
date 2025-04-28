@@ -18,6 +18,6 @@
       "caption": "Values for Dependencies",
       "description": "List of environment variable values to be set for the agent dependencies.",
       "requirement": "optional"
-    }            
+    }
   }
 }

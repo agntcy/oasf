@@ -4,7 +4,7 @@
   "extends": "object",
   "name": "env_var",
   "attributes": {
-    "defaultValue": {
+    "default_value": {
       "caption": "Default Value",
       "description": "Default value of the environment variable.",
       "requirement": "optional"
@@ -23,6 +23,6 @@
       "caption": "Required",
       "description": "Indicates that environment variable is a manadatory setting for the agent.",
       "requirement": "optional"
-    }            
+    }
   }
 }

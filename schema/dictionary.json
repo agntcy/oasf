@@ -218,12 +218,12 @@
       "description": "List of possible environment variables that the agent may require to be set before it can be used.",
       "type": "env_var",
       "is_array": true
-    },     
+    },
     "env_var_values": {
       "caption": "Environment Variables",
       "description": "List of possible environment variables that the agent may require to be set before it can be used.",
       "type": "env_var_values"
-    },             
+    },
     "errors": {
       "caption": "Errors",
       "description": "",
@@ -397,7 +397,7 @@
       "caption": "Reference",
       "description": "Reference to the agent in the agent directory. It includes the version and the locator.",
       "type": "agent_manifest_ref"
-    },    
+    },
     "referred_evaluations": {
       "caption": "Referred evaluations",
       "description": "Evaluations associated to the Agent.",

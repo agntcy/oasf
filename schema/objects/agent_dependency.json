@@ -23,6 +23,6 @@
       "caption": "Environment Variable Values",
       "description": "Environment variable values to be set for this agent.",
       "requirement": "optional"
-    }    
+    }
   }
 }
