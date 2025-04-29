@@ -21,7 +21,7 @@
       "references": [
         {
           "description": "Agntcy Observability Data Schema",
-          "url": "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability_data_schema.json"
+          "url": "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability/agntcy_observability_data_schema.json"
         }
       ]
     }

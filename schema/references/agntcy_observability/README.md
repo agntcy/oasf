@@ -1,4 +1,4 @@
-# AGNTCY Observability Data Schema (OASF Extension)
+# AGNTCY Observability Data Schema
 
 ## Introduction
 
@@ -11,7 +11,6 @@ AGNTGY.org is releasing this schema to facilitate standardized observability acr
 The AGNTCY Observability Data Schema is a core component of a broader observability and evaluation framework, which includes:
 
 *   **Framework-Agnostic Observability SDK:** An SDK designed to instrument agents within a MAS, capturing traces, metrics, and events according to the AGNTCY Observability Data Schema. This SDK exports data to an OTel collector endpoint, which then forwards the data to a database for storage and processing.
-*   **OASF Schema Extensions:** Integration of observability instrumentation descriptions and performance ratings based on reported evaluations into OASF records.
 
 ## Key Components of the Schema
 
