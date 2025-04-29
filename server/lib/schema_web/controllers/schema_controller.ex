@@ -388,10 +388,28 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
-      Class:
+      Skill:
         swagger_schema do
-          title("Class")
-          description("An OASF formatted class object.")
+          title("Skill class")
+          description("An OASF formatted skill class object.")
+          type(:object)
+        end,
+      Domain:
+        swagger_schema do
+          title("Domain class")
+          description("An OASF formatted domain class object.")
+          type(:object)
+        end,
+      Feature:
+        swagger_schema do
+          title("Feature class")
+          description("An OASF formatted feature class object.")
+          type(:object)
+        end,
+      Object:
+        swagger_schema do
+          title("Object")
+          description("An OASF formatted object.")
           type(:object)
         end,
       ValidationError:
@@ -1801,7 +1819,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The skill class data to be enriched.",
+      data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class data to be enriched.",
         required: true
       )
     end
@@ -1877,7 +1895,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The domain class data to be enriched.",
+      data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class data to be enriched.",
         required: true
       )
     end
@@ -1964,7 +1982,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The skill class data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class data to be translated",
         required: true
       )
     end
@@ -2046,7 +2064,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The domain class data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class data to be translated",
         required: true
       )
     end
@@ -2128,7 +2146,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The feature class data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class data to be translated",
         required: true
       )
     end
@@ -2212,7 +2230,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The object data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Object), "The object data to be translated",
         required: true
       )
     end
@@ -2273,7 +2291,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class to be validated", required: true)
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
@@ -2322,7 +2340,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class to be validated", required: true)
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
@@ -2371,7 +2389,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class to be validated", required: true)
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
@@ -2422,7 +2440,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Object), "The object to be validated", required: true)
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
