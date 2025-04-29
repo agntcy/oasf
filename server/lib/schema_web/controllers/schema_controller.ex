@@ -74,6 +74,291 @@ defmodule SchemaWeb.SchemaController do
             ]
           })
         end,
+      SkillDesc:
+        swagger_schema do
+          title("Skill Class Descriptor")
+          description("Schema skill class descriptor.")
+          type(:object)
+
+          properties do
+            name(:string, "Skill class name", required: true)
+            family(:string, "Skill class family", required: true)
+            caption(:string, "Skill class caption", required: true)
+            description(:string, "Skill class description", required: true)
+            category(:string, "Skill class category", required: true)
+            category_name(:string, "Skill class category caption", required: true)
+            profiles(:array, "Skill class profiles", items: %PhoenixSwagger.Schema{type: :string})
+            uid(:integer, "Skill class unique identifier", required: true)
+          end
+
+          example([
+            %{
+              name: "problem_solving",
+              family: "skill",
+              description:
+                "Assisting with solving problems by generating potential solutions or strategies.",
+              category: "nlp",
+              extends: "analytical_reasoning",
+              uid: 10702,
+              caption: "Problem Solving",
+              category_name: "Natural Language Processing",
+              category_uid: 1
+            }
+          ])
+        end,
+      SkillsDesc:
+        swagger_schema do
+          title("Skill Class Descriptors")
+          description("A collection of Skill Class Descriptors.")
+          type(:array)
+          items(Schema.ref(:SkillDesc))
+
+          example([
+            %{
+              name: "question_generation",
+              family: "skill",
+              description:
+                "Automatically generating relevant and meaningful questions from a given text or context.",
+              category: "nlp",
+              extends: "natural_language_generation",
+              uid: 10205,
+              caption: "Question Generation",
+              category_name: "Natural Language Processing",
+              category_uid: 1
+            },
+            %{
+              name: "speech_recognition",
+              family: "skill",
+              description: "Converting spoken language into written text.",
+              category: "multi_modal",
+              extends: "audio_processing",
+              uid: 70202,
+              caption: "Automatic Speech Recognition",
+              category_name: "Multi-modal",
+              category_uid: 7
+            },
+            %{
+              name: "dialogue_generation",
+              family: "skill",
+              description:
+                "Producing conversational responses that are contextually relevant and engaging within a dialogue context.",
+              category: "nlp",
+              extends: "natural_language_generation",
+              uid: 10204,
+              caption: "Dialogue Generation",
+              category_name: "Natural Language Processing",
+              category_uid: 1
+            }
+          ])
+        end,
+      DomainDesc:
+        swagger_schema do
+          title("Domain Class Descriptor")
+          description("Schema domain class descriptor.")
+
+          properties do
+            name(:string, "Domain class name", required: true)
+            family(:string, "Domain class family", required: true)
+            caption(:string, "Domain class caption", required: true)
+            description(:string, "Domain class description", required: true)
+            category(:string, "Domain class category", required: true)
+            category_name(:string, "Domain class category caption", required: true)
+
+            profiles(:array, "Domain class profiles",
+              items: %PhoenixSwagger.Schema{type: :string}
+            )
+
+            uid(:integer, "Domain class unique identifier", required: true)
+          end
+
+          example([
+            %{
+              name: "information_technology",
+              family: "domain",
+              description:
+                "All aspects of managing and supporting technology systems and infrastructure.",
+              category: "technology",
+              extends: "technology",
+              uid: 106,
+              caption: "Information Technology",
+              category_name: "Technology",
+              category_uid: 1
+            }
+          ])
+        end,
+      DomainsDesc:
+        swagger_schema do
+          title("Domain Class Descriptors")
+          description("A collection of Domain Class Descriptors.")
+          type(:array)
+          items(Schema.ref(:DomainDesc))
+
+          example([
+            %{
+              name: "process_engineering",
+              family: "domain",
+              description:
+                "Designing, implementing, and optimizing industrial processes to improve efficiency and quality. Subdomains: Process Design, Process Optimization, Quality Control, and Safety Engineering.",
+              category: "industrial_manufacturing",
+              extends: "industrial_manufacturing",
+              uid: 705,
+              caption: "Process Engineering",
+              category_name: "Industrial Manufacturing",
+              category_uid: 7
+            },
+            %{
+              name: "data_privacy",
+              family: "domain",
+              description:
+                "Safeguarding personal information from unauthorized access and ensuring compliance with privacy laws and regulations. Subdomains: Privacy Regulations Compliance, Data Encryption, Data Anonymization, and User Consent Management.",
+              category: "trust_and_safety",
+              extends: "trust_and_safety_domain",
+              uid: 404,
+              caption: "Data Privacy",
+              category_name: "Trust and Safety",
+              category_uid: 4
+            },
+            %{
+              name: "robotics",
+              family: "domain",
+              description:
+                "Designing and using robots for manufacturing tasks to enhance productivity and precision. Subdomains: Robotic Process Automation, Industrial Robotics, AI and Robotics, and Collaborative Robots.",
+              category: "industrial_manufacturing",
+              extends: "industrial_manufacturing",
+              uid: 702,
+              caption: "Robotics",
+              category_name: "Industrial Manufacturing",
+              category_uid: 7
+            }
+          ])
+        end,
+      FeatureDesc:
+        swagger_schema do
+          title("Feature Class Descriptor")
+          description("Schema Feature class descriptor.")
+
+          properties do
+            name(:string, "Feature class name", required: true)
+            family(:string, "Feature class family", required: true)
+            caption(:string, "Feature class caption", required: true)
+            description(:string, "Feature class description", required: true)
+            category(:string, "Feature class category", required: true)
+            category_name(:string, "Feature class category caption", required: true)
+
+            profiles(:array, "Feature class profiles",
+              items: %PhoenixSwagger.Schema{type: :string}
+            )
+
+            uid(:integer, "Feature class unique identifier", required: true)
+          end
+
+          example([
+            %{
+              name: "observability",
+              family: "feature",
+              description: "Agent extension describing how the agent can be observed",
+              category: "observability",
+              extends: "base_feature",
+              uid: 101,
+              caption: "Observability",
+              category_name: "Observability"
+            }
+          ])
+        end,
+      FeaturesDesc:
+        swagger_schema do
+          title("Feature Class Descriptors")
+          description("A collection of Feature Class Descriptors.")
+          type(:array)
+          items(Schema.ref(:FeatureDesc))
+
+          example([
+            %{
+              name: "manifest",
+              family: "feature",
+              description: "Agent manifest",
+              category: "runtime",
+              extends: "runtime",
+              uid: 301,
+              caption: "Manifest",
+              category_name: "Runtime"
+            },
+            %{
+              name: "observability",
+              family: "feature",
+              description: "Agent extension describing how the agent can be observed",
+              category: "observability",
+              extends: "base_feature",
+              uid: 101,
+              caption: "Observability",
+              category_name: "Observability"
+            },
+            %{
+              name: "evaluation",
+              family: "feature",
+              description:
+                "Assessing actions and outcomes to determine their effectiveness, guiding future decision-making and enhancing personal agency.",
+              category: "evaluation",
+              extends: "base_feature",
+              uid: 201,
+              caption: "Evaluation",
+              category_name: "Evaluation"
+            }
+          ])
+        end,
+      ObjectDesc:
+        swagger_schema do
+          title("Object Descriptor")
+          description("Schema object descriptor.")
+
+          properties do
+            name(:string, "Object name", required: true)
+            caption(:string, "Object caption", required: true)
+            description(:string, "Object description", required: true)
+            extends(:string, "Object parent class name", required: true)
+            observable(:integer, "Observable ID")
+            profiles(:array, "Object profiles", items: %PhoenixSwagger.Schema{type: :string})
+          end
+
+          example([
+            %{
+              name: "streaming_modes",
+              description:
+                "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+              extends: "object",
+              caption: "Streaming Modes"
+            }
+          ])
+        end,
+      ObjectsDesc:
+        swagger_schema do
+          title("Object Descriptors")
+          description("A collection of Object Descriptors.")
+          type(:array)
+          items(Schema.ref(:ObjectDesc))
+
+          example([
+            %{
+              name: "streaming_modes",
+              description:
+                "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
+              extends: "object",
+              caption: "Streaming Modes"
+            },
+            %{
+              name: "deployment_option",
+              description: "Describes a deployment option for an agent.",
+              extends: "object",
+              caption: "Deployment Option"
+            },
+            %{
+              name: "docker_deployment",
+              description: "Describes the docker deployment for this agent.",
+              extends: "deployment_option",
+              caption: "Docker Deployment"
+            }
+          ])
+        end,
       ClassDesc:
         swagger_schema do
           title("Class Descriptor")
@@ -100,33 +385,6 @@ defmodule SchemaWeb.SchemaController do
               caption: "Problem Solving",
               category_name: "Natural Language Processing",
               category_uid: 1
-            }
-          ])
-        end,
-      ObjectDesc:
-        swagger_schema do
-          title("Object Descriptor")
-          description("Schema object descriptor.")
-
-          properties do
-            name(:string, "Object name", required: true)
-            caption(:string, "Object caption", required: true)
-            description(:string, "Object description", required: true)
-            observable(:integer, "Observable ID")
-            profiles(:array, "Object profiles", items: %PhoenixSwagger.Schema{type: :string})
-          end
-
-          example([
-            %{
-              caption: "File",
-              description:
-                "The file object describes files, folders, links and mounts," <>
-                  " including the reputation information, if applicable.",
-              name: "file",
-              observable: 24,
-              profiles: [
-                "file_security"
-              ]
             }
           ])
         end,
@@ -953,7 +1211,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :ClassDesc)
+    response(200, "Success", :SkillsDesc)
   end
 
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1043,7 +1301,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :ClassDesc)
+    response(200, "Success", :DomainsDesc)
   end
 
   @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1133,7 +1391,7 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :ClassDesc)
+    response(200, "Success", :FeaturesDesc)
   end
 
   @spec features(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -1200,7 +1458,8 @@ defmodule SchemaWeb.SchemaController do
         send_json_resp(conn, 404, %{error: "Object #{id} not found"})
 
       data ->
-        send_json_resp(conn, add_objects(data, params))
+        object = add_objects(data, params)
+        send_json_resp(conn, object)
     end
   end
 
@@ -1220,14 +1479,14 @@ defmodule SchemaWeb.SchemaController do
       )
     end
 
-    response(200, "Success", :ObjectDesc)
+    response(200, "Success", :ObjectsDesc)
   end
 
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
   def objects(conn, params) do
     objects =
       Enum.map(objects(params), fn {_name, map} ->
-        Map.delete(map, :_links) |> Schema.delete_attributes()
+        Map.delete(map, :_links) |> Map.delete(:_children) |> Schema.delete_attributes()
       end)
 
     send_json_resp(conn, objects)
