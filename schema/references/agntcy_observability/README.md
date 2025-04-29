@@ -6,11 +6,9 @@ This document describes the AGNTCY Observability Data Schema, an extension of th
 
 AGNTGY.org is releasing this schema to facilitate standardized observability across diverse agentic systems. It is enriched with MAS-specific concepts, such as agent collaboration success rate, MAS response time, and task delegation accuracy.
 
-## Overall Observability and Evaluation Framework
+## Goal
 
-The AGNTCY Observability Data Schema is a core component of a broader observability and evaluation framework, which includes:
-
-*   **Framework-Agnostic Observability SDK:** An SDK designed to instrument agents within a MAS, capturing traces, metrics, and events according to the AGNTCY Observability Data Schema. This SDK exports data to an OTel collector endpoint, which then forwards the data to a database for storage and processing.
+The primary goal of this schema is to provide a standardized structure for Observability SDKs to implement, ensuring consistent data capture and reporting across diverse agentic systems implemented in various frameworks.
 
 ## Key Components of the Schema
 
