@@ -14,6 +14,7 @@ defmodule SchemaWeb.SchemaController do
 
   @verbose "_mode"
   @spaces "_spaces"
+  @missing_recommended "missing_recommended"
 
   @enum_text "_enum_text"
   @observables "_observables"
@@ -1307,6 +1308,81 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
+  Export the OASF skill classes.
+  """
+  swagger_path :export_skills do
+    get("/export/skills")
+    summary("Export skill classes")
+    description("Get OASF schema skill classes.")
+    produces("application/json")
+    tag("Schema Export")
+
+    parameters do
+      extensions(:query, :array, @extensions_param_description, items: [type: :string])
+      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  def export_skills(conn, params) do
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    classes = Schema.export_skills(extensions, profiles)
+    send_json_resp(conn, classes)
+  end
+
+  @doc """
+  Export the OASF domain classes.
+  """
+  swagger_path :export_domains do
+    get("/export/domains")
+    summary("Export domain classes")
+    description("Get OASF schema domain classes.")
+    produces("application/json")
+    tag("Schema Export")
+
+    parameters do
+      extensions(:query, :array, @extensions_param_description, items: [type: :string])
+      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  def export_domains(conn, params) do
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    classes = Schema.export_domains(extensions, profiles)
+    send_json_resp(conn, classes)
+  end
+
+  @doc """
+  Export the OASF feature classes.
+  """
+  swagger_path :export_features do
+    get("/export/features")
+    summary("Export feature classes")
+    description("Get OASF schema feature classes.")
+    produces("application/json")
+    tag("Schema Export")
+
+    parameters do
+      extensions(:query, :array, @extensions_param_description, items: [type: :string])
+      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  def export_features(conn, params) do
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    classes = Schema.export_features(extensions, profiles)
+    send_json_resp(conn, classes)
+  end
+
+  @doc """
   Export the OASF base  class.
   """
   swagger_path :export_base_class do
@@ -1473,16 +1549,16 @@ defmodule SchemaWeb.SchemaController do
   # ---------------------------------------------
 
   @doc """
-  Enrich class data by adding type_uid, enumerated text, and observables.
+  Enrich skill class data by adding type_uid, enumerated text, and observables.
   A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   objects.
   """
-  swagger_path :enrich do
-    post("/api/enrich")
-    summary("Enrich Class")
+  swagger_path :enrich_skill do
+    post("/api/enrich/skill")
+    summary("Enrich Skill Class")
 
     description(
-      "The purpose of this API is to enrich the provided class data with <code>type_uid</code>," <>
+      "The purpose of this API is to enrich the provided skill class data with <code>type_uid</code>," <>
         " enumerated text, and <code>observables</code> array. Each class is represented as a" <>
         " JSON object, while multiple classes are encoded as a JSON array of objects."
     )
@@ -1507,12 +1583,12 @@ defmodule SchemaWeb.SchemaController do
       _observables(
         :query,
         :boolean,
-        "<strong>TODO</strong>: Enhance the class data by adding the observables associated with" <>
+        "<strong>TODO</strong>: Enhance the skill class data by adding the observables associated with" <>
           " the class.",
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be enriched.",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The skill class data to be enriched.",
         required: true
       )
     end
@@ -1520,8 +1596,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec enrich(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def enrich(conn, params) do
+  @spec enrich_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def enrich_skill(conn, params) do
     enum_text = conn.query_params[@enum_text]
     observables = conn.query_params[@observables]
 
@@ -1529,12 +1605,15 @@ defmodule SchemaWeb.SchemaController do
       case params["_json"] do
         # Enrich a single class
         class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, observables)}
+          {200, Schema.enrich(class, enum_text, observables, :skill)}
 
         # Enrich a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, &Task.async(fn -> Schema.enrich(&1, enum_text, observables) end))
+           Enum.map(
+             list,
+             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, :skill) end)
+           )
            |> Enum.map(&Task.await/1)}
 
         # something other than json data
@@ -1546,14 +1625,90 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Translate class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  Enrich domain class data by adding type_uid, enumerated text, and observables.
+  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
+  objects.
   """
-  swagger_path :translate do
-    post("/api/translate")
-    summary("Translate Class")
+  swagger_path :enrich_domain do
+    post("/api/enrich/domain")
+    summary("Enrich domain Class")
 
     description(
-      "The purpose of this API is to translate the provided class data using the OASF schema." <>
+      "The purpose of this API is to enrich the provided domain class data with <code>type_uid</code>," <>
+        " enumerated text, and <code>observables</code> array. Each class is represented as a" <>
+        " JSON object, while multiple classes are encoded as a JSON array of objects."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      _enum_text(
+        :query,
+        :boolean,
+        """
+        Enhance the class data by adding the enumerated text values.<br/>
+
+        |Value|Example|
+        |-----|-------|
+        |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0,"activity_id": 0,"severity_id": 5,"status": "Something else","status_id": 99,"time": 1689125893360905}</code><br/><br/>Translated:<br/><code>{"activity_name": "Unknown", "activity_id": 0, "category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0, "severity": "Critical", "severity_id": 5, "status": "Something else", "status_id": 99, "time": 1689125893360905, "type_name": "Base Class: Unknown", "type_uid": 0}</code>|
+        """,
+        default: false
+      )
+
+      _observables(
+        :query,
+        :boolean,
+        "<strong>TODO</strong>: Enhance the domain class data by adding the observables associated with" <>
+          " the class.",
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The domain class data to be enriched.",
+        required: true
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec enrich_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def enrich_domain(conn, params) do
+    enum_text = conn.query_params[@enum_text]
+    observables = conn.query_params[@observables]
+
+    {status, result} =
+      case params["_json"] do
+        # Enrich a single class
+        class when is_map(class) ->
+          {200, Schema.enrich(class, enum_text, observables, :domain)}
+
+        # Enrich a list of classes
+        list when is_list(list) ->
+          {200,
+           Enum.map(
+             list,
+             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, :domain) end)
+           )
+           |> Enum.map(&Task.await/1)}
+
+        # something other than json data
+        _ ->
+          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
+      end
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Translate skill class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  """
+  swagger_path :translate_skill do
+    post("/api/translate/skill")
+    summary("Translate Skill Class")
+
+    description(
+      "The purpose of this API is to translate the provided skill class data using the OASF schema." <>
         " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
         "  JSON array of objects."
     )
@@ -1596,7 +1751,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The skill class data to be translated",
         required: true
       )
     end
@@ -1604,19 +1759,20 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec translate(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def translate(conn, params) do
+  @spec translate_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_skill(conn, params) do
     options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
 
     {status, result} =
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options)}
+          {200, Schema.Translator.translate(class, options, :skill)}
 
         # Translate a list of classes
         list when is_list(list) ->
-          {200, Enum.map(list, fn class -> Schema.Translator.translate(class, options) end)}
+          {200,
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :skill) end)}
 
         # some other json data
         _ ->
@@ -1627,26 +1783,57 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate class data.
-  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
-  object.
-  post /api/validate
+  Translate domain class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
-  swagger_path :validate do
-    post("/api/validate")
-    summary("Validate Class")
+  swagger_path :translate_domain do
+    post("/api/translate/domain")
+    summary("Translate domain Class")
 
     description(
-      "The primary objective of this API is to validate the provided class data against the OASF" <>
-        " schema. Each class is represented as a JSON object, while multiple classes are encoded" <>
-        " as a JSON array of objects."
+      "The purpose of this API is to translate the provided domain class data using the OASF schema." <>
+        " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
+        "  JSON array of objects."
     )
 
     produces("application/json")
     tag("Tools")
 
     parameters do
-      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class data to be validated",
+      _mode(
+        :query,
+        :number,
+        """
+        Controls how attribute names and enumerated values are translated.<br/>
+        The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
+        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        """,
+        default: 1
+      )
+
+      _spaces(
+        :query,
+        :string,
+        """
+          Controls how spaces in the translated attribute names are handled.<br/>
+          By default, the translated attribute names may contain spaces (for example, Class Time).
+          You can remove the spaces or replace the spaces with another string. For example, if you
+          want to forward to a database that does not support spaces.<br/>
+          The format is _spaces=[&lt;empty&gt;|string].
+
+          |Value|Description|Example|
+          |-----|-----------|-------|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+        """,
+        allowEmptyValue: true
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The domain class data to be translated",
         required: true
       )
     end
@@ -1654,19 +1841,20 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec validate(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def validate(conn, params) do
+  @spec translate_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_domain(conn, params) do
+    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+
     {status, result} =
       case params["_json"] do
-        # Validate a single classes
+        # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Validator.validate(class)}
+          {200, Schema.Translator.translate(class, options, :domain)}
 
-        # Validate a list of classes
+        # Translate a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, &Task.async(fn -> Schema.Validator.validate(&1) end))
-           |> Enum.map(&Task.await/1)}
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :domain) end)}
 
         # some other json data
         _ ->
@@ -1677,15 +1865,185 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate class data, version 2. Validates a single class.
-  post /api/v2/validate
+  Translate feature class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
-  swagger_path :validate2 do
-    post("/api/v2/validate")
-    summary("Validate Class (version 2)")
+  swagger_path :translate_feature do
+    post("/api/translate/feature")
+    summary("Translate feature Class")
 
     description(
-      "This API validates the provided class data against the OASF schema, returning a response" <>
+      "The purpose of this API is to translate the provided feature class data using the OASF schema." <>
+        " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
+        "  JSON array of objects."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      _mode(
+        :query,
+        :number,
+        """
+        Controls how attribute names and enumerated values are translated.<br/>
+        The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
+        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        """,
+        default: 1
+      )
+
+      _spaces(
+        :query,
+        :string,
+        """
+          Controls how spaces in the translated attribute names are handled.<br/>
+          By default, the translated attribute names may contain spaces (for example, Class Time).
+          You can remove the spaces or replace the spaces with another string. For example, if you
+          want to forward to a database that does not support spaces.<br/>
+          The format is _spaces=[&lt;empty&gt;|string].
+
+          |Value|Description|Example|
+          |-----|-----------|-------|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+        """,
+        allowEmptyValue: true
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The feature class data to be translated",
+        required: true
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec translate_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_feature(conn, params) do
+    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+
+    {status, result} =
+      case params["_json"] do
+        # Translate a single classes
+        class when is_map(class) ->
+          {200, Schema.Translator.translate(class, options, :feature)}
+
+        # Translate a list of classes
+        list when is_list(list) ->
+          {200,
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :feature) end)}
+
+        # some other json data
+        _ ->
+          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
+      end
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Translate object data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  """
+  swagger_path :translate_object do
+    post("/api/translate/object/{name}")
+    summary("Translate object")
+
+    description(
+      "The purpose of this API is to translate the provided object data using the OASF schema." <>
+        " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
+        "  JSON array of objects."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      name(:path, :string, "Object name", required: true)
+
+      _mode(
+        :query,
+        :number,
+        """
+        Controls how attribute names and enumerated values are translated.<br/>
+        The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_name": File Activity", "class_uid": 1000}</code>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class": File Activity", "Class ID": 1000}</code>|
+        |3|Verbose translation|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"class_uid": {"caption": "File Activity","name": "Class ID","type": "integer_t","value": 1000}}</code>|
+        """,
+        default: 1
+      )
+
+      _spaces(
+        :query,
+        :string,
+        """
+          Controls how spaces in the translated attribute names are handled.<br/>
+          By default, the translated attribute names may contain spaces (for example, Class Time).
+          You can remove the spaces or replace the spaces with another string. For example, if you
+          want to forward to a database that does not support spaces.<br/>
+          The format is _spaces=[&lt;empty&gt;|string].
+
+          |Value|Description|Example|
+          |-----|-----------|-------|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"ClassID": File Activity"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"class_uid": 1000}</code><br/><br/>Translated:<br/><code>{"Class_ID": File Activity"}</code>|
+        """,
+        allowEmptyValue: true
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The object data to be translated",
+        required: true
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_object(conn, %{"id" => id} = params) do
+    options = [
+      name: id,
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose])
+    ]
+
+    {status, result} =
+      case params["_json"] do
+        # Translate a single classes
+        class when is_map(class) ->
+          {200, Schema.Translator.translate(class, options, :object)}
+
+        # Translate a list of classes
+        list when is_list(list) ->
+          {200,
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :object) end)}
+
+        # some other json data
+        _ ->
+          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
+      end
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Validate skill class data. Validates a single class.
+  post /api/validate/skill
+  """
+  swagger_path :validate_skill do
+    post("/api/validate/skill")
+    summary("Validate Skill Class")
+
+    description(
+      "This API validates the provided skill class data against the OASF schema, returning a response" <>
         " containing validation errors and warnings."
     )
 
@@ -1708,39 +2066,191 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
   end
 
-  @spec validate2(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate2(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+  @spec validate_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_skill(conn, params) do
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate2_actual(params["_json"], warn_on_missing_recommended)
+    {status, result} = validate_actual(params["_json"], options, :skill)
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate2_actual(class, warn_on_missing_recommended) when is_map(class) do
-    {200, Schema.Validator2.validate(class, warn_on_missing_recommended)}
+  @doc """
+  Validate domain class data. Validates a single class.
+  post /api/validate/domain
+  """
+  swagger_path :validate_domain do
+    post("/api/validate/domain")
+    summary("Validate domain Class")
+
+    description(
+      "This API validates the provided domain class data against the OASF schema, returning a response" <>
+        " containing validation errors and warnings."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      missing_recommended(
+        :query,
+        :boolean,
+        """
+        When true, warnings are created for missing recommended attributes, otherwise recommended attributes are treated the same as optional.
+        """,
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+    end
+
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
   end
 
-  defp validate2_actual(_, _) do
+  @spec validate_domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_domain(conn, params) do
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
+
+    # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
+    # endpoint.ex.
+    {status, result} = validate_actual(params["_json"], options, :domain)
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Validate feature class data. Validates a single class.
+  post /api/validate/feature
+  """
+  swagger_path :validate_feature do
+    post("/api/validate/feature")
+    summary("Validate feature Class")
+
+    description(
+      "This API validates the provided feature class data against the OASF schema, returning a response" <>
+        " containing validation errors and warnings."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      missing_recommended(
+        :query,
+        :boolean,
+        """
+        When true, warnings are created for missing recommended attributes, otherwise recommended attributes are treated the same as optional.
+        """,
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+    end
+
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+  end
+
+  @spec validate_feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_feature(conn, params) do
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
+
+    # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
+    # endpoint.ex.
+    {status, result} = validate_actual(params["_json"], options, :feature)
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Validate object data. Validates a single class.
+  post /api/validate/object
+  """
+  swagger_path :validate_object do
+    post("/api/validate/object/{name}")
+    summary("Validate object")
+
+    description(
+      "This API validates the provided object data against the OASF schema, returning a response" <>
+        " containing validation errors and warnings."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      name(:path, :string, "Object name", required: true)
+
+      missing_recommended(
+        :query,
+        :boolean,
+        """
+        When true, warnings are created for missing recommended attributes, otherwise recommended attributes are treated the same as optional.
+        """,
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:Class), "The class to be validated", required: true)
+    end
+
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+  end
+
+  @spec validate_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_object(conn, %{"id" => id} = params) do
+    options = [
+      name: id,
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
+
+    # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
+    # endpoint.ex.
+    {status, result} = validate_actual(params["_json"], options, :object)
+
+    send_json_resp(conn, status, result)
+  end
+
+  defp validate_actual(input, options, type) when is_map(input) do
+    {200, Schema.Validator.validate(input, options, type)}
+  end
+
+  defp validate_actual(_, _, _) do
     {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
   @doc """
-  Validate class data, version 2. Validates a single class.
-  post /api/v2/validate
+  Validate skill class data. Validates a bundle of skill classes.
+  post /api/validate_bundle/skill
   """
-  swagger_path :validate2_bundle do
-    post("/api/v2/validate_bundle")
-    summary("Validate Class Bundle (version 2)")
+  swagger_path :validate_bundle_skill do
+    post("/api/validate_bundle/skill")
+    summary("Validate Skill Class Bundle")
 
     description(
-      "This API validates the provided class bundle. The class bundle itself is validated, and" <>
+      "This API validates the provided skill class bundle. The class bundle itself is validated, and" <>
         " each class in the bundle's classes attribute are validated."
     )
 
@@ -1765,26 +2275,133 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
   end
 
-  @spec validate2_bundle(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def validate2_bundle(conn, params) do
-    warn_on_missing_recommended =
-      case conn.query_params["missing_recommended"] do
-        "true" -> true
-        _ -> false
-      end
+  @spec validate_bundle_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def validate_bundle_skill(conn, params) do
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate2_bundle_actual(params["_json"], warn_on_missing_recommended)
+    {status, result} =
+      validate_bundle_actual(params["_json"], options, :skill)
 
     send_json_resp(conn, status, result)
   end
 
-  defp validate2_bundle_actual(bundle, warn_on_missing_recommended) when is_map(bundle) do
-    {200, Schema.Validator2.validate_bundle(bundle, warn_on_missing_recommended)}
+  @doc """
+  Validate domain class data. Validates a bundle of domain classes.
+  post /api/validate_bundle/domain
+  """
+  swagger_path :validate_bundle_domain do
+    post("/api/validate_bundle/domain")
+    summary("Validate domain Class Bundle")
+
+    description(
+      "This API validates the provided domain class bundle. The class bundle itself is validated, and" <>
+        " each class in the bundle's classes attribute are validated."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      missing_recommended(
+        :query,
+        :boolean,
+        """
+        When true, warnings are created for missing recommended attributes, otherwise recommended attributes are treated the same as optional.
+        """,
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:ClassBundle), "The class bundle to be validated",
+        required: true
+      )
+    end
+
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
   end
 
-  defp validate2_bundle_actual(_, _) do
+  @spec validate_bundle_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def validate_bundle_domain(conn, params) do
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
+
+    # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
+    # endpoint.ex.
+    {status, result} =
+      validate_bundle_actual(params["_json"], options, :domain)
+
+    send_json_resp(conn, status, result)
+  end
+
+  @doc """
+  Validate feature class data. Validates a bundle of feature classes.
+  post /api/validate_bundle/feature
+  """
+  swagger_path :validate_bundle_feature do
+    post("/api/validate_bundle/feature")
+    summary("Validate feature Class Bundle")
+
+    description(
+      "This API validates the provided feature class bundle. The class bundle itself is validated, and" <>
+        " each class in the bundle's classes attribute are validated."
+    )
+
+    produces("application/json")
+    tag("Tools")
+
+    parameters do
+      missing_recommended(
+        :query,
+        :boolean,
+        """
+        When true, warnings are created for missing recommended attributes, otherwise recommended attributes are treated the same as optional.
+        """,
+        default: false
+      )
+
+      data(:body, PhoenixSwagger.Schema.ref(:ClassBundle), "The class bundle to be validated",
+        required: true
+      )
+    end
+
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
+  end
+
+  @spec validate_bundle_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def validate_bundle_feature(conn, params) do
+    options = [
+      warn_on_missing_recommended:
+        case conn.query_params[@missing_recommended] do
+          "true" -> true
+          _ -> false
+        end
+    ]
+
+    # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
+    # endpoint.ex.
+    {status, result} =
+      validate_bundle_actual(params["_json"], options, :feature)
+
+    send_json_resp(conn, status, result)
+  end
+
+  defp validate_bundle_actual(bundle, options, type) when is_map(bundle) do
+    {200, Schema.Validator.validate_bundle(bundle, options, type)}
+  end
+
+  defp validate_bundle_actual(_, _, _) do
     {400, %{error: "Unexpected body. Expected a JSON object."}}
   end
 
@@ -1857,17 +2474,7 @@ defmodule SchemaWeb.SchemaController do
 
       class ->
         class =
-          case Map.get(options, @verbose) do
-            nil ->
-              Schema.generate_class(class, profiles)
-
-            verbose ->
-              Schema.generate_class(class, profiles)
-              |> Schema.Translator.translate(
-                spaces: options[@spaces],
-                verbose: verbose(verbose)
-              )
-          end
+          Schema.generate_class(class, profiles)
 
         send_json_resp(conn, class)
     end

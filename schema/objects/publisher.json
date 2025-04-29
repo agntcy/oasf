@@ -1,0 +1,22 @@
+{
+  "caption": "Publisher",
+  "description": "Publisher.",
+  "name": "publisher",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Name of the publisher.",
+      "requirement": "required"
+    },
+    "version": {
+      "caption": "Version",
+      "description": "Version of the publisher.",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "URL",
+      "description": "Link to the publisher.",
+      "requirement": "recommended"
+    }
+  }
+}

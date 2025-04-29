@@ -7,27 +7,39 @@ defmodule Schema.Helper do
   """
   require Logger
 
-  def enrich(data, enum_text, observables) when is_map(data) do
+  def enrich(data, enum_text, observables, type) when is_map(data) do
     Logger.debug(fn ->
-      "enrich class: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
+      "enrich #{type}: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
     end)
 
-    enrich_class(data["class_uid"], data, enum_text, observables)
+    enrich_class(data, enum_text, observables, type)
   end
 
   # this is not a class
-  def enrich(data, _enum_text, _observables), do: %{:error => "Not a JSON object", :data => data}
+  def enrich(data, _enum_text, _observables, _type),
+    do: %{:error => "Not a JSON object", :data => data}
 
-  # missing class_uid
-  defp enrich_class(nil, data, _enum_text, _observables),
-    do: %{:error => "Missing class_uid", :data => data}
-
-  defp enrich_class(class_uid, data, enum_text, _observables) do
+  defp enrich_class(data, enum_text, _observables, type) do
+    class_uid = data["class_uid"]
+    if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
     Logger.debug("enrich class: #{class_uid}")
 
-    # if observables == "true", do:
+    class =
+      case type do
+        :skill ->
+          Schema.find_skill(class_uid)
 
-    case Schema.find_class_by_uid(class_uid) do
+        :domain ->
+          Schema.find_domain(class_uid)
+
+        _ ->
+          {:error, "Unknown type", data}
+      end
+
+    case class do
+      {:error, message, data} ->
+        %{:error => message, :data => data}
+
       # invalid class ID
       nil ->
         %{:error => "Invalid class_uid: #{class_uid}", :data => data}

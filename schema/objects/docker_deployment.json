@@ -19,10 +19,10 @@
       "description": "Container image for the agent.",
       "requirement": "required"
     },
-    "protocol": {
-      "caption": "ACP Endpoint",
-      "description": "ACP endpoint description.",
-      "requirement": "required"
+    "name": {
+      "caption": "Deployment Option Name",
+      "description": "Name this deployment option is referred to within this agent. This is needed to indicate which one is preferred when this manifest is referred. Can be omitted, in such case selection is not possible.",
+      "requirement": "optional"
     }
   }
 }

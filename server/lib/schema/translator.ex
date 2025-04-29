@@ -3,26 +3,77 @@
 
 defmodule Schema.Translator do
   @moduledoc """
-  Translates classes to more user friendly form.
+  Translates inputs to more user friendly form.
   """
   require Logger
 
-  def translate(data, options) when is_map(data) do
-    Logger.debug("translate class: #{inspect(data)}, options: #{inspect(options)}")
+  def translate(data, options, type) when is_map(data) do
+    Logger.debug(
+      "translate input: #{inspect(data)}, options: #{inspect(options)}, type: #{type}}"
+    )
 
-    translate_class(data["class_uid"], data, options)
+    translate_class(data, options, type)
   end
 
-  # this is not an class
-  def translate(data, _options), do: data
+  # this is not a valid input
+  def translate(data, _options, _type), do: data
 
-  # missing class_uid, thus cannot translate the class
-  defp translate_class(nil, data, _options), do: data
+  defp translate_class(data, options, type) do
+    type =
+      case type do
+        :skill ->
+          case Map.get(data, "class_uid") do
+            nil ->
+              data
 
-  defp translate_class(class_uid, data, options) do
-    Logger.debug("translate class: #{class_uid}")
+            class_uid ->
+              Logger.debug("translate class: #{class_uid}")
+              Schema.find_skill(class_uid)
+          end
 
-    type = Schema.find_class_by_uid(class_uid)
+        :domain ->
+          case Map.get(data, "class_uid") do
+            nil ->
+              data
+
+            class_uid ->
+              Logger.debug("translate class: #{class_uid}")
+              Schema.find_domain(class_uid)
+          end
+
+        :feature ->
+          case Map.get(data, "name") do
+            nil ->
+              data
+
+            name ->
+              class_name = Schema.Types.extract_class_name(name)
+              Logger.debug("translate class: #{class_name}")
+              Schema.feature(class_name)
+          end
+
+        :object ->
+          case Keyword.get(options, :name) do
+            nil ->
+              data
+
+            object_name ->
+              Logger.debug("translate object: #{object_name}")
+              Schema.object(object_name)
+          end
+
+        _ ->
+          # invalid class ID
+          %{:error => "Unknown type", :data => data}
+      end
+
+    translate_input(type, data, options)
+  end
+
+  # unknown input class, thus cannot translate the input
+  defp translate_input(nil, data, _options), do: data
+
+  defp translate_input(type, data, options) do
     attributes = type[:attributes]
 
     Enum.reduce(data, %{}, fn {name, value}, acc ->
@@ -82,7 +133,7 @@ defmodule Schema.Translator do
   end
 
   defp translate_attribute("object_t", name, attribute, value, options) when is_map(value) do
-    translated = translate_class(Schema.object(attribute[:object_type]), value, options)
+    translated = translate_input(Schema.object(attribute[:object_type]), value, options)
     translate_attribute(name, attribute, translated, options)
   end
 
@@ -92,7 +143,7 @@ defmodule Schema.Translator do
         obj_type = Schema.object(attribute[:object_type])
 
         Enum.map(value, fn data ->
-          translate_class(obj_type, data, options)
+          translate_input(obj_type, data, options)
         end)
       else
         value

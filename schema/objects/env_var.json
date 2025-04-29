@@ -1,0 +1,28 @@
+{
+  "caption": "Environment Variable",
+  "description": "Describes an environment variable.",
+  "extends": "object",
+  "name": "env_var",
+  "attributes": {
+    "defaultValue": {
+      "caption": "Default Value",
+      "description": "Default value of the environment variable.",
+      "requirement": "optional"
+    },
+    "desc": {
+      "caption": "Description",
+      "description": "Description of the environment variable.",
+      "requirement": "required"
+    },
+    "name": {
+      "caption": "Name",
+      "description": "Name of the environment variable.",
+      "requirement": "required"
+    },
+    "required": {
+      "caption": "Required",
+      "description": "Indicates that environment variable is a manadatory setting for the agent.",
+      "requirement": "optional"
+    }            
+  }
+}

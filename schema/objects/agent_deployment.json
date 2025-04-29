@@ -13,6 +13,11 @@
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
       "requirement": "optional"
+    },
+    "env_vars": {
+      "caption": "Environment Variables",
+      "description": "List of environment variables to be set for the agent.",
+      "requirement": "optional"
     }
   }
 }

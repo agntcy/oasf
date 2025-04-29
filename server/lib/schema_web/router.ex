@@ -138,11 +138,22 @@ defmodule SchemaWeb.Router do
 
     get "/data_types", SchemaController, :data_types
 
-    post "/enrich", SchemaController, :enrich
-    post "/translate", SchemaController, :translate
-    post "/validate", SchemaController, :validate
-    post "/v2/validate", SchemaController, :validate2
-    post "/v2/validate_bundle", SchemaController, :validate2_bundle
+    post "/enrich/skill", SchemaController, :enrich_skill
+    post "/translate/skill", SchemaController, :translate_skill
+    post "/validate/skill", SchemaController, :validate_skill
+    post "/validate_bundle/skill", SchemaController, :validate_bundle_skill
+
+    post "/enrich/domain", SchemaController, :enrich_domain
+    post "/translate/domain", SchemaController, :translate_domain
+    post "/validate/domain", SchemaController, :validate_domain
+    post "/validate_bundle/domain", SchemaController, :validate_bundle_domain
+
+    post "/translate/feature", SchemaController, :translate_feature
+    post "/validate/feature", SchemaController, :validate_feature
+    post "/validate_bundle/feature", SchemaController, :validate_bundle_feature
+
+    post "/translate/object/:id", SchemaController, :translate_object
+    post "/validate/object/:id", SchemaController, :validate_object
   end
 
   scope "/schema", SchemaWeb do
@@ -169,6 +180,9 @@ defmodule SchemaWeb.Router do
 
     get "/base_class", SchemaController, :export_base_class
     get "/classes", SchemaController, :export_classes
+    get "/skills", SchemaController, :export_skills
+    get "/domains", SchemaController, :export_domains
+    get "/features", SchemaController, :export_features
     get "/objects", SchemaController, :export_objects
     get "/schema", SchemaController, :export_schema
   end
@@ -208,7 +222,7 @@ defmodule SchemaWeb.Router do
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        version: "0.1.0"
+        version: "0.2.2"
       }
     }
   end

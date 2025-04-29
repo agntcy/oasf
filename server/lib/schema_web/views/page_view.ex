@@ -655,36 +655,40 @@ defmodule SchemaWeb.PageView do
       end
 
     options_html =
-      case obj[:type] do
-        "object_t" ->
-          children = Schema.Utils.find_children(Schema.objects(), obj[:object_type])
+      if enum do
+        case obj[:type] do
+          "object_t" ->
+            children = Schema.Utils.find_children(Schema.objects(), obj[:object_type])
 
-          if children != nil do
-            [
-              "<dt>Options<dd class=\"ml-3\">",
-              Enum.map(children, fn child ->
-                [
-                  "<div>",
-                  "<a href=\"",
-                  "#{child[:name]}",
-                  "\">",
-                  child[:caption]
-                  |> Phoenix.HTML.html_escape()
-                  |> Phoenix.HTML.safe_to_string(),
-                  "</a>",
-                  "</div>"
-                ]
-              end)
-            ]
-          else
+            if children != nil and !Enum.empty?(children) do
+              [
+                "<dt>Options<dd class=\"ml-3\">",
+                Enum.map(children, fn child ->
+                  [
+                    "<div>",
+                    "<a href=\"",
+                    "#{child[:name]}",
+                    "\">",
+                    child[:caption]
+                    |> Phoenix.HTML.html_escape()
+                    |> Phoenix.HTML.safe_to_string(),
+                    "</a>",
+                    "</div>"
+                  ]
+                end)
+              ]
+            else
+              ""
+            end
+
+          _ ->
             ""
-          end
-
-        _ ->
-          ""
+        end
+      else
+        ""
       end
 
-    if source_html != "" or refs_html != "" or enum do
+    if source_html != "" or refs_html != "" or options_html != "" do
       [html, prefix_html, "<dd>", source_html, refs_html, options_html, "</dd>"]
     else
       html

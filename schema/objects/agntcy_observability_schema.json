@@ -6,18 +6,24 @@
   "attributes": {
     "name": {
       "caption": "Name",
-      "description": "Agntcy Observability Data Schema",
+      "description": "Agntcy Observability Data Schema name",
       "requirement": "required"
     },
     "version": {
       "caption": "Version",
-      "description": "v0.0.1",
+      "description": "Agntcy Observability Data Schema version",
       "requirement": "required"
     },
     "url": {
       "caption": "URL",
-      "description": "<a target='_blank' href='https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability_data_schema.json'>Agntcy Observability Data Schema</a>",
-      "requirement": "required"
+      "description": "Agntcy Observability Data Schema URL",
+      "requirement": "required",
+      "references": [
+        {
+          "description": "Agntcy Observability Data Schema",
+          "url": "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability_data_schema.json"
+        }
+      ]
     }
   }
 }

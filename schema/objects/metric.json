@@ -9,11 +9,6 @@
       "requirement": "required",
       "description": "The unique name of the metric, identifying the specific measurement being captured (for example, 'CPU Usage' or 'Response Time')."
     },
-    "attributes": {
-      "caption": "Attributes",
-      "requirement": "recommended",
-      "description": "Additional metadata or dimensions associated with the metric, such as tags or labels (for example, 'region' or 'agent_id')."
-    },
     "type": {
       "caption": "Type",
       "requirement": "required",
@@ -30,6 +25,11 @@
         }
       ]
     },
+    "url": {
+      "caption": "Reference",
+      "description": "The reference for this metric, giving some explainability for it.",
+      "requirement": "recommended"
+    },
     "data_points": {
       "caption": "Data Points",
       "requirement": "required",
@@ -41,11 +41,5 @@
         }
       ]
     }
-  },
-  "references": [
-    {
-      "description": "OpenTelemetry Specification",
-      "url": "https://opentelemetry.io/docs/specs/otel/metrics/data-model/#model-details"
-    }
-  ]
+  }
 }

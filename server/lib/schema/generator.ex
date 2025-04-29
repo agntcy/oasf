@@ -144,7 +144,7 @@ defmodule Schema.Generator do
       data
     else
       Map.update!(data, :name, fn _name ->
-        Types.class_name(class[:family], class[:category], class[:name])
+        Types.long_class_name(class[:family], class[:category], class[:name])
       end)
     end
   end
@@ -335,19 +335,15 @@ defmodule Schema.Generator do
   defp generate_array({name, field} = attribute) do
     n = random(@max_array_size)
 
-    if n > 0 do
-      case field[:type] do
-        "object_t" ->
-          generate_objects(n, attribute)
+    case field[:type] do
+      "object_t" ->
+        generate_objects(n, attribute)
 
-        "class_t" ->
-          generate_classes(n, attribute)
+      "class_t" ->
+        generate_classes(n, attribute)
 
-        type ->
-          Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
-      end
-    else
-      []
+      type ->
+        Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
     end
   end
 
@@ -801,10 +797,10 @@ defmodule Schema.Generator do
       if field[:is_enum] do
         # Filter to include only children classes that are not hidden
         Utils.find_children(Schema.all_classes(), field[:class_type])
-        |> Enum.map(&Schema.find_class_by_name(&1.name))
+        |> Enum.map(&Schema.class(&1.name))
         |> Enum.filter(&(&1 != nil))
       else
-        Schema.find_class_by_name(field[:class_type]) |> List.wrap()
+        Schema.class(field[:class_type]) |> List.wrap()
       end
 
     case valid_classes do
