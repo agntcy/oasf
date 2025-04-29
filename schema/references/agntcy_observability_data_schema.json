@@ -5,35 +5,35 @@
       "instrument_type": "Counter",
       "unit": "1 (count)",
       "description": "Counts the number of input and output tokens used by the generative AI client.",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "metric_name": "gen_ai.client.operation.duration",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Measures the duration of operations initiated by the generative AI client.",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "metric_name": "gen_ai.server.request.duration",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Measures the duration of requests processed by the generative AI server.",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "metric_name": "gen_ai.server.time_per_output_token",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Measures the time taken to generate each output token after the first one.",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "metric_name": "gen_ai.server.time_to_first_token",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Measures the time taken to generate the first token in a successful response.",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "metric_name": "llm.openai.chat_completions.exceptions",
@@ -169,7 +169,7 @@
       "description": "The name of the operation being performed. [1]",
       "examples": "chat; text_completion; embeddings",
       "requirement_level": "Required",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "attribute": "gen_ai.system",
@@ -177,7 +177,7 @@
       "description": "The Generative AI product as identified by the client or server instrumentation. [2]",
       "examples": "openai",
       "requirement_level": "Required",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "attribute": "error.type",
@@ -233,7 +233,7 @@
       "description": "The name of the GenAI model a request is being made to. [6]",
       "examples": "gpt-4",
       "requirement_level": "Conditionally Required If provided by the application.",
-      "stability": "Experimental"
+      "stability": "development"
     },
     {
       "attribute": "gen_ai.request.seed",
