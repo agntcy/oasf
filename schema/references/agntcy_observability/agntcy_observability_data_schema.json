@@ -61,42 +61,90 @@
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Measures the end-to-end response time for the client to receive agent execution results.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.response_latency",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Time taken by the agent to complete its execution and return a result.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.end_to_end_chain_completion_time",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Time taken by an agent to complete a full sequence of chained tasks in a workflow.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.execution_success_rate",
       "instrument_type": "Gauge",
       "unit": "1 (ratio)",
       "description": "Fraction of agent executions that complete successfully without errors.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.error_count",
       "instrument_type": "Counter",
       "unit": "1 (count)",
       "description": "Total number of errors encountered by the agent.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.uptime_and_availability",
       "instrument_type": "Gauge",
       "unit": "%",
       "description": "Percentage of time the agent is operational and available.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.error_recovery_rate",
@@ -110,74 +158,138 @@
       "instrument_type": "Gauge",
       "unit": "1 (ratio)",
       "description": "Measures how accurately the semantic router delegates tasks to the correct agent.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.connection_reliability",
       "instrument_type": "Gauge",
       "unit": "1 (ratio)",
       "description": "Success rate of establishing authenticated connections between agents.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.transfer_time_accuracy",
       "instrument_type": "Gauge",
       "unit": "1 (ratio)",
       "description": "Measures the accuracy and timeliness of data transfer between agents.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.client.ioa.agent.collaboration.success_rate",
       "instrument_type": "Gauge",
       "unit": "1 (ratio)",
       "description": "Fraction of multi-agent collaborations that complete successfully.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.server.ioa.agp.chain_completion_time",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.server.ioa.agp.connection_latency",
       "instrument_type": "Histogram",
       "unit": "s",
       "description": "Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.server.ioa.agp.error_rates",
       "instrument_type": "Counter",
       "unit": "1 (count)",
       "description": "Total number of errors encountered within the AGP layer (e.g., message handling, routing failures).",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     },
     {
       "metric_name": "gen_ai.server.ioa.agp.message_throughput",
       "instrument_type": "UpDownCounter",
       "unit": "1/s",
       "description": "Tracks the rate of messages sent and received over the AGP, reflecting communication load.",
-      "stability": "Experimental"
+      "stability": "Experimental",
+      "metric_version": "string: The version of the metric being reported.",
+      "attributes": {
+        "metric_category": "string; The category of the metric; Required",
+        "processing_mode": "Enum: real-time, batch, on-demand; The mode of processing for the request; Optional",
+        "reporting_frequency": "Enum: daily, per-task, real-time, on-demand; The frequency at which the latency is reported; Optional",
+        "collection_method": "Enum: instrumentation, manual logs, OTel; The method used to collect the latency data",
+        "outcome_justification": "string: The justification for the outcome of the request; Optional"
+      }
     }
   ],
-  "attributes": [
+  "traces": [
     {
       "attribute": "gen_ai.operation.name",
       "type": "string",
       "description": "The name of the operation being performed. [1]",
       "examples": "chat; text_completion; embeddings",
       "requirement_level": "Required",
-      "stability": "development"
+      "stability": "Experimental"
     },
     {
       "attribute": "gen_ai.system",
       "type": "string",
       "description": "The Generative AI product as identified by the client or server instrumentation. [2]",
-      "examples": "openai",
+      "examples": "openai, langchain",
       "requirement_level": "Required",
-      "stability": "development"
+      "stability": "Experimental"
     },
     {
       "attribute": "error.type",
@@ -233,7 +345,7 @@
       "description": "The name of the GenAI model a request is being made to. [6]",
       "examples": "gpt-4",
       "requirement_level": "Conditionally Required If provided by the application.",
-      "stability": "development"
+      "stability": "Experimental"
     },
     {
       "attribute": "gen_ai.request.seed",
@@ -408,7 +520,7 @@
       "type": "int",
       "description": "The number of tokens used in cache creation input.",
       "examples": "50",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -416,7 +528,7 @@
       "type": "int",
       "description": "The number of tokens used in cache read input.",
       "examples": "30",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -440,7 +552,7 @@
       "type": "int",
       "description": "The total number of tokens used in the LLM operation.",
       "examples": "250",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -456,7 +568,7 @@
       "type": "string",
       "description": "The user initiating the LLM request.",
       "examples": "user123",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -464,7 +576,7 @@
       "type": "object",
       "description": "Headers sent with the LLM request.",
       "examples": "{\"Authorization\": \"Bearer token\"}",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -472,7 +584,7 @@
       "type": "int",
       "description": "The top_k sampling setting for the LLM request.",
       "examples": "5",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -480,7 +592,7 @@
       "type": "boolean",
       "description": "Indicates if the LLM response is streamed.",
       "examples": "true; false",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -488,7 +600,7 @@
       "type": "double",
       "description": "The frequency penalty setting for the LLM request.",
       "examples": "0.1",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -496,7 +608,7 @@
       "type": "double",
       "description": "The presence penalty setting for the LLM request.",
       "examples": "0.1",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -504,7 +616,7 @@
       "type": "string[]",
       "description": "List of sequences that the LLM will use to stop generating further tokens.",
       "examples": "[\"stop\", \"end\"]",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -512,7 +624,7 @@
       "type": "string[]",
       "description": "Functions requested in the LLM operation.",
       "examples": "[\"summarize\", \"translate\"]",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -520,7 +632,7 @@
       "type": "double",
       "description": "The repetition penalty setting for the LLM request.",
       "examples": "1.2",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -560,7 +672,7 @@
       "type": "string",
       "description": "The base URL for the OpenAI API.",
       "examples": "https://api.openai.com",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -584,7 +696,7 @@
       "type": "string",
       "description": "The vendor of the vector database.",
       "examples": "Pinecone; Weaviate",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -592,7 +704,7 @@
       "type": "string",
       "description": "The operation being performed on the vector database.",
       "examples": "query; insert",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -600,7 +712,7 @@
       "type": "int",
       "description": "The top_k setting for vector database queries.",
       "examples": "10",
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": "Experimental"
     },
     {
@@ -608,7 +720,7 @@
       "type": "string",
       "description": "Track the path of a message from sending to receiving, which can help in diagnosing delays or failures in message routing.",
       "examples": null,
-      "requirement_level": "Recommended",
+      "requirement_level": "Optional",
       "stability": null
     },
     {
@@ -616,7 +728,47 @@
       "type": "string",
       "description": "Tracing to capture performance-related data, like processing time for different operations within the gateway and agent.",
       "examples": null,
+      "requirement_level": "Optional",
+      "stability": null
+    },
+    {
+      "attribute": "gen_ai.ioa.span_kind",
+      "type": "string",
+      "description": "The kind of span being recorded, such as client, server, producer, or consumer.",
+      "examples": "client; server",
       "requirement_level": "Recommended",
+      "stability": null
+    },
+    {
+      "attribute": "gen_ai.ioa.start_condition",
+      "type": "string",
+      "description": "The condition under which the span starts, such as which agent or tool initiated the action.",
+      "examples": "agentA; toolB",
+      "requirement_level": "Optional",
+      "stability": null
+    },
+    {
+      "attribute": "gen_ai.ioa.end_condition",
+      "type": "string",
+      "description": "The condition under which the span ends, such as which agent or tool completed the action.",
+      "examples": "agentC; toolD",
+      "requirement_level": "Optional",
+      "stability": null
+    },
+    {
+      "attribute": "gen_ai.ioa.collection_method",
+      "type": "string",
+      "description": "The method used to collect the trace data",
+      "examples": "manual; automatic",
+      "requirement_level": "Optional",
+      "stability": null
+    },
+    {
+      "attribute": "gen_ai.ioa.sampling_rate",
+      "type": "double",
+      "description": "The rate at which data is sampled, percentage of traces retained for analysis.",
+      "examples": "0.1",
+      "requirement_level": "Optional",
       "stability": null
     }
   ],
@@ -780,94 +932,100 @@
       "stability": "Experimental"
     },
     {
-      "event_name": "gen_ai.client.ioa.agent.tool_use_errors",
-      "description": "Tracks failed tool/API calls",
+      "event_name": "gen_ai.ioa.generic",
+      "description": "Generic event for tracking agent interactions.",
       "attributes": {
-        "error_message": "string: Error msg associated with the agent.",
-        "status_code": "int: If applicable.",
-        "agent_id": "string: The ID of the agent"
+        "error_message": "string: Error msg associated with the agent; Optional;",
+        "status_code": "int: If applicable; Optional;",
+        "event_type": "string: The type of the event; Required;",
+        "event_source": "string: The source of the event; Optional;",
+        "agent_id": "string: The ID of the agent; Optional;",
+        "agent_role": "string: The role of the agent. Optional;",
+        "agent_version": "string: The version of the agent; Optional;",
+        "input_data": "AnyValue: The input data for the event; Optional;",
+        "output_data": "AnyValue: The output data for the event; Optional;",
+        "tool_used": "string: The tool used in the event; Optional;",
+        "recipient_agent_id": "string: The ID of the recipient agent; Optional;",
+        "channel": "string: The communication channel used; Optional;",
+        "status": "string: The status of the event; Optional;",
+        "error_code": "string: The error code, if any; Optional;",
+        "retry_attempt": "int: The number of retry attempts; Optional;",
+        "policy_triggered": "string: The policy triggered by the event; Optional;",
+        "policy_decision": "string: The decision made by the policy; Optional;"
       },
       "stability": "Experimental"
-    },
+    }
+  ],
+  "event_attribute_values": [
     {
-      "event_name": "gen_ai.ioa.security.number_of_unauthorized_access_attempts",
-      "description": "Ensures only authorized agents interact with each other.",
-      "attributes": {
-        "agent_id": "string: The ID of the agent"
-      },
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.schema_inconsistencies",
-      "description": "Tracks IOA components to refine integrations with external APIs.",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.schema_transformations",
-      "description": "Shows how often IO Mapper is needed to normalize agent data.",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.agent.discovery_errors",
-      "description": "Identifies common developer frustrations when searching for agents.",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.graph_determinism_score",
-      "description": "Measuring Determinism in Agentic Workflows",
-      "attributes": {
-        "score": "int"
-      },
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.graph_dynamism",
-      "description": "If nodes frequently change how many connections they have, the topology is dynamic.",
-      "attributes": {
-        "score": "int"
-      },
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.agp.subscription_events",
-      "description": "Record successful or failed subscription attempts to the gateway.",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.agp.connection_events",
-      "description": "Log when connections to the gateway are established or terminated.",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.agp.message_send_receive_events",
-      "description": "Capture when a message is sent or received, along with the sender and receiver details.",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.runtime_graph",
-      "description": "Topology of the runtime graph",
-      "attributes": {
-        "topology": "object: The graph topology"
-      },
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.agent.commonly_failing_agents",
-      "description": "Identify problematic agents that need debugging or better training data",
-      "attributes": {},
-      "stability": "Experimental"
-    },
-    {
-      "event_name": "gen_ai.ioa.agent.most_frequent_agent_to_agent_interactions",
-      "description": "Identifies which agents work well together for multi-agent tasks",
-      "attributes": {},
-      "stability": "Experimental"
+      "attribute": "event_type",
+      "values": [
+        {
+          "value": "gen_ai.client.ioa.agent.tool_use_errors",
+          "description": "Tracks failed tool/API calls",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.security.number_of_unauthorized_access_attempts",
+          "description": "Ensures only authorized agents interact with each other.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.schema_inconsistencies",
+          "description": "Tracks IOA components to refine integrations with external APIs.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.schema_transformations",
+          "description": "Shows how often IO Mapper is needed to normalize agent data.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.agent.discovery_errors",
+          "description": "Identifies common developer frustrations when searching for agents.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.graph_determinism_score",
+          "description": "Measuring Determinism in Agentic Workflows",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.graph_dynamism",
+          "description": "If nodes frequently change how many connections they have, the topology is dynamic.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.agp.subscription_events",
+          "description": "Record successful or failed subscription attempts to the gateway.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.agp.connection_events",
+          "description": "Log when connections to the gateway are established or terminated.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.agp.message_send_receive_events",
+          "description": "Capture when a message is sent or received, along with the sender and receiver details.",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.runtime_graph",
+          "description": "Topology of the runtime graph",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.agent.commonly_failing_agents",
+          "description": "Identify problematic agents that need debugging or better training data",
+          "stability": "Experimental"
+        },
+        {
+          "value": "gen_ai.ioa.agent.most_frequent_agent_to_agent_interactions",
+          "description": "Identifies which agents work well together for multi-agent tasks",
+          "stability": "Experimental"
+        }
+      ]
     }
   ]
 }

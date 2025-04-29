@@ -23,20 +23,110 @@ Metrics are numerical measurements captured over time, providing insights into t
 AGNTGY is contributing the following metrics (identified by `ioa` in their names) to provide detailed insights into the performance and behavior of Intelligent Open Agents:
 
 *   **`gen_ai.client.ioa.response_latency`**: Measures the end-to-end response time for the client to receive agent execution results (in seconds).
-    *   **`gen_ai.client.ioa.agent.response_latency`**: Measures the time taken by the agent to complete its execution and return a result (in seconds).
-    *   **`gen_ai.client.ioa.agent.end_to_end_chain_completion_time`**: Measures the time taken by an agent to complete a full sequence of chained tasks in a workflow (in seconds).
-     *   **`gen_ai.client.ioa.agent.execution_success_rate`**: Represents the fraction of agent executions that complete successfully without errors (ratio).
-     *   **`gen_ai.client.ioa.agent.error_count`**: Counts the total number of errors encountered by the agent.
-     *   **`gen_ai.client.ioa.agent.uptime_and_availability`**: Represents the percentage of time the agent is operational and available (percentage).
-     *   **`gen_ai.client.ioa.agent.error_recovery_rate`**: Represents the fraction of agent failures that successfully recover without external intervention (ratio).
-     *   **`gen_ai.client.ioa.agent.task_delegation_accuracy`**: Measures how accurately the semantic router delegates tasks to the correct agent (ratio).
-     *   **`gen_ai.client.ioa.agent.connection_reliability`**: Represents the success rate of establishing authenticated connections between agents (ratio).
-     *   **`gen_ai.client.ioa.agent.transfer_time_accuracy`**: Measures the accuracy and timeliness of data transfer between agents (ratio).
-     *   **`gen_ai.client.ioa.agent.collaboration.success_rate`**: Represents the fraction of multi-agent collaborations that complete successfully (ratio).
-     *   **`gen_ai.server.ioa.agp.chain_completion_time`**: Measures the time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway (in seconds).
-     *   **`gen_ai.server.ioa.agp.connection_latency`**: Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions (in seconds).
-     *   **`gen_ai.server.ioa.agp.error_rates`**: Counts the total number of errors encountered within the AGP layer (e.g., message handling, routing failures).
-     *   **`gen_ai.server.ioa.agp.message_throughput`**: Tracks the rate of messages sent and received over the AGP, reflecting communication load (messages/second).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+*   **`gen_ai.client.ioa.agent.response_latency`**: Measures the time taken by the agent to complete its execution and return a result (in seconds).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+*   **`gen_ai.client.ioa.agent.end_to_end_chain_completion_time`**: Measures the time taken by an agent to complete a full sequence of chained tasks in a workflow (in seconds).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.execution_success_rate`**: Represents the fraction of agent executions that complete successfully without errors (ratio).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.error_count`**: Counts the total number of errors encountered by the agent.
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.uptime_and_availability`**: Represents the percentage of time the agent is operational and available (percentage).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.error_recovery_rate`**: Represents the fraction of agent failures that successfully recover without external intervention (ratio).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.task_delegation_accuracy`**: Measures how accurately the semantic router delegates tasks to the correct agent (ratio).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.connection_reliability`**: Represents the success rate of establishing authenticated connections between agents (ratio).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.transfer_time_accuracy`**: Measures the accuracy and timeliness of data transfer between agents (ratio).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.client.ioa.agent.collaboration.success_rate`**: Represents the fraction of multi-agent collaborations that complete successfully (ratio).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.server.ioa.agp.chain_completion_time`**: Measures the time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway (in seconds).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.server.ioa.agp.connection_latency`**: Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions (in seconds).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.server.ioa.agp.error_rates`**: Counts the total number of errors encountered within the AGP layer (e.g., message handling, routing failures).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
+ *   **`gen_ai.server.ioa.agp.message_throughput`**: Tracks the rate of messages sent and received over the AGP, reflecting communication load (messages/second).
+  *   Attributes:
+        *   `metric_version`: The version of the metric being reported.
+        *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
+        *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
+        *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
+        *   `outcome_justification`: The justification for the outcome of the request.
      
 **Standard Metrics:**
 
@@ -104,9 +194,10 @@ Events represent discrete occurrences of interest within the system, such as use
 **AGNTCY Contributions (IoA-Specific events):**
 
 *   `gen_ai.ioa.generic`: Generic event for tracking agent interactions.
-     *   Attributes:
+
+    *   **Attributes:**
         *   `error_message`: Error message associated with the agent.
-        *   `status_code`: If applicable.
+        *   `status_code`: Status code, if applicable.
         *   `event_type`: The type of the event.
         *   `event_source`: The source of the event.
         *   `agent_id`: The ID of the agent.
