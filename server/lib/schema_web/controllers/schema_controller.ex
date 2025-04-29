@@ -436,10 +436,10 @@ defmodule SchemaWeb.SchemaController do
 
           additional_properties(true)
         end,
-      ClassValidation:
+      Validation:
         swagger_schema do
-          title("Class Validation")
-          description("The errors and and warnings found when validating an class.")
+          title("Class or object Validation")
+          description("The errors and and warnings found when validating a class or an object.")
 
           properties do
             uid(:string, "The class's metadata.uid, if available")
@@ -511,7 +511,7 @@ defmodule SchemaWeb.SchemaController do
             class_validations(
               :array,
               "Array of class validations",
-              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/ClassValidation"},
+              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Validation"},
               required: true
             )
           end
@@ -2294,7 +2294,7 @@ defmodule SchemaWeb.SchemaController do
       data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class to be validated", required: true)
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
   end
 
   @spec validate_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -2343,7 +2343,7 @@ defmodule SchemaWeb.SchemaController do
       data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class to be validated", required: true)
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
   end
 
   @spec validate_domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -2392,7 +2392,7 @@ defmodule SchemaWeb.SchemaController do
       data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class to be validated", required: true)
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
   end
 
   @spec validate_feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
@@ -2443,7 +2443,7 @@ defmodule SchemaWeb.SchemaController do
       data(:body, PhoenixSwagger.Schema.ref(:Object), "The object to be validated", required: true)
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
   end
 
   @spec validate_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
