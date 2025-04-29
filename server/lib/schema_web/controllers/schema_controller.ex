@@ -1039,28 +1039,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get the schema base class.
-  """
-  swagger_path :base_class do
-    get("/api/base_class")
-    summary("Base class")
-    description("Get OASF schema base class.")
-    produces("application/json")
-    tag("All Categories and Classes")
-
-    parameters do
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  @spec base_class(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_class(conn, params) do
-    class(conn, "base_class", params)
-  end
-
-  @doc """
   Get an class by name.
   get /api/classes/:name
   """
@@ -1639,30 +1617,6 @@ defmodule SchemaWeb.SchemaController do
     extensions = parse_options(extensions(params))
     classes = Schema.export_features(extensions, profiles)
     send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF base  class.
-  """
-  swagger_path :export_base_class do
-    get("/export/base_class")
-    summary("Export base class")
-    description("Get OASF schema base class.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  def export_base_class(conn, params) do
-    profiles = parse_options(profiles(params))
-    base_class = Schema.export_base_class(profiles)
-
-    send_json_resp(conn, base_class)
   end
 
   @doc """
@@ -2667,28 +2621,6 @@ defmodule SchemaWeb.SchemaController do
   # --------------------------
   # Request sample data API's
   # --------------------------
-
-  @doc """
-  Returns randomly generated class sample data for the base class.
-  """
-  swagger_path :sample_base_class do
-    get("/sample/base_class")
-    summary("Base sample data")
-    description("This API returns randomly generated sample data for the base class.")
-    produces("application/json")
-    tag("Sample Data")
-
-    parameters do
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  @spec sample_base_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_base_class(conn, params) do
-    sample_class(conn, "base_class", params)
-  end
 
   @doc """
   Returns randomly generated skill, domain or feature class sample data for the given name.

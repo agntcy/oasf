@@ -130,7 +130,6 @@ defmodule SchemaWeb.Router do
     get "/features/:extension/:id", SchemaController, :feature
 
     get "/dictionary", SchemaController, :dictionary
-    get "/base_class", SchemaController, :base_class
 
     get "/objects", SchemaController, :objects
     get "/objects/:id", SchemaController, :object
@@ -178,7 +177,6 @@ defmodule SchemaWeb.Router do
   scope "/export", SchemaWeb do
     pipe_through :api
 
-    get "/base_class", SchemaController, :export_base_class
     get "/classes", SchemaController, :export_classes
     get "/skills", SchemaController, :export_skills
     get "/domains", SchemaController, :export_domains
@@ -189,8 +187,6 @@ defmodule SchemaWeb.Router do
 
   scope "/sample", SchemaWeb do
     pipe_through :api
-
-    get "/base_class", SchemaController, :sample_class
 
     get "/objects/:id", SchemaController, :sample_object
     get "/objects/:extension/:id", SchemaController, :sample_object
