@@ -9,24 +9,6 @@ defmodule SchemaWeb.PageController do
 
   alias SchemaWeb.SchemaController
 
-  @spec class_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def class_graph(conn, %{"id" => id} = params) do
-    case SchemaWeb.SchemaController.class_ex(id, params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
-
-      class ->
-        data = Schema.Graph.build(class)
-          |> Map.put(:categories_path, "categories")
-
-        render(conn, "class_graph.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
-    end
-  end
-
   @spec skill_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
   def skill_graph(conn, %{"id" => id} = params) do
     case SchemaWeb.SchemaController.skill_ex(id, params) do
