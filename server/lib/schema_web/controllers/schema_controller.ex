@@ -443,7 +443,7 @@ defmodule SchemaWeb.SchemaController do
             classes(
               :array,
               "Array of classes.",
-              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Class"},
+              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Class"},
               required: true
             )
 
@@ -1539,39 +1539,38 @@ defmodule SchemaWeb.SchemaController do
   # -----------------
 
   @doc """
-  Get JSON schema definitions for a given skill, domain or feature class.
-  get /schema/classes/:name
+  Get JSON schema definitions for a given skill class.
+  get /schema/skills/:name
   """
-  swagger_path :json_class do
-    get("/schema/classes/{name}")
-    summary("Class")
+  swagger_path :json_skill_class do
+    get("/schema/skills/{name}")
+    summary("Skill")
 
     description(
-      "Get OASF schema skill, domain or feature class by name, using JSON schema Draft-07 format " <>
-        "(see http://json-schema.org). The class name may contain a schema extension name. " <>
-        "For example, \"dev/cpu_usage\"."
+      "Get OASF schema skill class by name, using JSON schema Draft-07 format " <>
+        "(see http://json-schema.org). The class name may contain a schema extension name. "
     )
 
     produces("application/json")
     tag("JSON Schema")
 
     parameters do
-      name(:path, :string, "Class name", required: true)
+      name(:path, :string, "Skill class name", required: true)
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
       package_name(:query, :string, "Java package name")
     end
 
     response(200, "Success")
-    response(404, "Class <code>name</code> not found")
+    response(404, "Skill class <code>name</code> not found")
   end
 
-  @spec json_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_class(conn, %{"id" => id} = params) do
+  @spec json_skill_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def json_skill_class(conn, %{"id" => id} = params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case class_ex(id, params) do
+    case skill_ex(id, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Skill class #{id} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
@@ -1579,19 +1578,94 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  def class_ex(id, params) do
-    extension = extension(params)
-    Schema.class_ex(extension, id, parse_options(profiles(params)))
-  end
-
   def skill_ex(id, params) do
     extension = extension(params)
     Schema.skill_ex(extension, id, parse_options(profiles(params)))
   end
 
+  @doc """
+  Get JSON schema definitions for a given domain class.
+  get /schema/domains/:name
+  """
+  swagger_path :json_domain_class do
+    get("/schema/domains/{name}")
+    summary("Domain")
+
+    description(
+      "Get OASF schema domain class by name, using JSON schema Draft-07 format " <>
+        "(see http://json-schema.org). The class name may contain a schema extension name. "
+    )
+
+    produces("application/json")
+    tag("JSON Schema")
+
+    parameters do
+      name(:path, :string, "Domain class name", required: true)
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+      package_name(:query, :string, "Java package name")
+    end
+
+    response(200, "Success")
+    response(404, "Domain class <code>name</code> not found")
+  end
+
+  @spec json_domain_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def json_domain_class(conn, %{"id" => id} = params) do
+    options = Map.get(params, "package_name") |> parse_java_package()
+
+    case domain_ex(id, params) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Domain class #{id} not found"})
+
+      data ->
+        class = Schema.JsonSchema.encode(data, options)
+        send_json_resp(conn, class)
+    end
+  end
+
   def domain_ex(id, params) do
     extension = extension(params)
     Schema.domain_ex(extension, id, parse_options(profiles(params)))
+  end
+
+  @doc """
+  Get JSON schema definitions for a given feature class.
+  get /schema/features/:name
+  """
+  swagger_path :json_feature_class do
+    get("/schema/features/{name}")
+    summary("Feature")
+
+    description(
+      "Get OASF schema feature class by name, using JSON schema Draft-07 format " <>
+        "(see http://json-schema.org). The class name may contain a schema extension name. "
+    )
+
+    produces("application/json")
+    tag("JSON Schema")
+
+    parameters do
+      name(:path, :string, "Feature class name", required: true)
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+      package_name(:query, :string, "Java package name")
+    end
+
+    response(200, "Success")
+    response(404, "Feature class <code>name</code> not found")
+  end
+
+  @spec json_feature_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def json_feature_class(conn, %{"id" => id} = params) do
+    options = Map.get(params, "package_name") |> parse_java_package()
+
+    case feature_ex(id, params) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Feature class #{id} not found"})
+
+      data ->
+        class = Schema.JsonSchema.encode(data, options)
+        send_json_resp(conn, class)
+    end
   end
 
   def feature_ex(id, params) do
@@ -2163,7 +2237,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class to be validated",
+        required: true
+      )
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
@@ -2212,7 +2288,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class to be validated",
+        required: true
+      )
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
@@ -2261,7 +2339,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class to be validated",
+        required: true
+      )
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
@@ -2312,7 +2392,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Object), "The object to be validated", required: true)
+      data(:body, PhoenixSwagger.Schema.ref(:Object), "The object to be validated",
+        required: true
+      )
     end
 
     response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))

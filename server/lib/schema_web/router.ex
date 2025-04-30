@@ -147,17 +147,14 @@ defmodule SchemaWeb.Router do
   scope "/schema", SchemaWeb do
     pipe_through :api
 
-    get "/classes/:id", SchemaController, :json_class
-    get "/classes/:extension/:id", SchemaController, :json_class
+    get "/skills/:id", SchemaController, :json_skill_class
+    get "/skills/:extension/:id", SchemaController, :json_skill_class
 
-    get "/skills/:id", SchemaController, :json_class
-    get "/skills/:extension/:id", SchemaController, :json_class
+    get "/domains/:id", SchemaController, :json_domain_class
+    get "/domains/:extension/:id", SchemaController, :json_domain_class
 
-    get "/domains/:id", SchemaController, :json_class
-    get "/domains/:extension/:id", SchemaController, :json_class
-
-    get "/features/:id", SchemaController, :json_class
-    get "/features/:extension/:id", SchemaController, :json_class
+    get "/features/:id", SchemaController, :json_feature_class
+    get "/features/:extension/:id", SchemaController, :json_feature_class
 
     get "/objects/:id", SchemaController, :json_object
     get "/objects/:extension/:id", SchemaController, :json_object
