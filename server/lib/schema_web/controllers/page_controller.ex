@@ -340,49 +340,6 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Renders classes.
-  """
-  @spec classes(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def classes(conn, %{"id" => id} = params) do
-    extension = params["extension"]
-
-    case Schema.class(extension, id) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
-
-      data ->
-        data =
-          data
-          |> sort_attributes()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
-          |> Map.put(:class_type, "class")
-
-        render(conn, "class.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
-    end
-  end
-
-  def classes(conn, params) do
-    data = %{
-      classes:
-        SchemaController.classes(params)
-        |> sort_by(:uid),
-      title: "Classes",
-      description: "The OASF classes",
-      classes_path: "classes"
-    }
-
-    render(conn, "classes.html",
-      extensions: Schema.extensions(),
-      profiles: SchemaController.get_profiles(params),
-      data: data
-    )
-  end
-
-  @doc """
   Renders skills.
   """
   @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()

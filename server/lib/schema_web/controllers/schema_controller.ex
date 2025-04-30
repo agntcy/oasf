@@ -359,35 +359,6 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
-      ClassDesc:
-        swagger_schema do
-          title("Class Descriptor")
-          description("Schema class descriptor.")
-
-          properties do
-            name(:string, "Class name", required: true)
-            caption(:string, "Class caption", required: true)
-            description(:string, "Class description", required: true)
-            category(:string, "Class category", required: true)
-            category_name(:string, "Class category caption", required: true)
-            profiles(:array, "Class profiles", items: %PhoenixSwagger.Schema{type: :string})
-            uid(:integer, "Class unique identifier", required: true)
-          end
-
-          example([
-            %{
-              name: "problem_solving",
-              description:
-                "Assisting with solving problems by generating potential solutions or strategies.",
-              category: "nlp",
-              extends: "analytical_reasoning",
-              uid: 10702,
-              caption: "Problem Solving",
-              category_name: "Natural Language Processing",
-              category_uid: 1
-            }
-          ])
-        end,
       Skill:
         swagger_schema do
           title("Skill class")
@@ -1057,80 +1028,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get an class by name.
-  get /api/classes/:name
-  """
-  swagger_path :class do
-    get("/api/classes/{name}")
-    summary("Class")
-
-    description(
-      "Get OASF schema class by name. The class name may contain a schema extension name." <>
-        " For example, \"dev/cpu_usage\"."
-    )
-
-    produces("application/json")
-    tag("All Categories and Classes")
-
-    parameters do
-      name(:path, :string, "Class name", required: true)
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(404, "Class <code>name</code> not found")
-  end
-
-  @spec class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def class(conn, %{"id" => id} = params) do
-    class(conn, id, params)
-  end
-
-  defp class(conn, id, params) do
-    extension = extension(params)
-
-    case Schema.class(extension, id, parse_options(profiles(params))) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Class #{id} not found"})
-
-      data ->
-        class = add_objects(data, params)
-        send_json_resp(conn, class)
-    end
-  end
-
-  @doc """
-  Get the schema classes.
-  """
-  swagger_path :classes do
-    get("/api/classes")
-    summary("List all classes")
-    description("Get all OASF schema classes (skills, domains, features).")
-    produces("application/json")
-    tag("All Categories and Classes")
-
-    parameters do
-      extensions(:query, :array, "Related schema extensions to include in response.",
-        items: [type: :string]
-      )
-
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success", :ClassDesc)
-  end
-
-  @spec classes(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def classes(conn, params) do
-    classes =
-      Enum.map(classes(params), fn {_name, class} ->
-        Schema.reduce_class(class)
-      end)
-
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
   Returns the list of classes.
   """
   @spec classes(map) :: map
@@ -1535,31 +1432,6 @@ defmodule SchemaWeb.SchemaController do
     extensions = parse_options(extensions(params))
     data = Schema.export_schema(extensions, profiles)
     send_json_resp(conn, data)
-  end
-
-  @doc """
-  Export the OASF schema classes.
-  """
-  swagger_path :export_classes do
-    get("/export/classes")
-    summary("Export classes")
-    description("Get OASF schema classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  def export_classes(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_classes(extensions, profiles)
-    send_json_resp(conn, classes)
   end
 
   @doc """

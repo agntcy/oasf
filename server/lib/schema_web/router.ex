@@ -41,10 +41,6 @@ defmodule SchemaWeb.Router do
     get "/profiles/:id", PageController, :profiles
     get "/profiles/:extension/:id", PageController, :profiles
 
-    get "/classes", PageController, :classes
-    get "/classes/:id", PageController, :classes
-    get "/classes/:extension/:id", PageController, :classes
-
     get "/class/graph/:id", PageController, :class_graph
     get "/class/graph/:extension/:id", PageController, :class_graph
 
@@ -113,10 +109,6 @@ defmodule SchemaWeb.Router do
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile
 
-    get "/classes", SchemaController, :classes
-    get "/classes/:id", SchemaController, :class
-    get "/classes/:extension/:id", SchemaController, :class
-
     get "/skills", SchemaController, :skills
     get "/skills/:id", SchemaController, :skill
     get "/skills/:extension/:id", SchemaController, :skill
@@ -177,7 +169,6 @@ defmodule SchemaWeb.Router do
   scope "/export", SchemaWeb do
     pipe_through :api
 
-    get "/classes", SchemaController, :export_classes
     get "/skills", SchemaController, :export_skills
     get "/domains", SchemaController, :export_domains
     get "/features", SchemaController, :export_features
