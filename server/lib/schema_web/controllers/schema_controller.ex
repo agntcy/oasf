@@ -915,7 +915,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List skill categories")
     description("Get all OASF skill classes by category.")
     produces("application/json")
-    tag("Skills")
+    tag("Categories")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -952,7 +952,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Skills")
+    tag("Categories")
 
     parameters do
       name(:path, :string, "Skill category name", required: true)
@@ -994,7 +994,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List domain categories")
     description("Get all OASF domain classes by category.")
     produces("application/json")
-    tag("Domains")
+    tag("Categories")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1031,7 +1031,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Domains")
+    tag("Categories")
 
     parameters do
       name(:path, :string, "Domain category name", required: true)
@@ -1073,7 +1073,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List feature categories")
     description("Get all OASF feature classes by category.")
     produces("application/json")
-    tag("Features")
+    tag("Categories")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1110,7 +1110,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Features")
+    tag("Categories")
 
     parameters do
       name(:path, :string, "Feature category name", required: true)
@@ -1208,7 +1208,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Skills")
+    tag("Classes and Objects")
 
     parameters do
       name(:path, :string, "Skill class name", required: true)
@@ -1245,7 +1245,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List all skills")
     description("Get OASF skill classes.")
     produces("application/json")
-    tag("Skills")
+    tag("Classes and Objects")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1298,7 +1298,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Domains")
+    tag("Classes and Objects")
 
     parameters do
       name(:path, :string, "Domain class name", required: true)
@@ -1335,7 +1335,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List all domains")
     description("Get OASF domain classes.")
     produces("application/json")
-    tag("Domains")
+    tag("Classes and Objects")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1388,7 +1388,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Features")
+    tag("Classes and Objects")
 
     parameters do
       name(:path, :string, "Feature class name", required: true)
@@ -1425,7 +1425,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List all features")
     description("Get OASF feature classes.")
     produces("application/json")
-    tag("Features")
+    tag("Classes and Objects")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1479,7 +1479,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Objects")
+    tag("Classes and Objects")
 
     parameters do
       name(:path, :string, "Object name", required: true)
@@ -1515,7 +1515,7 @@ defmodule SchemaWeb.SchemaController do
     summary("List objects")
     description("Get OASF schema objects.")
     produces("application/json")
-    tag("Objects")
+    tag("Classes and Objects")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1892,7 +1892,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Skills")
+    tag("Enrichment")
 
     parameters do
       _enum_text(
@@ -1968,7 +1968,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Domains")
+    tag("Enrichment")
 
     parameters do
       _enum_text(
@@ -2042,7 +2042,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Skills")
+    tag("Translation")
 
     parameters do
       _mode(
@@ -2124,7 +2124,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Domains")
+    tag("Translation")
 
     parameters do
       _mode(
@@ -2206,7 +2206,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Features")
+    tag("Translation")
 
     parameters do
       _mode(
@@ -2288,7 +2288,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Objects")
+    tag("Translation")
 
     parameters do
       name(:path, :string, "Object name", required: true)
@@ -2376,7 +2376,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Skills")
+    tag("Validation")
 
     parameters do
       missing_recommended(
@@ -2427,7 +2427,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Domains")
+    tag("Validation")
 
     parameters do
       missing_recommended(
@@ -2478,7 +2478,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Features")
+    tag("Validation")
 
     parameters do
       missing_recommended(
@@ -2529,7 +2529,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Objects")
+    tag("Validation")
 
     parameters do
       name(:path, :string, "Object name", required: true)
@@ -2591,7 +2591,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Skills")
+    tag("Validation")
 
     parameters do
       missing_recommended(
@@ -2646,7 +2646,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Domains")
+    tag("Validation")
 
     parameters do
       missing_recommended(
@@ -2701,7 +2701,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Features")
+    tag("Validation")
 
     parameters do
       missing_recommended(
