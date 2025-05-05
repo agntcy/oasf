@@ -11,7 +11,7 @@
     },
     "version": {
       "caption": "Agent Version",
-      "description": "property contains the version of the agent. Values MAY conform to a specific versioning schema.",
+      "description": "The version of the agent. Values MAY conform to a specific versioning schema.",
       "requirement": "required"
     },
     "created_at": {
