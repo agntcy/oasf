@@ -21,10 +21,6 @@ defmodule SchemaWeb.Router do
 
     get "/", PageController, :main_skills
 
-    get "/categories", PageController, :categories
-    get "/categories/:id", PageController, :categories
-    get "/categories/:extension/:id", PageController, :categories
-
     get "/main_skills", PageController, :main_skills
     get "/main_skills/:id", PageController, :main_skills
     get "/main_skills/:extension/:id", PageController, :main_skills
@@ -86,10 +82,6 @@ defmodule SchemaWeb.Router do
 
     get "/profiles", SchemaController, :profiles
     get "/extensions", SchemaController, :extensions
-
-    get "/categories", SchemaController, :categories
-    get "/categories/:id", SchemaController, :category
-    get "/categories/:extension/:id", SchemaController, :category
 
     get "/main_skills", SchemaController, :main_skills
     get "/main_skills/:id", SchemaController, :main_skill

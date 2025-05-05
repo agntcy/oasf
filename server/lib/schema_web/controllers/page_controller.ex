@@ -130,47 +130,6 @@ defmodule SchemaWeb.PageController do
     )
   end
 
-  @doc """
-  Renders categories or the classes in a given category.
-  """
-  @spec categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def categories(conn, %{"id" => id} = params) do
-    case SchemaController.category_classes(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
-
-      data ->
-        classes = sort_by(data[:classes], :uid)
-
-        data =
-          Map.put(data, :classes, classes)
-          |> Map.put(:class_type, "class")
-          |> Map.put(:classes_path, "classes")
-
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
-    end
-  end
-
-  def categories(conn, params) do
-    data =
-      Map.put_new(params, "extensions", "")
-      |> SchemaController.categories()
-      |> sort_attributes(:uid)
-      |> sort_classes()
-      |> Map.put(:categories_path, "categories")
-      |> Map.put(:classes_path, "classes")
-
-    render(conn, "index.html",
-      extensions: Schema.extensions(),
-      profiles: SchemaController.get_profiles(params),
-      data: data
-    )
-  end
-
   @spec agent_model(Plug.Conn.t(), any) :: Plug.Conn.t()
   def agent_model(conn, _params) do
     redirect(conn, to: "/objects/agent")
