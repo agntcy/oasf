@@ -436,6 +436,11 @@
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
     },
+    "schema_version": {
+      "caption": "Schema Version",
+      "description": "Version of the OASF schema.",
+      "type": "string_t"
+    },
     "security_score": {
       "caption": "Security Score",
       "description": "Security score.",
