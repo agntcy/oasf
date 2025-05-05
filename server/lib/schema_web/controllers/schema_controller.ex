@@ -1885,7 +1885,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :enrich_skill do
     post("/api/enrich/skill")
-    summary("Enrich Skill Class")
+    summary("Enrich skill class")
 
     description(
       "The purpose of this API is to enrich the provided skill class data with <code>type_uid</code>," <>
@@ -1961,7 +1961,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :enrich_domain do
     post("/api/enrich/domain")
-    summary("Enrich domain Class")
+    summary("Enrich domain class")
 
     description(
       "The purpose of this API is to enrich the provided domain class data with <code>type_uid</code>," <>
@@ -2035,7 +2035,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :translate_skill do
     post("/api/translate/skill")
-    summary("Translate Skill Class")
+    summary("Translate skill class")
 
     description(
       "The purpose of this API is to translate the provided skill class data using the OASF schema." <>
@@ -2117,7 +2117,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :translate_domain do
     post("/api/translate/domain")
-    summary("Translate domain Class")
+    summary("Translate domain class")
 
     description(
       "The purpose of this API is to translate the provided domain class data using the OASF schema." <>
@@ -2370,7 +2370,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_skill do
     post("/api/validate/skill")
-    summary("Validate Skill Class")
+    summary("Validate skill class")
 
     description(
       "This API validates the provided skill class data against the OASF schema, returning a response" <>
@@ -2585,7 +2585,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_bundle_skill do
     post("/api/validate_bundle/skill")
-    summary("Validate Skill Class Bundle")
+    summary("Validate skill class bundle")
 
     description(
       "This API validates the provided skill class bundle. The class bundle itself is validated, and" <>
@@ -2640,7 +2640,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_bundle_domain do
     post("/api/validate_bundle/domain")
-    summary("Validate Domain Class Bundle")
+    summary("Validate domain class bundle")
 
     description(
       "This API validates the provided domain class bundle. The class bundle itself is validated, and" <>
@@ -2695,7 +2695,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_bundle_feature do
     post("/api/validate_bundle/feature")
-    summary("Validate Feature Class Bundle")
+    summary("validate feature class bundle")
 
     description(
       "This API validates the provided feature class bundle. The class bundle itself is validated, and" <>
