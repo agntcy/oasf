@@ -413,7 +413,6 @@ defmodule SchemaWeb.SchemaController do
           description("The errors and and warnings found when validating a class or an object.")
 
           properties do
-            uid(:string, "The class's metadata.uid, if available")
             error(:string, "Overall error message")
 
             errors(
@@ -434,32 +433,46 @@ defmodule SchemaWeb.SchemaController do
 
           additional_properties(false)
         end,
-      ClassBundle:
+      SkillBundle:
         swagger_schema do
-          title("Class Bundle")
-          description("A bundle of classes.")
+          title("Skill Class Bundle")
+          description("A bundle of skill classes.")
 
           properties do
-            classes(
+            inputs(
               :array,
-              "Array of classes.",
-              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Class"},
+              "Array of skill classes.",
+              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Skill"},
               required: true
             )
 
-            start_time(:integer, "Earliest class time in Epoch milliseconds (OASF timestamp_t)")
-            end_time(:integer, "Latest class time in Epoch milliseconds (OASF timestamp_t)")
-            start_time_dt(:string, "Earliest class time in RFC 3339 format (OASF datetime_t)")
-            end_time_dt(:string, "Latest class time in RFC 3339 format (OASF datetime_t)")
             count(:integer, "Count of classes")
           end
 
+          example(%{
+            count: 2,
+            inputs: [
+              %{
+                category_name: "Natural Language Processing",
+                category_uid: 1,
+                class_uid: 10101,
+                class_name: "Contextual Comprehension"
+              },
+              %{
+                category_name: "Natural Language Processing",
+                category_uid: 1,
+                class_uid: 10203,
+                class_name: "Text Paraphrasing"
+              }
+            ]
+          })
+
           additional_properties(false)
         end,
-      ClassBundleValidation:
+      SkillBundleValidation:
         swagger_schema do
-          title("Class Bundle Validation")
-          description("The errors and and warnings found when validating an class bundle.")
+          title("Skill Class Bundle Validation")
+          description("The errors and and warnings found when validating a skill class bundle.")
 
           properties do
             error(:string, "Overall error message")
@@ -479,9 +492,149 @@ defmodule SchemaWeb.SchemaController do
             error_count(:integer, "Count of errors of the bundle itself")
             warning_count(:integer, "Count of warnings of the bundle itself")
 
-            class_validations(
+            input_validations(
               :array,
-              "Array of class validations",
+              "Array of skill class validations",
+              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Validation"},
+              required: true
+            )
+          end
+
+          additional_properties(false)
+        end,
+      DomainBundle:
+        swagger_schema do
+          title("Domain Class Bundle")
+          description("A bundle of domain classes.")
+
+          properties do
+            inputs(
+              :array,
+              "Array of domain classes.",
+              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Domain"},
+              required: true
+            )
+
+            count(:integer, "Count of classes")
+          end
+
+          example(%{
+            count: 2,
+            inputs: [
+              %{
+                category_name: "Technology",
+                category_uid: 1,
+                class_uid: 101,
+                class_name: "Internet of Things (IoT)"
+              },
+              %{
+                category_name: "Trust and Safety",
+                category_uid: 4,
+                class_uid: 403,
+                class_name: "Fraud Prevention"
+              }
+            ]
+          })
+
+          additional_properties(false)
+        end,
+      DomainBundleValidation:
+        swagger_schema do
+          title("Domain Class Bundle Validation")
+          description("The errors and and warnings found when validating a domain class bundle.")
+
+          properties do
+            error(:string, "Overall error message")
+
+            errors(
+              :array,
+              "Validation errors of the bundle itself",
+              items: %PhoenixSwagger.Schema{type: :object}
+            )
+
+            warnings(
+              :array,
+              "Validation warnings of the bundle itself",
+              items: %PhoenixSwagger.Schema{type: :object}
+            )
+
+            error_count(:integer, "Count of errors of the bundle itself")
+            warning_count(:integer, "Count of warnings of the bundle itself")
+
+            input_validations(
+              :array,
+              "Array of domain class validations",
+              items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Validation"},
+              required: true
+            )
+          end
+
+          additional_properties(false)
+        end,
+      FeatureBundle:
+        swagger_schema do
+          title("Feature Class Bundle")
+          description("A bundle of feature classes.")
+
+          properties do
+            inputs(
+              :array,
+              "Array of feature classes.",
+              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Feature"},
+              required: true
+            )
+
+            count(:integer, "Count of classes")
+          end
+
+          example(%{
+            count: 1,
+            inputs: [
+              %{
+                data: %{
+                  communication_protocols: ["AGP"],
+                  data_platform_integrations: [],
+                  data_schema: %{
+                    name: "Agntcy Observability Data Schema",
+                    version: "v0.0.1",
+                    url: "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability/agntcy_observability_data_schema.json"
+                  },
+                  export_format: "csv"
+                },
+                name: "oasf.agntcy.org/feature/observability/observability",
+                version: "v0.2.2"
+              }
+            ]
+          })
+
+          additional_properties(false)
+        end,
+      FeatureBundleValidation:
+        swagger_schema do
+          title("Feature Class Bundle Validation")
+          description("The errors and and warnings found when validating a feature class bundle.")
+
+          properties do
+            error(:string, "Overall error message")
+
+            errors(
+              :array,
+              "Validation errors of the bundle itself",
+              items: %PhoenixSwagger.Schema{type: :object}
+            )
+
+            warnings(
+              :array,
+              "Validation warnings of the bundle itself",
+              items: %PhoenixSwagger.Schema{type: :object}
+            )
+
+            error_count(:integer, "Count of errors of the bundle itself")
+            warning_count(:integer, "Count of warnings of the bundle itself")
+
+            input_validations(
+              :array,
+              "Array of feature class validations",
               items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Validation"},
               required: true
             )
@@ -2452,12 +2605,15 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:ClassBundle), "The class bundle to be validated",
+      data(
+        :body,
+        PhoenixSwagger.Schema.ref(:SkillBundle),
+        "The skill class bundle to be validated",
         required: true
       )
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:SkillBundleValidation))
   end
 
   @spec validate_bundle_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2484,7 +2640,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_bundle_domain do
     post("/api/validate_bundle/domain")
-    summary("Validate domain Class Bundle")
+    summary("Validate Domain Class Bundle")
 
     description(
       "This API validates the provided domain class bundle. The class bundle itself is validated, and" <>
@@ -2504,12 +2660,15 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:ClassBundle), "The class bundle to be validated",
+      data(
+        :body,
+        PhoenixSwagger.Schema.ref(:DomainBundle),
+        "The domain class bundle to be validated",
         required: true
       )
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:DomainBundleValidation))
   end
 
   @spec validate_bundle_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2536,7 +2695,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_bundle_feature do
     post("/api/validate_bundle/feature")
-    summary("Validate feature Class Bundle")
+    summary("Validate Feature Class Bundle")
 
     description(
       "This API validates the provided feature class bundle. The class bundle itself is validated, and" <>
@@ -2556,12 +2715,15 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:ClassBundle), "The class bundle to be validated",
+      data(
+        :body,
+        PhoenixSwagger.Schema.ref(:FeatureBundle),
+        "The feature class bundle to be validated",
         required: true
       )
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:ClassBundleValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:FeatureBundleValidation))
   end
 
   @spec validate_bundle_feature(Plug.Conn.t(), map) :: Plug.Conn.t()

@@ -72,10 +72,6 @@ defmodule Schema.Validator do
   defp get_bundle_structure() do
     %{
       "inputs" => {:required, "array", &is_list/1},
-      "start_time" => {:optional, "timestamp_t (long_t)", &is_long_t/1},
-      "end_time" => {:optional, "timestamp_t (long_t)", &is_long_t/1},
-      "start_time_dt" => {:optional, "datetime_t (string_t)", &is_binary/1},
-      "end_time_dt" => {:optional, "datetime_t (string_t)", &is_binary/1},
       "count" => {:optional, "integer_t", &is_integer_t/1}
     }
   end
