@@ -364,18 +364,94 @@ defmodule SchemaWeb.SchemaController do
           title("Skill class")
           description("An OASF formatted skill class object.")
           type(:object)
+
+          properties do
+            class_name(:string, "The class name, as defined by class_uid value")
+
+            class_uid(
+              :integer,
+              "The unique identifier of a class"
+            )
+
+            category_name(
+              :string,
+              "The class category name, as defined by category_uid value"
+            )
+
+            category_uid(:integer, "The category unique identifier of the class")
+          end
+
+          example(%{
+            category_name: "Natural Language Processing",
+            category_uid: 1,
+            class_uid: 10101,
+            class_name: "Contextual Comprehension"
+          })
         end,
       Domain:
         swagger_schema do
           title("Domain class")
           description("An OASF formatted domain class object.")
           type(:object)
+
+          properties do
+            class_name(:string, "The class name, as defined by class_uid value")
+
+            class_uid(
+              :integer,
+              "The unique identifier of a class"
+            )
+
+            category_name(
+              :string,
+              "The class category name, as defined by category_uid value"
+            )
+
+            category_uid(:integer, "The category unique identifier of the class")
+          end
+
+          example(%{
+            category_name: "Internet of Things (IoT)",
+            category_uid: 1,
+            class_uid: 101,
+            class_name: "Technology"
+          })
         end,
       Feature:
         swagger_schema do
           title("Feature class")
           description("An OASF formatted feature class object.")
           type(:object)
+
+          properties do
+            name(:string, "The agent extension name")
+
+            version(
+              :string,
+              "The schema version"
+            )
+
+            data(
+              :object,
+              "The data associated with the agent extension"
+            )
+          end
+
+          example(%{
+            data: %{
+              communication_protocols: ["AGP"],
+              data_platform_integrations: [],
+              data_schema: %{
+                name: "Agntcy Observability Data Schema",
+                version: "v0.0.1",
+                url:
+                  "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability/agntcy_observability_data_schema.json"
+              },
+              export_format: "csv"
+            },
+            name: "oasf.agntcy.org/feature/observability/observability",
+            version: "v0.2.2"
+          })
         end,
       Object:
         swagger_schema do
@@ -597,7 +673,8 @@ defmodule SchemaWeb.SchemaController do
                   data_schema: %{
                     name: "Agntcy Observability Data Schema",
                     version: "v0.0.1",
-                    url: "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability/agntcy_observability_data_schema.json"
+                    url:
+                      "https://github.com/agntcy/oasf/blob/main/schema/references/agntcy_observability/agntcy_observability_data_schema.json"
                   },
                   export_format: "csv"
                 },
@@ -2757,16 +2834,16 @@ defmodule SchemaWeb.SchemaController do
   # --------------------------
 
   @doc """
-  Returns randomly generated skill, domain or feature class sample data for the given name.
-  get /sample/classes/:name
-  get /sample/classes/:extension/:name
+  Returns randomly generated skill class sample data for the given name.
+  get /sample/skills/:name
+  get /sample/skills/:extension/:name
   """
-  swagger_path :sample_class do
-    get("/sample/classes/{name}")
-    summary("Class sample data")
+  swagger_path :sample_skill do
+    get("/sample/skills/{name}")
+    summary("Skill class sample data")
 
     description(
-      "This API returns randomly generated sample data for the given skill, domain or feature class name. The class" <>
+      "This API returns randomly generated sample data for the given skill class name. The class" <>
         " name may contain a schema extension name. For example, \"dev/cpu_usage\"."
     )
 
@@ -2774,28 +2851,126 @@ defmodule SchemaWeb.SchemaController do
     tag("Sample Data")
 
     parameters do
-      name(:path, :string, "Class name", required: true)
+      name(:path, :string, "Skill class name", required: true)
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
     response(200, "Success")
-    response(404, "Class <code>name</code> not found")
+    response(404, "Skill class <code>name</code> not found")
   end
 
-  @spec sample_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_class(conn, %{"id" => id} = params) do
-    sample_class(conn, id, params)
+  @spec sample_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def sample_skill(conn, %{"id" => id} = params) do
+    sample_skill(conn, id, params)
   end
 
-  defp sample_class(conn, id, options) do
+  defp sample_skill(conn, id, options) do
     # TODO: honor constraints
 
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.class(extension, id) do
+    case Schema.skill(extension, id) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Skill class #{id} not found"})
+
+      class ->
+        class =
+          Schema.generate_class(class, profiles)
+
+        send_json_resp(conn, class)
+    end
+  end
+
+  @doc """
+  Returns randomly generated domain class sample data for the given name.
+  get /sample/domains/:name
+  get /sample/domains/:extension/:name
+  """
+  swagger_path :sample_domain do
+    get("/sample/domains/{name}")
+    summary("Domain class sample data")
+
+    description(
+      "This API returns randomly generated sample data for the given domain class name. The class" <>
+        " name may contain a schema extension name. For example, \"dev/cpu_usage\"."
+    )
+
+    produces("application/json")
+    tag("Sample Data")
+
+    parameters do
+      name(:path, :string, "Domain class name", required: true)
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success", :Domain)
+    response(404, "Domain class <code>name</code> not found")
+  end
+
+  @spec sample_domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def sample_domain(conn, %{"id" => id} = params) do
+    sample_domain(conn, id, params)
+  end
+
+  defp sample_domain(conn, id, options) do
+    # TODO: honor constraints
+
+    extension = extension(options)
+    profiles = profiles(options) |> parse_options()
+
+    case Schema.domain(extension, id) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Domain class #{id} not found"})
+
+      class ->
+        class =
+          Schema.generate_class(class, profiles)
+
+        send_json_resp(conn, class)
+    end
+  end
+
+  @doc """
+  Returns randomly generated feature class sample data for the given name.
+  get /sample/features/:name
+  get /sample/features/:extension/:name
+  """
+  swagger_path :sample_feature do
+    get("/sample/features/{name}")
+    summary("Feature class sample data")
+
+    description(
+      "This API returns randomly generated sample data for the given feature class name. The class" <>
+        " name may contain a schema extension name. For example, \"dev/cpu_usage\"."
+    )
+
+    produces("application/json")
+    tag("Sample Data")
+
+    parameters do
+      name(:path, :string, "Feature class name", required: true)
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success")
+    response(404, "Feature class <code>name</code> not found")
+  end
+
+  @spec sample_feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def sample_feature(conn, %{"id" => id} = params) do
+    sample_feature(conn, id, params)
+  end
+
+  defp sample_feature(conn, id, options) do
+    # TODO: honor constraints
+
+    extension = extension(options)
+    profiles = profiles(options) |> parse_options()
+
+    case Schema.feature(extension, id) do
+      nil ->
+        send_json_resp(conn, 404, %{error: "Feature class #{id} not found"})
 
       class ->
         class =

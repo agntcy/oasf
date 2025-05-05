@@ -173,17 +173,17 @@ defmodule SchemaWeb.Router do
   scope "/sample", SchemaWeb do
     pipe_through :api
 
+    get "/skills/:id", SchemaController, :sample_skill
+    get "/skills/:extension/:id", SchemaController, :sample_skill
+
+    get "/domains/:id", SchemaController, :sample_domain
+    get "/domains/:extension/:id", SchemaController, :sample_domain
+
+    get "/features/:id", SchemaController, :sample_feature
+    get "/features/:extension/:id", SchemaController, :sample_feature
+
     get "/objects/:id", SchemaController, :sample_object
     get "/objects/:extension/:id", SchemaController, :sample_object
-
-    get "/classes/:id", SchemaController, :sample_class
-    get "/classes/:extension/:id", SchemaController, :sample_class
-    get "/skills/:id", SchemaController, :sample_class
-    get "/skills/:extension/:id", SchemaController, :sample_class
-    get "/domains/:id", SchemaController, :sample_class
-    get "/domains/:extension/:id", SchemaController, :sample_class
-    get "/features/:id", SchemaController, :sample_class
-    get "/features/:extension/:id", SchemaController, :sample_class
   end
 
   scope "/doc" do
