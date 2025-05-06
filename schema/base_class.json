@@ -30,6 +30,11 @@
           "caption": "Base class"
         }
       }
+    },
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Additional metadata associated with the class.",
+      "requirement": "optional"
     }
   }
 }

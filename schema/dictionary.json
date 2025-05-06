@@ -32,7 +32,7 @@
     },
     "annotations": {
       "caption": "Annotations",
-      "description": "Provides additional metadata associated with this release manifest.",
+      "description": "Provides additional metadata associated with the object. See specific usage.",
       "type": "key_value_object",
       "is_array": true
     },
