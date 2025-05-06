@@ -26,7 +26,7 @@
     },
     "created_at": {
       "caption": "Creation Time",
-      "description": "Includes the creation timestamp. Value MUST conform to RFC 3339.",
+      "description": "Includes the creation timestamp. Value MUST conform to <a target='_blank' href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC-3339</a>. For example:<br><code>2024-09-10T23:20:50.520Z</code>,<br><code>2024-09-10 23:20:50.520789Z</code>.",
       "requirement": "required"
     },
     "authors": {
