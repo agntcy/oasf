@@ -213,7 +213,7 @@
       "is_enum": true,
       "is_array": true
     },
-    "desc": {
+    "description": {
       "caption": "Description",
       "description": "The description of the entity. See specific usage.",
       "type": "string_t"

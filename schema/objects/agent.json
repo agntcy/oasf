@@ -9,6 +9,11 @@
       "description": "The name of the agent. For example: <code>Marketing Strategy Agent</code>.",
       "requirement": "required"
     },
+    "description": {
+      "caption": "Agent Description",
+      "description": "The description of the agent.",
+      "requirement": "required"
+    },
     "version": {
       "caption": "Agent Version",
       "description": "The version of the agent. Values MAY conform to a specific versioning schema.",

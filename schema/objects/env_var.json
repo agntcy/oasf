@@ -9,7 +9,7 @@
       "description": "Default value of the environment variable.",
       "requirement": "optional"
     },
-    "desc": {
+    "description": {
       "caption": "Description",
       "description": "Description of the environment variable.",
       "requirement": "required"
