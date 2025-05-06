@@ -5,13 +5,13 @@
   "name": "base_feature",
   "attributes": {
     "name": {
-      "description": "The schema extension name. For example: <code>oasf.agntcy.org/features/runtime/language</code>.",
+      "description": "The agent extension name. For example: <code>schema.oasf.agntcy.org/features/runtime/language</code>.",
       "requirement": "required"
     },
     "version": {
       "caption": "Version",
-      "description": "The schema extension version. For example: <code>1.0.0-alpha.2</code>.",
-      "requirement": "required"
+      "description": "The agent extension version. For example: <code>1.0.0-alpha.2</code>.",
+      "requirement": "optional"
     },
     "annotations": {
       "caption": "Annotations",
@@ -20,7 +20,7 @@
     },
     "data": {
       "caption": "Data",
-      "description": "The data associated with the feature.",
+      "description": "The data associated with the agent extension.",
       "requirement": "required"
     }
   }
