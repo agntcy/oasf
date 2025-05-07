@@ -102,7 +102,8 @@ defmodule Schema.Cache do
 
     categories = %{attributes: categories_attributes}
 
-    {objects, all_objects, observable_type_id_map} = read_objects(observable_type_id_map)
+    {objects, all_objects, observable_type_id_map} =
+      read_objects(observable_type_id_map, version[:version])
 
     dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
 
@@ -643,7 +644,7 @@ defmodule Schema.Cache do
     {classes, all_classes, observable_type_id_map, categories}
   end
 
-  defp read_objects(observable_type_id_map) do
+  defp read_objects(observable_type_id_map, version) do
     objects = JsonReader.read_objects()
 
     observable_type_id_map = observables_from_objects(observable_type_id_map, objects)
@@ -676,6 +677,9 @@ defmodule Schema.Cache do
       objects
       |> Stream.filter(fn {object_key, _object} -> !hidden_object?(object_key) end)
       |> Enum.into(%{})
+      |> Enum.into(%{}, fn object_tuple ->
+        enrich_object(object_tuple, version)
+      end)
 
     {objects, all_objects, observable_type_id_map}
   end
@@ -1027,9 +1031,17 @@ defmodule Schema.Cache do
       |> add_class_uid(class_key)
       |> add_category_uid(class_key, categories)
       |> add_class_name()
-      |> add_class_version(version)
+      |> add_schema_version(version)
 
     {class_key, class}
+  end
+
+  defp enrich_object({object_key, object}, version) do
+    object =
+      object
+      |> add_schema_version(version)
+
+    {object_key, object}
   end
 
   defp update_categories(categories) do
@@ -1195,13 +1207,13 @@ defmodule Schema.Cache do
     end
   end
 
-  defp add_class_version(class, version) do
-    if class[:attributes][:version] == nil do
+  defp add_schema_version(class, version) do
+    if class[:attributes][:schema_version] == nil do
       class
     else
       class
       |> put_in(
-        [:attributes, :version, :description],
+        [:attributes, :schema_version, :description],
         "The schema extension version: <code>v#{version}"
       )
     end
