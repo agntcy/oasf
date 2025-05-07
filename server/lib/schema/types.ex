@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule Schema.Types do
-  @schema_addr "oasf.agntcy.org"
+  @schema_addr "schema.oasf.agntcy.org"
 
   @moduledoc """
   Schema types and helpers functions to make unique identifiers.
