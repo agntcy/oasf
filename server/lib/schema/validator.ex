@@ -286,7 +286,7 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_object_name_and_return_object(map(), map()) :: {map(), nil | map()}
+  @spec validate_object_name_and_return_object(map(), list()) :: {map(), nil | map()}
   defp validate_object_name_and_return_object(response, options) do
     if Keyword.has_key?(options, :name) do
       object_name = Keyword.get(options, :name)
@@ -413,7 +413,7 @@ defmodule Schema.Validator do
       nil,
       class,
       profiles,
-      Keyword.get(options, :warn_on_missing_recommended),
+      options,
       dictionary
     )
     |> validate_version(input)
@@ -695,7 +695,7 @@ defmodule Schema.Validator do
           nil | String.t(),
           map(),
           list(String.t()),
-          boolean(),
+          list(),
           map()
         ) :: map()
   defp validate_attributes(
@@ -704,7 +704,7 @@ defmodule Schema.Validator do
          parent_attribute_path,
          schema_item,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     schema_attributes = filter_with_profiles(schema_item[:attributes], profiles)
@@ -715,7 +715,7 @@ defmodule Schema.Validator do
       parent_attribute_path,
       schema_attributes,
       profiles,
-      warn_on_missing_recommended,
+      options,
       dictionary
     )
     |> validate_attributes_unknown_keys(
@@ -735,7 +735,7 @@ defmodule Schema.Validator do
           nil | String.t(),
           list(tuple()),
           list(String.t()),
-          boolean(),
+          list(),
           map()
         ) :: map()
   defp validate_attributes_types(
@@ -744,7 +744,7 @@ defmodule Schema.Validator do
          parent_attribute_path,
          schema_attributes,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     Enum.reduce(
@@ -762,7 +762,7 @@ defmodule Schema.Validator do
           attribute_name,
           attribute_details,
           profiles,
-          warn_on_missing_recommended,
+          options,
           dictionary
         )
       end
@@ -1210,7 +1210,7 @@ defmodule Schema.Validator do
           String.t(),
           map(),
           list(String.t()),
-          boolean(),
+          list(),
           map()
         ) :: map()
   defp validate_attribute(
@@ -1220,7 +1220,7 @@ defmodule Schema.Validator do
          attribute_name,
          attribute_details,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     if value == nil do
@@ -1229,7 +1229,7 @@ defmodule Schema.Validator do
         attribute_path,
         attribute_name,
         attribute_details,
-        warn_on_missing_recommended
+        options
       )
     else
       response =
@@ -1253,7 +1253,7 @@ defmodule Schema.Validator do
             attribute_name,
             attribute_details,
             profiles,
-            warn_on_missing_recommended,
+            options,
             dictionary
           )
         else
@@ -1264,7 +1264,7 @@ defmodule Schema.Validator do
             attribute_name,
             attribute_details,
             profiles,
-            warn_on_missing_recommended,
+            options,
             dictionary
           )
         end
@@ -1297,14 +1297,14 @@ defmodule Schema.Validator do
          attribute_path,
          attribute_name,
          attribute_details,
-         warn_on_missing_recommended
+         options
        ) do
     case attribute_details[:requirement] do
       "required" ->
         add_error_required_attribute_missing(response, attribute_path, attribute_name)
 
       "recommended" ->
-        if warn_on_missing_recommended do
+        if Keyword.get(options, :warn_on_missing_recommended) do
           add_warning_recommended_attribute_missing(response, attribute_path, attribute_name)
         else
           response
@@ -1323,7 +1323,7 @@ defmodule Schema.Validator do
           String.t(),
           map(),
           list(String.t()),
-          boolean(),
+          list(),
           map()
         ) :: map()
   defp validate_array(
@@ -1333,7 +1333,7 @@ defmodule Schema.Validator do
          attribute_name,
          attribute_details,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     if is_list(value) do
@@ -1350,7 +1350,7 @@ defmodule Schema.Validator do
                 attribute_name,
                 attribute_details,
                 profiles,
-                warn_on_missing_recommended,
+                options,
                 dictionary
               ),
               index + 1
@@ -1378,7 +1378,7 @@ defmodule Schema.Validator do
           String.t(),
           map(),
           list(String.t()),
-          boolean(),
+          list(),
           map()
         ) :: map()
   defp validate_value(
@@ -1388,7 +1388,7 @@ defmodule Schema.Validator do
          attribute_name,
          attribute_details,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     attribute_type = attribute_details[:type]
@@ -1408,7 +1408,7 @@ defmodule Schema.Validator do
           attribute_name,
           Schema.object(object_type),
           profiles,
-          warn_on_missing_recommended,
+          options,
           dictionary
         )
       else
@@ -1439,7 +1439,7 @@ defmodule Schema.Validator do
           String.t(),
           map(),
           list(String.t()),
-          boolean(),
+          list(),
           map()
         ) :: map()
   defp validate_map_against_object(
@@ -1449,7 +1449,7 @@ defmodule Schema.Validator do
          attribute_name,
          schema_object,
          profiles,
-         warn_on_missing_recommended,
+         options,
          dictionary
        ) do
     response
@@ -1459,7 +1459,7 @@ defmodule Schema.Validator do
       attribute_path,
       schema_object,
       profiles,
-      warn_on_missing_recommended,
+      options,
       dictionary
     )
     |> validate_constraints(input_object, schema_object, attribute_path)
