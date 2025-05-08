@@ -27,7 +27,7 @@ defmodule Schema.Translator do
               data
 
             class_uid ->
-              Logger.debug("translate class: #{class_uid}")
+              Logger.debug("translate skill class: #{class_uid}")
               Schema.find_skill(class_uid)
           end
 
@@ -37,7 +37,7 @@ defmodule Schema.Translator do
               data
 
             class_uid ->
-              Logger.debug("translate class: #{class_uid}")
+              Logger.debug("translate domain class: #{class_uid}")
               Schema.find_domain(class_uid)
           end
 
@@ -48,7 +48,7 @@ defmodule Schema.Translator do
 
             name ->
               class_name = Schema.Types.extract_class_name(name)
-              Logger.debug("translate class: #{class_name}")
+              Logger.debug("translate feature class: #{class_name}")
               Schema.feature(class_name)
           end
 
@@ -144,6 +144,24 @@ defmodule Schema.Translator do
 
         Enum.map(value, fn data ->
           translate_input(obj_type, data, options)
+        end)
+      else
+        value
+      end
+
+    translate_attribute(name, attribute, translated, options)
+  end
+
+  defp translate_attribute("class_t", name, attribute, value, options) when is_map(value) do
+    translated = translate_class(value, options, String.to_atom(attribute[:family]))
+    translate_attribute(name, attribute, translated, options)
+  end
+
+  defp translate_attribute("class_t", name, attribute, value, options) when is_list(value) do
+    translated =
+      if attribute[:is_array] and is_map(List.first(value)) do
+        Enum.map(value, fn data ->
+          translate_class(data, options, String.to_atom(attribute[:family]))
         end)
       else
         value
