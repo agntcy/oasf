@@ -1393,14 +1393,66 @@ defmodule Schema.Validator do
        ) do
     attribute_type = attribute_details[:type]
 
-    if attribute_type == "object_t" do
-      # object_t is a marker added by the schema compile to make it easy to check if attribute
-      # is an OASF object (otherwise we would need to notice that the attribute type isn't a
-      # data dictionary type)
-      object_type = attribute_details[:object_type]
+    case attribute_type do
+      "class_t" ->
+        # class_t is a marker added by the schema compile to make it easy to check if attribute
+        # is an OASF class (otherwise we would need to notice that the attribute type isn't a
+        # data dictionary type)
+        {response, class} =
+          case attribute_details[:family] do
+            "skill" ->
+              validate_skill_class_uid_and_return_class(response, value)
 
-      if is_map(value) do
-        # Drill in to object
+            "domain" ->
+              validate_domain_class_uid_and_return_class(response, value)
+
+            "feature" ->
+              validate_feature_class_name_and_return_class(response, value)
+
+            _ ->
+              # This should never happen for published schemas (validator will catch this) but
+              # _could_ happen for a schema that's in development and presumably running on a
+              # local / private OASF Server instance.
+              Logger.warning(
+                "SCHEMA BUG: Class type \"#{attribute_type}\" is not defined in dictionary" <>
+                  " at attribute path \"#{attribute_path}\""
+              )
+
+              add_error(
+                response,
+                "schema_bug_class_missing",
+                "SCHEMA BUG: Class type \"#{attribute_type}\" is not defined in dictionary.",
+                %{
+                  attribute_path: attribute_path,
+                  attribute: attribute_name,
+                  type: attribute_type,
+                  value: value
+                }
+              )
+          end
+
+        if class do
+          {response, profiles} = validate_and_return_profiles(response, value)
+
+          validate_input_against_class(
+            response,
+            value,
+            class,
+            profiles,
+            options,
+            dictionary
+          )
+        else
+          # Can't continue if we can't find the class
+          response
+        end
+
+      "object_t" ->
+        # object_t is a marker added by the schema compile to make it easy to check if attribute
+        # is an OASF object (otherwise we would need to notice that the attribute type isn't a
+        # data dictionary type)
+        object_type = attribute_details[:object_type]
+
         validate_map_against_object(
           response,
           value,
@@ -1411,24 +1463,16 @@ defmodule Schema.Validator do
           options,
           dictionary
         )
-      else
-        add_error_wrong_type(
+
+      _ ->
+        validate_value_against_dictionary_type(
           response,
+          value,
           attribute_path,
           attribute_name,
-          value,
-          "#{object_type} (object)"
+          attribute_details,
+          dictionary
         )
-      end
-    else
-      validate_value_against_dictionary_type(
-        response,
-        value,
-        attribute_path,
-        attribute_name,
-        attribute_details,
-        dictionary
-      )
     end
   end
 
