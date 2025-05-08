@@ -268,7 +268,7 @@
       "description": "Extension model that describes agents and its capabilities more in depth.",
       "type": "class_t",
       "class_type": "base_feature",
-      "path": "features",
+      "family": "feature",
       "is_enum": true
     },
     "extensions": {
@@ -276,7 +276,7 @@
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
       "type": "class_t",
       "class_type": "base_feature",
-      "path": "features",
+      "family": "feature",
       "is_enum": true,
       "is_array": true
     },
@@ -456,7 +456,7 @@
       "description": "A skill that apply to an agent.",
       "type": "class_t",
       "class_type": "base_skill",
-      "path": "skills",
+      "family": "skill",
       "is_enum": true
     },
     "skills": {
@@ -464,7 +464,7 @@
       "description": "Skills that apply to an agent.",
       "type": "class_t",
       "class_type": "base_skill",
-      "path": "skills",
+      "family": "skill",
       "is_enum": true,
       "is_array": true
     },

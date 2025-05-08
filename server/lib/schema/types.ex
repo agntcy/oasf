@@ -48,7 +48,7 @@ defmodule Schema.Types do
   Makes longer class name from class type/family, category and name.
   """
   def long_class_name(family, category, name) do
-    "#{@schema_addr}/#{family}/#{category}/#{name}"
+    "#{@schema_addr}/#{family}s/#{category}/#{name}"
   end
 
   @doc """

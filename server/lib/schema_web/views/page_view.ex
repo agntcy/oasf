@@ -11,7 +11,7 @@ defmodule SchemaWeb.PageView do
 
   def class_graph_path(conn, data) do
     class_name = data[:name]
-    class_type = data[:class_type]
+    class_type = data[:family]
 
     case data[:extension] do
       nil ->
@@ -24,13 +24,14 @@ defmodule SchemaWeb.PageView do
 
   def class_path(conn, data) do
     class_name = data[:name]
+    class_type = data[:family] <> "s"
 
     case data[:extension] do
       nil ->
-        Routes.static_path(conn, "/classes/" <> class_name)
+        Routes.static_path(conn, "/" <> class_type <> "/" <> class_name)
 
       extension ->
-        Routes.static_path(conn, "/classes/" <> extension <> "/" <> class_name)
+        Routes.static_path(conn, "/" <> class_type <> "/" <> extension <> "/" <> class_name)
     end
   end
 
@@ -240,7 +241,6 @@ defmodule SchemaWeb.PageView do
   def format_class_attribute_source(class_key, field, class_type) do
     all_classes =
       case class_type do
-        "class" -> Schema.all_classes()
         "skill" -> Schema.all_skills()
         "domain" -> Schema.all_domains()
         "feature" -> Schema.all_features()

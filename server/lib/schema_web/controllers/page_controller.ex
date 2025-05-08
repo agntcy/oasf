@@ -16,7 +16,8 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       class ->
-        data = Schema.Graph.build(class)
+        data =
+          Schema.Graph.build(class)
           |> Map.put(:categories_path, "main_skills")
 
         render(conn, "class_graph.html",
@@ -34,7 +35,8 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       class ->
-        data = Schema.Graph.build(class)
+        data =
+          Schema.Graph.build(class)
           |> Map.put(:categories_path, "main_domains")
 
         render(conn, "class_graph.html",
@@ -52,7 +54,8 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       class ->
-        data = Schema.Graph.build(class)
+        data =
+          Schema.Graph.build(class)
           |> Map.put(:categories_path, "main_features")
 
         render(conn, "class_graph.html",
@@ -296,7 +299,6 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
-          |> Map.put(:class_type, "skill")
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -339,7 +341,6 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
-          |> Map.put(:class_type, "domain")
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -382,7 +383,6 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
-          |> Map.put(:class_type, "feature")
 
         render(conn, "class.html",
           extensions: Schema.extensions(),

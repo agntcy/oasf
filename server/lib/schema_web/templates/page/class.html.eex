@@ -20,7 +20,7 @@ SPDX-License-Identifier: Apache-2.0
 <div class="row">
   <div class="col-md move-up">
     <%
-    class_type = @data[:class_type]
+    class_type = @data[:family]
 
     path = case class_type do
       "class" ->
@@ -115,7 +115,7 @@ SPDX-License-Identifier: Apache-2.0
       <%= for {key, field} <- @data[:attributes] do %>
         <tr class="<%= field_classes(field)%>">
           <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
-          <td data-toggle="tooltip" title="<%= format_class_attribute_source(@data[:key], field, @data[:class_type]) %>"><%= raw format_attribute_name(key) %></td>
+          <td data-toggle="tooltip" title="<%= format_class_attribute_source(@data[:key], field, @data[:family]) %>"><%= raw format_attribute_name(key) %></td>
           <td class="capitalize"><%= field[:group] %></td>
           <td><%= raw format_requirement(constraints, key, field) %></td>
           <td class="extensions"><%= raw format_type(@conn, field) %></td>
