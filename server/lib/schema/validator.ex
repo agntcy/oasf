@@ -260,10 +260,10 @@ defmodule Schema.Validator do
           case Schema.feature(class_name) do
             nil ->
               {
-                add_error(
+                add_warning(
                   response,
                   "name_unknown",
-                  "Unknown \"name\" value; no class is defined for #{class_name}.",
+                  "Unknown \"name\" value; no agent extension is defined for #{class_name} in OASF.",
                   %{attribute_path: "name", attribute: "name", value: class_name}
                 ),
                 nil
