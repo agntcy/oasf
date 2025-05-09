@@ -156,7 +156,7 @@
     "created_at": {
       "caption": "Created Time",
       "description": "The time when the object was created. See specific usage.",
-      "type": "timestamp_t"
+      "type": "datetime_t"
     },
     "custom_objects_streaming": {
       "caption": "Custom Objects Streaming",
