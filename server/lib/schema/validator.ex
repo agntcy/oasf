@@ -1692,6 +1692,25 @@ defmodule Schema.Validator do
           )
         end
 
+      :string_map_t ->
+        if is_map(value) do
+          response
+          |> validate_string_map(
+            value,
+            attribute_path,
+            attribute_name
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            expected_type,
+            expected_type_extra
+          )
+        end
+
       _ ->
         # Unhandled type (schema bug)
         # This should never happen for published schemas (OASF-validator catches this) but
@@ -2067,6 +2086,47 @@ defmodule Schema.Validator do
         else
           response
         end
+
+      true ->
+        response
+    end
+  end
+
+  # Validate a map with string keys and string values.
+  @spec validate_string_map(
+          map(),
+          map(),
+          String.t(),
+          String.t()
+        ) :: map()
+  defp validate_string_map(
+         response,
+         json_object,
+         attribute_path,
+         attribute_name
+       ) do
+    cond do
+      Enum.any?(json_object, fn {key, value} ->
+        !is_binary(key) or !is_binary(value)
+      end) ->
+        invalid_pairs =
+          Enum.filter(json_object, fn {key, value} ->
+            !is_binary(key) or !is_binary(value)
+          end)
+          |> Enum.map(fn {key, value} ->
+            %{key: key, value: value}
+          end)
+
+        add_error(
+          response,
+          "non_string_key_or_value",
+          "Attribute \"#{attribute_path}\" contains non-string keys or values.",
+          %{
+            attribute_path: attribute_path,
+            attribute: attribute_name,
+            invalid_pairs: invalid_pairs
+          }
+        )
 
       true ->
         response

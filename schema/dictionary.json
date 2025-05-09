@@ -33,8 +33,7 @@
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
-      "type": "key_value_object",
-      "is_array": true
+      "type": "string_map_t"
     },
     "authentication": {
       "caption": "Authentication",
@@ -673,6 +672,10 @@
       "string_t": {
         "caption": "String",
         "description": "UTF-8 encoded byte sequence."
+      },
+      "string_map_t": {
+        "caption": "String Map",
+        "description": "A map of string to string."
       },
       "subnet_t": {
         "max_len": 42,
