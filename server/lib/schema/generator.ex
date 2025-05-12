@@ -270,6 +270,15 @@ defmodule Schema.Generator do
     end
   end
 
+  defp generate_field(name, %{type: "string_map_t"} = _field, map) do
+    random_string_map =
+      Enum.reduce(1..random(@max_array_size), %{}, fn _, acc ->
+        Map.put_new(acc, word(), word())
+      end)
+
+    Map.put_new(map, name, random_string_map)
+  end
+
   defp generate_field(name, field, map) do
     Map.put_new(map, name, generate_data(name, field[:type], field))
   end
