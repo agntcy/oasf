@@ -579,9 +579,7 @@
       },
       "class_t": {
         "caption": "Class",
-        "description": "Name of the class associated to an attribute.",
-        "type": "string_t",
-        "type_name": "String"
+        "description": "Name of the class associated to an attribute."
       },
       "datetime_t": {
         "caption": "Datetime",
