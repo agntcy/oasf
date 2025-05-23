@@ -8,11 +8,6 @@
       "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
       "type": "agent"
     },
-    "agent_deployment": {
-      "caption": "Agent Workflow Server Deployment Manifest",
-      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
-      "type": "agent_deployment"
-    },
     "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
@@ -199,6 +194,11 @@
       "caption": "Default Value",
       "description": "Default value of the attribute.",
       "type": "string_t"
+    },
+    "deployment": {
+      "caption": "Agent Workflow Server Deployment Manifest",
+      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
+      "type": "deployment"
     },
     "deployment_option": {
       "caption": "Deployment Option",
@@ -467,7 +467,7 @@
       "is_enum": true,
       "is_array": true
     },
-    "acp_spec": {
+    "acp": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "acp"

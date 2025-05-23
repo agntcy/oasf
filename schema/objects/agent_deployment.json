@@ -2,7 +2,7 @@
   "caption": "Agent Workflow Server Deployment Manifest",
   "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
   "extends": "object",
-  "name": "agent_deployment",
+  "name": "deployment",
   "attributes": {
     "deployment_options": {
       "caption": "Deployment Options",
