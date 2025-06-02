@@ -1,18 +1,24 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+{{- range $index, $version := .Values.image.versions }}
+---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "chart.fullname" $ }}-{{ $version.schema | replace "." "-" }}
   labels:
-    {{- include "chart.labels" . | nindent 4 }}
+    {{- include "chart.labels" $ | nindent 4 }}
+    schema-version: {{ $version.schema }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ $.Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
+    - port: {{ $.Values.service.port }}
       targetPort: http
       protocol: TCP
       name: http
   selector:
-    {{- include "chart.selectorLabels" . | nindent 4 }}
+    {{- include "chart.selectorLabels" $ | nindent 4 }}
+    schema-version: {{ $version.schema }}
+{{- end }}

@@ -1,0 +1,53 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+# Enable the ingress
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: localhost
+  tls: []
+  service:
+    type: NodePort
+
+image:
+  repository: ghcr.io/agntcy/oasf-server
+  versions:
+    - server: v0.3.1
+      schema: 0.3.1
+      default: true
+    # - server: v0.3.2
+    #   schema: 0.3.2
+    # - server: v0.3.3
+    #   schema: 0.3.3
+    # - server: v0.3.4
+    #   schema: 0.3.4
+  pullPolicy: IfNotPresent
+
+service:
+  port: 8080
+
+env:
+  HOST: localhost
+  URL_PORT: 8080
+
+serviceAccount:
+  create: false
+
+# Autoscaling configuration
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 75
+  targetMemoryUtilizationPercentage: 80
+
+# Resource requests and limits
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

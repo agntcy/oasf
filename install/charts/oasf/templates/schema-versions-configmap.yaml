@@ -1,0 +1,16 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-schema-versions
+  labels:
+    app: {{ .Chart.Name }}
+data:
+  versions: |-
+    {{ $schemaValues := list -}}
+      {{- range .Values.image.versions -}}
+        {{- $schemaValues = append $schemaValues .schema -}}
+      {{- end -}}
+    {{- $schemaValues | join "," -}}
