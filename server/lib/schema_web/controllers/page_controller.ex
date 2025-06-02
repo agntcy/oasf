@@ -133,11 +133,6 @@ defmodule SchemaWeb.PageController do
     )
   end
 
-  @spec agent_model(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def agent_model(conn, _params) do
-    redirect(conn, to: "/objects/agent")
-  end
-
   @doc """
   Renders main skills or the skills in a given main skill.
   """
