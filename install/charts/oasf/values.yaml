@@ -10,7 +10,14 @@ fullnameOverride: ""
 
 image:
   repository: ghcr.io/agntcy/oasf-server
-  tag: latest
+  versions: []
+    # - server: v0.3.2
+    #   schema: 0.3.2
+    # - server: v0.3.2
+    #   schema: 0.3.3
+    # - server: v0.3.2
+    #   schema: 0.3.4
+    #   default: true
   pullPolicy: IfNotPresent
   pullSecrets: []
 
@@ -72,6 +79,8 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
+  service: {}  # Service configuration for the ingress controller
+    # type: ClusterIP
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

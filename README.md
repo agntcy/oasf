@@ -76,7 +76,7 @@ task up
 
 To access the schema server, open [`localhost:8080`](http://localhost:8080) in your Web browser.
 
-Note that any changes made to the schema or server backend itself will require running `task up` again.
+Note that any changes made to the server backend itself will require running `task up` again.
 
 ### Hot reload
 
@@ -91,6 +91,16 @@ task reload
 
 Note that this will only perform hot-reload for schema changes.
 Reloading backend changes still requires re-running `task build && task up`.
+
+### Deploy locally with multiple versions
+
+Trying out OASF locally with multiple versions is also possible, with updating the
+`install/charts/oasf/values-test-versions.yaml` file with the required versions and deploying OASF services on the
+ephemeral Kind cluster with those values.
+
+```
+HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
+```
 
 ### Cleanup
 

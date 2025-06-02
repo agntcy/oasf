@@ -195,7 +195,7 @@
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_features") %>'>Features</a>
       </li>
       <li id="agent_core_object_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/agent_model") %>'>Agent Core Object</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects/agent") %>'>Agent Core Object</a>
       </li>
       <li id="dictionary_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/dictionary") %>'>Dictionary</a>

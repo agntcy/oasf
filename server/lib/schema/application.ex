@@ -13,7 +13,7 @@ defmodule Schema.Application do
     env = Application.get_env(:schema_server, __MODULE__)
 
     schema_dir = Keyword.get(env, :home)
-    schemas_dir = Keyword.get(env, :schema_home)
+    schema_versions = Keyword.get(env, :schema_versions)
 
     extensions =
       case Keyword.get(env, :extension) do
@@ -23,7 +23,7 @@ defmodule Schema.Application do
 
     # List all child processes to be supervised
     children = [
-      {Schemas, schemas_dir},
+      {Schemas, schema_versions},
       {Schema.JsonReader, [schema_dir, extensions]},
       Schema.Repo,
       Schema.Generator,

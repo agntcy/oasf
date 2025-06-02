@@ -34,5 +34,4 @@ config :schema_server, SchemaWeb.Endpoint,
 # Configures the location of the schema files
 config :schema_server, Schema.Application, home: System.get_env("SCHEMA_DIR")
 config :schema_server, Schema.Application, extension: System.get_env("SCHEMA_EXTENSION")
-
-config :schema_server, Schema.Application, schema_home: System.get_env("SCHEMA_HOME")
+config :schema_server, Schema.Application, schema_versions: System.get_env("SCHEMA_VERSIONS")
