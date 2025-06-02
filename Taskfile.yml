@@ -11,7 +11,7 @@ dotenv:
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
-  IMAGE_TAG: '{{ .IMAGE_TAG | default "latest" }}'
+  IMAGE_TAG: '{{ .IMAGE_TAG }}'
 
   ## Dependency config
   BIN_DIR: '{{ .ROOT_DIR }}/bin'
@@ -129,11 +129,15 @@ tasks:
 
       # Extract images from values-test.yaml and load them into kind
       - |
+        {{- if .IMAGE_TAG }}
+        {{ .KIND_BIN }} load docker-image "{{ .IMAGE_REPO }}/oasf-server:{{ .IMAGE_TAG }}" --name {{ .KIND_CLUSTER_NAME }}
+        {{- else }}
         images=$(yq eval '.image.versions[].server' {{ .HELM_VALUES_PATH }})
         echo "Images to load: $images"
         echo "$images" | while read image; do
           {{ .KIND_BIN }} load docker-image "{{ .IMAGE_REPO }}/oasf-server:$image" --name {{ .KIND_CLUSTER_NAME }}
         done
+        {{- end }}
 
       # Deploy chart
       - |
@@ -141,6 +145,9 @@ tasks:
           {{ .HELM_CHART_PATH }} \
           -f {{ .HELM_VALUES_PATH }} \
           --set image.repository="{{ .IMAGE_REPO }}/oasf-server" \
+          {{- if .IMAGE_TAG }}
+          --set image.versions[0].server={{.IMAGE_TAG}} \
+          {{- end }}
           --namespace {{ .HELM_NAMESPACE }} \
           --create-namespace \
           --install \
