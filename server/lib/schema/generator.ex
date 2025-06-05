@@ -200,27 +200,77 @@ defmodule Schema.Generator do
   end
 
   defp generate_sample(type) do
-    Enum.reduce(type[:attributes], Map.new(), fn {name, field} = attribute, map ->
-      if field[:is_array] == true do
-        generate_array(field[:requirement], name, attribute, map)
-      else
-        case field[:type] do
-          "object_t" ->
-            generate_object(field[:requirement], name, attribute, map)
+    attributes =
+      Enum.reduce(type[:attributes], Map.new(), fn {name, field} = attribute, map ->
+        if field[:is_array] == true do
+          generate_array(field[:requirement], name, attribute, map)
+        else
+          case field[:type] do
+            "object_t" ->
+              generate_object(field[:requirement], name, attribute, map)
 
-          "class_t" ->
-            get_valid_class(field)
-            |> generate_sample_class(Process.get(:profiles))
+            "class_t" ->
+              get_valid_class(field)
+              |> generate_sample_class(Process.get(:profiles))
 
-          nil ->
-            Logger.warning("Invalid type name: #{name}")
-            map
+            nil ->
+              Logger.warning("Invalid type name: #{name}")
+              map
 
-          _other ->
-            generate(attribute, map)
+            _other ->
+              generate(attribute, map)
+          end
         end
+      end)
+
+    constraints = Map.get(type, :constraints)
+
+    if constraints do
+      apply_constraints(attributes, constraints)
+    else
+      attributes
+    end
+  end
+
+  defp apply_constraints(data, constraints) do
+    data =
+      if constraints[:just_one] do
+        valid_keys = Enum.filter(constraints[:just_one], &Map.has_key?(data, String.to_atom(&1)))
+        IO.inspect(valid_keys, label: "Valid keys for just_one")
+
+        if valid_keys != [] do
+          chosen_key = Enum.random(valid_keys)
+          IO.inspect(chosen_key, label: "Chosen key for just_one")
+
+          Enum.reduce(valid_keys, data, fn key, acc ->
+            if key == chosen_key, do: acc, else: Map.delete(acc, String.to_atom(key))
+          end)
+        else
+          data
+        end
+      else
+        data
       end
-    end)
+
+    if constraints[:at_least_one] do
+      valid_keys =
+        Enum.filter(constraints[:at_least_one], &Map.has_key?(data, String.to_atom(&1)))
+
+      IO.inspect(valid_keys, label: "Valid keys for at_least_one")
+
+      if valid_keys != [] do
+        chosen_keys = Enum.take_random(valid_keys, Enum.random(1..min(2, length(valid_keys))))
+        IO.inspect(chosen_keys, label: "Chosen keys for at_least_one")
+
+        Enum.reduce(valid_keys, data, fn key, acc ->
+          if key in chosen_keys, do: acc, else: Map.delete(acc, String.to_atom(key))
+        end)
+      else
+        data
+      end
+    else
+      data
+    end
   end
 
   defp generate({name, field}, map) do
