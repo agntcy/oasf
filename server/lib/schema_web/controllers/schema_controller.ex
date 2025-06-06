@@ -1731,7 +1731,7 @@ defmodule SchemaWeb.SchemaController do
 
   def skill_ex(id, params) do
     extension = extension(params)
-    Schema.skill_ex(extension, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :skill, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1776,7 +1776,7 @@ defmodule SchemaWeb.SchemaController do
 
   def domain_ex(id, params) do
     extension = extension(params)
-    Schema.domain_ex(extension, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :domain, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1821,7 +1821,7 @@ defmodule SchemaWeb.SchemaController do
 
   def feature_ex(id, params) do
     extension = extension(params)
-    Schema.feature_ex(extension, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :feature, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1869,7 +1869,7 @@ defmodule SchemaWeb.SchemaController do
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.object_ex(extensions, extension, id, profiles)
+    Schema.entity_ex(extensions, extension, :object, id, profiles)
   end
 
   # ---------------------------------------------

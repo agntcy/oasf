@@ -283,31 +283,6 @@ defmodule Schema.Cache do
     end
   end
 
-  @doc """
-  Returns extended class definition, which includes all objects referred by the class.
-  """
-
-  # @spec class_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  # def class_ex(
-  #       %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-  #       :base_class
-  #     ) do
-  #   class_ex(base_class, dictionary, objects)
-  # end
-  #
-  # def class_ex(%__MODULE__{dictionary: dictionary, classes: classes, objects: objects}, id) do
-  #   Map.get(classes, id) |> class_ex(dictionary, objects)
-  # end
-  #
-  # defp class_ex(nil, _dictionary, _objects) do
-  #   nil
-  # end
-  #
-  # defp class_ex(class, dictionary, objects) do
-  #   {class_ex, ref_objects} = enrich_ex(class, dictionary[:attributes], objects, Map.new())
-  #   Map.put(class_ex, :objects, Map.to_list(ref_objects))
-  # end
-
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
 
@@ -335,31 +310,6 @@ defmodule Schema.Cache do
         enrich(skill, dictionary[:attributes])
     end
   end
-
-  @doc """
-  Returns extended skill definition, which includes all objects referred by the skill.
-  """
-
-  # @spec skill_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  # def skill_ex(
-  #       %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-  #       :base_class
-  #     ) do
-  #   skill_ex(base_class, dictionary, objects)
-  # end
-  #
-  # def skill_ex(%__MODULE__{dictionary: dictionary, skills: skills, objects: objects}, id) do
-  #   Map.get(skills, id) |> skill_ex(dictionary, objects)
-  # end
-  #
-  # defp skill_ex(nil, _dictionary, _objects) do
-  #   nil
-  # end
-  #
-  # defp skill_ex(skill, dictionary, objects) do
-  #   {skill_ex, ref_objects} = enrich_ex(skill, dictionary[:attributes], objects, Map.new())
-  #   Map.put(skill_ex, :objects, Map.to_list(ref_objects))
-  # end
 
   @spec find_skill(Schema.Cache.t(), any) :: nil | map
   def find_skill(%__MODULE__{dictionary: dictionary, skills: skills}, uid) do
@@ -397,31 +347,6 @@ defmodule Schema.Cache do
     end
   end
 
-  @doc """
-  Returns extended domain definition, which includes all objects referred by the domain.
-  """
-
-  # @spec domain_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  # def domain_ex(
-  #       %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-  #       :base_class
-  #     ) do
-  #   domain_ex(base_class, dictionary, objects)
-  # end
-  #
-  # def domain_ex(%__MODULE__{dictionary: dictionary, domains: domains, objects: objects}, id) do
-  #   Map.get(domains, id) |> domain_ex(dictionary, objects)
-  # end
-  #
-  # defp domain_ex(nil, _dictionary, _objects) do
-  #   nil
-  # end
-  #
-  # defp domain_ex(domain, dictionary, objects) do
-  #   {domain_ex, ref_objects} = enrich_ex(domain, dictionary[:attributes], objects, Map.new())
-  #   Map.put(domain_ex, :objects, Map.to_list(ref_objects))
-  # end
-
   @spec find_domain(Schema.Cache.t(), any) :: nil | map
   def find_domain(%__MODULE__{dictionary: dictionary, domains: domains}, uid) do
     case Enum.find(domains, fn {_, domain} -> domain[:uid] == uid end) do
@@ -458,31 +383,6 @@ defmodule Schema.Cache do
     end
   end
 
-  @doc """
-  Returns extended feature definition, which includes all objects referred by the feature.
-  """
-
-  # @spec feature_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  # def feature_ex(
-  #       %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-  #       :base_class
-  #     ) do
-  #   feature_ex(base_class, dictionary, objects)
-  # end
-  #
-  # def feature_ex(%__MODULE__{dictionary: dictionary, features: features, objects: objects}, id) do
-  #   Map.get(features, id) |> feature_ex(dictionary, objects)
-  # end
-  #
-  # defp feature_ex(nil, _dictionary, _objects) do
-  #   nil
-  # end
-  #
-  # defp feature_ex(feature, dictionary, objects) do
-  #   {feature_ex, ref_objects} = enrich_ex(feature, dictionary[:attributes], objects, Map.new())
-  #   Map.put(feature_ex, :objects, Map.to_list(ref_objects))
-  # end
-
   @spec objects(__MODULE__.t()) :: map()
   def objects(%__MODULE__{objects: objects}), do: objects
 
@@ -503,37 +403,6 @@ defmodule Schema.Cache do
         enrich(object, dictionary[:attributes])
     end
   end
-
-  # @spec object_ex(__MODULE__.t(), any) :: nil | object_t()
-  # def object_ex(
-  #       %__MODULE__{
-  #         dictionary: dictionary,
-  #         objects: objects,
-  #         skills: skills,
-  #         domains: domains,
-  #         features: features
-  #       },
-  #       id
-  #     ) do
-  #   case Map.get(objects, id) do
-  #     nil ->
-  #       nil
-  #
-  #     object ->
-  #       {object_ex, ref_objects} =
-  #         enrich_ex(
-  #           object,
-  #           dictionary[:attributes],
-  #           objects,
-  #           # skills,
-  #           # domains,
-  #           # features,
-  #           Map.new()
-  #         )
-  #
-  #       Map.put(object_ex, :objects, Map.to_list(ref_objects))
-  #   end
-  # end
 
   @spec entity_ex(__MODULE__.t(), atom(), atom()) :: nil | map()
   def entity_ex(

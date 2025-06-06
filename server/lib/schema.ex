@@ -268,31 +268,6 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single class with the embedded objects.
-  """
-  @spec class_ex(atom() | String.t()) :: nil | Cache.class_t()
-  def class_ex(id),
-    do: Repo.class_ex(Utils.to_uid(id))
-
-  @spec class_ex(nil | String.t(), String.t()) :: nil | map()
-  def class_ex(extension, id),
-    do: Repo.class_ex(Utils.to_uid(extension, id))
-
-  @spec class_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def class_ex(extension, id, nil),
-    do: class_ex(extension, id)
-
-  def class_ex(extension, id, profiles) do
-    case class_ex(extension, id) do
-      nil ->
-        nil
-
-      class ->
-        Schema.Profiles.apply_profiles(class, profiles)
-    end
-  end
-
-  @doc """
     Returns all skill classes.
   """
   @spec skills() :: map()
@@ -333,31 +308,6 @@ defmodule Schema do
         Map.update!(skill, :attributes, fn attributes ->
           Utils.apply_profiles(attributes, profiles)
         end)
-    end
-  end
-
-  @doc """
-    Returns a single skill class with the embedded objects.
-  """
-  @spec skill_ex(atom() | String.t()) :: nil | Cache.class_t()
-  def skill_ex(id),
-    do: Repo.skill_ex(Utils.to_uid(id))
-
-  @spec skill_ex(nil | String.t(), String.t()) :: nil | map()
-  def skill_ex(extension, id),
-    do: Repo.skill_ex(Utils.to_uid(extension, id))
-
-  @spec skill_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def skill_ex(extension, id, nil),
-    do: skill_ex(extension, id)
-
-  def skill_ex(extension, id, profiles) do
-    case skill_ex(extension, id) do
-      nil ->
-        nil
-
-      skill ->
-        Schema.Profiles.apply_profiles(skill, profiles)
     end
   end
 
@@ -412,31 +362,6 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single domain with the embedded objects.
-  """
-  @spec domain_ex(atom() | String.t()) :: nil | Cache.class_t()
-  def domain_ex(id),
-    do: Repo.domain_ex(Utils.to_uid(id))
-
-  @spec domain_ex(nil | String.t(), String.t()) :: nil | map()
-  def domain_ex(extension, id),
-    do: Repo.domain_ex(Utils.to_uid(extension, id))
-
-  @spec domain_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def domain_ex(extension, id, nil),
-    do: domain_ex(extension, id)
-
-  def domain_ex(extension, id, profiles) do
-    case domain_ex(extension, id) do
-      nil ->
-        nil
-
-      domain ->
-        Schema.Profiles.apply_profiles(domain, profiles)
-    end
-  end
-
-  @doc """
   Finds a domain by the domain uid value.
   """
   @spec find_domain(integer()) :: nil | Cache.class_t()
@@ -483,31 +408,6 @@ defmodule Schema do
         Map.update!(feature, :attributes, fn attributes ->
           Utils.apply_profiles(attributes, profiles)
         end)
-    end
-  end
-
-  @doc """
-    Returns a single feature with the embedded objects.
-  """
-  @spec feature_ex(atom() | String.t()) :: nil | Cache.class_t()
-  def feature_ex(id),
-    do: Repo.feature_ex(Utils.to_uid(id))
-
-  @spec feature_ex(nil | String.t(), String.t()) :: nil | map()
-  def feature_ex(extension, id),
-    do: Repo.feature_ex(Utils.to_uid(extension, id))
-
-  @spec feature_ex(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def feature_ex(extension, id, nil),
-    do: feature_ex(extension, id)
-
-  def feature_ex(extension, id, profiles) do
-    case feature_ex(extension, id) do
-      nil ->
-        nil
-
-      feature ->
-        Schema.Profiles.apply_profiles(feature, profiles)
     end
   end
 
@@ -562,34 +462,52 @@ defmodule Schema do
   end
 
   @doc """
-    Returns a single object and with the embedded objects.
+    Returns a single object or class and with the embedded objects and classes.
   """
-  @spec object_ex(atom | String.t()) :: nil | Cache.object_t()
-  def object_ex(id),
-    do: Repo.object_ex(Utils.to_uid(id))
+  @spec entity_ex(atom, atom | String.t()) :: nil | map()
+  def entity_ex(type, id),
+    do: Repo.entity_ex(type, Utils.to_uid(id))
 
-  @spec object_ex(nil | String.t(), String.t()) :: nil | map()
-  def object_ex(extension, id) when is_binary(id) do
-    Repo.object_ex(Utils.to_uid(extension, id))
+  @spec entity_ex(nil | String.t(), atom, String.t()) :: nil | map()
+  def entity_ex(extension, type, id) when is_binary(id) and is_atom(type) do
+    Repo.entity_ex(type, Utils.to_uid(extension, id))
   end
 
-  @spec object_ex(Repo.extensions_t(), String.t(), String.t()) :: nil | map()
-  def object_ex(extensions, extension, id) when is_binary(id) do
-    Repo.object_ex(extensions, Utils.to_uid(extension, id))
+  @spec entity_ex(String.t() | nil, atom, String.t(), Repo.profiles_t() | nil) :: nil | map()
+  def entity_ex(extension, type, id, nil),
+    do: entity_ex(extension, type, id)
+
+  @spec entity_ex(Repo.extensions_t(), String.t(), atom, String.t()) :: nil | map()
+  def entity_ex(extensions, extension, type, id) when is_binary(id) and is_atom(type) do
+    Repo.entity_ex(extensions, type, Utils.to_uid(extension, id))
   end
 
-  @spec object_ex(Repo.extensions_t(), String.t(), String.t(), Repo.profiles_t() | nil) ::
+  @spec entity_ex(String.t(), atom, String.t(), Repo.profiles_t() | nil) ::
           nil | map()
-  def object_ex(extensions, extension, id, nil),
-    do: object_ex(extensions, extension, id)
-
-  def object_ex(extensions, extension, id, profiles) do
-    case object_ex(extensions, extension, id) do
+  def entity_ex(extension, type, id, profiles) do
+    case entity_ex(extension, type, id) do
       nil ->
         nil
 
-      object ->
-        Map.update!(object, :attributes, fn attributes ->
+      entity ->
+        Schema.Profiles.apply_profiles(entity, profiles)
+    end
+  end
+
+  @spec entity_ex(Repo.extensions_t(), String.t(), atom, String.t(), Repo.profiles_t() | nil) ::
+          nil | map()
+  def entity_ex(extensions, extension, type, id, nil),
+    do: entity_ex(extensions, extension, type, id)
+
+  @spec entity_ex(Repo.extensions_t(), String.t(), atom, String.t(), Repo.profiles_t() | nil) ::
+          nil | map()
+  def entity_ex(extensions, extension, type, id, profiles) do
+    case entity_ex(extensions, extension, type, id) do
+      nil ->
+        nil
+
+      entity ->
+        Map.update!(entity, :attributes, fn attributes ->
           Utils.apply_profiles(attributes, profiles)
         end)
     end
