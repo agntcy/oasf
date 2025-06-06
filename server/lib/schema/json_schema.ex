@@ -161,6 +161,10 @@ defmodule Schema.JsonSchema do
     new_schema(attr) |> encode_object(name, attr)
   end
 
+  defp encode_attribute(name, "class_t", attr) do
+    new_schema(attr) |> encode_class(name, attr)
+  end
+
   defp encode_attribute(_name, "json_t", attr) do
     new_schema(attr)
   end
@@ -184,6 +188,11 @@ defmodule Schema.JsonSchema do
 
   defp encode_object(schema, _name, attr) do
     type = attr[:object_type]
+    Map.put(schema, "$ref", make_object_ref(type))
+  end
+
+  defp encode_class(schema, _name, attr) do
+    type = attr[:class_type]
     Map.put(schema, "$ref", make_object_ref(type))
   end
 
