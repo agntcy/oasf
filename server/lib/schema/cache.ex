@@ -607,7 +607,7 @@ defmodule Schema.Cache do
     classes =
       classes
       # remove intermediate hidden classes
-      # |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
+      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
         enrich_class(class_tuple, categories_attributes, classes, version)
@@ -992,7 +992,8 @@ defmodule Schema.Cache do
 
   @spec hidden_class?(atom(), map()) :: boolean()
   defp hidden_class?(class_key, class) do
-    class_key != :base_class and !Map.has_key?(class, :uid)
+    ignored_keys = [:base_class, :base_feature, :base_skill, :base_domain]
+    class_key not in ignored_keys and !Map.has_key?(class, :uid)
   end
 
   # Add category_uid, class_uid, and type_uid
