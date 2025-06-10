@@ -3,27 +3,26 @@
 
 defmodule Schemas do
   @moduledoc """
-  This module provides function to work with multiple schema versions.
+  This module provides functions to work with multiple schema versions.
   """
 
   use Agent
 
   require Logger
 
-  # The Schema version file
-  @version_file "version.json"
-
   def start_link(nil) do
     Agent.start_link(fn -> [] end, name: __MODULE__)
   end
 
-  def start_link(path) do
-    Agent.start_link(fn -> ls(path) end, name: __MODULE__)
+  def start_link(schema_versions) do
+    # Split the string by commas into a list
+    parsed_versions = String.split(schema_versions, ",")
+    IO.inspect(parsed_versions, label: "Parsed schema versions")
+    Agent.start_link(fn -> parse_versions(parsed_versions) end, name: __MODULE__)
   end
 
   @doc """
   Returns a list of available schemas.
-
   Returns {:ok, list(map())}.
   """
   def versions do
@@ -31,54 +30,26 @@ defmodule Schemas do
   end
 
   @doc """
-  Returns a list of schemas is the given directory.
-
-  Returns list of {version, path} tuples in case of success, {:error, reason} otherwise.
+  Parses the schema versions from the provided content.
+  Expects a list of versions or a map with a "versions" key.
+  Returns a list of {version, metadata} tuples in case of success, or an empty list if the content is invalid.
   """
-  @spec ls(Path.t()) :: list({String.t(), String.t()}) | {:error, File.posix()}
-  def ls(path) do
-    with {:ok, list} <- File.ls(path) do
-      Stream.map(list, fn name ->
-        Path.join(path, name)
-      end)
-      |> Stream.map(fn dir ->
-        with {:ok, data} <- File.read(Path.join(dir, @version_file)),
-             {:ok, json} <- Jason.decode(data),
-             {:ok, version} <- version(json) do
-          {:ok, version, dir}
-        else
-          {:error, reason} when is_atom(reason) ->
-            err_msg = :file.format_error(reason)
-            Logger.error("No schema version file found in #{dir}. Error: #{err_msg}")
-            {:error, err_msg, dir}
-
-          {:error, reason} ->
-            Logger.error("Invalid schema version file in #{dir}. Error: #{inspect(reason)}")
-            {:error, reason, dir}
-        end
-      end)
-      |> Stream.filter(fn
-        {:ok, _, _} -> true
-        {_er, _, _} -> false
-      end)
-      |> Enum.map(fn {_, version, path} -> {version, path} end)
-      # Simplistic lexical sort of versions - not perfect, but better than random
-      |> Enum.sort(fn {v1, _p1}, {v2, _p2} -> v1 <= v2 end)
-    else
-      {:error, reason} ->
-        err_msg = :file.format_error(reason)
-        Logger.error("Invalid schema directory: #{err_msg}")
-        {:error, err_msg}
-    end
+  @spec parse_versions(any()) :: list({String.t(), map()})
+  def parse_versions(%{"versions" => versions}) when is_list(versions) do
+    # Transform each version into a tuple {version, metadata}
+    Enum.map(versions, fn version -> {version, %{}} end)
   end
 
-  defp version(data) do
-    case data["version"] do
-      nil ->
-        {:error, "Missing 'version' attribute"}
+  def parse_versions(versions) when is_list(versions) do
+    # Assume the input is already a list of version strings
+    Enum.map(versions, fn version -> {version, %{}} end)
+  end
 
-      version ->
-        {:ok, version}
-    end
+  def parse_versions(_invalid_data) do
+    Logger.error(
+      "Invalid schema versions provided. Expected a list or a map with a 'versions' key."
+    )
+
+    []
   end
 end

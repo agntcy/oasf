@@ -1,0 +1,32 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.ingress.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-ingress-controller
+  labels:
+    app: ingress-controller
+    release: {{ .Release.Name }}
+spec:
+  type: {{ .Values.ingress.service.type }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      {{- if eq .Values.ingress.service.type "NodePort" }}
+      nodePort: 30080
+      {{- end }}
+    {{- if .Values.ingress.tls }}
+    - name: https
+      port: 443
+      targetPort: 443
+      {{- if eq .Values.ingress.service.type "NodePort" }}
+      nodePort: 30443
+      {{- end }}
+    {{- end }}
+  selector:
+    app: ingress-controller
+    release: {{ .Release.Name }}
+{{- end }}
