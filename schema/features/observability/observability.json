@@ -6,7 +6,7 @@
   "extends": "base_feature",
   "name": "observability",
   "attributes": {
-    "data": {
+    "extension_data": {
       "caption": "Data",
       "description": "Data supported by the agent for observability.",
       "requirement": "required",

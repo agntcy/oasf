@@ -18,7 +18,7 @@
       "description": "Additional metadata associated with the agent extension.",
       "requirement": "optional"
     },
-    "data": {
+    "extension_data": {
       "caption": "Data",
       "description": "The data associated with the agent extension.",
       "requirement": "required"
