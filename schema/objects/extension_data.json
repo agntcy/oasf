@@ -1,0 +1,7 @@
+{
+  "caption": "Extension Data",
+  "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
+  "name": "extension_data",
+	"extends": "object",
+  "attributes": {}
+}

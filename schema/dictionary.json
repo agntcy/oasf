@@ -189,8 +189,9 @@
     },
     "data": {
       "caption": "Data",
-      "description": "Supported data type.",
-      "type": "object"
+      "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
+      "type": "extension_data",
+      "is_enum": true
     },
     "datasets": {
       "caption": "Datasets",
