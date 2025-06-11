@@ -25,6 +25,16 @@
       "type": "agent",
       "is_array": true
     },
+    "agent_signature": {
+      "caption": "Signature",
+      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
+      "type": "agent_signature"
+    },
+    "algorithm": {
+      "caption": "Algorithm",
+      "description": "The algorithm used. See specific usage.",
+      "type": "string_t"
+    },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
@@ -72,6 +82,11 @@
       "description": "The category unique identifier of the class.",
       "sibling": "category_name",
       "type": "integer_t"
+    },
+    "certificate": {
+      "caption": "Certificate",
+      "description": "Base64-encoded signing certificate.",
+      "type": "bytestring_t"
     },
     "class": {
       "caption": "Class",
@@ -141,6 +156,16 @@
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
       "type": "json_t"
+    },
+    "content_bundle": {
+      "caption": "Content Bundle",
+      "description": "Base64-encoded signature bundle.",
+      "type": "bytestring_t"
+    },
+    "content_type": {
+      "caption": "Content Type",
+      "description": "Type of the content. See specific usage.",
+      "type": "string_t"
     },
     "cost_score": {
       "caption": "Cost Score",
@@ -444,6 +469,16 @@
       "caption": "Security Score",
       "description": "Security score.",
       "type": "float_t"
+    },
+    "signed_at": {
+      "caption": "Signed Time",
+      "description": "Timestamp when signing occurred. See specific usage.",
+      "type": "datetime_t"
+    },
+    "signature": {
+      "caption": "Signature",
+      "description": "Base64-encoded signature.",
+      "type": "bytestring_t"
     },
     "size": {
       "caption": "Size",
