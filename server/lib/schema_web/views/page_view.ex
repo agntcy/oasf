@@ -480,13 +480,13 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  @spec format_desc(String.t() | atom(), map()) :: any
-  def format_desc(key, obj) do
-    append_source_references(base_format_desc(key, obj), "<p><hr>", obj)
+  @spec format_desc(any, String.t() | atom(), map()) :: any
+  def format_desc(conn, key, obj) do
+    append_source_references(conn, base_format_desc(conn, key, obj), "<p><hr>", obj)
   end
 
-  @spec base_format_desc(String.t() | atom(), map()) :: any
-  defp base_format_desc(key, obj) do
+  @spec base_format_desc(any, String.t() | atom(), map()) :: any
+  defp base_format_desc(conn, key, obj) do
     description = description(obj)
 
     case Map.get(obj, :enum) do
@@ -527,7 +527,7 @@ defmodule SchemaWeb.PageView do
                 "</code></td><td class='textnowrap'>",
                 Map.get(item, :caption, id),
                 "<div class='text-secondary'>",
-                append_source_references(description(item), item),
+                append_source_references(conn, description(item), item),
                 "</div></td><tr>" | acc
               ]
             end
@@ -537,13 +537,13 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  @spec append_source_references(any(), map()) :: any()
-  defp append_source_references(html, obj) do
-    append_source_references(html, "", obj)
+  @spec append_source_references(any(), any(), map()) :: any()
+  defp append_source_references(conn, html, obj) do
+    append_source_references(conn, html, "", obj)
   end
 
   @spec append_source_references(any(), any(), map()) :: any()
-  defp append_source_references(html, prefix_html, obj) do
+  defp append_source_references(conn, html, prefix_html, obj) do
     source = obj[:source]
     references = obj[:references]
     enum = obj[:is_enum]
@@ -576,11 +576,11 @@ defmodule SchemaWeb.PageView do
               [
                 "<dt>Options<dd class=\"ml-3\">",
                 Enum.map(children, fn child ->
+                  path = Routes.static_path(conn, "/objects/" <> child[:name])
+
                   [
                     "<div>",
-                    "<a href=\"",
-                    "#{child[:name]}",
-                    "\">",
+                    "<a href='#{path}'>",
                     child[:caption]
                     |> Phoenix.HTML.html_escape()
                     |> Phoenix.HTML.safe_to_string(),

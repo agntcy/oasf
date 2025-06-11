@@ -89,7 +89,7 @@ SPDX-License-Identifier: Apache-2.0
         <td data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:key], field) %>"><%= raw format_attribute_name(key) %></td>
         <td><%= raw format_requirement(constraints, key, field) %></td>
         <td class="extensions"><%= raw format_type(@conn, field) %></td>
-        <td><%= raw format_desc(key, field) %></td>
+        <td><%= raw format_desc(@conn, key, field) %></td>
       </tr>
       <% end %>
     </tbody>
@@ -117,7 +117,7 @@ SPDX-License-Identifier: Apache-2.0
         <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
         <td data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:key], field) %>"><%= raw format_attribute_name(key) %></td>
         <td class="extensions"><%= raw format_type(@conn, field) %></td>
-        <td><%= raw format_desc(key, field) %></td>
+        <td><%= raw format_desc(@conn, key, field) %></td>
       </tr>
       <% end %>
     </tbody>
