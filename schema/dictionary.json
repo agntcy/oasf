@@ -419,6 +419,11 @@
       "description": "The TCP/UDP port number associated with a connection. See specific usage.",
       "type": "port_t"
     },
+    "previous_record_cid": {
+      "caption": "Previous Agent Record CID",
+      "description": "Content Identifier (CID) of an Agent Record's parent record.",
+      "type": "uuid_t"
+    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
