@@ -18,7 +18,7 @@
         "docker-image": {
           "caption": "Docker Image"
         },
-        "py-package": {
+        "python-package": {
           "caption": "Python Package"
         },
         "source-code": {
@@ -49,6 +49,5 @@
       "description": "Specifies the digest of the release manifest contents.",
       "requirement": "optional"
     }
-  },
-  "constraints": {}
+  }
 }
