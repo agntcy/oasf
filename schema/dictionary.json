@@ -187,11 +187,6 @@
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
     },
-    "data": {
-      "caption": "Data",
-      "description": "Supported data type.",
-      "type": "object"
-    },
     "datasets": {
       "caption": "Datasets",
       "description": "Datasets array.",
@@ -286,6 +281,12 @@
       "caption": "Export Format",
       "description": "Format used by the agent for exporting observability data.",
       "type": "string_t"
+    },
+    "extension_data": {
+      "caption": "Data",
+      "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
+      "type": "extension_data",
+      "is_enum": true
     },
     "extension": {
       "caption": "Schema Extension",
