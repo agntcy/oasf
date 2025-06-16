@@ -312,11 +312,7 @@ defmodule Schema.Utils do
                       update_links_fn.(item_attribute, link)
 
                     dictionary_attribute ->
-                      # We do _not_ want to merge class / object attribute observable values
-                      # back to the dictionary
-                      clean_item_attribute = Map.delete(item_attribute, :observable)
-
-                      deep_merge(dictionary_attribute, clean_item_attribute)
+                      deep_merge(dictionary_attribute, item_attribute)
                       |> update_links_fn.(link)
                   end
 
@@ -467,20 +463,6 @@ defmodule Schema.Utils do
 
   def make_datetime(name) do
     (Atom.to_string(name) <> "_dt") |> String.to_atom()
-  end
-
-  @spec observable_type_id_to_atom(any()) :: atom()
-  def observable_type_id_to_atom(observable_type_id) when is_integer(observable_type_id) do
-    Integer.to_string(observable_type_id) |> String.to_atom()
-  end
-
-  def observable_type_id_to_atom(observable_type_id) do
-    Logger.error(
-      "Bad observable type_id - cannot convert non-integer to atom: #{inspect(observable_type_id)}"
-    )
-
-    System.stop(1)
-    -1
   end
 
   @spec find_parent(map(), String.t(), String.t()) :: {atom() | nil, map() | nil}

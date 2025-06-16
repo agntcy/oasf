@@ -68,10 +68,10 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
 
-    {skills, all_skills, observable_type_id_map, main_skills} =
+    {skills, all_skills, main_skills} =
       read_classes(base_class, @main_skills_file, @skills_dir, @skill_family, version[:version])
 
-    {domains, all_domains, _observable_domains_type_id_map, main_domains} =
+    {domains, all_domains, main_domains} =
       read_classes(
         base_class,
         @main_domains_file,
@@ -80,7 +80,7 @@ defmodule Schema.Cache do
         version[:version]
       )
 
-    {features, all_features, _observable_features_type_id_map, main_features} =
+    {features, all_features, main_features} =
       read_classes(
         base_class,
         @main_features_file,
@@ -102,13 +102,10 @@ defmodule Schema.Cache do
 
     categories = %{attributes: categories_attributes}
 
-    {objects, all_objects, observable_type_id_map} =
-      read_objects(observable_type_id_map, version[:version])
+    {objects, all_objects} =
+      read_objects(version[:version])
 
     dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
-
-    # TODO: Right now this map is empty. What are observables for, should we keep the logic around them?
-    observable_type_id_map = observables_from_dictionary(dictionary, observable_type_id_map)
 
     dictionary_attributes = dictionary[:attributes]
 
@@ -123,7 +120,6 @@ defmodule Schema.Cache do
     objects =
       objects
       |> Utils.update_objects(dictionary_attributes)
-      |> update_observable(observable_type_id_map)
       |> update_objects()
       |> final_check(dictionary_attributes)
 
@@ -579,8 +575,6 @@ defmodule Schema.Cache do
     # merge classes with base class
     classes = Map.put(classes, :base_class, base_class)
 
-    observable_type_id_map = observables_from_classes(classes)
-
     classes =
       classes
       |> Enum.into(%{}, fn class_tuple -> attribute_source(class_tuple) end)
@@ -613,13 +607,11 @@ defmodule Schema.Cache do
         enrich_class(class_tuple, categories_attributes, classes, version)
       end)
 
-    {classes, all_classes, observable_type_id_map, categories}
+    {classes, all_classes, categories}
   end
 
-  defp read_objects(observable_type_id_map, version) do
+  defp read_objects(version) do
     objects = JsonReader.read_objects()
-
-    observable_type_id_map = observables_from_objects(observable_type_id_map, objects)
 
     objects =
       objects
@@ -653,332 +645,7 @@ defmodule Schema.Cache do
         enrich_object(object_tuple, version)
       end)
 
-    {objects, all_objects, observable_type_id_map}
-  end
-
-  @spec observables_from_classes(map()) :: map()
-  defp observables_from_classes(classes) do
-    Enum.reduce(
-      classes,
-      %{},
-      fn {class_key, class}, observable_type_id_map ->
-        validate_class_observables(class_key, class)
-
-        observable_type_id_map
-        |> observables_from_item_attributes(classes, class_key, class, "Class")
-        |> observables_from_item_observables(classes, class_key, class, "Class")
-      end
-    )
-  end
-
-  defp validate_class_observables(class_key, class) do
-    if Map.has_key?(class, :observable) do
-      Logger.error(
-        "Illegal definition of one or more attributes with \"#{:observable}\" in class" <>
-          "  \"#{class_key}\". Defining class-level observables is not supported (this would be" <>
-          " redundant). Instead use the \"class_uid\" attribute for querying, correlating, and" <>
-          " reporting."
-      )
-
-      System.stop(1)
-    end
-
-    if not patch_extends?(class) and hidden_class?(class_key, class) do
-      if Map.has_key?(class, :attributes) and
-           Enum.any?(
-             class[:attributes],
-             fn {_attribute_key, attribute} ->
-               Map.has_key?(attribute, :observable)
-             end
-           ) do
-        Logger.error(
-          "Illegal definition of one or more attributes with \"#{:observable}\" definition in" <>
-            " hidden class \"#{class_key}\". This would cause colliding definitions of the same" <>
-            " observable type_id values in all children of this class. Instead define" <>
-            " observables (of any kind) in non-hidden child classes of \"#{class_key}\"."
-        )
-
-        System.stop(1)
-      end
-
-      if Map.has_key?(class, :observables) do
-        Logger.error(
-          "Illegal \"#{:observables}\" definition in hidden class \"#{class_key}\". This" <>
-            " would cause colliding definitions of the same observable type_id values in" <>
-            " all children of this class. Instead define observables (of any kind) in" <>
-            " non-hidden child classes of \"#{class_key}\"."
-        )
-
-        System.stop(1)
-      end
-    end
-  end
-
-  @spec observables_from_item_attributes(map(), map(), atom(), map(), String.t()) :: map()
-  defp observables_from_item_attributes(observable_type_id_map, items, item_key, item, kind) do
-    {caption, _description} = find_item_caption_and_description(items, item_key, item)
-
-    if Map.has_key?(item, :attributes) do
-      Enum.reduce(
-        item[:attributes],
-        observable_type_id_map,
-        fn {attribute_key, attribute}, observable_type_id_map ->
-          if Map.has_key?(attribute, :observable) do
-            observable_type_id = Utils.observable_type_id_to_atom(attribute[:observable])
-
-            if Map.has_key?(observable_type_id_map, observable_type_id) do
-              Logger.error(
-                "Collision of observable type_id #{observable_type_id} between" <>
-                  " \"#{caption}\" #{kind} attribute \"#{attribute_key}\" and" <>
-                  " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-              )
-
-              System.stop(1)
-
-              observable_type_id_map
-            else
-              observable_kind = "#{kind}-Specific Attribute"
-
-              Map.put(
-                observable_type_id_map,
-                observable_type_id,
-                make_observable_enum_entry(
-                  "#{caption} #{kind}: #{attribute_key}",
-                  "#{kind}-specific attribute \"#{attribute_key}\" for the #{caption} #{kind}.",
-                  observable_kind
-                )
-              )
-            end
-          else
-            observable_type_id_map
-          end
-        end
-      )
-    else
-      observable_type_id_map
-    end
-  end
-
-  @spec observables_from_item_observables(map(), map(), atom(), map(), String.t()) :: map()
-  defp observables_from_item_observables(observable_type_id_map, items, item_key, item, kind) do
-    {caption, _description} = find_item_caption_and_description(items, item_key, item)
-
-    if Map.has_key?(item, :observables) do
-      Enum.reduce(
-        item[:observables],
-        observable_type_id_map,
-        fn {attribute_path, observable_type_id}, observable_type_id_map ->
-          observable_type_id = Utils.observable_type_id_to_atom(observable_type_id)
-
-          if(Map.has_key?(observable_type_id_map, observable_type_id)) do
-            Logger.error(
-              "Collision of observable type_id #{observable_type_id} between" <>
-                " \"#{caption}\" #{kind} attribute path \"#{attribute_path}\" and" <>
-                " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-            )
-
-            System.stop(1)
-
-            observable_type_id_map
-          else
-            observable_kind = "#{kind}-Specific Attribute"
-
-            Map.put(
-              observable_type_id_map,
-              observable_type_id,
-              make_observable_enum_entry(
-                "#{caption} #{kind}: #{attribute_path}",
-                "#{kind}-specific attribute \"#{attribute_path}\" for the #{caption} #{kind}.",
-                observable_kind
-              )
-            )
-          end
-        end
-      )
-    else
-      observable_type_id_map
-    end
-  end
-
-  @spec observables_from_objects(map(), map()) :: map()
-  defp observables_from_objects(observable_type_id_map, objects) do
-    Enum.reduce(
-      objects,
-      observable_type_id_map,
-      fn {object_key, object}, observable_type_id_map ->
-        validate_object_observables(object_key, object)
-
-        observable_type_id_map
-        |> observable_from_object(objects, object_key, object)
-        |> observables_from_item_attributes(objects, object_key, object, "Object")
-
-        # Not supported: |> observables_from_item_observables(objects, object_key, object, "Object")
-      end
-    )
-  end
-
-  defp validate_object_observables(object_key, object) do
-    if Map.has_key?(object, :observables) do
-      # Attribute-path observables would be tricky to implement as an machine-driven enrichment.
-      # It would require tracking the relative from the point of the object down that tree of an
-      # overall OASF class.
-      Logger.error(
-        "Illegal \"#{:observables}\" definition in object \"#{object_key}\"." <>
-          " Object-specific attribute path observables are not supported." <>
-          " Please file an issue if you find this feature necessary."
-      )
-
-      System.stop(1)
-    end
-
-    if not patch_extends?(object) and hidden_object?(object[:name]) do
-      if Map.has_key?(object, :attributes) and
-           Enum.any?(
-             object[:attributes],
-             fn {_attribute_key, attribute} ->
-               Map.has_key?(attribute, :observable)
-             end
-           ) do
-        Logger.error(
-          "Illegal definition of one or more attributes with \"#{:observable}\" in hidden object" <>
-            " \"#{object_key}\". This would cause colliding definitions of the same" <>
-            " observable type_id values in all children of this object. Instead define" <>
-            " observables (of any kind) in non-hidden child objects of \"#{object_key}\"."
-        )
-
-        System.stop(1)
-      end
-
-      if Map.has_key?(object, :observable) do
-        Logger.error(
-          "Illegal \"#{:observable}\" definition in hidden object \"#{object_key}\". This" <>
-            " would cause colliding definitions of the same observable type_id values in" <>
-            " all children of this object. Instead define observables (of any kind) in" <>
-            " non-hidden child objects of \"#{object_key}\"."
-        )
-
-        System.stop(1)
-      end
-    end
-  end
-
-  @spec observable_from_object(map(), map(), atom(), map()) :: map()
-  defp observable_from_object(observable_type_id_map, objects, object_key, object) do
-    {caption, description} = find_item_caption_and_description(objects, object_key, object)
-
-    if Map.has_key?(object, :observable) do
-      observable_type_id = Utils.observable_type_id_to_atom(object[:observable])
-
-      if(Map.has_key?(observable_type_id_map, observable_type_id)) do
-        Logger.error(
-          "Collision of observable type_id #{observable_type_id} between" <>
-            " \"#{caption}\" Object \"#{:observable}\" and" <>
-            " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-        )
-
-        System.stop(1)
-
-        observable_type_id_map
-      else
-        Map.put(
-          observable_type_id_map,
-          observable_type_id,
-          make_observable_enum_entry(caption, description, "Object")
-        )
-      end
-    else
-      observable_type_id_map
-    end
-  end
-
-  defp observables_from_dictionary(dictionary, observable_type_id_map) do
-    observable_type_id_map
-    |> observables_from_dictionary_items(dictionary[:types][:attributes], "Dictionary Type")
-    |> observables_from_dictionary_items(dictionary[:attributes], "Dictionary Attribute")
-  end
-
-  defp observables_from_dictionary_items(observable_type_id_map, items, kind) do
-    if items do
-      Enum.reduce(
-        items,
-        observable_type_id_map,
-        fn {_item_key, item}, observable_type_id_map ->
-          if Map.has_key?(item, :observable) do
-            observable_type_id = Utils.observable_type_id_to_atom(item[:observable])
-
-            if Map.has_key?(observable_type_id_map, observable_type_id) do
-              Logger.error(
-                "Collision of observable type_id #{observable_type_id} between #{kind}" <>
-                  " \"#{item[:caption]}\" and" <>
-                  " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-              )
-
-              System.stop(1)
-
-              observable_type_id_map
-            else
-              Map.put(
-                observable_type_id_map,
-                observable_type_id,
-                make_observable_enum_entry(item[:caption], item[:description], kind)
-              )
-            end
-          else
-            observable_type_id_map
-          end
-        end
-      )
-    else
-      observable_type_id_map
-    end
-  end
-
-  # make an observable type_id enum entry
-  @spec make_observable_enum_entry(String.t(), String.t(), String.t()) :: map()
-  defp make_observable_enum_entry(caption, description, observable_kind) do
-    %{
-      caption: caption,
-      description: "Observable by #{observable_kind}.<br>#{description}",
-      _observable_kind: observable_kind
-    }
-  end
-
-  @spec find_item_caption_and_description(map(), atom(), map() | nil) :: {String.t(), String.t()}
-  defp find_item_caption_and_description(items, item_key, item)
-       when is_map(items) and is_atom(item_key) do
-    cond do
-      item == nil ->
-        caption = Atom.to_string(item_key)
-        {caption, caption}
-
-      patch_extends?(item) ->
-        find_item_parent_caption_and_description(items, item_key, item)
-
-      item[:caption] != nil ->
-        caption = item[:caption]
-        {caption, item[:description] || caption}
-
-      item[:extends] != nil ->
-        find_item_parent_caption_and_description(items, item_key, item)
-
-      true ->
-        caption = Atom.to_string(item_key)
-        {caption, caption}
-    end
-  end
-
-  @spec find_item_parent_caption_and_description(map(), atom(), map() | nil) ::
-          {String.t(), String.t()}
-  defp find_item_parent_caption_and_description(items, item_key, item)
-       when is_map(items) and is_atom(item_key) do
-    {parent_key, parent_item} = Utils.find_parent(items, item[:extends], item[:extension])
-
-    if parent_key do
-      find_item_caption_and_description(items, parent_key, parent_item)
-    else
-      caption = Atom.to_string(item_key)
-      {caption, caption}
-    end
+    {objects, all_objects}
   end
 
   @spec hidden_object?(atom() | String.t()) :: boolean()
@@ -1272,12 +939,6 @@ defmodule Schema.Cache do
               base
               |> Map.put(:profiles, profiles)
               |> Map.put(:attributes, attributes)
-              # Top-level observable.
-              # Only occurs in objects, but is safe to do for classes too.
-              |> Utils.put_non_nil(:observable, item[:observable])
-              # Top-level path-based observables.
-              # Only occurs in classes, but is safe to do for objects too.
-              |> Utils.put_non_nil(:observables, item[:observables])
               |> Utils.put_non_nil(:references, item[:references])
               |> patch_constraints(item)
 
@@ -1427,24 +1088,6 @@ defmodule Schema.Cache do
       else
         MapSet.put(no_req_set, context)
       end
-    end
-  end
-
-  defp update_observable(objects, observable_type_id_map) do
-    if Map.has_key?(objects, :observable) do
-      update_in(objects, [:observable, :attributes, :type_id, :enum], fn enum_map ->
-        Map.merge(enum_map, observable_type_id_map, fn observable_type_id, enum1, enum2 ->
-          Logger.error(
-            "Collision of observable type_id #{observable_type_id} between" <>
-              " \"#{enum1[:caption]}\" and \"#{enum2[:caption]}\" (detected while merging)"
-          )
-
-          System.stop(1)
-          enum1
-        end)
-      end)
-    else
-      objects
     end
   end
 
@@ -1631,7 +1274,6 @@ defmodule Schema.Cache do
     |> copy_new(from, :type_name)
     |> copy_new(from, :object_name)
     |> copy_new(from, :object_type)
-    |> copy_new(from, :observable)
     |> copy_new(from, :source)
     |> copy_new(from, :references)
   end
