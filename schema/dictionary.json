@@ -93,6 +93,11 @@
       "description": "Base64-encoded signing certificate.",
       "type": "bytestring_t"
     },
+    "cid": {
+      "caption": "Content Identifier",
+      "description": "Content Identifier (CID). See specific usage.",
+      "type": "uuid_t"
+    },
     "class": {
       "caption": "Class",
       "description": "The class name of the object. See specific usage.",
@@ -445,6 +450,11 @@
       "description": "Overall score.",
       "type": "float_t"
     },
+    "record": {
+      "caption": "Agent Record",
+      "description": "A record of an agent.",
+      "type": "agent"
+    },
     "ref": {
       "caption": "Reference",
       "description": "Reference to the agent in the agent directory. It includes the version and the locator.",
@@ -470,6 +480,22 @@
       "caption": "Resume Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
+    },
+    "object_type": {
+      "caption": "Schema Type",
+      "description": "Schema type of the object. Can be used to identify the format of the data.",
+      "type": "string_t",
+      "enum": {
+        "0": {
+          "caption": "Unspecified"
+        },
+        "1": {
+          "caption": "Raw"
+        },
+        "1000": {
+          "caption": "OASF v0.4.0"
+        }
+      }
     },
     "schema_version": {
       "caption": "Schema Version",
