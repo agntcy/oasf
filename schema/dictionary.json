@@ -103,17 +103,6 @@
       "description": "The class name of the object. See specific usage.",
       "type": "string_t"
     },
-    "class_name": {
-      "caption": "Class",
-      "description": "The class name, as defined by class_uid value.",
-      "type": "string_t"
-    },
-    "class_uid": {
-      "caption": "Class ID",
-      "description": "The unique identifier of a class. A class describes the available attributes.",
-      "sibling": "class_name",
-      "type": "integer_t"
-    },
     "classification": {
       "caption": "Classification",
       "description": "The classification as defined by the vendor.",
@@ -330,6 +319,11 @@
       "caption": "Graph",
       "description": "Graph of the framework config.",
       "type": "string_t"
+    },
+    "id": {
+      "caption": "ID",
+      "description": "A unique identifier. See specific usage.",
+      "type": "integer_t"
     },
     "image": {
       "caption": "Docker Image",
@@ -582,7 +576,7 @@
     },
     "type_uid": {
       "caption": "Type ID",
-      "description": "The class type ID. It identifies the class's semantics and structure. The value is calculated by the logging system as: <code>class_uid * 100 + activity_id</code>.",
+      "description": "The class type ID. It identifies the class's semantics and structure. The value is calculated by the logging system as: <code>id * 100 + activity_id</code>.",
       "sibling": "type_name",
       "type": "long_t"
     },

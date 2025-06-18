@@ -676,7 +676,7 @@ defmodule Schema.Cache do
       Logger.error(
         "Illegal definition of one or more attributes with \"#{:observable}\" in class" <>
           "  \"#{class_key}\". Defining class-level observables is not supported (this would be" <>
-          " redundant). Instead use the \"class_uid\" attribute for querying, correlating, and" <>
+          " redundant). Instead use the \"id\" attribute for querying, correlating, and" <>
           " reporting."
       )
 
@@ -1092,7 +1092,7 @@ defmodule Schema.Cache do
   end
 
   defp add_class_uid(data, name) do
-    if is_nil(data[:attributes][:class_uid]) do
+    if is_nil(data[:attributes][:id]) do
       data
     else
       class_name = data[:caption]
@@ -1108,11 +1108,11 @@ defmodule Schema.Cache do
       }
 
       data
-      |> put_in([:attributes, :class_uid, :enum], %{class_uid => enum})
-      |> put_in([:attributes, :class_uid, :_source], name)
+      |> put_in([:attributes, :id, :enum], %{class_uid => enum})
+      |> put_in([:attributes, :id, :_source], name)
       |> put_in(
-        [:attributes, :class_name, :description],
-        "The class name, as defined by class_uid value: <code>#{class_name}</code>."
+        [:attributes, :name, :description],
+        "The class name, as defined by id value: <code>#{class_name}</code>."
       )
     end
   end
@@ -1175,7 +1175,7 @@ defmodule Schema.Cache do
       class
       |> put_in(
         [:attributes, :name, :description],
-        "The schema extension name: <code>#{Types.long_class_name(class[:family], class[:category], class[:name])}</code>"
+        "The schema extension name: <code>#{Types.long_class_name(class[:family], class[:name])}</code>"
       )
     end
   end

@@ -6,7 +6,10 @@
   "attributes": {
     "category_name": {
       "group": "classification",
-      "description": "The name of the category.",
+      "description": "The name of the category."
+    },
+    "name": {
+      "description": "The class name.",
       "requirement": "optional"
     },
     "category_uid": {
@@ -18,13 +21,10 @@
         }
       }
     },
-    "class_name": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "class_uid": {
-      "group": "classification",
+    "id": {
+      "description": "The unique identifier of a class.",
       "requirement": "required",
+      "sibling": "name",
       "enum": {
         "0": {
           "caption": "Base class"
