@@ -63,9 +63,6 @@
                                             "description": "The maximum length of this data type.",
                                             "minimum": 0
                                         },
-                                        "observable": {
-                                            "$ref": "observable.schema.json"
-                                        },
                                         "range": {
                                             "type": "array",
                                             "description": "A range of values that are valid for this data type.",

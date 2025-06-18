@@ -419,7 +419,6 @@ defmodule Schema.Validator do
     |> validate_version(input)
     |> validate_type_uid(input)
     |> validate_constraints(input, class)
-    |> validate_observables(input, class, profiles)
   end
 
   @spec validate_class_deprecated(map(), map()) :: map()
@@ -596,94 +595,6 @@ defmodule Schema.Validator do
           class_name: schema_item[:name]
         }
       }
-    end
-  end
-
-  @spec validate_observables(map(), map(), map(), list(String.t())) :: map()
-  defp validate_observables(response, input, class, profiles) do
-    # TODO: There is no check of the "type_id" values. This gets slightly tricky (but possible).
-
-    # TODO: There is no check to make sure the values of "name" refers to something actually in the
-    #       input and has same (stringified) value. This would be a tricky check due to navigation
-    #       through arrays (though possible with some effort).
-
-    observables = input["observables"]
-
-    if is_list(observables) do
-      {response, _} =
-        Enum.reduce(
-          observables,
-          {response, 0},
-          fn observable, {response, index} ->
-            if is_map(observable) do
-              name = observable["name"]
-
-              if is_binary(name) do
-                referenced_definition =
-                  get_referenced_definition(String.split(name, "."), class, profiles)
-
-                if referenced_definition do
-                  # At this point we could check the definition or dictionary to make sure
-                  # this observable is correctly defined, though that is tricky
-                  {response, index + 1}
-                else
-                  attribute_path =
-                    make_attribute_path_array_element("observables", index) <> ".name"
-
-                  {
-                    add_error(
-                      response,
-                      "observable_name_invalid_reference",
-                      "Observable index #{index} \"name\" value \"#{name}\" does not refer to" <>
-                        " an attribute defined in class \"#{class[:name]}\" uid #{class[:uid]}.",
-                      %{
-                        attribute_path: attribute_path,
-                        attribute: "name",
-                        name: name,
-                        class_uid: class[:uid],
-                        class_name: class[:name]
-                      }
-                    ),
-                    index + 1
-                  }
-                end
-              else
-                {response, index + 1}
-              end
-            else
-              {response, index + 1}
-            end
-          end
-        )
-
-      response
-    else
-      response
-    end
-  end
-
-  @spec get_referenced_definition(list(String.t()), map(), list(String.t())) :: any()
-  defp get_referenced_definition([key | remaining_keys], schema_item, profiles) do
-    schema_attributes = filter_with_profiles(schema_item[:attributes], profiles)
-    key_atom = String.to_atom(key)
-
-    attribute = Enum.find(schema_attributes, fn {a_name, _} -> key_atom == a_name end)
-
-    if attribute do
-      {_, attribute_details} = attribute
-
-      if Enum.empty?(remaining_keys) do
-        schema_item
-      else
-        if attribute_details[:type] == "object_t" do
-          object_type = String.to_atom(attribute_details[:object_type])
-          get_referenced_definition(remaining_keys, Schema.object(object_type), profiles)
-        else
-          nil
-        end
-      end
-    else
-      nil
     end
   end
 

@@ -16,16 +16,9 @@ SPDX-License-Identifier: Apache-2.0
   <div class="col-md move-up">
     <h3 class="extensions">
       <a href="<%= object_graph_path(@conn, @data)  %>"><%= @data[:caption] %></a>
-      <% observable = @data[:observable] %>
-      <%= if is_nil(observable) do %>
-        <span class="small"><sup><%= @data[:extension] || "" %></sup>
-          object
-        </span>
-      <% else %>
-        <span class="small"><sup><%= @data[:extension] || "" %></sup>
-          <span data-toggle="tooltip" title="Observable Type ID <%= observable %>">[<%= observable %>]</span> object
-        </span>
-      <% end %>
+			<span class="small"><sup><%= @data[:extension] || "" %></sup>
+				object
+			</span>
       <% extends = @data[:extends] || "object" %>
       <span class="small">
         <%= if extends != "object" and not String.starts_with?(extends, "_") do %>
@@ -38,9 +31,6 @@ SPDX-License-Identifier: Apache-2.0
 
     <div class="text-secondary">
       <%= raw description(@data) %>
-    </div>
-    <div class="text-secondary mt-2">
-      <strong>Note:</strong> a superscript &quot;O&quot; after a caption indicates attribute is an observable.
     </div>
     <%= if references != nil and !Enum.empty?(references) do %>
     <dd>

@@ -14,8 +14,7 @@
     },
     "damage_range": {
       "description": "The amount of damage that could be inflicted by this hammer.",
-      "requirement": "recommended",
-      "observable": 42201
+      "requirement": "recommended"
     }
   }
 }

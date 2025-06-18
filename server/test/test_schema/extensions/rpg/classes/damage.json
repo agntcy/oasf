@@ -26,9 +26,5 @@
     "hammer": {
       "requirement": "optional"
     }
-  },
-  "observables": {
-    "damage": 42101,
-    "hammer.damage_range": 42102
   }
 }

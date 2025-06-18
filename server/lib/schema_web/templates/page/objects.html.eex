@@ -9,9 +9,6 @@ SPDX-License-Identifier: Apache-2.0
     <div class="text-secondary">
       The OASF objects. An object is a complex data type, which is a collection of other attributes. Some objects represent entities or artifacts, but not all.
     </div>
-    <div class="text-secondary mt-2">
-      <strong>Note:</strong> a superscript &quot;O&quot; after a caption indicates object is an observable.
-    </div>
   </div>
   <div class="col-md-auto fixed-right mt-2">
     <div class="navbar-expand-md">

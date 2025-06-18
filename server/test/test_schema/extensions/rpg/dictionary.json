@@ -41,8 +41,7 @@
     "mana": {
       "caption": "Mana",
       "description": "Current mana, a measure of magical reserves.",
-      "type": "mana_t",
-      "observable": 42001
+      "type": "mana_t"
     },
     "max_hp": {
       "caption": "Max Hit Points",
@@ -57,8 +56,7 @@
     "name": {
       "caption": "RPG Name",
       "description": "The name of the RPG entity. See specific usage.",
-      "type": "string_t",
-      "observable": 42002
+      "type": "string_t"
     },
     "style": {
       "caption": "Style",
@@ -70,17 +68,9 @@
     "caption": "RPG Data Types",
     "description": "The predefined data types for the RPG extension.",
     "attributes": {
-      "entity_thing_t": {
-        "caption": "Entity Thing",
-        "description": "An entity's thingy that's made an observable by type in the RPG extension.",
-        "observable": 42003,
-        "type": "string_t",
-        "type_name": "String"
-      },
       "hp_t": {
         "caption": "Hit points type",
         "description": "Hit points are a measure of the ability to take damage.",
-        "observable": 42004,
         "type": "integer_t",
         "type_name": "Integer"
       },

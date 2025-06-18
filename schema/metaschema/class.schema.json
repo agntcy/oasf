@@ -38,16 +38,6 @@
                     "description": "A unique identifier for this class, must be unique within the category and class level.",
                     "minimum": 0,
                     "maximum": 999
-                },
-                "observables": {
-                    "type": "object",
-                    "description": "Defines class-specific observables by attribute path.",
-                    "patternProperties": {
-                        "^[a-z0-9_]+(\\.[a-z0-9_]+)*$": {
-                            "$ref": "observable.schema.json"
-                        }
-                    },
-                    "additionalProperties": false
                 }
             },
             "additionalProperties": false

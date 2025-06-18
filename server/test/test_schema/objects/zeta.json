@@ -1,15 +1,13 @@
 {
   "name": "zeta",
   "extends": "_zeta_base",
-  "observable": 204,
   "attributes": {
     "name": {
       "description": "The zeta's human-friendly name",
       "requirement": "recommended"
     },
     "numeric_value": {
-      "requirement": "required",
-      "observable": 205
+      "requirement": "required"
     }
   }
 }

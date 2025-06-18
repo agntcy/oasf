@@ -3,31 +3,12 @@
   "description": "The Network Node object represents a computing device on a network. This is simplified view; the actual OASF Schema uses far more elaborate model.",
   "name": "network_node",
   "extends": "_entity",
-  "observable": 203,
   "attributes": {
     "ip": {
       "requirement": "required"
     },
     "hostname": {
       "requirement": "recommended"
-    },
-    "ob_by_dict_type_1": {
-      "requirement": "optional",
-      "description": "Example 1 observable by dictionary type."
-    },
-    "ob_by_dict_type_2": {
-      "requirement": "optional",
-      "description": "Example 2 observable by dictionary type with object attribute observable.",
-      "observable": 20000
-    },
-    "ob_by_dict_attr_1": {
-      "requirement": "optional",
-      "description": "Example 1 observable by dictionary attribute."
-    },
-    "ob_by_dict_attr_2": {
-      "requirement": "optional",
-      "description": "Example 2 observable by dictionary attribute with object attribute observable.",
-      "observable": 20001
     }
   }
 }
