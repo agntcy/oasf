@@ -179,8 +179,8 @@ defmodule Schema.Validator do
 
   @spec validate_skill_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
   defp validate_skill_class_uid_and_return_class(response, input) do
-    if Map.has_key?(input, "class_uid") do
-      class_uid = input["class_uid"]
+    if Map.has_key?(input, "id") do
+      class_uid = input["id"]
 
       cond do
         is_integer_t(class_uid) ->
@@ -189,9 +189,9 @@ defmodule Schema.Validator do
               {
                 add_error(
                   response,
-                  "class_uid_unknown",
-                  "Unknown \"class_uid\" value; no class is defined for #{class_uid}.",
-                  %{attribute_path: "class_uid", attribute: "class_uid", value: class_uid}
+                  "id_unknown",
+                  "Unknown \"id\" value; no class is defined for #{class_uid}.",
+                  %{attribute_path: "id", attribute: "id", value: class_uid}
                 ),
                 nil
               }
@@ -203,20 +203,20 @@ defmodule Schema.Validator do
         true ->
           {
             # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "class_uid", "class_uid", class_uid, "integer_t"),
+            add_error_wrong_type(response, "id", "id", class_uid, "integer_t"),
             nil
           }
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "class_uid", "class_uid"), nil}
+      {add_error_required_attribute_missing(response, "id", "id"), nil}
     end
   end
 
   @spec validate_domain_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
   defp validate_domain_class_uid_and_return_class(response, input) do
-    if Map.has_key?(input, "class_uid") do
-      class_uid = input["class_uid"]
+    if Map.has_key?(input, "id") do
+      class_uid = input["id"]
 
       cond do
         is_integer_t(class_uid) ->
@@ -225,9 +225,9 @@ defmodule Schema.Validator do
               {
                 add_error(
                   response,
-                  "class_uid_unknown",
-                  "Unknown \"class_uid\" value; no class is defined for #{class_uid}.",
-                  %{attribute_path: "class_uid", attribute: "class_uid", value: class_uid}
+                  "id_unknown",
+                  "Unknown \"id\" value; no class is defined for #{class_uid}.",
+                  %{attribute_path: "id", attribute: "id", value: class_uid}
                 ),
                 nil
               }
@@ -239,13 +239,13 @@ defmodule Schema.Validator do
         true ->
           {
             # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "class_uid", "class_uid", class_uid, "integer_t"),
+            add_error_wrong_type(response, "id", "id", class_uid, "integer_t"),
             nil
           }
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "class_uid", "class_uid"), nil}
+      {add_error_required_attribute_missing(response, "id", "id"), nil}
     end
   end
 
@@ -282,7 +282,7 @@ defmodule Schema.Validator do
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "class_name", "class_name"), nil}
+      {add_error_required_attribute_missing(response, "name", "name"), nil}
     end
   end
 
@@ -467,7 +467,7 @@ defmodule Schema.Validator do
 
   @spec validate_type_uid(map(), map()) :: map()
   defp validate_type_uid(response, input) do
-    class_uid = input["class_uid"]
+    class_uid = input["id"]
     activity_id = input["activity_id"]
     type_uid = input["type_uid"]
 
@@ -482,7 +482,7 @@ defmodule Schema.Validator do
           "type_uid_incorrect",
           "input's \"type_uid\" value of #{type_uid}" <>
             " does not match expected value of #{expected_type_uid}" <>
-            " (class_uid #{class_uid} * 100 + activity_id #{activity_id} = #{expected_type_uid}).",
+            " (id #{class_uid} * 100 + activity_id #{activity_id} = #{expected_type_uid}).",
           %{
             attribute_path: "type_uid",
             attribute: "type_uid",
@@ -591,7 +591,7 @@ defmodule Schema.Validator do
         "\"#{constraint_key}\" from class \"#{schema_item[:name]}\" uid #{schema_item[:uid]}",
         %{
           constraint: %{constraint_key => constraint_details},
-          class_uid: schema_item[:uid],
+          id: schema_item[:uid],
           class_name: schema_item[:name]
         }
       }
@@ -712,11 +712,11 @@ defmodule Schema.Validator do
             {struct_desc, extra} =
               if Map.has_key?(schema_item, :uid) do
                 {
-                  "class \"#{schema_item[:name]}\" uid #{schema_item[:uid]}",
+                  "class \"#{schema_item[:name]}\" id #{schema_item[:uid]}",
                   %{
                     attribute_path: attribute_path,
                     attribute: key,
-                    class_uid: schema_item[:uid],
+                    id: schema_item[:uid],
                     class_name: schema_item[:name]
                   }
                 }
@@ -2148,8 +2148,8 @@ defmodule Schema.Validator do
     add_warning(
       response,
       "class_deprecated",
-      "Class \"#{class[:name]}\" uid #{class[:uid]} is deprecated. #{deprecated[:message]}",
-      %{class_uid: class[:uid], class_name: class[:name], since: deprecated[:since]}
+      "Class \"#{class[:name]}\" id #{class[:uid]} is deprecated. #{deprecated[:message]}",
+      %{id: class[:uid], name: class[:name], since: deprecated[:since]}
     )
   end
 

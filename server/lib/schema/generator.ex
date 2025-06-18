@@ -127,7 +127,7 @@ defmodule Schema.Generator do
       activity_id ->
         uid =
           if activity_id >= 0 do
-            Types.type_uid(data[:class_uid], activity_id)
+            Types.type_uid(data[:id], activity_id)
           else
             @other
           end
@@ -144,7 +144,7 @@ defmodule Schema.Generator do
       data
     else
       Map.update!(data, :name, fn _name ->
-        Types.long_class_name(class[:family], class[:category], class[:name])
+        Types.long_class_name(class[:family], class[:name])
       end)
     end
   end

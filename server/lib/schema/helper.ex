@@ -42,7 +42,7 @@ defmodule Schema.Helper do
 
       # invalid class ID
       nil ->
-        %{:error => "Invalid class_uid: #{class_uid}", :data => data}
+        %{:error => "Invalid id: #{class_uid}", :data => data}
 
       class ->
         data = type_uid(class_uid, data)

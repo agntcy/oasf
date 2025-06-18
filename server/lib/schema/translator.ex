@@ -22,7 +22,7 @@ defmodule Schema.Translator do
     type =
       case type do
         :skill ->
-          case Map.get(data, "class_uid") do
+          case Map.get(data, "id") do
             nil ->
               data
 
@@ -32,7 +32,7 @@ defmodule Schema.Translator do
           end
 
         :domain ->
-          case Map.get(data, "class_uid") do
+          case Map.get(data, "id") do
             nil ->
               data
 

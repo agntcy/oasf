@@ -6,8 +6,11 @@
   "attributes": {
     "category_name": {
       "group": "classification",
-      "description": "The name of the category.",
-      "requirement": "optional"
+      "description": "The name of the category."
+    },
+    "name": {
+      "description": "The class name.",
+      "requirement": "recommended"
     },
     "category_uid": {
       "group": "classification",
@@ -18,23 +21,17 @@
         }
       }
     },
-    "class_name": {
-      "group": "classification",
-      "requirement": "optional"
-    },
-    "class_uid": {
-      "group": "classification",
-      "requirement": "required",
-      "enum": {
-        "0": {
-          "caption": "Base class"
-        }
-      }
+    "id": {
+      "description": "The unique identifier of a class.",
+      "requirement": "recommended"
     },
     "annotations": {
       "caption": "Annotations",
       "description": "Additional metadata associated with the class.",
       "requirement": "optional"
     }
+  },
+  "constraints": {
+    "at_least_one": ["id", "name"]
   }
 }
