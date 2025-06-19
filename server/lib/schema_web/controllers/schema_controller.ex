@@ -101,7 +101,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 10702,
               caption: "Problem Solving",
               category_name: "Natural Language Processing",
-              category_uid: 1
             }
           ])
         end,
@@ -123,7 +122,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 10205,
               caption: "Question Generation",
               category_name: "Natural Language Processing",
-              category_uid: 1
             },
             %{
               name: "speech_recognition",
@@ -134,7 +132,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 70202,
               caption: "Automatic Speech Recognition",
               category_name: "Multi-modal",
-              category_uid: 7
             },
             %{
               name: "dialogue_generation",
@@ -146,7 +143,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 10204,
               caption: "Dialogue Generation",
               category_name: "Natural Language Processing",
-              category_uid: 1
             }
           ])
         end,
@@ -181,7 +177,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 106,
               caption: "Information Technology",
               category_name: "Technology",
-              category_uid: 1
             }
           ])
         end,
@@ -203,7 +198,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 705,
               caption: "Process Engineering",
               category_name: "Industrial Manufacturing",
-              category_uid: 7
             },
             %{
               name: "data_privacy",
@@ -215,7 +209,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 404,
               caption: "Data Privacy",
               category_name: "Trust and Safety",
-              category_uid: 4
             },
             %{
               name: "robotics",
@@ -227,7 +220,6 @@ defmodule SchemaWeb.SchemaController do
               uid: 702,
               caption: "Robotics",
               category_name: "Industrial Manufacturing",
-              category_uid: 7
             }
           ])
         end,
@@ -370,18 +362,9 @@ defmodule SchemaWeb.SchemaController do
               :integer,
               "The unique identifier of a class"
             )
-
-            category_name(
-              :string,
-              "The class category name, as defined by category_uid value"
-            )
-
-            category_uid(:integer, "The category unique identifier of the class")
           end
 
           example(%{
-            category_name: "Natural Language Processing",
-            category_uid: 1,
             id: 10101,
             name: "schema.oasf.agntcy.org/skills/contextual_comprehension"
           })
@@ -399,18 +382,9 @@ defmodule SchemaWeb.SchemaController do
               :integer,
               "The unique identifier of a class"
             )
-
-            category_name(
-              :string,
-              "The class category name, as defined by category_uid value"
-            )
-
-            category_uid(:integer, "The category unique identifier of the class")
           end
 
           example(%{
-            category_name: "Internet of Things (IoT)",
-            category_uid: 1,
             id: 101,
             name: "schema.oasf.agntcy.org/domains/technology"
           })
@@ -527,14 +501,10 @@ defmodule SchemaWeb.SchemaController do
             count: 2,
             inputs: [
               %{
-                category_name: "Natural Language Processing",
-                category_uid: 1,
                 id: 10101,
                 name: "schema.oasf.agntcy.org/skills/contextual_comprehension"
               },
               %{
-                category_name: "Natural Language Processing",
-                category_uid: 1,
                 id: 10203,
                 name: "schema.oasf.agntcy.org/skills/paraphrasing"
               }
@@ -596,14 +566,10 @@ defmodule SchemaWeb.SchemaController do
             count: 2,
             inputs: [
               %{
-                category_name: "Technology",
-                category_uid: 1,
                 id: 101,
                 name: "schema.oasf.agntcy.org/domains/internet_of_things"
               },
               %{
-                category_name: "Trust and Safety",
-                category_uid: 4,
                 id: 403,
                 name: "schema.oasf.agntcy.org/domains/fraud_prevention"
               }
@@ -1901,7 +1867,7 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Example|
         |-----|-------|
-        |true|Untranslated:<br/><code>{"category_uid":0,"id":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "category_uid": 0, "name": "Base Class", "id": 0}</code>|
+        |true|Untranslated:<br/><code>{"id":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "name": "Base Class", "id": 0}</code>|
         """,
         default: false
       )
@@ -1968,7 +1934,7 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Example|
         |-----|-------|
-        |true|Untranslated:<br/><code>{"category_uid":0,"id":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "category_uid": 0, "name": "Base Class", "id": 0}</code>|
+        |true|Untranslated:<br/><code>{"id":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized",  "name": "Base Class", "id": 0}</code>|
         """,
         default: false
       )

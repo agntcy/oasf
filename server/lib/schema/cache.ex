@@ -669,7 +669,6 @@ defmodule Schema.Cache do
       class
       |> update_class_uid(categories, classes)
       |> add_class_uid(class_key)
-      |> add_category_uid(class_key, categories)
       |> add_class_name()
       |> add_schema_version(version)
 
@@ -781,50 +780,6 @@ defmodule Schema.Cache do
         [:attributes, :name, :description],
         "The class name, as defined by id value: <code>#{class_name}</code>."
       )
-    end
-  end
-
-  defp add_category_uid(class, name, categories) do
-    if is_nil(class[:attributes][:category_uid]) do
-      class
-    else
-      category_name = class[:category]
-
-      {_key, category} = Utils.find_entity(categories, class, class[:category])
-
-      if category == nil do
-        case category_name do
-          "other" ->
-            Logger.info("Class \"#{class[:name]}\" uses special undefined category \"other\"")
-
-          nil ->
-            Logger.warning("Class \"#{class[:name]}\" has no category")
-
-          undefined ->
-            Logger.warning("Class \"#{class[:name]}\" has undefined category: #{undefined}")
-        end
-
-        # Match update_class_uid and use 0 for undefined categories
-        Map.put(class, :category_uid, 0)
-      else
-        category_uid = category[:uid]
-
-        class
-        |> Map.put(:category_uid, category_uid)
-        |> update_in(
-          [:attributes, :category_uid, :enum],
-          fn _enum ->
-            id = Integer.to_string(category_uid) |> String.to_atom()
-            %{id => category}
-          end
-        )
-        |> put_in(
-          [:attributes, :category_name, :description],
-          "The class category name, as defined by category_uid value:" <>
-            " <code>#{category[:caption]}</code>."
-        )
-      end
-      |> put_in([:attributes, :category_uid, :_source], name)
     end
   end
 

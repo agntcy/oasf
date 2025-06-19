@@ -77,17 +77,6 @@
       "sibling": "category",
       "type": "integer_t"
     },
-    "category_name": {
-      "caption": "Category",
-      "description": "The class category name, as defined by category_uid value.",
-      "type": "string_t"
-    },
-    "category_uid": {
-      "caption": "Category ID",
-      "description": "The category unique identifier of the class.",
-      "sibling": "category_name",
-      "type": "integer_t"
-    },
     "certificate": {
       "caption": "Certificate",
       "description": "Base64-encoded signing certificate.",
