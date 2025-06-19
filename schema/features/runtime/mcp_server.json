@@ -1,0 +1,17 @@
+{
+  "uid": 2,
+  "caption": "MCP",
+  "description": "Describes MCP servers required to run and interact with the agent.",
+  "extends": "runtime",
+  "name": "mcp",
+  "attributes": {
+    "data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for MCP server.",
+      "requirement": "required",
+      "type:": "object_t",
+      "object_type": "mcp_server_data",
+      "object_name": "MCP Server Data"
+    }
+  }
+}

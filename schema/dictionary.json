@@ -45,6 +45,12 @@
       "description": "Provides additional metadata associated with the object. See specific usage.",
       "type": "string_map_t"
     },
+    "args": {
+      "caption": "Arguments",
+      "description": "A list of arguments to be passed to a command. See specific usage.",
+      "type": "string_t",
+      "is_array": true
+    },
     "authentication": {
       "caption": "Authentication",
       "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0' >Security Scheme Object</a>.",
@@ -153,6 +159,11 @@
     "content_type": {
       "caption": "Content Type",
       "description": "Type of the content. See specific usage.",
+      "type": "string_t"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "A command to be ran. See specific usage.",
       "type": "string_t"
     },
     "cost_score": {
@@ -329,6 +340,11 @@
       "description": "A json input.",
       "type": "json_t"
     },
+    "input_id": {
+      "caption": "Input ID",
+      "description": "The unique identifier of the input. See specific usage.",
+      "type": "string_t"
+    },
     "interrupt_payload": {
       "caption": "Interrupt Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
@@ -359,6 +375,18 @@
       "caption": "Agent Locators",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
+      "is_array": true
+    },
+    "mcp_server_inputs": {
+      "caption": "MCP Server Inputs",
+      "description": "List of inputs that the agent can provide to the MCP servers.",
+      "type": "mcp_server_input",
+      "is_array": true
+    },
+    "mcp_servers": {
+      "caption": "MCP Servers",
+      "description": "List of MCP servers that the agent can connect to.",
+      "type": "mcp_server_configuration",
       "is_array": true
     },
     "metadata": {
@@ -402,6 +430,11 @@
       "caption": "Parent Unique ID",
       "description": "The unique identifier of an object's parent object. See specific usage.",
       "type": "string_t"
+    },
+    "password": {
+      "caption": "Password",
+      "description": "The password that pertains to the class or object. See specific usage.",
+      "type": "boolean_t"
     },
     "path": {
       "caption": "Path",

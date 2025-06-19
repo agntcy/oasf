@@ -1,0 +1,18 @@
+{
+	"caption": "MCP Server Configuration",
+	"description": "Data for the MCP server agent record extension.",
+	"extends": "extension_data",
+	"name": "mcp_server_data",
+	"attributes": {
+		"mcp_server_inputs": {
+			"caption": "User Inputs",
+			"description": "Collection of sensitive values requiring user input during server initialization.",
+			"requirement": "required"
+		},
+		"mcp_servers": {
+			"caption": "MCP Server Configurations",
+			"description": "Registry of configured MCP servers with execution parameters.",
+			"requirement": "required"
+		}
+	}
+}
