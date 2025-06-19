@@ -1,0 +1,17 @@
+{
+  "uid": 4,
+  "caption": "LLM Prompt",
+  "description": "Describes common LLM interaction prompts to use the agent.",
+  "extends": "runtime",
+  "name": "prompt",
+  "attributes": {
+    "data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for LLM prompt.",
+      "requirement": "required",
+      "type:": "object_t",
+      "object_type": "llm_prompt_data",
+      "object_name": "LLM Prompt Data"
+    }
+  }
+}

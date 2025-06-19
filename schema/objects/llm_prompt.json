@@ -1,0 +1,23 @@
+{
+  "caption": "Prompt",
+  "description": "Defines the structure for LLM prompts used in agent interactions.",
+  "extends": "object",
+  "name": "llm_prompt",
+  "attributes": {
+    "name": {
+      "caption": "Prompt Name",
+      "description": "Name of the prompt, used to identify it in the system.",
+      "requirement": "required"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of the prompt, providing context and usage information.",
+      "requirement": "required"
+    },
+    "prompt": {
+      "caption": "Prompt Text",
+      "description": "A specific input or instruction given to a large language model (LLM) to generate text or perform a task.",
+      "requirement": "required"
+    }
+  }
+}

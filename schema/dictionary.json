@@ -382,6 +382,12 @@
       "type": "llm_model",
       "is_array": true
     },
+    "llm_prompts": {
+      "caption": "List of LLM Prompts",
+      "description": "List of common prompts used for LLM interactions with the agent, including their configurations and parameters.",
+      "type": "llm_prompt",
+      "is_array": true
+    },
     "locator": {
       "caption": "Agent Locator",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
@@ -471,6 +477,11 @@
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
+    },
+    "prompt": {
+      "caption": "Prompt Text",
+      "description": "A specific input or instruction given to a large language model (LLM) to generate text or perform a task.",
+      "type": "string_t"
     },
     "provider": {
       "caption": "Provider",
