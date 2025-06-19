@@ -1,0 +1,28 @@
+{
+  "caption": "LLM Model Configuration",
+  "description": "Configures the MCP server for LLM model support.",
+  "extends": "object",
+  "name": "llm_model",
+  "attributes": {
+    "name": {
+      "caption": "Model Name",
+      "description": "Name of the LLM model including its version (e.g., 'gpt-3.5-turbo').",
+      "requirement": "required"
+    },
+    "provider": {
+      "caption": "Provider",
+      "description": "Provider of the LLM model (e.g., 'ollama', 'azure').",
+      "requirement": "required"
+    },
+    "api_base": {
+      "caption": "API Base URL",
+      "description": "URL of the API base for the LLM model (e.g., 'https://api.openai.com/v1').",
+      "requirement": "required"
+    },
+    "api_key": {
+      "caption": "API Key",
+      "description": "API key for accessing the LLM model, if required by the provider.",
+      "requirement": "required"
+    }
+  }
+}

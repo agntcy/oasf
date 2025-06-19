@@ -1,0 +1,17 @@
+{
+  "uid": 3,
+  "caption": "LLM Model",
+  "description": "Describes LLM support and its configuration for a given agent.",
+  "extends": "runtime",
+  "name": "model",
+  "attributes": {
+    "data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for LLM model.",
+      "requirement": "required",
+      "type:": "object_t",
+      "object_type": "llm_model_data",
+      "object_name": "LLM Model Data"
+    }
+  }
+}

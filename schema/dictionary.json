@@ -45,6 +45,16 @@
       "description": "Provides additional metadata associated with the object. See specific usage.",
       "type": "string_map_t"
     },
+    "api_base": {
+      "caption": "API Base URL",
+      "description": "URL of the API base for the LLM model (e.g., 'https://api.openai.com/v1').",
+      "type": "string_t"
+    },
+    "api_key": {
+      "caption": "API Key",
+      "description": "API key for accessing the LLM model, if required by the provider.",
+      "type": "string_t"
+    },
     "args": {
       "caption": "Arguments",
       "description": "A list of arguments to be passed to a command. See specific usage.",
@@ -366,6 +376,12 @@
       "type": "interrupts",
       "is_array": true
     },
+    "llm_models": {
+      "caption": "List of LLM Model Data",
+      "description": "Collection of LLM models supported by the agent, including their configurations and parameters.",
+      "type": "llm_model",
+      "is_array": true
+    },
     "locator": {
       "caption": "Agent Locator",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
@@ -455,6 +471,11 @@
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
+    },
+    "provider": {
+      "caption": "Provider",
+      "description": "Name of the provider of a service, tool, object, etc. See specific usage.",
+      "type": "string_t"
     },
     "publisher": {
       "caption": "Publisher",
