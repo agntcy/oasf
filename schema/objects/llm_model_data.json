@@ -1,0 +1,13 @@
+{
+  "caption": "LLM Model Data",
+  "description": "Data for the LLM model agent record extension.",
+  "extends": "extension_data",
+  "name": "llm_model_data",
+  "attributes": {
+    "llm_models": {
+      "caption": "LLM Model Data",
+      "description": "Collection of LLM models supported by the agent, including their configurations and parameters.",
+      "requirement": "required"
+    }
+  }
+}
