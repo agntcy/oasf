@@ -3,9 +3,14 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
+    "acp": {
+      "caption": "Agent Connect Protocol Specs",
+      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
+      "type": "acp"
+    },
     "agent": {
       "caption": "Agent",
-      "description": "An Agent (also known as a Sensor) is typically installed on an Operating System (OS) and serves as a specialized software component that can be designed to monitor, detect, collect, archive, or take action. These activities and possible actions are defined by the upstream system controlling the Agent and its intended purpose. For instance, an Agent can include Endpoint Detection & Response (EDR) agents, backup/disaster recovery sensors, Application Performance Monitoring or profiling sensors, and similar software.",
+      "description": "A record of an agent.",
       "type": "agent"
     },
     "agent_deps": {
@@ -24,6 +29,16 @@
       "description": "A list of <code>agent</code> objects associated with a device, endpoint, or resource.",
       "type": "agent",
       "is_array": true
+    },
+    "agent_signature": {
+      "caption": "Signature",
+      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
+      "type": "agent_signature"
+    },
+    "algorithm": {
+      "caption": "Algorithm",
+      "description": "The algorithm used. See specific usage.",
+      "type": "string_t"
     },
     "annotations": {
       "caption": "Annotations",
@@ -62,32 +77,20 @@
       "sibling": "category",
       "type": "integer_t"
     },
-    "category_name": {
-      "caption": "Category",
-      "description": "The class category name, as defined by category_uid value.",
-      "type": "string_t"
+    "certificate": {
+      "caption": "Certificate",
+      "description": "Base64-encoded signing certificate.",
+      "type": "bytestring_t"
     },
-    "category_uid": {
-      "caption": "Category ID",
-      "description": "The category unique identifier of the class.",
-      "sibling": "category_name",
-      "type": "integer_t"
+    "cid": {
+      "caption": "Content Identifier",
+      "description": "Content Identifier (CID). See specific usage.",
+      "type": "uuid_t"
     },
     "class": {
       "caption": "Class",
       "description": "The class name of the object. See specific usage.",
       "type": "string_t"
-    },
-    "class_name": {
-      "caption": "Class",
-      "description": "The class name, as defined by class_uid value.",
-      "type": "string_t"
-    },
-    "class_uid": {
-      "caption": "Class ID",
-      "description": "The unique identifier of a class. A class describes the available attributes.",
-      "sibling": "class_name",
-      "type": "integer_t"
     },
     "classification": {
       "caption": "Classification",
@@ -142,6 +145,16 @@
       "description": "This object contains an instance of an OpenAPI schema object.",
       "type": "json_t"
     },
+    "content_bundle": {
+      "caption": "Content Bundle",
+      "description": "Base64-encoded signature bundle.",
+      "type": "bytestring_t"
+    },
+    "content_type": {
+      "caption": "Content Type",
+      "description": "Type of the content. See specific usage.",
+      "type": "string_t"
+    },
     "cost_score": {
       "caption": "Cost Score",
       "description": "Cost score.",
@@ -161,11 +174,6 @@
       "caption": "Custom Streaming Update",
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
-    },
-    "data": {
-      "caption": "Data",
-      "description": "Supported data type.",
-      "type": "object"
     },
     "datasets": {
       "caption": "Datasets",
@@ -262,6 +270,12 @@
       "description": "Format used by the agent for exporting observability data.",
       "type": "string_t"
     },
+    "extension_data": {
+      "caption": "Data",
+      "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
+      "type": "extension_data",
+      "is_enum": true
+    },
     "extension": {
       "caption": "Schema Extension",
       "description": "Extension model that describes agents and its capabilities more in depth.",
@@ -294,6 +308,11 @@
       "caption": "Graph",
       "description": "Graph of the framework config.",
       "type": "string_t"
+    },
+    "id": {
+      "caption": "ID",
+      "description": "A unique identifier. See specific usage.",
+      "type": "integer_t"
     },
     "image": {
       "caption": "Docker Image",
@@ -394,6 +413,11 @@
       "description": "The TCP/UDP port number associated with a connection. See specific usage.",
       "type": "port_t"
     },
+    "previous_record_cid": {
+      "caption": "Previous Agent Record CID",
+      "description": "Content Identifier (CID) of an Agent Record's parent record.",
+      "type": "uuid_t"
+    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
@@ -408,6 +432,11 @@
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
+    },
+    "record": {
+      "caption": "Agent Record",
+      "description": "A record of an agent.",
+      "type": "agent"
     },
     "ref": {
       "caption": "Reference",
@@ -435,6 +464,22 @@
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
     },
+    "object_type": {
+      "caption": "Schema Type",
+      "description": "Schema type of the object. Can be used to identify the format of the data.",
+      "type": "string_t",
+      "enum": {
+        "0": {
+          "caption": "Unspecified"
+        },
+        "1": {
+          "caption": "Raw"
+        },
+        "1000": {
+          "caption": "OASF v0.4.0"
+        }
+      }
+    },
     "schema_version": {
       "caption": "Schema Version",
       "description": "Version of the OASF schema.",
@@ -444,6 +489,16 @@
       "caption": "Security Score",
       "description": "Security score.",
       "type": "float_t"
+    },
+    "signed_at": {
+      "caption": "Signed Time",
+      "description": "Timestamp when signing occurred. See specific usage.",
+      "type": "datetime_t"
+    },
+    "signature": {
+      "caption": "Signature",
+      "description": "Base64-encoded signature.",
+      "type": "bytestring_t"
     },
     "size": {
       "caption": "Size",
@@ -466,11 +521,6 @@
       "family": "skill",
       "is_enum": true,
       "is_array": true
-    },
-    "acp": {
-      "caption": "Agent Connect Protocol Specs",
-      "description": "Specification of agent capabilities, config, input, output, and interrupts.",
-      "type": "acp"
     },
     "streaming": {
       "caption": "Streaming Modes",
@@ -515,7 +565,7 @@
     },
     "type_uid": {
       "caption": "Type ID",
-      "description": "The class type ID. It identifies the class's semantics and structure. The value is calculated by the logging system as: <code>class_uid * 100 + activity_id</code>.",
+      "description": "The class type ID. It identifies the class's semantics and structure. The value is calculated by the logging system as: <code>id * 100 + activity_id</code>.",
       "sibling": "type_name",
       "type": "long_t"
     },

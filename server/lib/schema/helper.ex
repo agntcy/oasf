@@ -20,8 +20,8 @@ defmodule Schema.Helper do
     do: %{:error => "Not a JSON object", :data => data}
 
   defp enrich_class(data, enum_text, _observables, type) do
-    class_uid = data["class_uid"]
-    if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
+    class_uid = data["id"]
+    if class_uid == nil, do: %{:error => "Missing id", :data => data}
     Logger.debug("enrich class: #{class_uid}")
 
     class =
@@ -42,7 +42,7 @@ defmodule Schema.Helper do
 
       # invalid class ID
       nil ->
-        %{:error => "Invalid class_uid: #{class_uid}", :data => data}
+        %{:error => "Invalid id: #{class_uid}", :data => data}
 
       class ->
         data = type_uid(class_uid, data)

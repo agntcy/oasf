@@ -1,0 +1,23 @@
+{
+  "caption": "Agent Object",
+  "description": "The object holding the agent data or hash of the agent data together with metadata about the agent.",
+  "extends": "object",
+  "name": "agent_object",
+  "attributes": {
+    "cid": {
+      "caption": "CID",
+      "description": "Globally-unique content identifier of the object. Encodes fully-qualified type of the object as part of 'codec'. Specs: <a target='_blank' href='https://github.com/multiformats/cid'>CID (Content IDentifier) Specification</a>",
+      "requirement": "required"
+    },
+    "object_type": {
+      "caption": "Schema Type",
+      "description": "Schema type of the object. Can be used to identify the format of the data.",
+      "requirement": "required"
+    },
+    "record": {
+      "caption": "Raw Agent Data",
+      "description": "The encoded agent data in bytes.",
+      "requirement": "required"
+    }
+  }
+}

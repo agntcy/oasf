@@ -676,7 +676,7 @@ defmodule Schema.Cache do
       Logger.error(
         "Illegal definition of one or more attributes with \"#{:observable}\" in class" <>
           "  \"#{class_key}\". Defining class-level observables is not supported (this would be" <>
-          " redundant). Instead use the \"class_uid\" attribute for querying, correlating, and" <>
+          " redundant). Instead use the \"id\" attribute for querying, correlating, and" <>
           " reporting."
       )
 
@@ -1002,7 +1002,6 @@ defmodule Schema.Cache do
       class
       |> update_class_uid(categories, classes)
       |> add_class_uid(class_key)
-      |> add_category_uid(class_key, categories)
       |> add_class_name()
       |> add_schema_version(version)
 
@@ -1092,7 +1091,7 @@ defmodule Schema.Cache do
   end
 
   defp add_class_uid(data, name) do
-    if is_nil(data[:attributes][:class_uid]) do
+    if is_nil(data[:attributes][:id]) do
       data
     else
       class_name = data[:caption]
@@ -1108,56 +1107,12 @@ defmodule Schema.Cache do
       }
 
       data
-      |> put_in([:attributes, :class_uid, :enum], %{class_uid => enum})
-      |> put_in([:attributes, :class_uid, :_source], name)
+      |> put_in([:attributes, :id, :enum], %{class_uid => enum})
+      |> put_in([:attributes, :id, :_source], name)
       |> put_in(
-        [:attributes, :class_name, :description],
-        "The class name, as defined by class_uid value: <code>#{class_name}</code>."
+        [:attributes, :name, :description],
+        "The class name, as defined by id value: <code>#{class_name}</code>."
       )
-    end
-  end
-
-  defp add_category_uid(class, name, categories) do
-    if is_nil(class[:attributes][:category_uid]) do
-      class
-    else
-      category_name = class[:category]
-
-      {_key, category} = Utils.find_entity(categories, class, class[:category])
-
-      if category == nil do
-        case category_name do
-          "other" ->
-            Logger.info("Class \"#{class[:name]}\" uses special undefined category \"other\"")
-
-          nil ->
-            Logger.warning("Class \"#{class[:name]}\" has no category")
-
-          undefined ->
-            Logger.warning("Class \"#{class[:name]}\" has undefined category: #{undefined}")
-        end
-
-        # Match update_class_uid and use 0 for undefined categories
-        Map.put(class, :category_uid, 0)
-      else
-        category_uid = category[:uid]
-
-        class
-        |> Map.put(:category_uid, category_uid)
-        |> update_in(
-          [:attributes, :category_uid, :enum],
-          fn _enum ->
-            id = Integer.to_string(category_uid) |> String.to_atom()
-            %{id => category}
-          end
-        )
-        |> put_in(
-          [:attributes, :category_name, :description],
-          "The class category name, as defined by category_uid value:" <>
-            " <code>#{category[:caption]}</code>."
-        )
-      end
-      |> put_in([:attributes, :category_uid, :_source], name)
     end
   end
 
@@ -1175,7 +1130,7 @@ defmodule Schema.Cache do
       class
       |> put_in(
         [:attributes, :name, :description],
-        "The schema extension name: <code>#{Types.long_class_name(class[:family], class[:category], class[:name])}</code>"
+        "The schema extension name: <code>#{Types.long_class_name(class[:family], class[:name])}</code>"
       )
     end
   end

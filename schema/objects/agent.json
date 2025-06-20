@@ -1,5 +1,5 @@
 {
-  "caption": "Agent",
+  "caption": "Agent Record",
   "description": "The data model defines a schema for AI agent content representation. The schema provides a way to describe agent's features, constraints, artifact locators, versioning, ownership, or relevant details.",
   "extends": "object",
   "name": "agent",
@@ -9,24 +9,14 @@
       "description": "The name of the agent. For example: <code>Marketing Strategy Agent</code>.",
       "requirement": "required"
     },
-    "description": {
-      "caption": "Agent Description",
-      "description": "The description of the agent.",
-      "requirement": "required"
-    },
     "version": {
       "caption": "Agent Version",
       "description": "The version of the agent. Values MAY conform to a specific versioning schema.",
       "requirement": "required"
     },
-    "schema_version": {
-      "caption": "Schema Version",
-      "description": "Version of OASF schema used by the agent data model.",
-      "requirement": "required"
-    },
-    "created_at": {
-      "caption": "Creation Time",
-      "description": "Includes the creation timestamp. Value MUST conform to <a target='_blank' href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC-3339</a>. For example:<br><code>2024-09-10T23:20:50.520Z</code>,<br><code>2024-09-10 23:20:50.520789Z</code>.",
+    "description": {
+      "caption": "Agent Description",
+      "description": "The description of the agent.",
       "requirement": "required"
     },
     "authors": {
@@ -39,6 +29,16 @@
       "description": "Additional metadata associated with this agent.",
       "requirement": "optional"
     },
+    "created_at": {
+      "caption": "Creation Time",
+      "description": "Includes the creation timestamp. Value MUST conform to <a target='_blank' href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC-3339</a>. For example:<br><code>2024-09-10T23:20:50.520Z</code>,<br><code>2024-09-10 23:20:50.520789Z</code>.",
+      "requirement": "required"
+    },
+    "skills": {
+      "caption": "Skills",
+      "description": "List of skills associated with this agent.",
+      "requirement": "required"
+    },
     "locators": {
       "caption": "Locators",
       "description": "List of source locators where this agent can be found or used from.",
@@ -47,12 +47,17 @@
     "extensions": {
       "caption": "Extensions",
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
+      "requirement": "recommanded"
+    },
+    "agent_signature": {
+      "caption": "Signature",
+      "description": "A digital signature of the agent data model. This is used to verify the authenticity and integrity of the agent.",
       "requirement": "required"
     },
-    "skills": {
-      "caption": "Skills",
-      "description": "List of skills associated with this agent.",
-      "requirement": "required"
+    "previous_record_cid": {
+      "caption": "The object holding the arent CID",
+      "description": "Content Identifier (CID) of the data of the agent with the previous version.",
+      "requirement": "optional"
     }
   }
 }

@@ -5,7 +5,7 @@
   "extends": "runtime",
   "name": "manifest",
   "attributes": {
-    "data": {
+    "extension_data": {
       "caption": "Data",
       "description": "Data supported by the agent for runtime manifest.",
       "requirement": "required",
