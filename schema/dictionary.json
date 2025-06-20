@@ -3,6 +3,11 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
+    "a2a_card": {
+      "caption": "A2A Agent Card Data",
+      "description": "Content of the A2A card in JSON format.",
+      "type": "json_t"
+    },
     "acp": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
