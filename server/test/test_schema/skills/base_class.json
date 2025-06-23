@@ -52,10 +52,6 @@
       "group": "context",
       "requirement": "required"
     },
-    "observables": {
-      "group": "primary",
-      "requirement": "recommended"
-    },
     "time": {
       "requirement": "required"
     },

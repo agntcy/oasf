@@ -135,100 +135,12 @@ defmodule SchemaWeb.PageView do
   end
 
   @spec format_attribute_caption(any, String.t() | atom, nil | maybe_improper_list | map) :: any
-  def format_attribute_caption(conn, entity_key, entity) do
-    {observable_type_id, observable_kind} = observable_type_id_and_kind(entity)
-
+  def format_attribute_caption(_conn, entity_key, entity) do
     caption = entity[:caption] || to_string(entity_key)
-
-    caption =
-      case observable_type_id do
-        nil ->
-          caption
-
-        type_id ->
-          type_id = to_string(type_id)
-
-          [
-            caption,
-            " <sup><a href=\"",
-            SchemaWeb.Router.Helpers.static_path(conn, "/objects/observable"),
-            "#type_id-",
-            type_id,
-            "\" data-toggle=\"tooltip\" title=\"Observable Type ID ",
-            type_id,
-            ": ",
-            observable_kind,
-            "\">O</a></sup>"
-          ]
-      end
 
     case entity[:extension] do
       nil -> caption
       extension -> [caption, " <sup>#{extension}</sup>"]
-    end
-  end
-
-  defp observable_type_id_and_kind(entity) do
-    observable_object = Schema.object(:observable)
-
-    observable_type_id_map =
-      if observable_object do
-        observable_object[:attributes][:type_id][:enum]
-      else
-        nil
-      end
-
-    cond do
-      observable_type_id_map == nil ->
-        {nil, nil}
-
-      Map.has_key?(entity, :observable) ->
-        observable_type_id = Schema.Utils.observable_type_id_to_atom(entity[:observable])
-        enum_details = observable_type_id_map[observable_type_id]
-
-        {
-          observable_type_id,
-          "#{enum_details[:caption]} (#{enum_details[:_observable_kind]})"
-        }
-
-      Map.has_key?(entity, :type) ->
-        # Check if this is a dictionary type
-        type = Schema.dictionary()[:types][:attributes][Schema.Utils.to_uid(entity[:type])]
-        type_observable = type[:observable]
-
-        cond do
-          type_observable ->
-            observable_type_id = Schema.Utils.observable_type_id_to_atom(type_observable)
-            enum_details = observable_type_id_map[observable_type_id]
-
-            {
-              observable_type_id,
-              "#{enum_details[:caption]} (#{enum_details[:_observable_kind]})"
-            }
-
-          Map.has_key?(entity, :object_type) ->
-            # Check if this object is an observable
-            object_key = Schema.Utils.to_uid(entity[:object_type])
-            object_observable = Schema.object(object_key)[:observable]
-
-            if object_observable do
-              observable_type_id = Schema.Utils.observable_type_id_to_atom(object_observable)
-              enum_details = observable_type_id_map[observable_type_id]
-
-              {
-                observable_type_id,
-                "#{enum_details[:caption]} (#{enum_details[:_observable_kind]})"
-              }
-            else
-              {nil, nil}
-            end
-
-          true ->
-            {nil, nil}
-        end
-
-      true ->
-        {nil, nil}
     end
   end
 
