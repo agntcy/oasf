@@ -2,7 +2,7 @@
   "uid": 1,
   "caption": "Natural Language Understanding",
   "description": "Natural Language Understanding (NLU) focuses on the ability to interpret and comprehend human language, including understanding context, semantics, and identifying key entities within text.",
-  "extends": "nlp",
-  "name": "nlu",
+  "extends": "natural_language_processing",
+  "name": "natural_language_understanding",
   "attributes": {}
 }

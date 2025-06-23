@@ -2,7 +2,7 @@
   "uid": 6,
   "caption": "Personalisation and Adaptation",
   "description": "Capabilities for adapting and personalizing content based on user context and preferences.",
-  "extends": "nlp",
+  "extends": "natural_language_processing",
   "name": "personalization",
   "attributes": {}
 }

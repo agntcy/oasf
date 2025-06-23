@@ -2,7 +2,7 @@
   "caption": "Agent Connect Protocol Specs",
   "description": "Specification of agent capabilities, config, input, output, and interrupts.",
   "extends": "object",
-  "name": "acp",
+  "name": "agent_connect_protocol",
   "attributes": {
     "capabilities": {
       "caption": "Capabilities",

@@ -2,7 +2,7 @@
   "uid": 7,
   "caption": "Analytical and Logical Reasoning",
   "description": "Capabilities for performing logical analysis, inference, and problem-solving tasks.",
-  "extends": "nlp",
+  "extends": "natural_language_processing",
   "name": "analytical_reasoning",
   "attributes": {}
 }

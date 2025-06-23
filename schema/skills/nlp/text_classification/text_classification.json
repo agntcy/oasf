@@ -2,7 +2,7 @@
   "uid": 9,
   "caption": "Text Classification",
   "description": "Capabilities for classifying and categorizing text into predefined categories or labels.",
-  "extends": "nlp",
+  "extends": "natural_language_processing",
   "name": "text_classification",
   "attributes": {}
 }

@@ -1,7 +1,7 @@
 {
   "caption": "Natural Language Processing",
-  "category": "nlp",
+  "category": "natural_language_processing",
   "extends": "base_skill",
-  "name": "nlp",
+  "name": "natural_language_processing",
   "attributes": {}
 }

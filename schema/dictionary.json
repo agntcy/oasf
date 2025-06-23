@@ -470,7 +470,7 @@
     "acp": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
-      "type": "acp"
+      "type": "agent_connect_protocol"
     },
     "streaming": {
       "caption": "Streaming Modes",

@@ -2,7 +2,7 @@
   "uid": 1,
   "caption": "Contextual Comprehension",
   "description": "Understanding the context and nuances of text input to provide relevant responses.",
-  "extends": "nlu",
+  "extends": "natural_language_understanding",
   "name": "contextual_comprehension",
   "attributes": {}
 }

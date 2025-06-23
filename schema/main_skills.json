@@ -3,7 +3,7 @@
   "description": "A structured view of distinct abilities, defining the capabilities within the Open Agentic Schema Framework.",
   "name": "category",
   "attributes": {
-    "nlp": {
+    "natural_language_processing": {
       "uid": 1,
       "caption": "Natural Language Processing",
       "description": "Natural Language Processing (NLP) tasks are the application of computational techniques to the analysis and synthesis of natural language and speech."

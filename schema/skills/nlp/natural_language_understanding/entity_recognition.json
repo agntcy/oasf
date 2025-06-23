@@ -2,7 +2,7 @@
   "uid": 3,
   "caption": "Entity Recognition",
   "description": "Identifying and categorizing key entities within the text, such as names, dates, or locations.",
-  "extends": "nlu",
+  "extends": "natural_language_understanding",
   "name": "entity_recognition",
   "attributes": {}
 }

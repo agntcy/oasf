@@ -2,7 +2,7 @@
   "uid": 2,
   "caption": "Semantic Understanding",
   "description": "Grasping the meaning and intent behind words and phrases.",
-  "extends": "nlu",
+  "extends": "natural_language_understanding",
   "name": "semantic_understanding",
   "attributes": {}
 }

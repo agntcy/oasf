@@ -2,7 +2,7 @@
   "uid": 10,
   "caption": "Feature Extraction",
   "description": "Capabilities for extracting and representing textual features as vectors for downstream tasks.",
-  "extends": "nlp",
+  "extends": "natural_language_processing",
   "name": "feature_extraction",
   "attributes": {}
 }
