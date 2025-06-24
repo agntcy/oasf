@@ -136,13 +136,13 @@ defmodule Schema.Validator do
     {response, class} =
       case type do
         :skill ->
-          validate_skill_class_uid_and_return_class(response, input)
+          validate_class_id_or_name(response, input, &Schema.find_skill/1, &Schema.skill/1)
 
         :domain ->
-          validate_domain_class_uid_and_return_class(response, input)
+          validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
         :feature ->
-          validate_feature_class_name_and_return_class(response, input)
+          validate_class_id_or_name(response, input, nil, &Schema.feature/1)
 
         :object ->
           validate_object_name_and_return_object(response, options)
@@ -177,14 +177,69 @@ defmodule Schema.Validator do
     finalize_response(response)
   end
 
-  @spec validate_skill_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
-  defp validate_skill_class_uid_and_return_class(response, input) do
+  defp validate_class_id_or_name(response, input, find_by_id, find_by_name) do
+    # Validate ID if present
+    {id_response, class_by_id} =
+      if Map.has_key?(input, "id") do
+        validate_class_id_and_return_class(find_by_id, response, input)
+      else
+        {response, nil}
+      end
+
+    # Validate name if present (using updated response to accumulate errors)
+    {final_response, class_by_name} =
+      if Map.has_key?(input, "name") do
+        validate_class_name_and_return_class(find_by_name, id_response, input)
+      else
+        {id_response, nil}
+      end
+
+    # Handle cases
+    cond do
+      # Both missing
+      !Map.has_key?(input, "id") && !Map.has_key?(input, "name") ->
+        {add_error_required_attribute_missing(final_response, "id or name", "id or name"), nil}
+
+      # ID present but invalid OR name present but invalid
+      (Map.has_key?(input, "id") && is_nil(class_by_id)) ||
+          (Map.has_key?(input, "name") && is_nil(class_by_name)) ->
+        {final_response, nil}
+
+      # Only one valid identifier
+      class_by_id && is_nil(class_by_name) ->
+        {final_response, class_by_id}
+
+      class_by_name && is_nil(class_by_id) ->
+        {final_response, class_by_name}
+
+      # Both valid - check consistency
+      true ->
+        if class_by_id.uid == class_by_name.uid do
+          {final_response, class_by_id}
+        else
+          error_msg =
+            "ID and name refer to different classes. " <>
+              "ID #{input["id"]} points to class #{class_by_id.name}, " <>
+              "name '#{input["name"]}' points to class #{class_by_name.name}."
+
+          {add_error(
+             final_response,
+             "id_name_mismatch",
+             error_msg,
+             %{attribute_path: "id/name", attribute: "id/name"}
+           ), nil}
+        end
+    end
+  end
+
+  @spec validate_class_id_and_return_class((any -> any), map(), map()) :: {map(), nil | map()}
+  defp validate_class_id_and_return_class(find_class_function, response, input) do
     if Map.has_key?(input, "id") do
       class_uid = input["id"]
 
       cond do
         is_integer_t(class_uid) ->
-          case Schema.find_skill(class_uid) do
+          case find_class_function.(class_uid) do
             nil ->
               {
                 add_error(
@@ -213,54 +268,23 @@ defmodule Schema.Validator do
     end
   end
 
-  @spec validate_domain_class_uid_and_return_class(map(), map()) :: {map(), nil | map()}
-  defp validate_domain_class_uid_and_return_class(response, input) do
-    if Map.has_key?(input, "id") do
-      class_uid = input["id"]
-
-      cond do
-        is_integer_t(class_uid) ->
-          case Schema.find_domain(class_uid) do
-            nil ->
-              {
-                add_error(
-                  response,
-                  "id_unknown",
-                  "Unknown \"id\" value; no class is defined for #{class_uid}.",
-                  %{attribute_path: "id", attribute: "id", value: class_uid}
-                ),
-                nil
-              }
-
-            class ->
-              {response, class}
-          end
-
-        true ->
-          {
-            # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "id", "id", class_uid, "integer_t"),
-            nil
-          }
-      end
-    else
-      # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "id", "id"), nil}
-    end
-  end
-
-  @spec validate_feature_class_name_and_return_class(map(), map()) :: {map(), nil | map()}
-  defp validate_feature_class_name_and_return_class(response, input) do
+  @spec validate_class_name_and_return_class((any -> any), map(), map()) ::
+          {map(), nil | map()}
+  defp validate_class_name_and_return_class(
+         find_class_function,
+         response,
+         input
+       ) do
     if Map.has_key?(input, "name") do
       name = input["name"]
       class_name = Schema.Types.extract_class_name(name)
 
       cond do
         is_bitstring(class_name) ->
-          case Schema.feature(class_name) do
+          case find_class_function.(class_name) do
             nil ->
               {
-                add_warning(
+                add_error(
                   response,
                   "name_unknown",
                   "Unknown \"name\" value; no agent extension is defined for #{class_name} in OASF.",
@@ -1312,13 +1336,13 @@ defmodule Schema.Validator do
         {response, class} =
           case attribute_details[:family] do
             "skill" ->
-              validate_skill_class_uid_and_return_class(response, value)
+              validate_class_id_or_name(response, value, &Schema.find_skill/1, &Schema.skill/1)
 
             "domain" ->
-              validate_domain_class_uid_and_return_class(response, value)
+              validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
             "feature" ->
-              validate_feature_class_name_and_return_class(response, value)
+              validate_class_id_or_name(response, value, nil, &Schema.feature/1)
 
             _ ->
               # This should never happen for published schemas (validator will catch this) but
