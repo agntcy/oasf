@@ -226,50 +226,60 @@ defmodule Schema.Generator do
     constraints = Map.get(type, :constraints)
 
     if constraints do
-      apply_constraints(attributes, constraints)
+      apply_constraints(attributes, constraints, type)
     else
       attributes
     end
   end
 
-  defp apply_constraints(data, constraints) do
-    data =
-      if constraints[:just_one] do
-        valid_keys = Enum.filter(constraints[:just_one], &Map.has_key?(data, String.to_atom(&1)))
-        IO.inspect(valid_keys, label: "Valid keys for just_one")
+  defp apply_constraints(attributes, constraints, type) do
+    attributes
+    |> apply_just_one(constraints[:just_one])
+    |> apply_at_least_one(constraints[:at_least_one], type)
+  end
 
-        if valid_keys != [] do
-          chosen_key = Enum.random(valid_keys)
-          IO.inspect(chosen_key, label: "Chosen key for just_one")
+  defp apply_just_one(attributes, nil), do: attributes
 
-          Enum.reduce(valid_keys, data, fn key, acc ->
-            if key == chosen_key, do: acc, else: Map.delete(acc, String.to_atom(key))
-          end)
-        else
-          data
-        end
-      else
-        data
-      end
+  defp apply_just_one(attributes, just_one_list) do
+    valid_keys = Enum.filter(just_one_list, &Map.has_key?(attributes, String.to_atom(&1)))
 
-    if constraints[:at_least_one] do
-      valid_keys =
-        Enum.filter(constraints[:at_least_one], &Map.has_key?(data, String.to_atom(&1)))
+    if valid_keys != [] do
+      chosen_key = Enum.random(valid_keys)
 
-      IO.inspect(valid_keys, label: "Valid keys for at_least_one")
-
-      if valid_keys != [] do
-        chosen_keys = Enum.take_random(valid_keys, Enum.random(1..min(2, length(valid_keys))))
-        IO.inspect(chosen_keys, label: "Chosen keys for at_least_one")
-
-        Enum.reduce(valid_keys, data, fn key, acc ->
-          if key in chosen_keys, do: acc, else: Map.delete(acc, String.to_atom(key))
-        end)
-      else
-        data
-      end
+      Enum.reduce(valid_keys, attributes, fn key, acc ->
+        if key == chosen_key, do: acc, else: Map.delete(acc, String.to_atom(key))
+      end)
     else
-      data
+      attributes
+    end
+  end
+
+  defp apply_at_least_one(attributes, nil, _type), do: attributes
+  defp apply_at_least_one(attributes, [], _type), do: attributes
+
+  defp apply_at_least_one(attributes, at_least_one_list, type) do
+    is_satisfied =
+      Enum.any?(at_least_one_list, fn key ->
+        Map.has_key?(attributes, String.to_atom(key))
+      end)
+
+    if is_satisfied do
+      attributes
+    else
+      key_to_add_string = Enum.random(at_least_one_list)
+      key_to_add_atom = String.to_atom(key_to_add_string)
+
+      case Enum.find(type[:attributes], fn {name, _field} -> name == key_to_add_atom end) do
+        nil ->
+          Logger.warning(
+            "Could not find attribute '#{key_to_add_string}' to satisfy at_least_one constraint."
+          )
+
+          attributes
+
+        {name, field} ->
+          generate_field(name, field, attributes)
+      end
     end
   end
 
