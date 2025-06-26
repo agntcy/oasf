@@ -54,10 +54,8 @@ tasks:
     desc: Build container images
     vars:
       BAKE_OPTS: '--set *.platform=linux/{{ARCH}}'
-      SCHEMA_VERSION:
-        sh: jq -r '.version' schema/version.json
     cmds:
-      - IMAGE_TAG=v{{.SCHEMA_VERSION}} docker buildx bake {{.BAKE_OPTS}}
+      - docker buildx bake {{.BAKE_OPTS}}
 
   release:
     desc: Release images for all components with a release tag
