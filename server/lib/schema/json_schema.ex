@@ -149,6 +149,12 @@ defmodule Schema.JsonSchema do
     {Map.new(properties), required}
   end
 
+  defp encode_attribute(_name, "string_map_t", attr) do
+    new_schema(attr)
+    |> Map.put("type", "object")
+    |> Map.put("additionalProperties", %{"type" => "string"})
+  end
+
   defp encode_attribute(_name, "integer_t", attr) do
     new_schema(attr) |> encode_integer(attr)
   end
