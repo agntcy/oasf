@@ -106,25 +106,23 @@ defmodule Schema.Cache do
       read_objects(version[:version])
 
     dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
-
     dictionary_attributes = dictionary[:attributes]
 
+    # Read and update profiles
     profiles = JsonReader.read_profiles() |> update_profiles(dictionary_attributes)
-
     # clean up the cached files
     JsonReader.cleanup()
-
     # Check profiles used in objects, adding objects to profile's _links
     profiles = Profiles.sanity_check(:object, objects, profiles)
+    # Check profiles used in classes, adding classes to profile's _links
+    profiles = Profiles.sanity_check(:class, classes, profiles)
 
+    # Missing description warnings, datetime attributes, and profiles
     objects =
       objects
       |> Utils.update_objects(dictionary_attributes)
       |> update_objects()
       |> final_check(dictionary_attributes)
-
-    # Check profiles used in classes, adding classes to profile's _links
-    profiles = Profiles.sanity_check(:class, classes, profiles)
 
     classes =
       update_classes(classes, objects)
@@ -144,6 +142,7 @@ defmodule Schema.Cache do
 
     base_class = final_check(:base_class, base_class, dictionary_attributes)
 
+    # Check for each attribute in the schema if it has a requirement field.
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
