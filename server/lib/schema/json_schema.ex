@@ -178,6 +178,7 @@ defmodule Schema.JsonSchema do
   defp encode_type(type) do
     cond do
       Schema.data_type?(type, "string_t") -> "string"
+      Schema.data_type?(type, "string_map_t") -> "object"
       Schema.data_type?(type, "integer_t") -> "integer"
       Schema.data_type?(type, "long_t") -> "integer"
       Schema.data_type?(type, "float_t") -> "number"
