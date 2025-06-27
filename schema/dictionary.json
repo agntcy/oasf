@@ -670,6 +670,29 @@
       "description": "The version that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
+    "version_format": {
+      "caption": "Version Format",
+      "description": "Specifies the versioning format used for the version field to enable semantic sorting and comparison.",
+      "type": "string_t",
+      "enum": {
+        "semver": {
+          "caption": "Semantic Versioning",
+          "description": "Semantic Versioning (SemVer) format: MAJOR.MINOR.PATCH (e.g., 1.2.3, 2.0.0-alpha.1)"
+        },
+        "pep440": {
+          "caption": "PEP 440",
+          "description": "Python PEP 440 versioning format (e.g., 1.2.3, 1.2.3a1, 1.2.3.dev0)"
+        },
+        "calver": {
+          "caption": "Calendar Versioning",
+          "description": "Calendar Versioning format using date-based versions (e.g., 2024.12.1, 24.12.1)"
+        },
+        "custom": {
+          "caption": "Custom Format",
+          "description": "Custom versioning format not covered by standard schemes"
+        }
+      }
+    },
     "value": {
       "caption": "Value",
       "description": "The value associated to an attribute. See specific usage.",
