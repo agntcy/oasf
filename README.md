@@ -71,6 +71,7 @@ It also sets up port forwarding
 so that the services can be accessed locally.
 
 ```shell
+IMAGE_TAG=latest task build:images
 task up
 ```
 
