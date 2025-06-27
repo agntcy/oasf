@@ -446,9 +446,17 @@ defmodule Schema.Cache do
 
   defp update_attributes(attributes, dictionary_attributes) do
     Enum.map(attributes, fn {name, attribute} ->
-      case find_attribute(dictionary_attributes, name, attribute[:_source]) do
+      # Use referece if exists instead of the name
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
+      case find_attribute(dictionary_attributes, reference, attribute[:_source]) do
         nil ->
-          Logger.warning("undefined attribute: #{name}: #{inspect(attribute)}")
+          Logger.warning("undefined attribute: #{reference}: #{inspect(attribute)}")
           {name, attribute}
 
         base ->
@@ -482,9 +490,16 @@ defmodule Schema.Cache do
          ref_objects
        ) do
     Enum.map_reduce(attributes, ref_objects, fn {name, attribute}, acc ->
-      case find_attribute(dictionary_attributes, name, attribute[:_source]) do
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
+      case find_attribute(dictionary_attributes, reference, attribute[:_source]) do
         nil ->
-          Logger.warning("undefined attribute: #{name}: #{inspect(attribute)}")
+          Logger.warning("undefined attribute: #{reference}: #{inspect(attribute)}")
           {{name, attribute}, acc}
 
         base ->
@@ -1205,10 +1220,20 @@ defmodule Schema.Cache do
 
   defp update_profile(profile, profile_attributes, dictionary_attributes) do
     Enum.into(profile_attributes, %{}, fn {name, attribute} ->
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
       {name,
-       case find_attribute(dictionary_attributes, name, String.to_atom(profile)) do
+       case find_attribute(dictionary_attributes, reference, String.to_atom(profile)) do
          nil ->
-           Logger.warning("profile #{profile} uses #{name} that is not defined in the dictionary")
+           Logger.warning(
+             "profile #{profile} uses #{reference} that is not defined in the dictionary"
+           )
+
            attribute
 
          dictionary_attribute ->
