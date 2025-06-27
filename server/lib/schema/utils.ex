@@ -290,6 +290,14 @@ defmodule Schema.Utils do
       item_attributes,
       dictionary_attributes,
       fn {item_attribute_key, item_attribute}, dictionary_attributes ->
+        # If the reference is different, use that as item_attribute_key
+        item_attribute_key =
+          if Map.has_key?(item_attribute, :reference) do
+            item_attribute[:reference]
+          else
+            item_attribute_key
+          end
+
         link =
           Map.update(
             link,
