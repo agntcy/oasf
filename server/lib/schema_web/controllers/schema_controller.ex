@@ -734,7 +734,7 @@ defmodule SchemaWeb.SchemaController do
 
     default_version = %{
       :version => Schema.version(),
-      :url => "#{base_url}/#{Schema.version()}/api"
+      :url => "#{base_url}/api/#{Schema.version()}"
     }
 
     versions_response =
