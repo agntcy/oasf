@@ -214,10 +214,10 @@
       }
     },
     {
-      "metric_name": "gen_ai.server.ioa.agp.chain_completion_time",
+      "metric_name": "gen_ai.server.ioa.slim.chain_completion_time",
       "instrument_type": "Histogram",
       "unit": "s",
-      "description": "Time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway.",
+      "description": "Time taken for a message to be routed from one agent to another and optionally back, via the SLIM gateway.",
       "stability": "Experimental",
       "metric_version": "string: The version of the metric being reported.",
       "attributes": {
@@ -229,10 +229,10 @@
       }
     },
     {
-      "metric_name": "gen_ai.server.ioa.agp.connection_latency",
+      "metric_name": "gen_ai.server.ioa.slim.connection_latency",
       "instrument_type": "Histogram",
       "unit": "s",
-      "description": "Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions.",
+      "description": "Measures the latency involved in connecting to the SLIM gateway and establishing routes or subscriptions.",
       "stability": "Experimental",
       "metric_version": "string: The version of the metric being reported.",
       "attributes": {
@@ -244,10 +244,10 @@
       }
     },
     {
-      "metric_name": "gen_ai.server.ioa.agp.error_rates",
+      "metric_name": "gen_ai.server.ioa.slim.error_rates",
       "instrument_type": "Counter",
       "unit": "1 (count)",
-      "description": "Total number of errors encountered within the AGP layer (e.g., message handling, routing failures).",
+      "description": "Total number of errors encountered within the SLIM layer (e.g., message handling, routing failures).",
       "stability": "Experimental",
       "metric_version": "string: The version of the metric being reported.",
       "attributes": {
@@ -259,10 +259,10 @@
       }
     },
     {
-      "metric_name": "gen_ai.server.ioa.agp.message_throughput",
+      "metric_name": "gen_ai.server.ioa.slim.message_throughput",
       "instrument_type": "UpDownCounter",
       "unit": "1/s",
-      "description": "Tracks the rate of messages sent and received over the AGP, reflecting communication load.",
+      "description": "Tracks the rate of messages sent and received over the SLIM, reflecting communication load.",
       "stability": "Experimental",
       "metric_version": "string: The version of the metric being reported.",
       "attributes": {

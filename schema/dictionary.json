@@ -155,8 +155,8 @@
         "gRPC": {
           "caption": "gRPC"
         },
-        "AGP": {
-          "caption": "AGP"
+        "SLIM": {
+          "caption": "SLIM"
         }
       },
       "is_array": true

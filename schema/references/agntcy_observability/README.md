@@ -99,28 +99,28 @@ AGNTGY is contributing the following metrics (identified by `ioa` in their names
         *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
         *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
         *   `outcome_justification`: The justification for the outcome of the request.
- *   **`gen_ai.server.ioa.agp.chain_completion_time`**: Measures the time taken for a message to be routed from one agent to another and optionally back, via the AGP gateway (in seconds).
+ *   **`gen_ai.server.ioa.slim.chain_completion_time`**: Measures the time taken for a message to be routed from one agent to another and optionally back, via the SLIM gateway (in seconds).
   *   Attributes:
         *   `metric_version`: The version of the metric being reported.
         *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
         *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
         *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
         *   `outcome_justification`: The justification for the outcome of the request.
- *   **`gen_ai.server.ioa.agp.connection_latency`**: Measures the latency involved in connecting to the AGP gateway and establishing routes or subscriptions (in seconds).
+ *   **`gen_ai.server.ioa.slim.connection_latency`**: Measures the latency involved in connecting to the SLIM gateway and establishing routes or subscriptions (in seconds).
   *   Attributes:
         *   `metric_version`: The version of the metric being reported.
         *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
         *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
         *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
         *   `outcome_justification`: The justification for the outcome of the request.
- *   **`gen_ai.server.ioa.agp.error_rates`**: Counts the total number of errors encountered within the AGP layer (e.g., message handling, routing failures).
+ *   **`gen_ai.server.ioa.slim.error_rates`**: Counts the total number of errors encountered within the SLIM layer (e.g., message handling, routing failures).
   *   Attributes:
         *   `metric_version`: The version of the metric being reported.
         *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
         *   `reporting_frequency`: The frequency at which the latency is reported (daily, per-task, real-time, on-demand).
         *   `collection_method`: The method used to collect the latency data (instrumentation, manual logs, OTel).
         *   `outcome_justification`: The justification for the outcome of the request.
- *   **`gen_ai.server.ioa.agp.message_throughput`**: Tracks the rate of messages sent and received over the AGP, reflecting communication load (messages/second).
+ *   **`gen_ai.server.ioa.slim.message_throughput`**: Tracks the rate of messages sent and received over the SLIM, reflecting communication load (messages/second).
   *   Attributes:
         *   `metric_version`: The version of the metric being reported.
         *   `processing_mode`: The mode of processing for the request (real-time, batch, on-demand).
