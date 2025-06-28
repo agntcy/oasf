@@ -411,7 +411,7 @@ defmodule SchemaWeb.SchemaController do
 
           example(%{
             data: %{
-              communication_protocols: ["AGP"],
+              communication_protocols: ["SLIM"],
               data_platform_integrations: [],
               data_schema: %{
                 name: "Agntcy Observability Data Schema",
@@ -632,7 +632,7 @@ defmodule SchemaWeb.SchemaController do
             inputs: [
               %{
                 data: %{
-                  communication_protocols: ["AGP"],
+                  communication_protocols: ["SLIM"],
                   data_platform_integrations: [],
                   data_schema: %{
                     name: "Agntcy Observability Data Schema",
