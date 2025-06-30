@@ -106,25 +106,23 @@ defmodule Schema.Cache do
       read_objects(version[:version])
 
     dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
-
     dictionary_attributes = dictionary[:attributes]
 
+    # Read and update profiles
     profiles = JsonReader.read_profiles() |> update_profiles(dictionary_attributes)
-
     # clean up the cached files
     JsonReader.cleanup()
-
     # Check profiles used in objects, adding objects to profile's _links
     profiles = Profiles.sanity_check(:object, objects, profiles)
+    # Check profiles used in classes, adding classes to profile's _links
+    profiles = Profiles.sanity_check(:class, classes, profiles)
 
+    # Missing description warnings, datetime attributes, and profiles
     objects =
       objects
       |> Utils.update_objects(dictionary_attributes)
       |> update_objects()
       |> final_check(dictionary_attributes)
-
-    # Check profiles used in classes, adding classes to profile's _links
-    profiles = Profiles.sanity_check(:class, classes, profiles)
 
     classes =
       update_classes(classes, objects)
@@ -144,6 +142,7 @@ defmodule Schema.Cache do
 
     base_class = final_check(:base_class, base_class, dictionary_attributes)
 
+    # Check for each attribute in the schema if it has a requirement field.
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
@@ -447,9 +446,17 @@ defmodule Schema.Cache do
 
   defp update_attributes(attributes, dictionary_attributes) do
     Enum.map(attributes, fn {name, attribute} ->
-      case find_attribute(dictionary_attributes, name, attribute[:_source]) do
+      # Use referece if exists instead of the name
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
+      case find_attribute(dictionary_attributes, reference, attribute[:_source]) do
         nil ->
-          Logger.warning("undefined attribute: #{name}: #{inspect(attribute)}")
+          Logger.warning("undefined attribute: #{reference}: #{inspect(attribute)}")
           {name, attribute}
 
         base ->
@@ -483,9 +490,16 @@ defmodule Schema.Cache do
          ref_objects
        ) do
     Enum.map_reduce(attributes, ref_objects, fn {name, attribute}, acc ->
-      case find_attribute(dictionary_attributes, name, attribute[:_source]) do
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
+      case find_attribute(dictionary_attributes, reference, attribute[:_source]) do
         nil ->
-          Logger.warning("undefined attribute: #{name}: #{inspect(attribute)}")
+          Logger.warning("undefined attribute: #{reference}: #{inspect(attribute)}")
           {{name, attribute}, acc}
 
         base ->
@@ -1251,10 +1265,20 @@ defmodule Schema.Cache do
 
   defp update_profile(profile, profile_attributes, dictionary_attributes) do
     Enum.into(profile_attributes, %{}, fn {name, attribute} ->
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
       {name,
-       case find_attribute(dictionary_attributes, name, String.to_atom(profile)) do
+       case find_attribute(dictionary_attributes, reference, String.to_atom(profile)) do
          nil ->
-           Logger.warning("profile #{profile} uses #{name} that is not defined in the dictionary")
+           Logger.warning(
+             "profile #{profile} uses #{reference} that is not defined in the dictionary"
+           )
+
            attribute
 
          dictionary_attribute ->
