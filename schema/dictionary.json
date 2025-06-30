@@ -503,11 +503,6 @@
       "description": "Overall score.",
       "type": "float_t"
     },
-    "record": {
-      "caption": "Agent Record",
-      "description": "A record of an agent.",
-      "type": "agent"
-    },
     "ref": {
       "caption": "Reference",
       "description": "Reference to the agent in the agent directory. It includes the version and the locator.",
