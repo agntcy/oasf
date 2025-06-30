@@ -7,12 +7,10 @@
   "name": "observability",
   "attributes": {
     "data": {
+      "reference": "observability_data",
       "caption": "Data",
       "description": "Data supported by the agent for observability.",
-      "requirement": "required",
-      "type:": "object_t",
-      "object_type": "observability_data",
-      "object_name": "Observability Data"
+      "requirement": "required"
     }
   }
 }

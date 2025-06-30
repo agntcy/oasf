@@ -7,12 +7,10 @@
   "name": "evaluation",
   "attributes": {
     "data": {
+      "reference": "evaluation_data",
       "caption": "Data",
       "description": "Data supported by the agent for evaluation.",
-      "requirement": "required",
-      "type:": "object_t",
-      "object_type": "evaluation_data",
-      "object_name": "Evaluation Data"
+      "requirement": "required"
     }
   }
 }

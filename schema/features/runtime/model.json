@@ -6,12 +6,10 @@
   "name": "model",
   "attributes": {
     "data": {
+      "reference": "llm_model_data",
       "caption": "Data",
       "description": "Data supported by the agent for LLM model.",
-      "requirement": "required",
-      "type:": "object_t",
-      "object_type": "llm_model_data",
-      "object_name": "LLM Model Data"
+      "requirement": "required"
     }
   }
 }

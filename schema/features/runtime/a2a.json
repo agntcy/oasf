@@ -6,12 +6,10 @@
   "name": "a2a",
   "attributes": {
     "data": {
+      "reference": "a2a_card_data",
       "caption": "Data",
       "description": "Data supported by the agent for A2A card.",
-      "requirement": "required",
-      "type:": "object_t",
-      "object_type": "a2a_card_data",
-      "object_name": "A2A Card Data"
+      "requirement": "required"
     }
   }
 }

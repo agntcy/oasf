@@ -6,12 +6,10 @@
   "name": "prompt",
   "attributes": {
     "data": {
+      "reference": "llm_prompt_data",
       "caption": "Data",
       "description": "Data supported by the agent for LLM prompt.",
-      "requirement": "required",
-      "type:": "object_t",
-      "object_type": "llm_prompt_data",
-      "object_name": "LLM Prompt Data"
+      "requirement": "required"
     }
   }
 }

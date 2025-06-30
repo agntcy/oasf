@@ -8,6 +8,11 @@
       "description": "Content of the A2A card in JSON format.",
       "type": "json_t"
     },
+    "a2a_card_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for A2A card.",
+      "type": "a2a_card_data"
+    },
     "acp": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
@@ -190,12 +195,6 @@
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
     },
-    "data": {
-      "caption": "Data",
-      "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
-      "type": "extension_data",
-      "is_enum": true
-    },
     "datasets": {
       "caption": "Datasets",
       "description": "Datasets array.",
@@ -275,6 +274,11 @@
       "type": "metric",
       "is_array": true
     },
+    "evaluation_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for evaluation.",
+      "type": "evaluation_data"
+    },
     "evaluation_report": {
       "caption": "Evaluation report",
       "description": "The report of an evaluation.",
@@ -307,6 +311,12 @@
       "family": "feature",
       "is_enum": true,
       "is_array": true
+    },
+    "extension_data": {
+      "caption": "Data",
+      "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
+      "type": "extension_data",
+      "is_enum": true
     },
     "framework_config": {
       "caption": "Agentic Framework Config",
@@ -370,11 +380,21 @@
       "type": "interrupts",
       "is_array": true
     },
+    "llm_model_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for LLM model.",
+      "type": "llm_model_data"
+    },
     "llm_models": {
       "caption": "List of LLM Model Data",
       "description": "Collection of LLM models supported by the agent, including their configurations and parameters.",
       "type": "llm_model",
       "is_array": true
+    },
+    "llm_prompt_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for LLM prompts.",
+      "type": "llm_prompt_data"
     },
     "llm_prompts": {
       "caption": "List of LLM Prompts",
@@ -392,6 +412,16 @@
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
       "is_array": true
+    },
+    "manifest_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for runtime manifest.",
+      "type": "manifest_data"
+    },
+    "mcp_server_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for MCP server.",
+      "type": "mcp_server_data"
     },
     "mcp_server_inputs": {
       "caption": "MCP Server Inputs",
@@ -426,6 +456,11 @@
       "caption": "Name",
       "description": "The name of the entity. See specific usage.",
       "type": "string_t"
+    },
+    "observability_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for observability.",
+      "type": "observability_data"
     },
     "output": {
       "caption": "Output",

@@ -6,12 +6,10 @@
   "name": "manifest",
   "attributes": {
     "data": {
+      "reference": "manifest_data",
       "caption": "Data",
       "description": "Data supported by the agent for runtime manifest.",
-      "requirement": "required",
-      "type:": "object_t",
-      "object_type": "manifest_data",
-      "object_name": "Manifest Data"
+      "requirement": "required"
     }
   }
 }
