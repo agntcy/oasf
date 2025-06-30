@@ -86,8 +86,8 @@
           $('#features_id').addClass("active");
           $('#classes_id').addClass("active");
           break;
-        case '/objects/agent':
-          $('#agent_core_object_id').addClass("active");
+        case '/objects/agent_record':
+          $('#agent_record_id').addClass("active");
           break;
         case '/dictionary':
           $('#dictionary_id').addClass("active");
@@ -194,8 +194,8 @@
       <li id="features_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_features") %>'>Features</a>
       </li>
-      <li id="agent_core_object_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects/agent") %>'>Agent Core Object</a>
+      <li id="agent_record_id" class="nav-item">
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects/agent_record") %>'>Agent Record</a>
       </li>
       <li id="dictionary_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/dictionary") %>'>Dictionary</a>

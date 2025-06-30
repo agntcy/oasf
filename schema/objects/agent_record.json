@@ -2,7 +2,7 @@
   "caption": "Agent Record",
   "description": "The data model defines a schema for AI agent content representation. The schema provides a way to describe agent's features, constraints, artifact locators, versioning, ownership, or relevant details.",
   "extends": "object",
-  "name": "agent",
+  "name": "agent_record",
   "attributes": {
     "name": {
       "caption": "Agent Name",
@@ -56,7 +56,7 @@
       "requirement": "required"
     },
     "previous_record_cid": {
-      "caption": "The object holding the arent CID",
+      "caption": "Previous Record CID",
       "description": "Content Identifier (CID) of the data of the agent with the previous version.",
       "requirement": "optional"
     }

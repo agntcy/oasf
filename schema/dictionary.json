@@ -13,11 +13,6 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "agent_connect_protocol"
     },
-    "agent": {
-      "caption": "Agent",
-      "description": "A record of an agent.",
-      "type": "agent"
-    },
     "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
@@ -28,12 +23,6 @@
       "caption": "Agent Identifier",
       "description": "Agent identifier",
       "type": "uuid_t"
-    },
-    "agent_list": {
-      "caption": "Agent List",
-      "description": "A list of <code>agent</code> objects associated with a device, endpoint, or resource.",
-      "type": "agent",
-      "is_array": true
     },
     "agent_signature": {
       "caption": "Signature",
