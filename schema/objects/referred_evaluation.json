@@ -4,6 +4,7 @@
   "name": "referred_evaluation",
   "attributes": {
     "datasets": {
+      "reference": "evaluation_datasets",
       "caption": "Datasets",
       "description": "The datasets used for this evaluation.",
       "requirement": "required"

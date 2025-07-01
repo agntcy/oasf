@@ -141,12 +141,6 @@
       "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
       "type": "json_t"
     },
-    "datasets": {
-      "caption": "Datasets",
-      "description": "Datasets array.",
-      "type": "dataset",
-      "is_array": true
-    },
     "data_platform_integrations": {
       "caption": "Data Platform Integrations",
       "description": "Data platforms supported by the agent for observability.",
@@ -223,6 +217,12 @@
       "caption": "Data",
       "description": "Data supported by the agent for evaluation.",
       "type": "evaluation_data"
+    },
+    "evaluation_datasets": {
+      "caption": "Datasets",
+      "description": "Datasets array.",
+      "type": "evaluation_dataset",
+      "is_array": true
     },
     "evaluation_report": {
       "caption": "Evaluation report",

@@ -1,7 +1,7 @@
 {
   "caption": "Dataset",
   "description": "A dataset used for agent evaluation.",
-  "name": "dataset",
+  "name": "evaluation_dataset",
   "attributes": {
     "url": {
       "caption": "URL",
