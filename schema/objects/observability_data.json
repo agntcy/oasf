@@ -5,6 +5,7 @@
   "name": "observability_data",
   "attributes": {
     "data_schema": {
+      "reference": "observability_data_schema",
       "caption": "Supported Data Schema",
       "description": "Data schema supported by the agent for observability.",
       "requirement": "required",

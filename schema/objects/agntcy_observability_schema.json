@@ -1,7 +1,7 @@
 {
   "caption": "Agntcy Observability Data Schema",
   "description": "Describes OASF Observability Data Schema",
-  "extends": "data_schema",
+  "extends": "observability_data_schema",
   "name": "agntcy_observability_data_schema",
   "attributes": {
     "name": {

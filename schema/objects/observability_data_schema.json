@@ -2,7 +2,7 @@
   "caption": "Observability Data Schema",
   "description": "Declares what data schema is supported by the agent for observability.",
   "extends": "object",
-  "name": "data_schema",
+  "name": "observability_data_schema",
   "attributes": {
     "name": {
       "caption": "Name",

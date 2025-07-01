@@ -159,11 +159,6 @@
       "type": "key_value_object",
       "is_array": true
     },
-    "data_schema": {
-      "caption": "Supported Data Schema",
-      "description": "Data schema supported by the agent for observability.",
-      "type": "data_schema"
-    },
     "default_value": {
       "caption": "Default Value",
       "description": "Default value of the attribute.",
@@ -385,6 +380,11 @@
       "caption": "Data",
       "description": "Data supported by the agent for observability.",
       "type": "observability_data"
+    },
+    "observability_data_schema": {
+      "caption": "Supported Data Schema",
+      "description": "Data schema supported by the agent for observability.",
+      "type": "observability_data_schema"
     },
     "output": {
       "caption": "Output",
