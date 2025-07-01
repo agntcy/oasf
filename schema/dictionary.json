@@ -76,59 +76,10 @@
       "description": "Declares what invocation features this agent is capable of.",
       "type": "capabilities"
     },
-    "category": {
-      "caption": "Category",
-      "description": "The object category, normalized to the caption of <code>category_id</code>. See specific usage.",
-      "type": "string_t"
-    },
-    "category_id": {
-      "caption": "Category ID",
-      "description": "The normalized identifier of the object category. See specific usage.",
-      "sibling": "category",
-      "type": "integer_t"
-    },
     "certificate": {
       "caption": "Certificate",
       "description": "Base64-encoded signing certificate.",
       "type": "bytestring_t"
-    },
-    "cid": {
-      "caption": "Content Identifier",
-      "description": "Content Identifier (CID). See specific usage.",
-      "type": "uuid_t"
-    },
-    "class": {
-      "caption": "Class",
-      "description": "The class name of the object. See specific usage.",
-      "type": "string_t"
-    },
-    "classification": {
-      "caption": "Classification",
-      "description": "The classification as defined by the vendor.",
-      "type": "string_t"
-    },
-    "classification_ids": {
-      "caption": "Classification IDs",
-      "description": "The list of normalized classification identifiers. See specific usage.",
-      "sibling": "classifications",
-      "type": "integer_t",
-      "enum": {
-        "0": {
-          "caption": "Unknown",
-          "description": "The classification is unknown."
-        },
-        "99": {
-          "caption": "Other",
-          "description": "The classification is not mapped. See the <code>classifications</code> attribute, which contains a data source specific value."
-        }
-      },
-      "is_array": true
-    },
-    "classifications": {
-      "caption": "Classifications",
-      "description": "The list of malware classifications, normalized to the captions of the classification_id values. In the case of 'Other', they are defined by the source.",
-      "type": "string_t",
-      "is_array": true
     },
     "communication_protocols": {
       "caption": "Communication Protocols",
@@ -273,12 +224,6 @@
       "type": "env_var_values",
       "is_array": true
     },
-    "errors": {
-      "caption": "Errors",
-      "description": "",
-      "type": "metric",
-      "is_array": true
-    },
     "evaluation_data": {
       "caption": "Data",
       "description": "Data supported by the agent for evaluation.",
@@ -289,24 +234,10 @@
       "description": "The report of an evaluation.",
       "type": "evaluation_report"
     },
-    "events": {
-      "caption": "Events",
-      "description": "An event object that describes the event.",
-      "type": "object",
-      "is_array": true
-    },
     "export_format": {
       "caption": "Export Format",
       "description": "Format used by the agent for exporting observability data.",
       "type": "string_t"
-    },
-    "extension": {
-      "caption": "Schema Extension",
-      "description": "Extension model that describes agents and its capabilities more in depth.",
-      "type": "class_t",
-      "class_type": "base_feature",
-      "family": "feature",
-      "is_enum": true
     },
     "extensions": {
       "caption": "Schema Extensions",
@@ -363,11 +294,6 @@
       "description": "A json input.",
       "type": "json_t"
     },
-    "input_id": {
-      "caption": "Input ID",
-      "description": "The unique identifier of the input. See specific usage.",
-      "type": "string_t"
-    },
     "interrupt_payload": {
       "caption": "Interrupt Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
@@ -411,11 +337,6 @@
       "type": "llm_prompt",
       "is_array": true
     },
-    "locator": {
-      "caption": "Agent Locator",
-      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
-      "type": "locator"
-    },
     "locators": {
       "caption": "Agent Locators",
       "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
@@ -443,11 +364,6 @@
       "description": "Metadata.",
       "type": "key_value_object",
       "is_array": true
-    },
-    "metric": {
-      "caption": "Metric",
-      "description": "Defines a metric used to evaluate system performance, cost, and other critical factors.",
-      "type": "metric"
     },
     "metrics": {
       "caption": "Metrics",
@@ -485,25 +401,10 @@
       "description": "Overall scores of the Agent across all evaluation.",
       "type": "overall_scores"
     },
-    "parent_uid": {
-      "caption": "Parent Unique ID",
-      "description": "The unique identifier of an object's parent object. See specific usage.",
-      "type": "string_t"
-    },
-    "password": {
-      "caption": "Password",
-      "description": "The password that pertains to the class or object. See specific usage.",
-      "type": "boolean_t"
-    },
     "path": {
       "caption": "Path",
       "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
-    },
-    "port": {
-      "caption": "Port",
-      "description": "The TCP/UDP port number associated with a connection. See specific usage.",
-      "type": "port_t"
     },
     "previous_record_cid": {
       "caption": "Previous Agent Record CID",
@@ -560,22 +461,6 @@
       "caption": "Resume Payload",
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
-    },
-    "object_type": {
-      "caption": "Schema Type",
-      "description": "Schema type of the object. Can be used to identify the format of the data.",
-      "type": "string_t",
-      "enum": {
-        "0": {
-          "caption": "Unspecified"
-        },
-        "1": {
-          "caption": "Raw"
-        },
-        "1000": {
-          "caption": "OASF v0.4.0"
-        }
-      }
     },
     "schema_version": {
       "caption": "Schema Version",
@@ -649,44 +534,6 @@
       "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
       "type": "string_t"
     },
-    "type_id": {
-      "caption": "Type ID",
-      "description": "The normalized type identifier of an object. See specific usage.",
-      "sibling": "type",
-      "type": "integer_t",
-      "enum": {
-        "0": {
-          "caption": "Unknown",
-          "description": "The type is unknown."
-        },
-        "99": {
-          "caption": "Other",
-          "description": "The type is not mapped. See the <code>type</code> attribute, which contains a data source specific value."
-        }
-      }
-    },
-    "type_name": {
-      "caption": "Type Name",
-      "description": "The class type name, as defined by the type_uid.",
-      "type": "string_t"
-    },
-    "type_uid": {
-      "caption": "Type ID",
-      "description": "The class type ID. It identifies the class's semantics and structure. The value is calculated by the logging system as: <code>id * 100 + activity_id</code>.",
-      "sibling": "type_name",
-      "type": "long_t"
-    },
-    "types": {
-      "caption": "Types",
-      "description": "The type/s of an entity. See specific usage.",
-      "type": "string_t",
-      "is_array": true
-    },
-    "uid": {
-      "caption": "Unique ID",
-      "description": "The unique identifier. See specific usage.",
-      "type": "string_t"
-    },
     "unmapped": {
       "caption": "Unmapped Data",
       "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
@@ -714,7 +561,7 @@
     },
     "values": {
       "caption": "Values",
-      "description": "List of key / values pairs.",
+      "description": "List of key/value pairs.",
       "type": "key_value_object",
       "is_array": true
     }
