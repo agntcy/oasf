@@ -4,7 +4,7 @@
   "extends": "object",
   "name": "llm_model",
   "attributes": {
-    "name": {
+    "model": {
       "caption": "Model Name",
       "description": "Name of the LLM model including its version (e.g., 'gpt-3.5-turbo').",
       "requirement": "required"

@@ -1,18 +1,24 @@
 {
-	"caption": "MCP Server Configuration",
-	"description": "Data for the MCP server agent record extension.",
-	"extends": "extension_data",
-	"name": "mcp_server_data",
-	"attributes": {
-		"mcp_server_inputs": {
-			"caption": "User Inputs",
-			"description": "Collection of sensitive values requiring user input during server initialization.",
-			"requirement": "required"
-		},
-		"mcp_servers": {
-			"caption": "MCP Server Configurations",
-			"description": "Registry of configured MCP servers with execution parameters.",
-			"requirement": "required"
-		}
-	}
+  "caption": "MCP Server Configuration",
+  "description": "Data for the MCP server agent record extension.",
+  "extends": "extension_data",
+  "name": "mcp_server_data",
+  "attributes": {
+    "servers": {
+      "reference": "mcp_server_configurations",
+      "caption": "MCP Server Configurations",
+      "description": "List of MCP server configurations supported by the agent. Exact attribute names may vary depending on the client or platform.",
+      "requirement": "required",
+      "references": [
+        {
+          "description": "VS Code MCP Server Extension",
+          "url": "https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_configuration-format"
+        },
+        {
+          "description": "Claude MCP Connector",
+          "url": "https://docs.anthropic.com/en/docs/agents-and-tools/mcp-connector#field-descriptions"
+        }
+      ]
+    }
+  }
 }

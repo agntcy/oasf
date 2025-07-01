@@ -9,7 +9,13 @@
       "reference": "a2a_card_data",
       "caption": "Data",
       "description": "Data supported by the agent for A2A card.",
-      "requirement": "required"
+      "requirement": "required",
+      "references": [
+        {
+          "description": "A2A Card Data Schema",
+          "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+        }
+      ]
     }
   }
 }

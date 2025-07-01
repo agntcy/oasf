@@ -4,7 +4,8 @@
   "extends": "extension_data",
   "name": "llm_prompt_data",
   "attributes": {
-    "llm_prompts": {
+    "prompts": {
+      "reference": "llm_prompts",
       "caption": "LLM Prompts",
       "description": "List of common prompts used for LLM interactions with the agent, including their configurations and parameters.",
       "requirement": "required"
