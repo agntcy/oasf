@@ -5,10 +5,12 @@
   "name": "key_value_object",
   "attributes": {
     "name": {
+      "caption": "Name",
       "description": "The name of the key.",
       "requirement": "required"
     },
     "value": {
+      "caption": "Value",
       "description": "The value associated to the key.",
       "requirement": "required"
     }

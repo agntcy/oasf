@@ -25,7 +25,7 @@
       "requirement": "optional"
     },
     "thread_state": {
-      "caption": "ThreadState",
+      "caption": "Thread State",
       "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "requirement": "optional"
     },

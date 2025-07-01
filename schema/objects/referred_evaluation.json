@@ -1,5 +1,5 @@
 {
-  "caption": "Referred evaluation",
+  "caption": "Referred Evaluation",
   "description": "Referred evaluation for an agent.",
   "name": "referred_evaluation",
   "attributes": {
@@ -10,17 +10,17 @@
       "requirement": "required"
     },
     "publisher": {
-      "caption": "Evaluation publisher",
+      "caption": "Evaluation Publisher",
       "description": "The entity that published this evaluation.",
       "requirement": "required"
     },
     "created_at": {
-      "caption": "Creation date",
+      "caption": "Creation Date",
       "description": "Creation date of this evaluation.",
       "requirement": "required"
     },
     "evaluation_report": {
-      "caption": "Evaluation report",
+      "caption": "Evaluation Report",
       "description": "The report of this evaluation.",
       "requirement": "required"
     }

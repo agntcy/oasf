@@ -15,7 +15,7 @@
       }
     },
     "image": {
-      "caption": "Agent Docker image",
+      "caption": "Agent Docker Image",
       "description": "Container image for the agent.",
       "requirement": "required"
     },
