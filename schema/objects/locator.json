@@ -12,16 +12,16 @@
         "unspecified": {
           "caption": "Unspecified"
         },
-        "helm-chart": {
+        "helm_chart": {
           "caption": "Helm Chart"
         },
-        "docker-image": {
+        "docker_image": {
           "caption": "Docker Image"
         },
-        "python-package": {
+        "python_package": {
           "caption": "Python Package"
         },
-        "source-code": {
+        "source_code": {
           "caption": "Source Code"
         },
         "binary": {
