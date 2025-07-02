@@ -364,10 +364,6 @@ defmodule Schema.Cache do
   end
 
   @spec feature(__MODULE__.t(), atom()) :: nil | class_t()
-  def feature(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
-    enrich(base_class, dictionary[:attributes])
-  end
-
   def feature(%__MODULE__{dictionary: dictionary, features: features}, id) do
     case Map.get(features, id) do
       nil ->
