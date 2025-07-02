@@ -14,6 +14,11 @@
       "description": "The version of the agent. Values MAY conform to a specific versioning schema.",
       "requirement": "required"
     },
+    "schema_version": {
+      "caption": "Schema Version",
+      "description": "Version of the OASF schema.",
+      "requirement": "required"
+    },
     "description": {
       "caption": "Agent Description",
       "description": "The description of the agent.",
