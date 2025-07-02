@@ -14,7 +14,6 @@ OASF is highly inspired from OCSF (Open Cybersecurity Schema Framework) in terms
 The server is a derivative work of OCSF schema server and the schema update
 workflows reproduce those developed by OCSF.
 
-
 ## Features
 
 OASF defines a set of standards for AI agent content representation that aims to:
@@ -37,6 +36,10 @@ The schema server can also be used locally.
 
 - [Taskfile](https://taskfile.dev/)
 - [Docker](https://www.docker.com/)
+- [Go](https://go.dev/)
+- [yq](https://github.com/mikefarah/yq)
+- [curl](https://curl.se/)
+- [tar](https://www.gnu.org/software/tar/)
 
 Make sure Docker is installed with Buildx.
 
