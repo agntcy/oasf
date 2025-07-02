@@ -80,6 +80,8 @@ tasks:
 
   up:
     desc: Deploy services in an ephemeral kind cluster
+    preconditions:
+      - which yq
     deps:
       - deps:helm
       - deps:kubectl
