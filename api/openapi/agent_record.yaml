@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: Generated OpenAPI Spec
+  version: 1.0.0
+  description: agent_record
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+paths: {}
+components:
+  schemas:
+    agent_signature:
+      additionalProperties: false
+      properties:
+        algorithm:
+          type: string
+        annotations:
+          type: object
+        certificate:
+          type: string
+        content_bundle:
+          type: string
+        content_type:
+          type: string
+        signature:
+          type: string
+        signed_at:
+          type: string
+      type: object
+    base_feature:
+      additionalProperties: false
+      properties:
+        annotations:
+          type: object
+        data: {}
+        name:
+          type: string
+        version:
+          type: string
+      type: object
+    base_skill:
+      additionalProperties: false
+      properties:
+        annotations:
+          type: object
+        id:
+          type: integer
+        name:
+          type: string
+      type: object
+    locator:
+      additionalProperties: false
+      properties:
+        annotations:
+          type: object
+        digest:
+          type: string
+        size:
+          type: integer
+        type:
+          type: string
+        url:
+          type: string
+      type: object
+    agent_record:
+      additionalProperties: false
+      properties:
+        annotations:
+          type: object
+        authors:
+          items:
+            type: string
+          type: array
+        created_at:
+          type: string
+        description:
+          type: string
+        extensions:
+          items:
+            $ref: '#/components/schemas/base_feature'
+          type: array
+        locators:
+          items:
+            $ref: '#/components/schemas/locator'
+          type: array
+        name:
+          type: string
+        previous_record_cid:
+          type: string
+        schema_version:
+          type: string
+        signature:
+          $ref: '#/components/schemas/agent_signature'
+        skills:
+          items:
+            $ref: '#/components/schemas/base_skill'
+          type: array
+        version:
+          type: string
+      type: object

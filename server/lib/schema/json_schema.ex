@@ -182,6 +182,7 @@ defmodule Schema.JsonSchema do
       Schema.data_type?(type, "long_t") -> "integer"
       Schema.data_type?(type, "float_t") -> "number"
       Schema.data_type?(type, "boolean_t") -> "boolean"
+      Schema.data_type?(type, "string_map_t") -> "object"
       true -> type
     end
   end

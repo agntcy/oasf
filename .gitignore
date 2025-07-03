@@ -6,3 +6,8 @@ bin/
 
 # Env config
 .env
+
+# IDE
+.idea
+
+node_modules/

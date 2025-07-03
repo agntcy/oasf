@@ -95,6 +95,49 @@ jobs:
       image_tag: ${{ needs.prepare.outputs.image_tag }}
       artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
 
+  gen:
+    name: Generate API objects
+    needs:
+      - prepare
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Download artifacts
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
+        with:
+          name: artifacts-${{ needs.prepare.outputs.image_tag }}
+          path: artifacts
+          pattern: "*.tar"
+          merge-multiple: true
+
+      - name: Load images to local Docker registry
+        run: |
+          ls -la artifacts
+          for image_archive in artifacts/*.tar; do
+            docker load --input "$image_archive"
+          done
+          docker images
+
+      - name: Generate api
+        env:
+          IMAGE_REPO: ghcr.io/agntcy
+          IMAGE_TAG: ${{ needs.prepare.outputs.image_tag }}
+        run: |
+          task api:gen
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "There are uncommitted changes after running 'task api:gen'. Please commit these changes."
+            exit 1
+          fi
+
   test:
     name: Test
     needs:

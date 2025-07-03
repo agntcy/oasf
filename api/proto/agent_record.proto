@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package agent_record;
+
+import "google/api/annotations.proto";
+
+import "google/protobuf/descriptor.proto";
+
+import "google/protobuf/empty.proto";
+
+message Annotations {
+}
+
+message AgentSignature {
+  string algorithm = 1;
+
+  Annotations annotations = 2;
+
+  string certificate = 3;
+
+  string content_bundle = 4;
+
+  string content_type = 5;
+
+  string signature = 6;
+
+  string signed_at = 7;
+}
+
+message Data {
+}
+
+message BaseFeature {
+  Annotations annotations = 1;
+
+  Data data = 2;
+
+  string name = 3;
+
+  string version = 4;
+}
+
+message BaseSkill {
+  Annotations annotations = 1;
+
+  int64 id = 2;
+
+  string name = 3;
+}
+
+message Locator {
+  Annotations annotations = 1;
+
+  string digest = 2;
+
+  int64 size = 3;
+
+  string type = 4;
+
+  string url = 5;
+}
+
+message AgentRecord {
+  Annotations annotations = 1;
+
+  repeated string authors = 2;
+
+  string created_at = 3;
+
+  string description = 4;
+
+  repeated BaseFeature extensions = 5;
+
+  repeated Locator locators = 6;
+
+  string name = 7;
+
+  string previous_record_cid = 8;
+
+  string schema_version = 9;
+
+  AgentSignature signature = 10;
+
+  repeated BaseSkill skills = 11;
+
+  string version = 12;
+}
+
+service Agent_record {
+}
+

@@ -21,6 +21,23 @@ vars:
   KUBECTL_BIN: '{{ .BIN_DIR }}/kubectl-{{.KUBECTL_VERSION}}'
   KIND_VERSION: '0.25.0'
   KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
+  NODE_VERSION: '20.17.0'
+  NODE_BIN: '{{ .BIN_DIR }}/node-{{.NODE_VERSION }}'
+  GNOSTIC_VERSION: '0.7.0'
+  GNOSTIC_BIN: '{{ .BIN_DIR }}/gnostic-{{.GNOSTIC_VERSION}}'
+  GNOSTIC_GRPC_VERSION: '0.1.1'
+  GNOSTIC_GRPC_BIN: '{{ .BIN_DIR }}/gnostic-grpc-{{.GNOSTIC_GRPC_VERSION}}'
+  PROTOC_VERSION: '27.1'
+  PROTOC_BIN: '{{ .BIN_DIR }}/protoc-{{.PROTOC_VERSION}}'
+  BUFBUILD_VERSION: '1.50.1'
+  BUFBUILD_BIN: '{{ .BIN_DIR }}/bufbuild-{{.BUFBUILD_VERSION}}'
+
+  ## Object generation config
+  JSON_PATH: '{{ .ROOT_DIR }}/api/json'
+  OPENAPI_RELATIVE_PATH: 'api/openapi'
+  OPENAPI_PATH: '{{ .ROOT_DIR }}/{{ .OPENAPI_RELATIVE_PATH }}'
+  PROTO_PATH: '{{ .ROOT_DIR }}/api/proto'
+  OBJECTS: '{{ .OBJECTS | default "agent_record" }}'
 
 ## Set refresh interval for observable tasks like hot-reload
 interval: 500ms
@@ -214,6 +231,10 @@ tasks:
       - task: deps:helm
       - task: deps:kubectl
       - task: deps:kind
+      - task: deps:node
+      - task: deps:gnostic
+      - task: deps:protoc
+      - task: deps:bufbuild
 
   deps:bin-dir:
     desc: Create bin directory
@@ -265,3 +286,179 @@ tasks:
       - cmd: mv {{.BIN_DIR}}/kind {{.KIND_BIN}}
     status:
       - test -x {{.KIND_BIN}}
+
+  deps:node:
+    desc: Ensure supported Node.js version is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which curl
+    cmds:
+      - cmd: echo "Downloading Node.js v{{.NODE_VERSION}}..."
+      - cmd: curl -sSfL 'https://nodejs.org/dist/v{{.NODE_VERSION}}/node-v{{.NODE_VERSION}}-{{OS}}-{{ARCH}}.tar.gz' -o - | tar xzvOf - 'node-v{{.NODE_VERSION}}-{{OS}}-{{ARCH}}/bin/node' > {{.NODE_BIN}}
+      - cmd: chmod +x {{.NODE_BIN}}
+    status:
+      - test -x {{.NODE_BIN}}
+
+  deps:gnostic:
+    desc: Ensure gnostic is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which go
+    cmds:
+      - cmd: echo "Downloading Gnostic..."
+      - cmd: GOBIN={{.BIN_DIR}} go install github.com/google/gnostic@v{{.GNOSTIC_VERSION}}
+      - cmd: mv {{.BIN_DIR}}/gnostic {{.GNOSTIC_BIN}}
+      - cmd: GOBIN={{.BIN_DIR}} go install github.com/googleapis/gnostic-grpc@v{{.GNOSTIC_GRPC_VERSION}}
+      - cmd: mv {{.BIN_DIR}}/gnostic-grpc {{.GNOSTIC_GRPC_BIN}}
+    status:
+      - test -x {{.GNOSTIC_BIN}}
+      - test -x {{.GNOSTIC_GRPC_BIN}}
+
+  deps:protoc:
+    desc: Ensure supported Protoc version and plugins are installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which go
+      - which curl
+      - which unzip
+    vars:
+      ARCH_TYPE: '{{ if eq ARCH "arm64" }}aarch_64{{ else if eq ARCH "amd64" }}x86_64{{else if eq ARCH "s390x"}}x390_64{{ else }}{{ARCH}}{{ end }}'
+      OS_VARIANT: '{{ if eq OS "darwin" }}osx-universal_binary{{ else if eq OS "windows" }}win64{{else}}linux-{{.ARCH_TYPE}}{{ end }}'
+    cmds:
+      - cmd: echo "Downloading Protoc v{{.PROTOC_VERSION}}..."
+      - cmd: |
+          curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v{{.PROTOC_VERSION}}/protoc-{{.PROTOC_VERSION}}-{{.OS_VARIANT}}.zip -o {{.BIN_DIR}}/tmp.zip
+          unzip -j {{.BIN_DIR}}/tmp.zip "bin/protoc" -d {{.BIN_DIR}}
+          mv {{.BIN_DIR}}/protoc {{.PROTOC_BIN}}
+          rm {{.BIN_DIR}}/tmp.zip
+      - cmd: chmod +x {{.PROTOC_BIN}}
+      - cmd: echo "Downloading go plugins for protoc..."
+      - cmd: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - cmd: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+    status:
+      - test -x {{.PROTOC_BIN}}
+
+  deps:bufbuild:
+    desc: Ensure supported BufBuild version is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which curl
+    vars:
+      ARCH_TYPE: '{{ if eq ARCH "amd64" }}x86_64{{ else }}{{ARCH}}{{ end }}'
+    cmds:
+      - cmd: echo "Downloading BufBuild v{{.BUFBUILD_VERSION}}..."
+      - cmd: |
+          curl -L "https://github.com/bufbuild/buf/releases/download/v{{.BUFBUILD_VERSION}}/buf-{{OS}}-{{.ARCH_TYPE}}" -o {{.BUFBUILD_BIN}}
+      - cmd: chmod +x {{.BUFBUILD_BIN}}
+    status:
+      - test -x {{.BUFBUILD_BIN}}
+
+  ##
+  ## API
+  ##
+  api:clean:
+    desc: Clean generated API stubs
+    deps:
+      - api:clean:json
+      - api:clean:openapi
+      - api:clean:proto
+      - api:clean:go
+      - api:clean:python
+
+  api:clean:json:
+    desc: Clean generated JSON Schema files
+    dir: ./api/json
+    cmds:
+      - find . \( -name "*.json" \) -type f -delete
+
+  api:clean:openapi:
+    desc: Clean generated OpenAPI YAML files
+    dir: ./api/openapi
+    cmds:
+      - find . \( -name "*.yaml" \) -type f -delete
+
+  api:clean:proto:
+    desc: Clean generated gRPC stubs
+    dir: ./api/proto
+    cmds:
+      - find . \( -name "*.proto" \) -type f -delete
+
+  api:clean:go:
+    desc: Clean generated golang API stubs
+    dir: ./api/go
+    cmds:
+      - find . \( -name "*.pb.go" \) -type f -delete
+
+  api:clean:python:
+    desc: Clean generated python API stubs
+    dir: ./api/python
+    cmds:
+      - find . \( -name "*_pb2.py" -o -name "*_pb2.pyi" \) -type f -delete
+
+  api:gen:
+    desc: Generate API stubs for all supported languages
+    deps:
+      - up
+    cmds:
+      - defer: { task: down }
+      - task: api:gen:json
+      - task: api:gen:openapi
+      - task: api:gen:proto
+      - task: api:gen:language
+
+  api:gen:json:
+    desc: Get JSON Schema files from the server
+    vars:
+      SERVER_URL: '{{ .SERVER_URL | default "http://localhost:8080" }}'
+    cmds:
+      - mkdir -p {{.JSON_PATH}}
+      - |
+        for object in {{.OBJECTS}}; do
+          url="{{.SERVER_URL}}/schema/objects/$object"
+          echo "Fetching $object JSON from $url"
+          curl -sSfL "$url" > {{.JSON_PATH}}/$object.json
+        done
+
+  api:gen:openapi:
+    desc: Convert JSON Schema files to OpenAPI YAML files
+    deps:
+      - deps:node
+    cmds:
+      - mkdir -p {{.OPENAPI_PATH}}
+      - npm install --prefix {{.OPENAPI_PATH}}
+      - |
+        for f in {{.JSON_PATH}}/*.json; do
+          filename=$(basename "$f" .json)
+          INPUT_SCHEMA="{{.JSON_PATH}}/$filename.json" OUTPUT_FILE="{{.OPENAPI_PATH}}/$filename.yaml" {{.NODE_BIN}} {{.OPENAPI_PATH}}/convert-json-to-openapi.js
+        done
+
+  api:gen:proto:
+    desc: Generate gRPC stubs from OpenAPI spec
+    deps:
+      - deps:gnostic
+    cmds:
+      - mkdir -p {{.PROTO_PATH}}
+      - |
+        for f in {{.OPENAPI_PATH}}/*.yaml; do
+          filename=$(basename "$f")
+          echo "Generating gRPC stubs for $filename"
+          {{.GNOSTIC_BIN}} --grpc_out={{.PROTO_PATH}} {{.OPENAPI_RELATIVE_PATH}}/$filename
+        done
+
+  api:gen:language:
+    desc: Generates API stubs
+    dir: ./api
+    deps:
+      - task: deps:protoc
+      - task: deps:bufbuild
+    cmd: |
+      {{.BUFBUILD_BIN}} dep update
+      {{.BUFBUILD_BIN}} generate
