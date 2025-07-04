@@ -58,36 +58,6 @@ defmodule Schema do
   def reload(path), do: Repo.reload(path)
 
   @doc """
-    Returns the categories.
-  """
-  @spec categories :: map()
-  def categories(), do: Repo.categories()
-
-  @doc """
-    Returns the categories defined in the given extension set.
-  """
-  def categories(extensions) do
-    Map.update(Repo.categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _category} ->
-        {name, category(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single category with its classes.
-  """
-  @spec category(atom | String.t()) :: nil | Cache.category_t()
-  def category(id), do: get_category(Utils.to_uid(id))
-
-  @spec category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def category(extensions, id), do: get_category(extensions, Utils.to_uid(id))
-
-  @spec category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def category(extensions, extension, id),
-    do: get_category(extensions, Utils.to_uid(extension, id))
-
-  @doc """
     Returns skill categories.
   """
   @spec main_skills :: map()
@@ -220,52 +190,8 @@ defmodule Schema do
     end
   end
 
-  @doc """
-    Returns all classes.
-  """
-  @spec classes() :: map()
-  def classes(), do: Repo.classes()
-
-  @spec classes(Repo.extensions_t()) :: map()
-  def classes(extensions), do: Repo.classes(extensions)
-
-  @spec classes(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def classes(extensions, profiles) do
-    extensions
-    |> Repo.classes()
-    |> apply_profiles(profiles, MapSet.size(profiles))
-  end
-
-  @spec all_classes() :: map()
-  def all_classes(), do: Repo.all_classes()
-
   @spec all_objects() :: map()
   def all_objects(), do: Repo.all_objects()
-
-  @doc """
-    Returns a single class.
-  """
-  @spec class(atom() | String.t()) :: nil | Cache.class_t()
-  def class(id), do: Repo.class(Utils.to_uid(id))
-
-  @spec class(nil | String.t(), String.t()) :: nil | map()
-  def class(extension, id),
-    do: Repo.class(Utils.to_uid(extension, id))
-
-  @spec class(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def class(extension, id, nil), do: class(extension, id)
-
-  def class(extension, id, profiles) do
-    case class(extension, id) do
-      nil ->
-        nil
-
-      class ->
-        Map.update!(class, :attributes, fn attributes ->
-          Utils.apply_profiles(attributes, profiles)
-        end)
-    end
-  end
 
   @doc """
     Returns all skill classes.
@@ -554,7 +480,7 @@ defmodule Schema do
   """
   @spec export_schema() :: %{
           base_class: map(),
-          classes: map(),
+          skills: map(),
           domains: map(),
           features: map(),
           objects: map(),
@@ -565,7 +491,7 @@ defmodule Schema do
   def export_schema() do
     %{
       base_class: Schema.export_base_class(),
-      classes: Schema.export_classes(),
+      skills: Schema.export_skills(),
       domains: Schema.export_domains(),
       features: Schema.export_features(),
       objects: Schema.export_objects(),
@@ -577,7 +503,7 @@ defmodule Schema do
 
   @spec export_schema(Repo.extensions_t()) :: %{
           base_class: map(),
-          classes: map(),
+          skills: map(),
           domains: map(),
           features: map(),
           objects: map(),
@@ -588,7 +514,7 @@ defmodule Schema do
   def export_schema(extensions) do
     %{
       base_class: Schema.export_base_class(),
-      classes: Schema.export_classes(extensions),
+      skills: Schema.export_skills(extensions),
       domains: Schema.export_domains(extensions),
       features: Schema.export_features(extensions),
       objects: Schema.export_objects(extensions),
@@ -600,7 +526,7 @@ defmodule Schema do
 
   @spec export_schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
           base_class: map(),
-          classes: map(),
+          skills: map(),
           domains: map(),
           features: map(),
           objects: map(),
@@ -615,7 +541,7 @@ defmodule Schema do
   def export_schema(extensions, profiles) do
     %{
       base_class: Schema.export_base_class(profiles),
-      classes: Schema.export_classes(extensions, profiles),
+      skills: Schema.export_skills(extensions, profiles),
       domains: Schema.export_domains(extensions, profiles),
       features: Schema.export_features(extensions, profiles),
       objects: Schema.export_objects(extensions, profiles),
@@ -631,22 +557,6 @@ defmodule Schema do
   @spec export_data_types :: any
   def export_data_types() do
     Map.get(data_types(), :attributes)
-  end
-
-  @doc """
-    Exports the classes.
-  """
-  @spec export_classes() :: map()
-  def export_classes(), do: Repo.export_classes() |> reduce_objects()
-
-  @spec export_classes(Repo.extensions_t()) :: map()
-  def export_classes(extensions), do: Repo.export_classes(extensions) |> reduce_objects()
-
-  @spec export_classes(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_classes(extensions, nil), do: export_classes(extensions)
-
-  def export_classes(extensions, profiles) do
-    Repo.export_classes(extensions) |> update_exported_classes(profiles)
   end
 
   @doc """
@@ -763,10 +673,6 @@ defmodule Schema do
     Schema.Generator.generate_sample_class(class, nil)
   end
 
-  def generate_class(class) do
-    Schema.class(class) |> Schema.Generator.generate_sample_class(nil)
-  end
-
   @doc """
   Returns a randomly generated sample class, based on the spcified profiles.
   """
@@ -793,14 +699,6 @@ defmodule Schema do
   @spec generate_object(Cache.object_t(), Repo.profiles_t() | nil) :: map()
   def generate_object(type, profiles) when is_map(type) do
     Schema.Generator.generate_sample_object(type, profiles)
-  end
-
-  defp get_category(id) do
-    Repo.category(id) |> reduce_category()
-  end
-
-  defp get_category(extensions, id) do
-    Repo.category(extensions, id) |> reduce_category()
   end
 
   defp get_main_skill(id) do
