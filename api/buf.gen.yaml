@@ -18,6 +18,6 @@ plugins:
       - paths=source_relative
   # Stubs for Python
   - remote: buf.build/protocolbuffers/python:v29.3
-    out: python
+    out: python/src
   - remote: buf.build/protocolbuffers/pyi:v30.2
-    out: python
+    out: python/src

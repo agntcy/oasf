@@ -345,6 +345,6 @@ tasks:
 
   api:clean:python:
     desc: Clean generated python API stubs
-    dir: ./tools/python
+    dir: ./api/python/src
     cmds:
       - find . \( -name "*_pb2.py" -o -name "*_pb2.pyi" \) -type f -delete
