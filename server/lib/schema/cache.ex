@@ -683,7 +683,7 @@ defmodule Schema.Cache do
       class
       |> update_class_uid(categories, classes)
       |> add_class_uid(class_key)
-      |> add_class_name()
+      |> add_class_name(class_key)
       |> add_schema_version(version)
 
     {class_key, class}
@@ -775,7 +775,7 @@ defmodule Schema.Cache do
     if is_nil(data[:attributes][:id]) do
       data
     else
-      class_name = data[:caption]
+      class_caption = data[:caption]
 
       class_uid =
         data[:uid]
@@ -783,17 +783,13 @@ defmodule Schema.Cache do
         |> String.to_atom()
 
       enum = %{
-        :caption => class_name,
+        :caption => class_caption,
         :description => data[:description]
       }
 
       data
       |> put_in([:attributes, :id, :enum], %{class_uid => enum})
       |> put_in([:attributes, :id, :_source], name)
-      |> put_in(
-        [:attributes, :name, :description],
-        "The class name, as defined by id value: <code>#{class_name}</code>."
-      )
     end
   end
 
@@ -804,15 +800,20 @@ defmodule Schema.Cache do
     end)
   end
 
-  defp add_class_name(class) do
-    if class[:attributes][:name] == nil do
-      class
+  defp add_class_name(data, name) do
+    if is_nil(data[:attributes][:name]) do
+      data
     else
-      class
-      |> put_in(
-        [:attributes, :name, :description],
-        "The name in the schema: <code>#{Types.long_class_name(class[:family], class[:name])}</code>"
-      )
+      class_name = Types.long_class_name(data[:family], data[:name])
+
+      enum = %{
+        :caption => data[:caption],
+        :description => data[:description]
+      }
+
+      data
+      |> put_in([:attributes, :name, :enum], %{String.to_atom(class_name) => enum})
+      |> put_in([:attributes, :name, :_source], name)
     end
   end
 

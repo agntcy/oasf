@@ -5,11 +5,11 @@
   "name": "base_class",
   "attributes": {
     "name": {
-      "description": "The class name.",
+      "description": "The name as a unique identifier of the class.",
       "requirement": "recommended"
     },
     "id": {
-      "description": "The unique identifier of a class.",
+      "description": "The id as a unique identifier of the class.",
       "requirement": "recommended"
     },
     "annotations": {
