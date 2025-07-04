@@ -702,56 +702,18 @@ defmodule SchemaWeb.PageView do
   def dictionary_links(conn, attribute_name, links) do
     groups = Enum.group_by(links, fn link -> link[:group] end)
 
-    commons_html = dictionary_links_common_to_html(groups[:common])
-
     classes_html =
-      if Enum.empty?(commons_html) do
-        [
-          dictionary_links_class_to_html(conn, attribute_name, groups[:skill], "skill"),
-          dictionary_links_class_to_html(conn, attribute_name, groups[:domain], "domain"),
-          dictionary_links_class_to_html(conn, attribute_name, groups[:feature], "feature")
-        ]
-        |> Enum.reject(&Enum.empty?/1)
-
-        # |> Enum.intersperse("<br>")
-      else
-        [
-          dictionary_links_class_updated_to_html(conn, attribute_name, groups[:skill], "skill"),
-          dictionary_links_class_updated_to_html(conn, attribute_name, groups[:domain], "domain"),
-          dictionary_links_class_updated_to_html(
-            conn,
-            attribute_name,
-            groups[:feature],
-            "feature"
-          )
-        ]
-        |> Enum.reject(&Enum.empty?/1)
-
-        # |> Enum.intersperse("<br>")
-      end
+      [
+        dictionary_links_class_to_html(conn, attribute_name, groups[:skill], "skill"),
+        dictionary_links_class_to_html(conn, attribute_name, groups[:domain], "domain"),
+        dictionary_links_class_to_html(conn, attribute_name, groups[:feature], "feature")
+      ]
+      |> Enum.reject(&Enum.empty?/1)
 
     objects_html = links_object_to_html(conn, attribute_name, groups[:object], :collapse)
 
-    Enum.reject([commons_html, classes_html, objects_html], &Enum.empty?/1)
+    Enum.reject([classes_html, objects_html], &Enum.empty?/1)
     |> Enum.intersperse("<hr>")
-  end
-
-  defp dictionary_links_common_to_html(nil), do: []
-
-  defp dictionary_links_common_to_html(linked_classes) do
-    reverse_sort_links(linked_classes)
-    |> Enum.reduce(
-      [],
-      fn _link, acc ->
-        [
-          [
-            "<div class=\"m-0\"><span data-toggle=\"tooltip\" title=\"Directly referenced\">Referenced by all classes</span></div>"
-          ]
-          | acc
-        ]
-      end
-    )
-    |> Enum.intersperse("<br>")
   end
 
   defp link_deprecated(link) do
@@ -887,131 +849,6 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  defp dictionary_links_class_updated_to_html(_, _, nil, _), do: []
-
-  @spec dictionary_links_class_to_html(any, String.t(), list(Schema.Utils.link_t()), String.t()) ::
-          <<>> | list()
-  defp dictionary_links_class_updated_to_html(conn, attribute_name, linked_classes, family) do
-    {classes, all_classes} =
-      case family do
-        "skill" ->
-          {SchemaController.skills(conn.params), Schema.all_skills()}
-
-        "domain" ->
-          {SchemaController.domains(conn.params), Schema.all_domains()}
-
-        "feature" ->
-          {SchemaController.features(conn.params), Schema.all_features()}
-
-        _ ->
-          Logger.error("Unexpected family value: #{inspect(family)}")
-          {Map.new(), Map.new()}
-      end
-
-    attribute_key = Schema.Utils.descope_to_uid(attribute_name)
-
-    html_list =
-      reverse_sort_links(linked_classes)
-      |> Enum.reduce(
-        [],
-        fn link, acc ->
-          class_key = Schema.Utils.to_uid(link[:type])
-
-          type_path =
-            SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/" <> link[:type])
-
-          attribute = classes[class_key][:attributes][attribute_key]
-          source = attribute[:_source_patched] || attribute[:_source]
-
-          cond do
-            source == nil ->
-              # This means the attribute's :_source is incorrectly missing. Show with warning.
-              [
-                [
-                  "<a href=\"",
-                  type_path,
-                  "\" data-toggle=\"tooltip\" title=\"No source\">",
-                  link[:caption],
-                  " Class</a>",
-                  link_deprecated(link),
-                  " <span class=\"bg-warning\">No source</span>"
-                ]
-                | acc
-              ]
-
-            source == :base_class ->
-              # Skip base_class source:
-              #   - Reduces noise
-              #   - It is redundant with showing Base Class separately
-              acc
-
-            source == class_key ->
-              [
-                [
-                  "<a href=\"",
-                  type_path,
-                  "\" data-toggle=\"tooltip\" title=\"Directly updated\">",
-                  link[:caption],
-                  " Class</a>",
-                  link_deprecated(link)
-                ]
-                | acc
-              ]
-
-            true ->
-              # Any indirect situation, including through hidden classes
-              {ok, path} = build_hierarchy(class_key, source, all_classes)
-
-              if ok do
-                [
-                  [
-                    "<a href=\"",
-                    type_path,
-                    "\" data-toggle=\"tooltip\" title=\"Indirectly updated: ",
-                    format_hierarchy(path, all_classes, "class"),
-                    "\">",
-                    link[:caption],
-                    " Class</a>",
-                    link_deprecated(link)
-                  ]
-                  | acc
-                ]
-              else
-                # This means there's a bad class hierarchy. Show with warning.
-                [
-                  [
-                    "<a href=\"",
-                    type_path,
-                    "\" data-toggle=\"tooltip\" title=\"Updated via unknown parent\">",
-                    link[:caption],
-                    " Class</a>",
-                    link_deprecated(link),
-                    " <span class=\"bg-warning\">Unknown parent</span>"
-                  ]
-                  | acc
-                ]
-              end
-          end
-        end
-      )
-
-    if Enum.empty?(html_list) do
-      []
-    else
-      noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
-
-      collapse_html(
-        ["class-links-", to_css_selector(attribute_name)],
-        [
-          "Updated in ",
-          Integer.to_string(length(html_list)),
-          noun_text
-        ],
-        Enum.intersperse(html_list, "<br>")
-      )
-    end
-  end
-
   # Used by dictionary_links and profile_links
   defp links_object_to_html(_, _, nil, _), do: []
 
@@ -1062,11 +899,10 @@ defmodule SchemaWeb.PageView do
   def object_links(conn, name, links, list_presentation) do
     groups = Enum.group_by(links, fn link -> link[:group] end)
 
-    commons_html = object_links_common_to_html(conn, groups[:common], list_presentation)
     classes_html = object_links_class_to_html(conn, name, groups[:class], list_presentation)
     objects_html = object_links_object_to_html(conn, name, groups[:object], list_presentation)
 
-    Enum.reject([commons_html, classes_html, objects_html], &Enum.empty?/1)
+    Enum.reject([classes_html, objects_html], &Enum.empty?/1)
     |> Enum.intersperse("<hr>")
   end
 
@@ -1083,62 +919,6 @@ defmodule SchemaWeb.PageView do
 
       _ ->
         ["Attributes: ", Enum.intersperse(Enum.map(attribute_keys, &to_string/1), ", ")]
-    end
-  end
-
-  defp object_links_common_to_html(_, nil, _), do: []
-
-  defp object_links_common_to_html(conn, linked_classes, list_presentation) do
-    html_list =
-      reverse_sort_links(linked_classes)
-      |> Enum.reduce(
-        [],
-        fn link, acc ->
-          type_path =
-            if link[:type] == "base_class" do
-              SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class")
-            else
-              SchemaWeb.Router.Helpers.static_path(conn, "/classes/" <> link[:type])
-            end
-
-          [
-            if list_presentation == :collapse do
-              [
-                "<a href=\"",
-                type_path,
-                "\" data-toggle=\"tooltip\" title=\"",
-                link_attributes(link),
-                "\">",
-                link[:caption],
-                " Class</a>",
-                link_deprecated(link)
-              ]
-            else
-              [
-                "<dt><a href=\"",
-                type_path,
-                "\">",
-                link[:caption],
-                " Class</a>",
-                link_deprecated(link),
-                "<dd class=\"ml-3\">",
-                link_attributes(link)
-              ]
-            end
-            | acc
-          ]
-        end
-      )
-
-    cond do
-      Enum.empty?(html_list) ->
-        []
-
-      list_presentation == :collapse ->
-        Enum.intersperse(html_list, "<br>")
-
-      true ->
-        ["<dl class=\"m-0\">", html_list, "</dl>"]
     end
   end
 
