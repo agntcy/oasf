@@ -1,0 +1,15 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package api.proto;
+
+// For description of the Skill message, see: schema/skills/base_skill.json
+message Skill {
+  string name = 1;
+
+  uint32 id = 2;
+
+  map<string, string> annotations = 3;
+}

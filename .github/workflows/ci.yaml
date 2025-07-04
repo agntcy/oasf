@@ -46,6 +46,14 @@ jobs:
             exit 1
           fi
 
+      - name: Generate api
+        run: |
+          task api:gen
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "There are uncommitted changes after running 'task api:gen'. Please commit these changes."
+            exit 1
+          fi
+
   prepare:
     name: Prepare
     needs:

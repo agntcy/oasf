@@ -6,3 +6,7 @@ bin/
 
 # Env config
 .env
+
+# IDEs
+.idea/
+.DS_Store
