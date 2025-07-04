@@ -5,6 +5,8 @@ defmodule SchemaWeb.PageView do
   alias SchemaWeb.SchemaController
   use SchemaWeb, :view
 
+  require Logger
+
   @at_least_one_symbol "†"
   @just_one_symbol "‡"
   @unknown_constraint_symbol "*"
@@ -700,19 +702,32 @@ defmodule SchemaWeb.PageView do
   def dictionary_links(conn, attribute_name, links) do
     groups = Enum.group_by(links, fn link -> link[:group] end)
 
-    commons_html = dictionary_links_common_to_html(conn, groups[:common])
+    commons_html = dictionary_links_common_to_html(groups[:common])
 
     classes_html =
       if Enum.empty?(commons_html) do
-        dictionary_links_class_to_html(conn, attribute_name, groups[:class])
+        [
+          dictionary_links_class_to_html(conn, attribute_name, groups[:skill], "skill"),
+          dictionary_links_class_to_html(conn, attribute_name, groups[:domain], "domain"),
+          dictionary_links_class_to_html(conn, attribute_name, groups[:feature], "feature")
+        ]
+        |> Enum.reject(&Enum.empty?/1)
+
+        # |> Enum.intersperse("<br>")
       else
-        Enum.intersperse(
-          [
-            "Referenced by all classes",
-            dictionary_links_class_updated_to_html(conn, attribute_name, groups[:class])
-          ],
-          "<br>"
-        )
+        [
+          dictionary_links_class_updated_to_html(conn, attribute_name, groups[:skill], "skill"),
+          dictionary_links_class_updated_to_html(conn, attribute_name, groups[:domain], "domain"),
+          dictionary_links_class_updated_to_html(
+            conn,
+            attribute_name,
+            groups[:feature],
+            "feature"
+          )
+        ]
+        |> Enum.reject(&Enum.empty?/1)
+
+        # |> Enum.intersperse("<br>")
       end
 
     objects_html = links_object_to_html(conn, attribute_name, groups[:object], :collapse)
@@ -721,18 +736,16 @@ defmodule SchemaWeb.PageView do
     |> Enum.intersperse("<hr>")
   end
 
-  defp dictionary_links_common_to_html(_, nil), do: []
+  defp dictionary_links_common_to_html(nil), do: []
 
-  defp dictionary_links_common_to_html(conn, linked_classes) do
+  defp dictionary_links_common_to_html(linked_classes) do
     reverse_sort_links(linked_classes)
     |> Enum.reduce(
       [],
       fn _link, acc ->
         [
           [
-            "<a href=\"",
-            SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class"),
-            "\" data-toggle=\"tooltip\ title=\"Directly referenced\">Base Class</a>"
+            "<div class=\"m-0\"><span data-toggle=\"tooltip\" title=\"Directly referenced\">Referenced by all classes</span></div>"
           ]
           | acc
         ]
@@ -749,11 +762,27 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  defp dictionary_links_class_to_html(_, _, nil), do: []
+  defp dictionary_links_class_to_html(_, _, nil, _), do: []
 
-  defp dictionary_links_class_to_html(conn, attribute_name, linked_classes) do
-    classes = SchemaController.classes(conn.params)
-    all_classes = Schema.all_classes()
+  @spec dictionary_links_class_to_html(any, String.t(), list(Schema.Utils.link_t()), String.t()) ::
+          <<>> | list()
+  defp dictionary_links_class_to_html(conn, attribute_name, linked_classes, family) do
+    {classes, all_classes} =
+      case family do
+        "skill" ->
+          {SchemaController.skills(conn.params), Schema.all_skills()}
+
+        "domain" ->
+          {SchemaController.domains(conn.params), Schema.all_domains()}
+
+        "feature" ->
+          {SchemaController.features(conn.params), Schema.all_features()}
+
+        _ ->
+          Logger.error("Unexpected family value: #{inspect(family)}")
+          {Map.new(), Map.new()}
+      end
+
     attribute_key = Schema.Utils.descope_to_uid(attribute_name)
 
     html_list =
@@ -761,9 +790,22 @@ defmodule SchemaWeb.PageView do
       |> Enum.reduce(
         [],
         fn link, acc ->
-          type_path = SchemaWeb.Router.Helpers.static_path(conn, "/classes/" <> link[:type])
+          type_path =
+            SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/" <> link[:type])
+
           class_key = Schema.Utils.to_uid(link[:type])
-          attribute = classes[class_key][:attributes][attribute_key]
+
+          attribute =
+            case Map.get(classes[class_key][:attributes], attribute_key) do
+              nil ->
+                Enum.find_value(classes[class_key][:attributes], fn {_key, attr} ->
+                  if attr[:reference] == Atom.to_string(attribute_key), do: attr, else: nil
+                end)
+
+              attr ->
+                attr
+            end
+
           source = attribute[:_source_patched] || attribute[:_source]
 
           cond do
@@ -835,21 +877,37 @@ defmodule SchemaWeb.PageView do
     if Enum.empty?(html_list) do
       []
     else
-      noun_text = if length(html_list) == 1, do: " class", else: " classes"
+      noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
       collapse_html(
-        ["class-links-", to_css_selector(attribute_name)],
+        ["#{family}-links-", to_css_selector(attribute_name)],
         ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
         Enum.intersperse(html_list, "<br>")
       )
     end
   end
 
-  defp dictionary_links_class_updated_to_html(_, _, nil), do: []
+  defp dictionary_links_class_updated_to_html(_, _, nil, _), do: []
 
-  defp dictionary_links_class_updated_to_html(conn, attribute_name, linked_classes) do
-    classes = SchemaController.classes(conn.params)
-    all_classes = Schema.all_classes()
+  @spec dictionary_links_class_to_html(any, String.t(), list(Schema.Utils.link_t()), String.t()) ::
+          <<>> | list()
+  defp dictionary_links_class_updated_to_html(conn, attribute_name, linked_classes, family) do
+    {classes, all_classes} =
+      case family do
+        "skill" ->
+          {SchemaController.skills(conn.params), Schema.all_skills()}
+
+        "domain" ->
+          {SchemaController.domains(conn.params), Schema.all_domains()}
+
+        "feature" ->
+          {SchemaController.features(conn.params), Schema.all_features()}
+
+        _ ->
+          Logger.error("Unexpected family value: #{inspect(family)}")
+          {Map.new(), Map.new()}
+      end
+
     attribute_key = Schema.Utils.descope_to_uid(attribute_name)
 
     html_list =
@@ -859,7 +917,9 @@ defmodule SchemaWeb.PageView do
         fn link, acc ->
           class_key = Schema.Utils.to_uid(link[:type])
 
-          type_path = SchemaWeb.Router.Helpers.static_path(conn, "/classes/" <> link[:type])
+          type_path =
+            SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/" <> link[:type])
+
           attribute = classes[class_key][:attributes][attribute_key]
           source = attribute[:_source_patched] || attribute[:_source]
 
@@ -938,7 +998,7 @@ defmodule SchemaWeb.PageView do
     if Enum.empty?(html_list) do
       []
     else
-      noun_text = if length(html_list) == 1, do: " class", else: " classes"
+      noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
       collapse_html(
         ["class-links-", to_css_selector(attribute_name)],
@@ -1205,35 +1265,13 @@ defmodule SchemaWeb.PageView do
   def profile_links(conn, profile_name, links, list_presentation) do
     groups = Enum.group_by(links, fn link -> link[:group] end)
 
-    commons_html = profile_links_common_to_html(conn, groups[:common])
-
     classes_html =
       profile_links_class_to_html(conn, profile_name, groups[:class], list_presentation)
 
     objects_html = links_object_to_html(conn, profile_name, groups[:object], list_presentation)
 
-    Enum.reject([commons_html, classes_html, objects_html], &Enum.empty?/1)
+    Enum.reject([classes_html, objects_html], &Enum.empty?/1)
     |> Enum.intersperse("<hr>")
-  end
-
-  defp profile_links_common_to_html(_, nil), do: []
-
-  defp profile_links_common_to_html(conn, linked_classes) do
-    reverse_sort_links(linked_classes)
-    |> Enum.reduce(
-      [],
-      fn _link, acc ->
-        [
-          [
-            "<a href=\"",
-            SchemaWeb.Router.Helpers.static_path(conn, "/classes/base_class"),
-            "\">Base Class</a>"
-          ]
-          | acc
-        ]
-      end
-    )
-    |> Enum.intersperse("<br>")
   end
 
   defp profile_links_class_to_html(_, _, nil, _), do: []
