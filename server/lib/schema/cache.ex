@@ -99,9 +99,9 @@ defmodule Schema.Cache do
     # Check profiles used in objects, adding objects to profile's _links
     profiles = Profiles.sanity_check(:object, objects, profiles)
     # Check profiles used in classes, adding classes to profile's _links
-    profiles = Profiles.sanity_check(:class, skills, profiles)
-    profiles = Profiles.sanity_check(:class, domains, profiles)
-    profiles = Profiles.sanity_check(:class, features, profiles)
+    profiles = Profiles.sanity_check(:skill, skills, profiles)
+    profiles = Profiles.sanity_check(:domain, domains, profiles)
+    profiles = Profiles.sanity_check(:feature, features, profiles)
 
     # Missing description warnings, datetime attributes, and profiles
     objects =

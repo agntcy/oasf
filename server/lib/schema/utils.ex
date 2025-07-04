@@ -6,7 +6,7 @@ defmodule Schema.Utils do
   Defines map helper functions.
   """
   @type link_t() :: %{
-          :group => :common | :class | :object,
+          :group => :common | :skill | :domain | :feature | :object,
           :type => String.t(),
           :caption => String.t(),
           optional(:deprecated?) => boolean(),
@@ -82,12 +82,11 @@ defmodule Schema.Utils do
   end
 
   @spec update_dictionary(map, map, map, map, map, map) :: map
-  def update_dictionary(dictionary, common, skill_classes, domain_classes, feature_classes, objects) do
     dictionary
     |> add_common_links(common)
-    |> link_classes(skill_classes)
-    |> link_classes(domain_classes)
-    |> link_classes(feature_classes)
+    |> link_classes(:skill, skill_classes)
+    |> link_classes(:domain, domain_classes)
+    |> link_classes(:feature, feature_classes)
     |> link_objects(objects)
     |> update_data_types(objects)
     |> define_datetime_attributes()
@@ -150,9 +149,9 @@ defmodule Schema.Utils do
     |> Enum.to_list()
   end
 
-  defp link_classes(dictionary, classes) do
+  defp link_classes(dictionary, family, classes) do
     Enum.reduce(classes, dictionary, fn class, acc ->
-      add_class_links(acc, class)
+      add_class_links(acc, class, family)
     end)
   end
 
@@ -219,7 +218,7 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec make_link(:common | :class | :object, atom() | String.t(), map()) :: link_t()
+  @spec make_link(:common | :skill | :domain | :feature | :object, atom() | String.t(), map()) :: link_t()
   def make_link(group, type, item) do
     if Map.has_key?(item, :"@deprecated") do
       %{
@@ -247,7 +246,7 @@ defmodule Schema.Utils do
     end)
   end
 
-  defp add_class_links(dictionary, {class_key, class}) do
+  defp add_class_links(dictionary, {class_key, class}, family) do
     Map.update!(dictionary, :attributes, fn dictionary_attributes ->
       type =
         case class[:name] do
@@ -255,7 +254,7 @@ defmodule Schema.Utils do
           _ -> class_key
         end
 
-      link = make_link(:class, type, class)
+      link = make_link(family, type, class)
 
       update_attributes(
         class,
