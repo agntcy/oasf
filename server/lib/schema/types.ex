@@ -65,4 +65,8 @@ defmodule Schema.Types do
         List.last(list)
     end
   end
+
+  def is_oasf_class?(name) do
+    String.starts_with?(name, @schema_addr)
+  end
 end
