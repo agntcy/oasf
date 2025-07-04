@@ -421,7 +421,7 @@ defmodule SchemaWeb.SchemaController do
               },
               export_format: "csv"
             },
-            name: "schema.oasf.agntcy.org/feature/observability",
+            name: "schema.oasf.agntcy.org/features/observability",
             version: "v0.2.2"
           })
         end,
@@ -642,7 +642,7 @@ defmodule SchemaWeb.SchemaController do
                   },
                   export_format: "csv"
                 },
-                name: "schema.oasf.agntcy.org/feature/observability",
+                name: "schema.oasf.agntcy.org/features/observability",
                 version: "v0.2.2"
               }
             ]

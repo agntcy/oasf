@@ -5,7 +5,7 @@
   "name": "base_feature",
   "attributes": {
     "name": {
-      "description": "The agent extension name. For example: <code>schema.oasf.agntcy.org/features/runtime/language</code>.",
+      "description": "The agent extension name. For example: <code>schema.oasf.agntcy.org/features/observability</code>.",
       "requirement": "required"
     },
     "version": {

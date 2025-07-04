@@ -47,9 +47,13 @@ defmodule Schema.Translator do
               data
 
             name ->
-              class_name = Schema.Types.extract_class_name(name)
-              Logger.debug("translate feature class: #{class_name}")
-              Schema.feature(class_name)
+              if Schema.Types.is_oasf_class?(name) do
+                Logger.debug("translate feature class: #{name}")
+                Schema.feature(Schema.Types.extract_class_name(name))
+              else
+                Logger.debug("not an OASF extension: #{name}")
+                data
+              end
           end
 
         :object ->
@@ -63,8 +67,7 @@ defmodule Schema.Translator do
           end
 
         _ ->
-          # invalid class ID
-          %{:error => "Unknown type", :data => data}
+          data
       end
 
     translate_input(type, data, options)
