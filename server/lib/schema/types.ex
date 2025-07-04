@@ -51,21 +51,6 @@ defmodule Schema.Types do
     "#{@schema_addr}/#{family}s/#{name}"
   end
 
-  @doc """
-  Extracts class name from longer class name.
-  """
-  def extract_class_name(name) do
-    case String.split(name, "/") do
-      [last] ->
-        # if there were no "/" characters, return the original string
-        last
-
-      list ->
-        # return the last part of the list
-        List.last(list)
-    end
-  end
-
   def is_oasf_class?(name) do
     String.starts_with?(name, @schema_addr)
   end
