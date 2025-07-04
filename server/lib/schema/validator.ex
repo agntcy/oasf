@@ -288,8 +288,7 @@ defmodule Schema.Validator do
          input
        ) do
     if Map.has_key?(input, "name") do
-      name = input["name"]
-      class_name = Schema.Types.extract_class_name(name)
+      class_name = Path.basename(input["name"])
 
       cond do
         is_bitstring(class_name) ->

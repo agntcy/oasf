@@ -1143,22 +1143,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Returns the list of classes.
-  """
-  @spec classes(map) :: map
-  def classes(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.classes(extensions)
-
-      profiles ->
-        Schema.classes(extensions, profiles)
-    end
-  end
-
-  @doc """
   Get a skill by name.
   get /api/skills/:name
   """

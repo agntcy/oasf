@@ -40,41 +40,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.profiles(schema) |> filter(extensions) end)
   end
 
-  @spec categories :: map()
-  def categories() do
-    Agent.get(__MODULE__, fn schema -> Cache.categories(schema) end)
-  end
-
-  @spec categories(extensions_t() | nil) :: map()
-  def categories(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.categories(schema) end)
-  end
-
-  def categories(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.categories(schema)
-      |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
-    end)
-  end
-
-  @spec category(atom) :: nil | Cache.category_t()
-  def category(id) do
-    category(nil, id)
-  end
-
-  @spec category(extensions_t() | nil, atom) :: nil | Cache.category_t()
-  def category(extensions, id) do
-    Agent.get(__MODULE__, fn schema ->
-      case Cache.category(schema, id) do
-        nil ->
-          nil
-
-        category ->
-          add_classes(extensions, {id, category}, Cache.classes(schema))
-      end
-    end)
-  end
-
   @spec main_skills :: map()
   def main_skills() do
     Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
@@ -105,7 +70,7 @@ defmodule Schema.Repo do
           nil
 
         main_skill ->
-          add_skills(extensions, {id, main_skill}, Cache.skills(schema))
+          add_classes(extensions, {id, main_skill}, Cache.skills(schema))
       end
     end)
   end
@@ -140,7 +105,7 @@ defmodule Schema.Repo do
           nil
 
         main_domain ->
-          add_domains(extensions, {id, main_domain}, Cache.domains(schema))
+          add_classes(extensions, {id, main_domain}, Cache.domains(schema))
       end
     end)
   end
@@ -175,7 +140,7 @@ defmodule Schema.Repo do
           nil
 
         main_feature ->
-          add_features(extensions, {id, main_feature}, Cache.features(schema))
+          add_classes(extensions, {id, main_feature}, Cache.features(schema))
       end
     end)
   end
@@ -202,25 +167,6 @@ defmodule Schema.Repo do
         filter(attributes, extensions)
       end)
     end)
-  end
-
-  @spec classes() :: map()
-  def classes() do
-    Agent.get(__MODULE__, fn schema -> Cache.classes(schema) end)
-  end
-
-  @spec classes(extensions_t() | nil) :: map()
-  def classes(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.classes(schema) end)
-  end
-
-  def classes(extensions) do
-    Agent.get(__MODULE__, fn schema -> Cache.classes(schema) |> filter(extensions) end)
-  end
-
-  @spec all_classes() :: map()
-  def all_classes() do
-    Agent.get(__MODULE__, fn schema -> Cache.all_classes(schema) end)
   end
 
   @spec skills() :: map()
@@ -285,22 +231,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.all_objects(schema) end)
   end
 
-  @spec export_classes() :: map()
-  def export_classes() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_classes(schema) end)
-  end
-
-  @spec export_classes(extensions_t() | nil) :: map()
-  def export_classes(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_classes(schema) end)
-  end
-
-  def export_classes(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_classes(schema) |> filter(extensions)
-    end)
-  end
-
   @spec export_skills() :: map()
   def export_skills() do
     Agent.get(__MODULE__, fn schema -> Cache.export_skills(schema) end)
@@ -352,11 +282,6 @@ defmodule Schema.Repo do
   @spec export_base_class() :: map()
   def export_base_class() do
     Agent.get(__MODULE__, fn schema -> Cache.export_base_class(schema) end)
-  end
-
-  @spec class(atom) :: nil | Cache.class_t()
-  def class(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.class(schema, id) end)
   end
 
   @spec skill(atom) :: nil | Cache.class_t()
@@ -532,143 +457,5 @@ defmodule Schema.Repo do
       )
 
     Map.put(category, :classes, list)
-  end
-
-  defp add_skills(nil, {id, main_skill}, skills) do
-    main_skill_uid = Atom.to_string(id)
-
-    list =
-      skills
-      |> Stream.filter(fn {_name, skill} ->
-        md = Map.get(skill, :category)
-        md == main_skill_uid or Utils.to_uid(skill[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, skill} ->
-        skill =
-          skill
-          |> Map.delete(:category)
-          |> Map.delete(:category_name)
-
-        {name, skill}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_skill, :classes, list)
-    |> Map.put(:name, main_skill_uid)
-  end
-
-  defp add_skills(extensions, {id, main_skill}, skills) do
-    main_skill_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        skills,
-        fn {_name, skill} ->
-          md = skill[:category]
-
-          case skill[:extension] do
-            nil ->
-              md == main_skill_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_skill_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_skill, :classes, list)
-  end
-
-  defp add_domains(nil, {id, main_domain}, domains) do
-    main_domain_uid = Atom.to_string(id)
-
-    list =
-      domains
-      |> Stream.filter(fn {_name, domain} ->
-        md = Map.get(domain, :category)
-        md == main_domain_uid or Utils.to_uid(domain[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, domain} ->
-        domain =
-          domain
-          |> Map.delete(:category)
-          |> Map.delete(:category_name)
-
-        {name, domain}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_domain, :classes, list)
-    |> Map.put(:name, main_domain_uid)
-  end
-
-  defp add_domains(extensions, {id, main_domain}, domains) do
-    main_domain_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        domains,
-        fn {_name, domain} ->
-          md = domain[:category]
-
-          case domain[:extension] do
-            nil ->
-              md == main_domain_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_domain_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_domain, :classes, list)
-  end
-
-  defp add_features(nil, {id, main_feature}, features) do
-    main_feature_uid = Atom.to_string(id)
-
-    list =
-      features
-      |> Stream.filter(fn {_name, feature} ->
-        md = Map.get(feature, :category)
-        md == main_feature_uid or Utils.to_uid(feature[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, feature} ->
-        feature =
-          feature
-          |> Map.delete(:category)
-          |> Map.delete(:category_name)
-
-        {name, feature}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_feature, :classes, list)
-    |> Map.put(:name, main_feature_uid)
-  end
-
-  defp add_features(extensions, {id, main_feature}, features) do
-    main_feature_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        features,
-        fn {_name, feature} ->
-          md = feature[:category]
-
-          case feature[:extension] do
-            nil ->
-              md == main_feature_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_feature_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_feature, :classes, list)
   end
 end

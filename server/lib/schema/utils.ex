@@ -6,7 +6,7 @@ defmodule Schema.Utils do
   Defines map helper functions.
   """
   @type link_t() :: %{
-          :group => :common | :class | :object,
+          :group => :skill | :domain | :feature | :object,
           :type => String.t(),
           :caption => String.t(),
           optional(:deprecated?) => boolean(),
@@ -81,11 +81,12 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec update_dictionary(map, map, map, map) :: map
-  def update_dictionary(dictionary, common, classes, objects) do
+  @spec update_dictionary(map, map, map, map, map) :: map
+  def update_dictionary(dictionary, skills, domains, features, objects) do
     dictionary
-    |> add_common_links(common)
-    |> link_classes(classes)
+    |> link_classes(:skill, skills)
+    |> link_classes(:domain, domains)
+    |> link_classes(:feature, features)
     |> link_objects(objects)
     |> update_data_types(objects)
     |> define_datetime_attributes()
@@ -148,9 +149,9 @@ defmodule Schema.Utils do
     |> Enum.to_list()
   end
 
-  defp link_classes(dictionary, classes) do
+  defp link_classes(dictionary, family, classes) do
     Enum.reduce(classes, dictionary, fn class, acc ->
-      add_class_links(acc, class)
+      add_class_links(acc, class, family)
     end)
   end
 
@@ -217,7 +218,7 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec make_link(:common | :class | :object, atom() | String.t(), map()) :: link_t()
+  @spec make_link(:skill | :domain | :feature | :object, atom() | String.t(), map()) :: link_t()
   def make_link(group, type, item) do
     if Map.has_key?(item, :"@deprecated") do
       %{
@@ -231,21 +232,7 @@ defmodule Schema.Utils do
     end
   end
 
-  # Adds attribute's used-by links to the dictionary.
-  defp add_common_links(dict, class) do
-    Map.update!(dict, :attributes, fn attributes ->
-      link = make_link(:common, class[:name], class)
-
-      update_attributes(
-        class,
-        attributes,
-        link,
-        &update_dictionary_links/2
-      )
-    end)
-  end
-
-  defp add_class_links(dictionary, {class_key, class}) do
+  defp add_class_links(dictionary, {class_key, class}, family) do
     Map.update!(dictionary, :attributes, fn dictionary_attributes ->
       type =
         case class[:name] do
@@ -253,7 +240,7 @@ defmodule Schema.Utils do
           _ -> class_key
         end
 
-      link = make_link(:class, type, class)
+      link = make_link(family, type, class)
 
       update_attributes(
         class,
@@ -340,25 +327,6 @@ defmodule Schema.Utils do
         end
       end
     )
-  end
-
-  @spec merge_classes([map()]) :: map()
-  def merge_classes(maps) when is_list(maps) do
-    Enum.reduce(maps, %{}, fn map, acc ->
-      Map.merge(acc, map, fn
-        :base_class, val1, _val2 -> val1
-        key, _val1, _val2 -> raise ArgumentError, "Duplicate class names are forbidden: #{key}"
-      end)
-    end)
-  end
-
-  @spec merge_categories([map()]) :: map()
-  def merge_categories(maps) when is_list(maps) do
-    Enum.reduce(maps, %{}, fn map, acc ->
-      Map.merge(acc, map, fn
-        key, _val1, _val2 -> raise ArgumentError, "Duplicate category names are forbidden: #{key}"
-      end)
-    end)
   end
 
   @spec deep_merge(map | nil, map | nil) :: map | nil
