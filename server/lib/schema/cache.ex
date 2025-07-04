@@ -18,9 +18,6 @@ defmodule Schema.Cache do
     :profiles,
     :dictionary,
     :base_class,
-    :classes,
-    :all_classes,
-    :categories,
     :objects,
     :all_objects,
     # domain libs
@@ -37,7 +34,7 @@ defmodule Schema.Cache do
     :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class classes all_classes categories objects all_objects skills all_skills main_skills domains all_domains main_domains features all_features main_features
+    version profiles dictionary base_class objects all_objects skills all_skills main_skills domains all_domains main_domains features all_features main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -89,23 +86,10 @@ defmodule Schema.Cache do
         version[:version]
       )
 
-    # Merge skills, domains and features classes and categories
-    classes = Utils.merge_classes([skills, domains, features])
-    all_classes = Utils.merge_classes([all_skills, all_domains, all_features])
-
-    categories_attributes =
-      Utils.merge_categories([
-        main_skills[:attributes],
-        main_domains[:attributes],
-        main_features[:attributes]
-      ])
-
-    categories = %{attributes: categories_attributes}
-
     {objects, all_objects} =
       read_objects(version[:version])
 
-    dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
+    dictionary = Utils.update_dictionary(dictionary, base_class, skills, domains, features, objects)
     dictionary_attributes = dictionary[:attributes]
 
     # Read and update profiles
@@ -115,17 +99,15 @@ defmodule Schema.Cache do
     # Check profiles used in objects, adding objects to profile's _links
     profiles = Profiles.sanity_check(:object, objects, profiles)
     # Check profiles used in classes, adding classes to profile's _links
-    profiles = Profiles.sanity_check(:class, classes, profiles)
+    profiles = Profiles.sanity_check(:class, skills, profiles)
+    profiles = Profiles.sanity_check(:class, domains, profiles)
+    profiles = Profiles.sanity_check(:class, features, profiles)
 
     # Missing description warnings, datetime attributes, and profiles
     objects =
       objects
       |> Utils.update_objects(dictionary_attributes)
       |> update_objects()
-      |> final_check(dictionary_attributes)
-
-    classes =
-      update_classes(classes, objects)
       |> final_check(dictionary_attributes)
 
     skills =
@@ -146,7 +128,6 @@ defmodule Schema.Cache do
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
-    {classes, no_req_set} = fix_entities(classes, no_req_set, "class")
     {skills, no_req_set} = fix_entities(skills, no_req_set, "skill")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
     {features, no_req_set} = fix_entities(features, no_req_set, "feature")
@@ -166,9 +147,6 @@ defmodule Schema.Cache do
       profiles: profiles,
       dictionary: dictionary,
       base_class: base_class,
-      classes: classes,
-      all_classes: all_classes,
-      categories: categories,
       objects: objects,
       all_objects: all_objects,
       # skill libs
@@ -210,14 +188,6 @@ defmodule Schema.Cache do
   @spec dictionary(__MODULE__.t()) :: dictionary_t()
   def dictionary(%__MODULE__{dictionary: dictionary}), do: dictionary
 
-  @spec categories(__MODULE__.t()) :: map()
-  def categories(%__MODULE__{categories: categories}), do: categories
-
-  @spec category(__MODULE__.t(), any) :: nil | category_t()
-  def category(%__MODULE__{categories: categories}, id) do
-    Map.get(categories[:attributes], id)
-  end
-
   @spec main_skills(__MODULE__.t()) :: map()
   def main_skills(%__MODULE__{main_skills: main_skills}), do: main_skills
 
@@ -242,40 +212,12 @@ defmodule Schema.Cache do
     Map.get(main_features[:attributes], id)
   end
 
-  @spec classes(__MODULE__.t()) :: map()
-  def classes(%__MODULE__{classes: classes}), do: classes
-
-  @spec all_classes(__MODULE__.t()) :: map()
-  def all_classes(%__MODULE__{all_classes: all_classes}), do: all_classes
-
   @spec all_objects(__MODULE__.t()) :: map()
   def all_objects(%__MODULE__{all_objects: all_objects}), do: all_objects
-
-  @spec export_classes(__MODULE__.t()) :: map()
-  def export_classes(%__MODULE__{classes: classes, dictionary: dictionary}) do
-    Enum.into(classes, Map.new(), fn {name, class} ->
-      {name, enrich(class, dictionary[:attributes])}
-    end)
-  end
 
   @spec export_base_class(__MODULE__.t()) :: map()
   def export_base_class(%__MODULE__{base_class: base_class, dictionary: dictionary}) do
     enrich(base_class, dictionary[:attributes])
-  end
-
-  @spec class(__MODULE__.t(), atom()) :: nil | class_t()
-  def class(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
-    enrich(base_class, dictionary[:attributes])
-  end
-
-  def class(%__MODULE__{dictionary: dictionary, classes: classes}, id) do
-    case Map.get(classes, id) do
-      nil ->
-        nil
-
-      class ->
-        enrich(class, dictionary[:attributes])
-    end
   end
 
   @spec skills(__MODULE__.t()) :: map()

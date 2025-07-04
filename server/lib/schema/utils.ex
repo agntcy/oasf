@@ -81,11 +81,13 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec update_dictionary(map, map, map, map) :: map
-  def update_dictionary(dictionary, common, classes, objects) do
+  @spec update_dictionary(map, map, map, map, map, map) :: map
+  def update_dictionary(dictionary, common, skill_classes, domain_classes, feature_classes, objects) do
     dictionary
     |> add_common_links(common)
-    |> link_classes(classes)
+    |> link_classes(skill_classes)
+    |> link_classes(domain_classes)
+    |> link_classes(feature_classes)
     |> link_objects(objects)
     |> update_data_types(objects)
     |> define_datetime_attributes()
