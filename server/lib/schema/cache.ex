@@ -436,7 +436,7 @@ defmodule Schema.Cache do
             Map.new()
           )
 
-        Map.put(entity_ex, :objects, Map.to_list(ref_entities))
+        Map.put(entity_ex, :entities, Map.to_list(ref_entities))
     end
   end
 
