@@ -1,0 +1,19 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package api.proto;
+
+import "google/protobuf/struct.proto";
+
+// For description of the Extension message, see: schema/features/base_feature.json
+message Extension {
+  string name = 1;
+
+  string version = 2;
+
+  map<string, string> annotations = 3;
+
+  google.protobuf.Struct data = 4;
+}

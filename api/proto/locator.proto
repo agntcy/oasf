@@ -1,0 +1,28 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package api.proto;
+
+// For description of the Locator message, see: schema/objects/locator.json
+message Locator {
+  LocatorType type = 1;
+
+  string url = 2;
+
+  map<string, string> annotations = 3;
+
+  optional uint64 size = 4;
+
+  optional string digest = 5;
+}
+
+enum LocatorType {
+  LOCATOR_TYPE_UNSPECIFIED = 0;
+  LOCATOR_TYPE_HELM_CHART = 1;
+  LOCATOR_TYPE_DOCKER_IMAGE = 2;
+  LOCATOR_TYPE_PYTHON_PACKAGE = 3;
+  LOCATOR_TYPE_SOURCE_CODE = 4;
+  LOCATOR_TYPE_BINARY = 5;
+}

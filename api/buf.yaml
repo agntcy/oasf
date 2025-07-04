@@ -1,0 +1,14 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+version: v2
+lint:
+  disallow_comment_ignores: true
+  use:
+    - STANDARD
+breaking:
+  use:
+    - WIRE_JSON
+modules:
+  - path: proto
+    name: github.com/agntcy/oasf

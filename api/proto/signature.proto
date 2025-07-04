@@ -1,0 +1,23 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package api.proto;
+
+// For description of the Signature message, see: schema/objects/signature.json
+message Signature {
+  map<string, string> annotations = 1;
+
+  string signed_at = 2;
+
+  string algorithm = 3;
+
+  string signature = 4;
+
+  string certificate = 5;
+
+  string content_type = 6;
+
+  string content_bundle = 7;
+}
