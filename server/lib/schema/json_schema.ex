@@ -19,25 +19,38 @@ defmodule Schema.JsonSchema do
     Process.put(:options, options || [])
 
     try do
-      encode(type)
+      encode_entity(type, true)
     after
       Process.delete(:options)
     end
   end
 
-  def encode(type) do
+  def encode_entity(type, top_level) do
     name = type[:name]
 
     {properties, required} = map_reduce(name, type[:attributes])
 
     ext = type[:extension]
 
-    if Map.has_key?(type, :_links) do
-      Map.new()
-      |> add_java_class(name)
-    else
-      class_schema(make_class_ref(name, type[:family], ext))
-    end
+    schema = Map.new()
+
+    schema =
+      if Map.has_key?(type, :_links) do
+        add_java_class(schema, name)
+      else
+        schema
+      end
+
+    schema =
+      if top_level do
+        schema
+        |> Map.put("$schema", @schema_version)
+        |> Map.put("$id", make_id_ref(name, type[:family], ext))
+      else
+        schema
+      end
+
+    schema
     |> Map.put("title", type[:caption])
     |> Map.put("type", "object")
     |> Map.put("properties", properties)
@@ -70,14 +83,6 @@ defmodule Schema.JsonSchema do
     "#{package}.#{name}"
   end
 
-  defp class_schema(id) do
-    %{
-      "$schema" => @schema_version,
-      "$id" => id,
-      "additionalProperties" => false
-    }
-  end
-
   defp make_object_ref(name) do
     Path.join([ref_object(), String.replace(name, "/", "_")])
   end
@@ -86,11 +91,19 @@ defmodule Schema.JsonSchema do
     "#/$defs"
   end
 
-  defp make_class_ref(name, family, nil) do
+  defp make_id_ref(name, nil, nil) do
+    Path.join([@schema_base_uri, "objects", name])
+  end
+
+  defp make_id_ref(name, nil, ext) do
+    Path.join([@schema_base_uri, "objects", ext, name])
+  end
+
+  defp make_id_ref(name, family, nil) do
     Path.join([@schema_base_uri, family <> "s", name])
   end
 
-  defp make_class_ref(name, family, ext) do
+  defp make_id_ref(name, family, ext) do
     Path.join([@schema_base_uri, family <> "s", ext, name])
   end
 
