@@ -899,7 +899,14 @@ defmodule SchemaWeb.PageView do
   def object_links(conn, name, links, list_presentation) do
     groups = Enum.group_by(links, fn link -> link[:group] end)
 
-    classes_html = object_links_class_to_html(conn, name, groups[:class], list_presentation)
+    classes_html =
+      [
+        object_links_class_to_html(conn, name, groups[:skill], list_presentation, "skill"),
+        object_links_class_to_html(conn, name, groups[:domain], list_presentation, "domain"),
+        object_links_class_to_html(conn, name, groups[:feature], list_presentation, "feature")
+      ]
+      |> Enum.reject(&Enum.empty?/1)
+
     objects_html = object_links_object_to_html(conn, name, groups[:object], list_presentation)
 
     Enum.reject([classes_html, objects_html], &Enum.empty?/1)
@@ -922,15 +929,15 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  defp object_links_class_to_html(_, _, nil, _), do: []
+  defp object_links_class_to_html(_, _, nil, _, _), do: []
 
-  defp object_links_class_to_html(conn, name, linked_classes, list_presentation) do
+  defp object_links_class_to_html(conn, name, linked_classes, list_presentation, family) do
     html_list =
       reverse_sort_links(linked_classes)
       |> Enum.reduce(
         [],
         fn link, acc ->
-          type_path = SchemaWeb.Router.Helpers.static_path(conn, "/classes/" <> link[:type])
+          type_path = SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/" <> link[:type])
 
           [
             if list_presentation == :collapse do
@@ -966,10 +973,10 @@ defmodule SchemaWeb.PageView do
         []
 
       list_presentation == :collapse ->
-        noun_text = if length(html_list) == 1, do: " class", else: " classes"
+        noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
         collapse_html(
-          ["class-links-", to_css_selector(name)],
+          ["#{family}-links-", to_css_selector(name)],
           ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
           Enum.intersperse(html_list, "<br>")
         )
