@@ -1053,7 +1053,30 @@ defmodule SchemaWeb.PageView do
     groups = Enum.group_by(links, fn link -> link[:group] end)
 
     classes_html =
-      profile_links_class_to_html(conn, profile_name, groups[:class], list_presentation)
+      [
+        profile_links_class_to_html(
+          conn,
+          profile_name,
+          groups[:skill],
+          list_presentation,
+          "skill"
+        ),
+        profile_links_class_to_html(
+          conn,
+          profile_name,
+          groups[:domain],
+          list_presentation,
+          "domain"
+        ),
+        profile_links_class_to_html(
+          conn,
+          profile_name,
+          groups[:feature],
+          list_presentation,
+          "feature"
+        )
+      ]
+      |> Enum.reject(&Enum.empty?/1)
 
     objects_html = links_object_to_html(conn, profile_name, groups[:object], list_presentation)
 
@@ -1061,9 +1084,9 @@ defmodule SchemaWeb.PageView do
     |> Enum.intersperse("<hr>")
   end
 
-  defp profile_links_class_to_html(_, _, nil, _), do: []
+  defp profile_links_class_to_html(_, _, nil, _, _), do: []
 
-  defp profile_links_class_to_html(conn, profile_name, linked_classes, list_presentation) do
+  defp profile_links_class_to_html(conn, profile_name, linked_classes, list_presentation, family) do
     html_list =
       reverse_sort_links(linked_classes)
       |> Enum.reduce(
@@ -1072,7 +1095,7 @@ defmodule SchemaWeb.PageView do
           [
             [
               "<a href=\"",
-              SchemaWeb.Router.Helpers.static_path(conn, "/classes/" <> link[:type]),
+              SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/" <> link[:type]),
               "\">",
               link[:caption],
               " Class</a>",
@@ -1088,10 +1111,10 @@ defmodule SchemaWeb.PageView do
         []
 
       list_presentation == :collapse ->
-        noun_text = if length(html_list) == 1, do: " class", else: " classes"
+        noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
         collapse_html(
-          ["class-links-", to_css_selector(profile_name)],
+          ["#{family}-links-", to_css_selector(profile_name)],
           ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
           Enum.intersperse(html_list, "<br>")
         )
