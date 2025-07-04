@@ -70,7 +70,7 @@ defmodule Schema.Repo do
           nil
 
         main_skill ->
-          add_skills(extensions, {id, main_skill}, Cache.skills(schema))
+          add_classes(extensions, {id, main_skill}, Cache.skills(schema))
       end
     end)
   end
@@ -105,7 +105,7 @@ defmodule Schema.Repo do
           nil
 
         main_domain ->
-          add_domains(extensions, {id, main_domain}, Cache.domains(schema))
+          add_classes(extensions, {id, main_domain}, Cache.domains(schema))
       end
     end)
   end
@@ -140,7 +140,7 @@ defmodule Schema.Repo do
           nil
 
         main_feature ->
-          add_features(extensions, {id, main_feature}, Cache.features(schema))
+          add_classes(extensions, {id, main_feature}, Cache.features(schema))
       end
     end)
   end
@@ -457,143 +457,5 @@ defmodule Schema.Repo do
       )
 
     Map.put(category, :classes, list)
-  end
-
-  defp add_skills(nil, {id, main_skill}, skills) do
-    main_skill_uid = Atom.to_string(id)
-
-    list =
-      skills
-      |> Stream.filter(fn {_name, skill} ->
-        md = Map.get(skill, :category)
-        md == main_skill_uid or Utils.to_uid(skill[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, skill} ->
-        skill =
-          skill
-          |> Map.delete(:category)
-          |> Map.delete(:category_name)
-
-        {name, skill}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_skill, :classes, list)
-    |> Map.put(:name, main_skill_uid)
-  end
-
-  defp add_skills(extensions, {id, main_skill}, skills) do
-    main_skill_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        skills,
-        fn {_name, skill} ->
-          md = skill[:category]
-
-          case skill[:extension] do
-            nil ->
-              md == main_skill_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_skill_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_skill, :classes, list)
-  end
-
-  defp add_domains(nil, {id, main_domain}, domains) do
-    main_domain_uid = Atom.to_string(id)
-
-    list =
-      domains
-      |> Stream.filter(fn {_name, domain} ->
-        md = Map.get(domain, :category)
-        md == main_domain_uid or Utils.to_uid(domain[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, domain} ->
-        domain =
-          domain
-          |> Map.delete(:category)
-          |> Map.delete(:category_name)
-
-        {name, domain}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_domain, :classes, list)
-    |> Map.put(:name, main_domain_uid)
-  end
-
-  defp add_domains(extensions, {id, main_domain}, domains) do
-    main_domain_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        domains,
-        fn {_name, domain} ->
-          md = domain[:category]
-
-          case domain[:extension] do
-            nil ->
-              md == main_domain_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_domain_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_domain, :classes, list)
-  end
-
-  defp add_features(nil, {id, main_feature}, features) do
-    main_feature_uid = Atom.to_string(id)
-
-    list =
-      features
-      |> Stream.filter(fn {_name, feature} ->
-        md = Map.get(feature, :category)
-        md == main_feature_uid or Utils.to_uid(feature[:extension], md) == id
-      end)
-      |> Stream.map(fn {name, feature} ->
-        feature =
-          feature
-          |> Map.delete(:category)
-          |> Map.delete(:category_name)
-
-        {name, feature}
-      end)
-      |> Enum.to_list()
-
-    Map.put(main_feature, :classes, list)
-    |> Map.put(:name, main_feature_uid)
-  end
-
-  defp add_features(extensions, {id, main_feature}, features) do
-    main_feature_uid = Atom.to_string(id)
-
-    list =
-      Enum.filter(
-        features,
-        fn {_name, feature} ->
-          md = feature[:category]
-
-          case feature[:extension] do
-            nil ->
-              md == main_feature_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (md == main_feature_uid or Utils.to_uid(ext, md) == id)
-          end
-        end
-      )
-
-    Map.put(main_feature, :classes, list)
   end
 end
