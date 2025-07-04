@@ -43,7 +43,7 @@ defmodule Schema.JsonSchema do
     |> Map.put("properties", properties)
     |> Map.put("additionalProperties", false)
     |> put_required(required)
-    |> encode_objects(type[:objects])
+    |> encode_entities(type[:entities])
     |> empty_object(properties)
   end
 
@@ -110,19 +110,19 @@ defmodule Schema.JsonSchema do
     Map.put(map, "required", Enum.sort(required))
   end
 
-  defp encode_objects(schema, nil) do
+  defp encode_entities(schema, nil) do
     schema
   end
 
-  defp encode_objects(schema, []) do
+  defp encode_entities(schema, []) do
     schema
   end
 
-  defp encode_objects(schema, objects) do
+  defp encode_entities(schema, entities) do
     defs =
-      Enum.into(objects, %{}, fn {name, object} ->
+      Enum.into(entities, %{}, fn {name, entity} ->
         key = Atom.to_string(name) |> String.replace("/", "_")
-        {key, encode(object)}
+        {key, encode_entity(entity, false)}
       end)
 
     Map.put(schema, "$defs", defs)
