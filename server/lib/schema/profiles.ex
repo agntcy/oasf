@@ -21,7 +21,7 @@ defmodule Schema.Profiles do
     Map.update!(class, :attributes, fn attributes ->
       apply_profiles(attributes, profiles, size)
     end)
-    |> Map.update!(:objects, fn objects ->
+    |> Map.update!(:entities, fn objects ->
       Enum.map(objects, fn {name, object} ->
         {name,
          Map.update!(object, :attributes, fn attributes ->

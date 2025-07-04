@@ -2916,7 +2916,7 @@ defmodule SchemaWeb.SchemaController do
     objects = update_objects(Map.new(), data[:attributes])
 
     if map_size(objects) > 0 do
-      Map.put(data, :objects, objects)
+      Map.put(data, :entities, objects)
     else
       data
     end
