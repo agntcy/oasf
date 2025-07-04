@@ -89,7 +89,7 @@ defmodule Schema.Cache do
     {objects, all_objects} =
       read_objects(version[:version])
 
-    dictionary = Utils.update_dictionary(dictionary, base_class, skills, domains, features, objects)
+    dictionary = Utils.update_dictionary(dictionary, skills, domains, features, objects)
     dictionary_attributes = dictionary[:attributes]
 
     # Read and update profiles

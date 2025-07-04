@@ -6,7 +6,7 @@ defmodule Schema.Utils do
   Defines map helper functions.
   """
   @type link_t() :: %{
-          :group => :common | :skill | :domain | :feature | :object,
+          :group => :skill | :domain | :feature | :object,
           :type => String.t(),
           :caption => String.t(),
           optional(:deprecated?) => boolean(),
@@ -81,12 +81,12 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec update_dictionary(map, map, map, map, map, map) :: map
+  @spec update_dictionary(map, map, map, map, map) :: map
+  def update_dictionary(dictionary, skills, domains, features, objects) do
     dictionary
-    |> add_common_links(common)
-    |> link_classes(:skill, skill_classes)
-    |> link_classes(:domain, domain_classes)
-    |> link_classes(:feature, feature_classes)
+    |> link_classes(:skill, skills)
+    |> link_classes(:domain, domains)
+    |> link_classes(:feature, features)
     |> link_objects(objects)
     |> update_data_types(objects)
     |> define_datetime_attributes()
@@ -218,7 +218,7 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec make_link(:common | :skill | :domain | :feature | :object, atom() | String.t(), map()) :: link_t()
+  @spec make_link(:skill | :domain | :feature | :object, atom() | String.t(), map()) :: link_t()
   def make_link(group, type, item) do
     if Map.has_key?(item, :"@deprecated") do
       %{
@@ -230,20 +230,6 @@ defmodule Schema.Utils do
     else
       %{group: group, type: to_string(type), caption: item[:caption] || "*No name*"}
     end
-  end
-
-  # Adds attribute's used-by links to the dictionary.
-  defp add_common_links(dict, class) do
-    Map.update!(dict, :attributes, fn attributes ->
-      link = make_link(:common, class[:name], class)
-
-      update_attributes(
-        class,
-        attributes,
-        link,
-        &update_dictionary_links/2
-      )
-    end)
   end
 
   defp add_class_links(dictionary, {class_key, class}, family) do
