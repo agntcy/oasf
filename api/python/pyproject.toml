@@ -1,0 +1,6 @@
+[project]
+name = "agntcy-oasf-python-stubs"
+version = "0.1.0"
+description = "This package contains the python bindings for the proto stubs."
+requires-python = ">=3.12"
+dependencies = []
