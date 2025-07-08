@@ -216,7 +216,6 @@ tasks:
       - task: deps:helm
       - task: deps:kubectl
       - task: deps:kind
-      - task: deps:bufbuild
 
   deps:bin-dir:
     desc: Create bin directory
