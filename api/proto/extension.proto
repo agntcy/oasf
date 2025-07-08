@@ -7,13 +7,22 @@ package api.proto;
 
 import "google/protobuf/struct.proto";
 
-// For description of the Extension message, see: schema/features/base_feature.json
+// Extensions provide a generic way to attach additional information
+// about an agent to the record. For example, application-specific 
+// details can be provided using an extension.
 message Extension {
+  // Name of the extension.
+  // Can be used as a fully qualified name.
+  // For example, "org.agntcy.oasf.schema/features/<feature-name>"
   string name = 1;
 
+  // Version of the extension.
   string version = 2;
 
+  // Metadata associated with the extension.
   map<string, string> annotations = 3;
 
+  // Data attached to the extension.
+  // Usually a JSON-embedded object.
   google.protobuf.Struct data = 4;
 }

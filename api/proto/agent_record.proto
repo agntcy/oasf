@@ -1,0 +1,66 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package api.proto;
+
+import "skill.proto";
+import "locator.proto";
+import "extension.proto";
+import "signature.proto";
+
+// AgentRecord defines a schema for versioned AI agent content representation.
+// The schema provides a way to describe an agent in a structured format.
+//
+// This is a versioned gRPC-based OASF schema.
+//
+// Max size: 4 MB (or to fully fit in a single request)
+// It may be required to support larger agent record size in the future.
+//
+// AgentRecords are stored in a content-addressable store.
+// AgentRecords can be indexed for quick lookups and searches to avoid unnecessary data transfer.
+//
+// All agent records are referenced by a globally-unique content identifier (CID).
+// Specs: https://github.com/multiformats/cid
+message AgentRecord {
+  // Name of the agent.
+  string name = 1;
+
+  // Version of the agent.
+  string version = 2;
+
+  // Schema version of the agent.
+  string schema_version = 3;
+
+  // Description of the agent.
+  string description = 4;
+
+  // List of agent authors, e.g. in the form of `author-name <author-email>`.
+  repeated string authors = 5;
+
+  // Metadata associated with the agent.
+  map<string, string> annotations = 6;
+
+  // Creation timestamp of the agent in the RFC3339 format.
+  // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
+  string created_at = 7;
+  
+  // List of skills that the agent can perform.
+  repeated Skill skills = 8;
+
+  // List of source locators where the agent can be found or used from.
+  repeated Locator locators = 9;
+
+  // Additional information attached to the agent.
+  // Extensions are used to generically extend the agent's functionality.
+  repeated Extension extensions = 10;
+
+  // Security signature of the agent.
+  Signature signature = 11;
+
+  // Reference to the previous agent record, if any.
+  // Used to link the agent record to its previous versions.
+  // Field number is explicitly reserved for extendability.
+  optional string previous_agent_record_cid = 99;
+}

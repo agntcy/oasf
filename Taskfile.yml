@@ -21,10 +21,6 @@ vars:
   KUBECTL_BIN: '{{ .BIN_DIR }}/kubectl-{{.KUBECTL_VERSION}}'
   KIND_VERSION: '0.25.0'
   KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
-  PROTOC_VERSION: '27.1'
-  PROTOC_BIN: '{{ .BIN_DIR }}/protoc-{{.PROTOC_VERSION}}'
-  BUFBUILD_VERSION: '1.50.1'
-  BUFBUILD_BIN: '{{ .BIN_DIR }}/bufbuild-{{.BUFBUILD_VERSION}}'
 
 ## Set refresh interval for observable tasks like hot-reload
 interval: 500ms
@@ -220,7 +216,6 @@ tasks:
       - task: deps:helm
       - task: deps:kubectl
       - task: deps:kind
-      - task: deps:protoc
       - task: deps:bufbuild
 
   deps:bin-dir:
@@ -273,78 +268,3 @@ tasks:
       - cmd: mv {{.BIN_DIR}}/kind {{.KIND_BIN}}
     status:
       - test -x {{.KIND_BIN}}
-
-  deps:protoc:
-    desc: Ensure supported Protoc version and plugins are installed
-    internal: true
-    deps:
-      - deps:bin-dir
-    preconditions:
-      - which go
-      - which curl
-      - which unzip
-    vars:
-      ARCH_TYPE: '{{ if eq ARCH "arm64" }}aarch_64{{ else if eq ARCH "amd64" }}x86_64{{else if eq ARCH "s390x"}}x390_64{{ else }}{{ARCH}}{{ end }}'
-      OS_VARIANT: '{{ if eq OS "darwin" }}osx-universal_binary{{ else if eq OS "windows" }}win64{{else}}linux-{{.ARCH_TYPE}}{{ end }}'
-    cmds:
-      - cmd: echo "Downloading Protoc v{{.PROTOC_VERSION}}..."
-      - cmd: |
-          curl -sSfL https://github.com/protocolbuffers/protobuf/releases/download/v{{.PROTOC_VERSION}}/protoc-{{.PROTOC_VERSION}}-{{.OS_VARIANT}}.zip -o {{.BIN_DIR}}/tmp.zip
-          unzip -j {{.BIN_DIR}}/tmp.zip "bin/protoc" -d {{.BIN_DIR}}
-          mv {{.BIN_DIR}}/protoc {{.PROTOC_BIN}}
-          rm {{.BIN_DIR}}/tmp.zip
-      - cmd: chmod +x {{.PROTOC_BIN}}
-      - cmd: echo "Downloading go plugins for protoc..."
-      - cmd: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-      - cmd: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-      - cmd: go install github.com/NathanBaulch/protoc-gen-cobra@latest
-    status:
-      - test -x {{.PROTOC_BIN}}
-
-  deps:bufbuild:
-    desc: Ensure supported bufbuild version is installed
-    internal: true
-    deps:
-      - deps:bin-dir
-    preconditions:
-      - which curl
-    vars:
-      ARCH_TYPE: '{{ if eq ARCH "amd64" }}x86_64{{ else }}{{ARCH}}{{ end }}'
-    cmds:
-      - cmd: echo "Downloading BufBuild v{{.BUFBUILD_VERSION}}..."
-      - cmd: |
-          curl -sSfL "https://github.com/bufbuild/buf/releases/download/v{{.BUFBUILD_VERSION}}/buf-{{OS}}-{{.ARCH_TYPE}}" -o {{.BUFBUILD_BIN}}
-      - cmd: chmod +x {{.BUFBUILD_BIN}}
-    status:
-      - test -x {{.BUFBUILD_BIN}}
-
-  ##
-  ## API
-  ##
-  api:gen:
-    desc: Generates API stubs
-    dir: ./api
-    deps:
-      - task: deps:protoc
-      - task: deps:bufbuild
-    cmd: |
-      {{.BUFBUILD_BIN}} dep update
-      {{.BUFBUILD_BIN}} generate
-
-  api:clean:
-    desc: Clean generated API stubs
-    deps:
-      - api:clean:go
-      - api:clean:python
-
-  api:clean:go:
-    desc: Clean generated golang API stubs
-    dir: ./api
-    cmds:
-      - find . \( -name "*.pb.go" \) -type f -delete
-
-  api:clean:python:
-    desc: Clean generated python API stubs
-    dir: ./api/python/src
-    cmds:
-      - find . \( -name "*_pb2.py" -o -name "*_pb2.pyi" \) -type f -delete

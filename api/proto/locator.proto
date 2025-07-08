@@ -5,24 +5,36 @@ syntax = "proto3";
 
 package api.proto;
 
-// For description of the Locator message, see: schema/objects/locator.json
+// Locator points to the source where agent can be found at.
+// For example, a locator can be a link to a helm chart.
 message Locator {
-  LocatorType type = 1;
+  // Type of the locator.
+  // Supports custom types.
+  // Native types are defined in the LocatorType.
+  string type = 1;
 
+  // Location where the source can be found at.
+  // Specs: https://datatracker.ietf.org/doc/html/rfc1738
   string url = 2;
 
+  // Metadata associated with the locator.
   map<string, string> annotations = 3;
 
+  // Size of the source in bytes pointed by the {url} property.
   optional uint64 size = 4;
 
+  // Digest of the source pointed by the {url} property.
+  // Specs: https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests
   optional string digest = 5;
 }
 
+// LocatorType defines placeholders for supported locators.
+// Used in string format across APIs.
 enum LocatorType {
-  LOCATOR_TYPE_UNSPECIFIED = 0;
-  LOCATOR_TYPE_HELM_CHART = 1;
-  LOCATOR_TYPE_DOCKER_IMAGE = 2;
-  LOCATOR_TYPE_PYTHON_PACKAGE = 3;
-  LOCATOR_TYPE_SOURCE_CODE = 4;
-  LOCATOR_TYPE_BINARY = 5;
+  LOCATOR_TYPE_UNSPECIFIED = 0;     // ""
+  LOCATOR_TYPE_HELM_CHART = 1;      // "helm-chart"
+  LOCATOR_TYPE_DOCKER_IMAGE = 2;    // "docker-image"
+  LOCATOR_TYPE_PYTHON_PACKAGE = 3;  // "python-package"
+  LOCATOR_TYPE_SOURCE_CODE = 4;     // "source-code"
+  LOCATOR_TYPE_BINARY = 5;          // "binary"
 }

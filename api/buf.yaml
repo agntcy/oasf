@@ -11,4 +11,4 @@ breaking:
     - WIRE_JSON
 modules:
   - path: proto
-    name: github.com/agntcy/oasf
+    name: buf.build/atagsche-test-org/oasf

@@ -5,11 +5,15 @@ syntax = "proto3";
 
 package api.proto;
 
-// For description of the Skill message, see: schema/skills/base_skill.json
+// A specific skills that an agent record is capable of performing.
+// Supported skills: https://schema.oasf.agntcy.org/skills
 message Skill {
+  // Human-readable name of the skill.
   string name = 1;
 
+  // Unique identifier of the skill.
   uint32 id = 2;
 
+  // Metadata associated with the skill.
   map<string, string> annotations = 3;
 }
