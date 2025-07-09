@@ -18,7 +18,7 @@
         "docker-image": {
           "caption": "Docker Image"
         },
-        "py-package": {
+        "python-package": {
           "caption": "Python Package"
         },
         "source-code": {
