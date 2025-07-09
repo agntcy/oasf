@@ -1,9 +1,4 @@
-# Protocol Buffer Definitions
+# OASF
 
-This directory contains the Protocol Buffer (`.proto`) files defining our data objects and APIs.
-
-## Buf Schema Registry
-
-The full proto module, generated language stubs and it's versions are hosted at the Buf Schema Registry:
-
-[https://buf.build/agntcy/oasf](https://buf.build/agntcy/oasf)
+This repository contains the protocol definitions and language stubs for the
+[Open Agentic Schema Framework](https://schema.oasf.agntcy.org).

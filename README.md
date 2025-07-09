@@ -120,6 +120,12 @@ task down
 
 See https://github.com/orgs/agntcy/packages?repo_name=oasf
 
+### Protocol Buffer Definitions
+
+The `proto` directory contains the Protocol Buffer (`.proto`) files defining our data objects and APIs. The full proto
+module, generated language stubs and it's versions are hosted at the Buf Schema Registry:
+[https://buf.build/agntcy/oasf](https://buf.build/agntcy/oasf)
+
 ## Copyright Notice
 
 [Copyright Notice and License](./LICENSE.md)
