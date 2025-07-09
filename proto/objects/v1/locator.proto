@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package v1;
+package objects.v1;
 
 // Locator points to the source where agent can be found at.
 // For example, a locator can be a link to a helm chart.
