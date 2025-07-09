@@ -8,7 +8,7 @@ package objects.v1;
 import "google/protobuf/struct.proto";
 
 // Extensions provide a generic way to attach additional information
-// about an agent to the record. For example, application-specific 
+// about an agent to the record. For example, application-specific
 // details can be provided using an extension.
 message Extension {
   // Name of the extension.

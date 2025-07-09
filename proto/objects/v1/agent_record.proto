@@ -5,10 +5,10 @@ syntax = "proto3";
 
 package objects.v1;
 
-import "objects/v1/skill.proto";
-import "objects/v1/locator.proto";
 import "objects/v1/extension.proto";
+import "objects/v1/locator.proto";
 import "objects/v1/signature.proto";
+import "objects/v1/skill.proto";
 
 // AgentRecord defines a schema for versioned AI agent content representation.
 // The schema provides a way to describe an agent in a structured format.
@@ -45,7 +45,7 @@ message AgentRecord {
   // Creation timestamp of the agent in the RFC3339 format.
   // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
   string created_at = 7;
-  
+
   // List of skills that the agent can perform.
   repeated Skill skills = 8;
 

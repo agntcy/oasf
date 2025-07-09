@@ -19,7 +19,7 @@ message Signature {
 
   // Base64-encoded signature.
   string signature = 4;
-  
+
   // Base64-encoded signing certificate.
   string certificate = 5;
 
