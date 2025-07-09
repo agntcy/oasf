@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package api.proto;
+package api.proto.v1;
 
 // Signature provides the signing and verification details about the agent record.
 message Signature {
