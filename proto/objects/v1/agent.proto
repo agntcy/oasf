@@ -7,8 +7,8 @@ package objects.v1;
 
 import "objects/v1/extension.proto";
 import "objects/v1/locator.proto";
-import "objects/v1/skill.proto";
 import "objects/v1/signature.proto";
+import "objects/v1/skill.proto";
 
 // Data model defines a schema for versioned AI agent content representation.
 // The schema provides a way to describe features, constraints, artifact
