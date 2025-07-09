@@ -9,14 +9,10 @@
   "attributes": {
     "name": {
       "description": "The name of this eta.",
-      "requirement": "required",
-      "observable": 104
+      "requirement": "required"
     },
     "service": {
       "requirement": "recommended"
     }
-  },
-  "observables": {
-    "service.name": 105
   }
 }

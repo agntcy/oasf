@@ -17,7 +17,6 @@ defmodule SchemaWeb.SchemaController do
   @missing_recommended "missing_recommended"
 
   @enum_text "_enum_text"
-  @observables "_observables"
 
   @extensions_param_description "When included in request, filters response to included only the" <>
                                   " supplied schema extensions, or no extensions if this parameter has" <>
@@ -316,7 +315,6 @@ defmodule SchemaWeb.SchemaController do
             caption(:string, "Object caption", required: true)
             description(:string, "Object description", required: true)
             extends(:string, "Object parent class name", required: true)
-            observable(:integer, "Observable ID")
             profiles(:array, "Object profiles", items: %PhoenixSwagger.Schema{type: :string})
           end
 
@@ -1731,7 +1729,7 @@ defmodule SchemaWeb.SchemaController do
 
   def skill_ex(id, params) do
     extension = extension(params)
-    Schema.skill_ex(extension, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :skill, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1776,7 +1774,7 @@ defmodule SchemaWeb.SchemaController do
 
   def domain_ex(id, params) do
     extension = extension(params)
-    Schema.domain_ex(extension, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :domain, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1821,7 +1819,7 @@ defmodule SchemaWeb.SchemaController do
 
   def feature_ex(id, params) do
     extension = extension(params)
-    Schema.feature_ex(extension, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :feature, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1869,7 +1867,7 @@ defmodule SchemaWeb.SchemaController do
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.object_ex(extensions, extension, id, profiles)
+    Schema.entity_ex(extensions, extension, :object, id, profiles)
   end
 
   # ---------------------------------------------
@@ -1877,7 +1875,7 @@ defmodule SchemaWeb.SchemaController do
   # ---------------------------------------------
 
   @doc """
-  Enrich skill class data by adding type_uid, enumerated text, and observables.
+  Enrich skill class data by adding type_uid, and enumerated text.
   A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   objects.
   """
@@ -1887,7 +1885,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "The purpose of this API is to enrich the provided skill class data with <code>type_uid</code>," <>
-        " enumerated text, and <code>observables</code> array. Each class is represented as a" <>
+        " and enumerated text. Each class is represented as a" <>
         " JSON object, while multiple classes are encoded as a JSON array of objects."
     )
 
@@ -1905,14 +1903,6 @@ defmodule SchemaWeb.SchemaController do
         |-----|-------|
         |true|Untranslated:<br/><code>{"category_uid":0,"class_uid":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "category_uid": 0, "class_name": "Base Class", "class_uid": 0}</code>|
         """,
-        default: false
-      )
-
-      _observables(
-        :query,
-        :boolean,
-        "<strong>TODO</strong>: Enhance the skill class data by adding the observables associated with" <>
-          " the class.",
         default: false
       )
 
@@ -1927,20 +1917,19 @@ defmodule SchemaWeb.SchemaController do
   @spec enrich_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
   def enrich_skill(conn, params) do
     enum_text = conn.query_params[@enum_text]
-    observables = conn.query_params[@observables]
 
     {status, result} =
       case params["_json"] do
         # Enrich a single class
         class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, observables, :skill)}
+          {200, Schema.enrich(class, enum_text, :skill)}
 
         # Enrich a list of classes
         list when is_list(list) ->
           {200,
            Enum.map(
              list,
-             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, :skill) end)
+             &Task.async(fn -> Schema.enrich(&1, enum_text, :skill) end)
            )
            |> Enum.map(&Task.await/1)}
 
@@ -1953,7 +1942,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Enrich domain class data by adding type_uid, enumerated text, and observables.
+  Enrich domain class data by adding type_uid, and enumerated text.
   A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
   objects.
   """
@@ -1963,7 +1952,7 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "The purpose of this API is to enrich the provided domain class data with <code>type_uid</code>," <>
-        " enumerated text, and <code>observables</code> array. Each class is represented as a" <>
+        " and enumerated text. Each class is represented as a" <>
         " JSON object, while multiple classes are encoded as a JSON array of objects."
     )
 
@@ -1984,14 +1973,6 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      _observables(
-        :query,
-        :boolean,
-        "<strong>TODO</strong>: Enhance the domain class data by adding the observables associated with" <>
-          " the class.",
-        default: false
-      )
-
       data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class data to be enriched.",
         required: true
       )
@@ -2003,20 +1984,19 @@ defmodule SchemaWeb.SchemaController do
   @spec enrich_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
   def enrich_domain(conn, params) do
     enum_text = conn.query_params[@enum_text]
-    observables = conn.query_params[@observables]
 
     {status, result} =
       case params["_json"] do
         # Enrich a single class
         class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, observables, :domain)}
+          {200, Schema.enrich(class, enum_text, :domain)}
 
         # Enrich a list of classes
         list when is_list(list) ->
           {200,
            Enum.map(
              list,
-             &Task.async(fn -> Schema.enrich(&1, enum_text, observables, :domain) end)
+             &Task.async(fn -> Schema.enrich(&1, enum_text, :domain) end)
            )
            |> Enum.map(&Task.await/1)}
 

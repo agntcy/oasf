@@ -3,11 +3,27 @@
 
 image:
   repository: ghcr.io/agntcy/oasf-server
-  tag: latest
+  versions:
+    - server: latest
+      schema: 0.3.1
+      default: true
   pullPolicy: IfNotPresent
+
+ingress:
+  enabled: true
+  className: "nginx"
+  hosts:
+    - host: localhost
+  tls: []
+  service:
+    type: NodePort
 
 service:
   type: NodePort
+
+env:
+  HOST: localhost
+  URL_PORT: 8080
 
 volumes:
   - name: schema

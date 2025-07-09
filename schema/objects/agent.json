@@ -47,6 +47,12 @@
     "extensions": {
       "caption": "Extensions",
       "description": "List of extension models that describe this agent and its capabilities more in depth.",
+      "requirement": "recommended"
+    },
+    "signature": {
+      "reference": "agent_signature",
+      "caption": "Signature",
+      "description": "A digital signature of the agent data model. This is used to verify the authenticity and integrity of the agent.",
       "requirement": "required"
     },
     "skills": {

@@ -5,7 +5,7 @@ defmodule Schema.JsonSchema do
   @moduledoc """
   Json schema generator. This module defines functions that generate JSON schema (see http://json-schema.org) schemas for OASF schema.
   """
-  @schema_base_uri "https://schema.oasf.agntcy.org/schema/classes"
+  @schema_base_uri "https://schema.oasf.agntcy.org/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
 
   @doc """
@@ -36,7 +36,7 @@ defmodule Schema.JsonSchema do
       Map.new()
       |> add_java_class(name)
     else
-      class_schema(make_class_ref(name, ext))
+      class_schema(make_class_ref(name, type[:family], ext))
     end
     |> Map.put("title", type[:caption])
     |> Map.put("type", "object")
@@ -86,12 +86,12 @@ defmodule Schema.JsonSchema do
     "#/$defs"
   end
 
-  defp make_class_ref(name, nil) do
-    Path.join([@schema_base_uri, name])
+  defp make_class_ref(name, family, nil) do
+    Path.join([@schema_base_uri, family <> "s", name])
   end
 
-  defp make_class_ref(name, ext) do
-    Path.join([@schema_base_uri, ext, name])
+  defp make_class_ref(name, family, ext) do
+    Path.join([@schema_base_uri, family <> "s", ext, name])
   end
 
   defp empty_object(map, properties) do
@@ -161,6 +161,10 @@ defmodule Schema.JsonSchema do
     new_schema(attr) |> encode_object(name, attr)
   end
 
+  defp encode_attribute(name, "class_t", attr) do
+    new_schema(attr) |> encode_class(name, attr)
+  end
+
   defp encode_attribute(_name, "json_t", attr) do
     new_schema(attr)
   end
@@ -184,6 +188,11 @@ defmodule Schema.JsonSchema do
 
   defp encode_object(schema, _name, attr) do
     type = attr[:object_type]
+    Map.put(schema, "$ref", make_object_ref(type))
+  end
+
+  defp encode_class(schema, _name, attr) do
+    type = attr[:class_type]
     Map.put(schema, "$ref", make_object_ref(type))
   end
 

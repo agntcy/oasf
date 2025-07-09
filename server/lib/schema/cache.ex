@@ -68,10 +68,10 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
 
-    {skills, all_skills, observable_type_id_map, main_skills} =
+    {skills, all_skills, main_skills} =
       read_classes(base_class, @main_skills_file, @skills_dir, @skill_family, version[:version])
 
-    {domains, all_domains, _observable_domains_type_id_map, main_domains} =
+    {domains, all_domains, main_domains} =
       read_classes(
         base_class,
         @main_domains_file,
@@ -80,7 +80,7 @@ defmodule Schema.Cache do
         version[:version]
       )
 
-    {features, all_features, _observable_features_type_id_map, main_features} =
+    {features, all_features, main_features} =
       read_classes(
         base_class,
         @main_features_file,
@@ -102,33 +102,27 @@ defmodule Schema.Cache do
 
     categories = %{attributes: categories_attributes}
 
-    {objects, all_objects, observable_type_id_map} =
-      read_objects(observable_type_id_map, version[:version])
+    {objects, all_objects} =
+      read_objects(version[:version])
 
     dictionary = Utils.update_dictionary(dictionary, base_class, classes, objects)
-
-    # TODO: Right now this map is empty. What are observables for, should we keep the logic around them?
-    observable_type_id_map = observables_from_dictionary(dictionary, observable_type_id_map)
-
     dictionary_attributes = dictionary[:attributes]
 
+    # Read and update profiles
     profiles = JsonReader.read_profiles() |> update_profiles(dictionary_attributes)
-
     # clean up the cached files
     JsonReader.cleanup()
-
     # Check profiles used in objects, adding objects to profile's _links
     profiles = Profiles.sanity_check(:object, objects, profiles)
+    # Check profiles used in classes, adding classes to profile's _links
+    profiles = Profiles.sanity_check(:class, classes, profiles)
 
+    # Missing description warnings, datetime attributes, and profiles
     objects =
       objects
       |> Utils.update_objects(dictionary_attributes)
-      |> update_observable(observable_type_id_map)
       |> update_objects()
       |> final_check(dictionary_attributes)
-
-    # Check profiles used in classes, adding classes to profile's _links
-    profiles = Profiles.sanity_check(:class, classes, profiles)
 
     classes =
       update_classes(classes, objects)
@@ -148,6 +142,7 @@ defmodule Schema.Cache do
 
     base_class = final_check(:base_class, base_class, dictionary_attributes)
 
+    # Check for each attribute in the schema if it has a requirement field.
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
@@ -283,30 +278,6 @@ defmodule Schema.Cache do
     end
   end
 
-  @doc """
-  Returns extended class definition, which includes all objects referred by the class.
-  """
-  @spec class_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  def class_ex(
-        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-        :base_class
-      ) do
-    class_ex(base_class, dictionary, objects)
-  end
-
-  def class_ex(%__MODULE__{dictionary: dictionary, classes: classes, objects: objects}, id) do
-    Map.get(classes, id) |> class_ex(dictionary, objects)
-  end
-
-  defp class_ex(nil, _dictionary, _objects) do
-    nil
-  end
-
-  defp class_ex(class, dictionary, objects) do
-    {class_ex, ref_objects} = enrich_ex(class, dictionary[:attributes], objects, Map.new())
-    Map.put(class_ex, :objects, Map.to_list(ref_objects))
-  end
-
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
 
@@ -333,30 +304,6 @@ defmodule Schema.Cache do
       skill ->
         enrich(skill, dictionary[:attributes])
     end
-  end
-
-  @doc """
-  Returns extended skill definition, which includes all objects referred by the skill.
-  """
-  @spec skill_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  def skill_ex(
-        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-        :base_class
-      ) do
-    skill_ex(base_class, dictionary, objects)
-  end
-
-  def skill_ex(%__MODULE__{dictionary: dictionary, skills: skills, objects: objects}, id) do
-    Map.get(skills, id) |> skill_ex(dictionary, objects)
-  end
-
-  defp skill_ex(nil, _dictionary, _objects) do
-    nil
-  end
-
-  defp skill_ex(skill, dictionary, objects) do
-    {skill_ex, ref_objects} = enrich_ex(skill, dictionary[:attributes], objects, Map.new())
-    Map.put(skill_ex, :objects, Map.to_list(ref_objects))
   end
 
   @spec find_skill(Schema.Cache.t(), any) :: nil | map
@@ -395,30 +342,6 @@ defmodule Schema.Cache do
     end
   end
 
-  @doc """
-  Returns extended domain definition, which includes all objects referred by the domain.
-  """
-  @spec domain_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  def domain_ex(
-        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-        :base_class
-      ) do
-    domain_ex(base_class, dictionary, objects)
-  end
-
-  def domain_ex(%__MODULE__{dictionary: dictionary, domains: domains, objects: objects}, id) do
-    Map.get(domains, id) |> domain_ex(dictionary, objects)
-  end
-
-  defp domain_ex(nil, _dictionary, _objects) do
-    nil
-  end
-
-  defp domain_ex(domain, dictionary, objects) do
-    {domain_ex, ref_objects} = enrich_ex(domain, dictionary[:attributes], objects, Map.new())
-    Map.put(domain_ex, :objects, Map.to_list(ref_objects))
-  end
-
   @spec find_domain(Schema.Cache.t(), any) :: nil | map
   def find_domain(%__MODULE__{dictionary: dictionary, domains: domains}, uid) do
     case Enum.find(domains, fn {_, domain} -> domain[:uid] == uid end) do
@@ -455,30 +378,6 @@ defmodule Schema.Cache do
     end
   end
 
-  @doc """
-  Returns extended feature definition, which includes all objects referred by the feature.
-  """
-  @spec feature_ex(__MODULE__.t(), atom()) :: nil | class_t()
-  def feature_ex(
-        %__MODULE__{dictionary: dictionary, objects: objects, base_class: base_class},
-        :base_class
-      ) do
-    feature_ex(base_class, dictionary, objects)
-  end
-
-  def feature_ex(%__MODULE__{dictionary: dictionary, features: features, objects: objects}, id) do
-    Map.get(features, id) |> feature_ex(dictionary, objects)
-  end
-
-  defp feature_ex(nil, _dictionary, _objects) do
-    nil
-  end
-
-  defp feature_ex(feature, dictionary, objects) do
-    {feature_ex, ref_objects} = enrich_ex(feature, dictionary[:attributes], objects, Map.new())
-    Map.put(feature_ex, :objects, Map.to_list(ref_objects))
-  end
-
   @spec objects(__MODULE__.t()) :: map()
   def objects(%__MODULE__{objects: objects}), do: objects
 
@@ -500,15 +399,44 @@ defmodule Schema.Cache do
     end
   end
 
-  @spec object_ex(__MODULE__.t(), any) :: nil | object_t()
-  def object_ex(%__MODULE__{dictionary: dictionary, objects: objects}, id) do
-    case Map.get(objects, id) do
+  @spec entity_ex(__MODULE__.t(), atom(), atom()) :: nil | map()
+  def entity_ex(
+        %__MODULE__{
+          dictionary: dictionary,
+          objects: objects,
+          skills: skills,
+          domains: domains,
+          features: features
+        },
+        type,
+        id
+      ) do
+    entities =
+      case type do
+        :object -> objects
+        :skill -> skills
+        :domain -> domains
+        :feature -> features
+        _ -> %{}
+      end
+
+    case Map.get(entities, id) do
       nil ->
         nil
 
-      object ->
-        {object_ex, ref_objects} = enrich_ex(object, dictionary[:attributes], objects, Map.new())
-        Map.put(object_ex, :objects, Map.to_list(ref_objects))
+      entity ->
+        {entity_ex, ref_entities} =
+          enrich_ex(
+            entity,
+            dictionary[:attributes],
+            objects,
+            skills,
+            domains,
+            features,
+            Map.new()
+          )
+
+        Map.put(entity_ex, :objects, Map.to_list(ref_entities))
     end
   end
 
@@ -518,9 +446,17 @@ defmodule Schema.Cache do
 
   defp update_attributes(attributes, dictionary_attributes) do
     Enum.map(attributes, fn {name, attribute} ->
-      case find_attribute(dictionary_attributes, name, attribute[:_source]) do
+      # Use referece if exists instead of the name
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
+      case find_attribute(dictionary_attributes, reference, attribute[:_source]) do
         nil ->
-          Logger.warning("undefined attribute: #{name}: #{inspect(attribute)}")
+          Logger.warning("undefined attribute: #{reference}: #{inspect(attribute)}")
           {name, attribute}
 
         base ->
@@ -529,18 +465,41 @@ defmodule Schema.Cache do
     end)
   end
 
-  defp enrich_ex(type, dictionary_attributes, objects, ref_objects) do
+  defp enrich_ex(type, dictionary_attributes, objects, skills, domains, features, ref_objects) do
     {attributes, ref_objects} =
-      update_attributes_ex(type[:attributes], dictionary_attributes, objects, ref_objects)
+      update_attributes_ex(
+        type[:attributes],
+        dictionary_attributes,
+        objects,
+        skills,
+        domains,
+        features,
+        ref_objects
+      )
 
     {Map.put(type, :attributes, attributes), ref_objects}
   end
 
-  defp update_attributes_ex(attributes, dictionary_attributes, objects, ref_objects) do
+  defp update_attributes_ex(
+         attributes,
+         dictionary_attributes,
+         objects,
+         skills,
+         domains,
+         features,
+         ref_objects
+       ) do
     Enum.map_reduce(attributes, ref_objects, fn {name, attribute}, acc ->
-      case find_attribute(dictionary_attributes, name, attribute[:_source]) do
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
+      case find_attribute(dictionary_attributes, reference, attribute[:_source]) do
         nil ->
-          Logger.warning("undefined attribute: #{name}: #{inspect(attribute)}")
+          Logger.warning("undefined attribute: #{reference}: #{inspect(attribute)}")
           {{name, attribute}, acc}
 
         base ->
@@ -548,16 +507,39 @@ defmodule Schema.Cache do
             Utils.deep_merge(base, attribute)
             |> Map.delete(:_links)
 
+          {type, entities} =
+            case attribute[:type] do
+              "object_t" ->
+                {attribute[:object_type], objects}
+
+              "class_t" ->
+                family =
+                  case attribute[:family] do
+                    "skill" -> skills
+                    "domain" -> domains
+                    "feature" -> features
+                    _ -> %{}
+                  end
+
+                {attribute[:class_type], family}
+
+              _ ->
+                {nil, objects}
+            end
+
           update_attributes_ex(
-            attribute[:object_type],
+            type,
             name,
             attribute,
-            fn obj_type ->
+            fn entity_name ->
               enrich_ex(
-                objects[obj_type],
+                entities[entity_name],
                 dictionary_attributes,
                 objects,
-                Map.put(acc, obj_type, nil)
+                skills,
+                domains,
+                features,
+                Map.put(acc, entity_name, nil)
               )
             end,
             acc
@@ -570,15 +552,15 @@ defmodule Schema.Cache do
     {{name, attribute}, acc}
   end
 
-  defp update_attributes_ex(object_name, name, attribute, enrich, acc) do
-    obj_type = String.to_atom(object_name)
+  defp update_attributes_ex(type, name, attribute, enrich, acc) do
+    entity_name = String.to_atom(type)
 
     acc =
-      if Map.has_key?(acc, obj_type) do
+      if Map.has_key?(acc, entity_name) do
         acc
       else
-        {object, acc} = enrich.(obj_type)
-        Map.put(acc, obj_type, object)
+        {object, acc} = enrich.(entity_name)
+        Map.put(acc, entity_name, object)
       end
 
     {{name, attribute}, acc}
@@ -606,8 +588,6 @@ defmodule Schema.Cache do
     classes = JsonReader.read_classes(classes_dir)
     # merge classes with base class
     classes = Map.put(classes, :base_class, base_class)
-
-    observable_type_id_map = observables_from_classes(classes)
 
     classes =
       classes
@@ -641,13 +621,11 @@ defmodule Schema.Cache do
         enrich_class(class_tuple, categories_attributes, classes, version)
       end)
 
-    {classes, all_classes, observable_type_id_map, categories}
+    {classes, all_classes, categories}
   end
 
-  defp read_objects(observable_type_id_map, version) do
+  defp read_objects(version) do
     objects = JsonReader.read_objects()
-
-    observable_type_id_map = observables_from_objects(observable_type_id_map, objects)
 
     objects =
       objects
@@ -681,332 +659,7 @@ defmodule Schema.Cache do
         enrich_object(object_tuple, version)
       end)
 
-    {objects, all_objects, observable_type_id_map}
-  end
-
-  @spec observables_from_classes(map()) :: map()
-  defp observables_from_classes(classes) do
-    Enum.reduce(
-      classes,
-      %{},
-      fn {class_key, class}, observable_type_id_map ->
-        validate_class_observables(class_key, class)
-
-        observable_type_id_map
-        |> observables_from_item_attributes(classes, class_key, class, "Class")
-        |> observables_from_item_observables(classes, class_key, class, "Class")
-      end
-    )
-  end
-
-  defp validate_class_observables(class_key, class) do
-    if Map.has_key?(class, :observable) do
-      Logger.error(
-        "Illegal definition of one or more attributes with \"#{:observable}\" in class" <>
-          "  \"#{class_key}\". Defining class-level observables is not supported (this would be" <>
-          " redundant). Instead use the \"class_uid\" attribute for querying, correlating, and" <>
-          " reporting."
-      )
-
-      System.stop(1)
-    end
-
-    if not patch_extends?(class) and hidden_class?(class_key, class) do
-      if Map.has_key?(class, :attributes) and
-           Enum.any?(
-             class[:attributes],
-             fn {_attribute_key, attribute} ->
-               Map.has_key?(attribute, :observable)
-             end
-           ) do
-        Logger.error(
-          "Illegal definition of one or more attributes with \"#{:observable}\" definition in" <>
-            " hidden class \"#{class_key}\". This would cause colliding definitions of the same" <>
-            " observable type_id values in all children of this class. Instead define" <>
-            " observables (of any kind) in non-hidden child classes of \"#{class_key}\"."
-        )
-
-        System.stop(1)
-      end
-
-      if Map.has_key?(class, :observables) do
-        Logger.error(
-          "Illegal \"#{:observables}\" definition in hidden class \"#{class_key}\". This" <>
-            " would cause colliding definitions of the same observable type_id values in" <>
-            " all children of this class. Instead define observables (of any kind) in" <>
-            " non-hidden child classes of \"#{class_key}\"."
-        )
-
-        System.stop(1)
-      end
-    end
-  end
-
-  @spec observables_from_item_attributes(map(), map(), atom(), map(), String.t()) :: map()
-  defp observables_from_item_attributes(observable_type_id_map, items, item_key, item, kind) do
-    {caption, _description} = find_item_caption_and_description(items, item_key, item)
-
-    if Map.has_key?(item, :attributes) do
-      Enum.reduce(
-        item[:attributes],
-        observable_type_id_map,
-        fn {attribute_key, attribute}, observable_type_id_map ->
-          if Map.has_key?(attribute, :observable) do
-            observable_type_id = Utils.observable_type_id_to_atom(attribute[:observable])
-
-            if Map.has_key?(observable_type_id_map, observable_type_id) do
-              Logger.error(
-                "Collision of observable type_id #{observable_type_id} between" <>
-                  " \"#{caption}\" #{kind} attribute \"#{attribute_key}\" and" <>
-                  " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-              )
-
-              System.stop(1)
-
-              observable_type_id_map
-            else
-              observable_kind = "#{kind}-Specific Attribute"
-
-              Map.put(
-                observable_type_id_map,
-                observable_type_id,
-                make_observable_enum_entry(
-                  "#{caption} #{kind}: #{attribute_key}",
-                  "#{kind}-specific attribute \"#{attribute_key}\" for the #{caption} #{kind}.",
-                  observable_kind
-                )
-              )
-            end
-          else
-            observable_type_id_map
-          end
-        end
-      )
-    else
-      observable_type_id_map
-    end
-  end
-
-  @spec observables_from_item_observables(map(), map(), atom(), map(), String.t()) :: map()
-  defp observables_from_item_observables(observable_type_id_map, items, item_key, item, kind) do
-    {caption, _description} = find_item_caption_and_description(items, item_key, item)
-
-    if Map.has_key?(item, :observables) do
-      Enum.reduce(
-        item[:observables],
-        observable_type_id_map,
-        fn {attribute_path, observable_type_id}, observable_type_id_map ->
-          observable_type_id = Utils.observable_type_id_to_atom(observable_type_id)
-
-          if(Map.has_key?(observable_type_id_map, observable_type_id)) do
-            Logger.error(
-              "Collision of observable type_id #{observable_type_id} between" <>
-                " \"#{caption}\" #{kind} attribute path \"#{attribute_path}\" and" <>
-                " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-            )
-
-            System.stop(1)
-
-            observable_type_id_map
-          else
-            observable_kind = "#{kind}-Specific Attribute"
-
-            Map.put(
-              observable_type_id_map,
-              observable_type_id,
-              make_observable_enum_entry(
-                "#{caption} #{kind}: #{attribute_path}",
-                "#{kind}-specific attribute \"#{attribute_path}\" for the #{caption} #{kind}.",
-                observable_kind
-              )
-            )
-          end
-        end
-      )
-    else
-      observable_type_id_map
-    end
-  end
-
-  @spec observables_from_objects(map(), map()) :: map()
-  defp observables_from_objects(observable_type_id_map, objects) do
-    Enum.reduce(
-      objects,
-      observable_type_id_map,
-      fn {object_key, object}, observable_type_id_map ->
-        validate_object_observables(object_key, object)
-
-        observable_type_id_map
-        |> observable_from_object(objects, object_key, object)
-        |> observables_from_item_attributes(objects, object_key, object, "Object")
-
-        # Not supported: |> observables_from_item_observables(objects, object_key, object, "Object")
-      end
-    )
-  end
-
-  defp validate_object_observables(object_key, object) do
-    if Map.has_key?(object, :observables) do
-      # Attribute-path observables would be tricky to implement as an machine-driven enrichment.
-      # It would require tracking the relative from the point of the object down that tree of an
-      # overall OASF class.
-      Logger.error(
-        "Illegal \"#{:observables}\" definition in object \"#{object_key}\"." <>
-          " Object-specific attribute path observables are not supported." <>
-          " Please file an issue if you find this feature necessary."
-      )
-
-      System.stop(1)
-    end
-
-    if not patch_extends?(object) and hidden_object?(object[:name]) do
-      if Map.has_key?(object, :attributes) and
-           Enum.any?(
-             object[:attributes],
-             fn {_attribute_key, attribute} ->
-               Map.has_key?(attribute, :observable)
-             end
-           ) do
-        Logger.error(
-          "Illegal definition of one or more attributes with \"#{:observable}\" in hidden object" <>
-            " \"#{object_key}\". This would cause colliding definitions of the same" <>
-            " observable type_id values in all children of this object. Instead define" <>
-            " observables (of any kind) in non-hidden child objects of \"#{object_key}\"."
-        )
-
-        System.stop(1)
-      end
-
-      if Map.has_key?(object, :observable) do
-        Logger.error(
-          "Illegal \"#{:observable}\" definition in hidden object \"#{object_key}\". This" <>
-            " would cause colliding definitions of the same observable type_id values in" <>
-            " all children of this object. Instead define observables (of any kind) in" <>
-            " non-hidden child objects of \"#{object_key}\"."
-        )
-
-        System.stop(1)
-      end
-    end
-  end
-
-  @spec observable_from_object(map(), map(), atom(), map()) :: map()
-  defp observable_from_object(observable_type_id_map, objects, object_key, object) do
-    {caption, description} = find_item_caption_and_description(objects, object_key, object)
-
-    if Map.has_key?(object, :observable) do
-      observable_type_id = Utils.observable_type_id_to_atom(object[:observable])
-
-      if(Map.has_key?(observable_type_id_map, observable_type_id)) do
-        Logger.error(
-          "Collision of observable type_id #{observable_type_id} between" <>
-            " \"#{caption}\" Object \"#{:observable}\" and" <>
-            " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-        )
-
-        System.stop(1)
-
-        observable_type_id_map
-      else
-        Map.put(
-          observable_type_id_map,
-          observable_type_id,
-          make_observable_enum_entry(caption, description, "Object")
-        )
-      end
-    else
-      observable_type_id_map
-    end
-  end
-
-  defp observables_from_dictionary(dictionary, observable_type_id_map) do
-    observable_type_id_map
-    |> observables_from_dictionary_items(dictionary[:types][:attributes], "Dictionary Type")
-    |> observables_from_dictionary_items(dictionary[:attributes], "Dictionary Attribute")
-  end
-
-  defp observables_from_dictionary_items(observable_type_id_map, items, kind) do
-    if items do
-      Enum.reduce(
-        items,
-        observable_type_id_map,
-        fn {_item_key, item}, observable_type_id_map ->
-          if Map.has_key?(item, :observable) do
-            observable_type_id = Utils.observable_type_id_to_atom(item[:observable])
-
-            if Map.has_key?(observable_type_id_map, observable_type_id) do
-              Logger.error(
-                "Collision of observable type_id #{observable_type_id} between #{kind}" <>
-                  " \"#{item[:caption]}\" and" <>
-                  " \"#{observable_type_id_map[observable_type_id][:caption]}\""
-              )
-
-              System.stop(1)
-
-              observable_type_id_map
-            else
-              Map.put(
-                observable_type_id_map,
-                observable_type_id,
-                make_observable_enum_entry(item[:caption], item[:description], kind)
-              )
-            end
-          else
-            observable_type_id_map
-          end
-        end
-      )
-    else
-      observable_type_id_map
-    end
-  end
-
-  # make an observable type_id enum entry
-  @spec make_observable_enum_entry(String.t(), String.t(), String.t()) :: map()
-  defp make_observable_enum_entry(caption, description, observable_kind) do
-    %{
-      caption: caption,
-      description: "Observable by #{observable_kind}.<br>#{description}",
-      _observable_kind: observable_kind
-    }
-  end
-
-  @spec find_item_caption_and_description(map(), atom(), map() | nil) :: {String.t(), String.t()}
-  defp find_item_caption_and_description(items, item_key, item)
-       when is_map(items) and is_atom(item_key) do
-    cond do
-      item == nil ->
-        caption = Atom.to_string(item_key)
-        {caption, caption}
-
-      patch_extends?(item) ->
-        find_item_parent_caption_and_description(items, item_key, item)
-
-      item[:caption] != nil ->
-        caption = item[:caption]
-        {caption, item[:description] || caption}
-
-      item[:extends] != nil ->
-        find_item_parent_caption_and_description(items, item_key, item)
-
-      true ->
-        caption = Atom.to_string(item_key)
-        {caption, caption}
-    end
-  end
-
-  @spec find_item_parent_caption_and_description(map(), atom(), map() | nil) ::
-          {String.t(), String.t()}
-  defp find_item_parent_caption_and_description(items, item_key, item)
-       when is_map(items) and is_atom(item_key) do
-    {parent_key, parent_item} = Utils.find_parent(items, item[:extends], item[:extension])
-
-    if parent_key do
-      find_item_caption_and_description(items, parent_key, parent_item)
-    else
-      caption = Atom.to_string(item_key)
-      {caption, caption}
-    end
+    {objects, all_objects}
   end
 
   @spec hidden_object?(atom() | String.t()) :: boolean()
@@ -1020,7 +673,8 @@ defmodule Schema.Cache do
 
   @spec hidden_class?(atom(), map()) :: boolean()
   defp hidden_class?(class_key, class) do
-    class_key != :base_class and !Map.has_key?(class, :uid)
+    ignored_keys = [:base_feature, :base_skill, :base_domain]
+    class_key not in ignored_keys and !Map.has_key?(class, :uid)
   end
 
   # Add category_uid, class_uid, and type_uid
@@ -1299,12 +953,6 @@ defmodule Schema.Cache do
               base
               |> Map.put(:profiles, profiles)
               |> Map.put(:attributes, attributes)
-              # Top-level observable.
-              # Only occurs in objects, but is safe to do for classes too.
-              |> Utils.put_non_nil(:observable, item[:observable])
-              # Top-level path-based observables.
-              # Only occurs in classes, but is safe to do for objects too.
-              |> Utils.put_non_nil(:observables, item[:observables])
               |> Utils.put_non_nil(:references, item[:references])
               |> patch_constraints(item)
 
@@ -1454,24 +1102,6 @@ defmodule Schema.Cache do
       else
         MapSet.put(no_req_set, context)
       end
-    end
-  end
-
-  defp update_observable(objects, observable_type_id_map) do
-    if Map.has_key?(objects, :observable) do
-      update_in(objects, [:observable, :attributes, :type_id, :enum], fn enum_map ->
-        Map.merge(enum_map, observable_type_id_map, fn observable_type_id, enum1, enum2 ->
-          Logger.error(
-            "Collision of observable type_id #{observable_type_id} between" <>
-              " \"#{enum1[:caption]}\" and \"#{enum2[:caption]}\" (detected while merging)"
-          )
-
-          System.stop(1)
-          enum1
-        end)
-      end)
-    else
-      objects
     end
   end
 
@@ -1635,10 +1265,20 @@ defmodule Schema.Cache do
 
   defp update_profile(profile, profile_attributes, dictionary_attributes) do
     Enum.into(profile_attributes, %{}, fn {name, attribute} ->
+      reference =
+        if Map.has_key?(attribute, :reference) do
+          String.to_atom(attribute[:reference])
+        else
+          name
+        end
+
       {name,
-       case find_attribute(dictionary_attributes, name, String.to_atom(profile)) do
+       case find_attribute(dictionary_attributes, reference, String.to_atom(profile)) do
          nil ->
-           Logger.warning("profile #{profile} uses #{name} that is not defined in the dictionary")
+           Logger.warning(
+             "profile #{profile} uses #{reference} that is not defined in the dictionary"
+           )
+
            attribute
 
          dictionary_attribute ->
@@ -1658,7 +1298,6 @@ defmodule Schema.Cache do
     |> copy_new(from, :type_name)
     |> copy_new(from, :object_name)
     |> copy_new(from, :object_type)
-    |> copy_new(from, :observable)
     |> copy_new(from, :source)
     |> copy_new(from, :references)
   end

@@ -359,19 +359,9 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.class(schema, id) end)
   end
 
-  @spec class_ex(atom) :: nil | Cache.class_t()
-  def class_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.class_ex(schema, id) end)
-  end
-
   @spec skill(atom) :: nil | Cache.class_t()
   def skill(id) do
     Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end)
-  end
-
-  @spec skill_ex(atom) :: nil | Cache.class_t()
-  def skill_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.skill_ex(schema, id) end)
   end
 
   @spec find_skill(any) :: nil | map
@@ -382,11 +372,6 @@ defmodule Schema.Repo do
   @spec domain(atom) :: nil | Cache.class_t()
   def domain(id) do
     Agent.get(__MODULE__, fn schema -> Cache.domain(schema, id) end)
-  end
-
-  @spec domain_ex(atom) :: nil | Cache.class_t()
-  def domain_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.domain_ex(schema, id) end)
   end
 
   @spec find_domain(any) :: nil | map
@@ -401,7 +386,7 @@ defmodule Schema.Repo do
 
   @spec feature_ex(atom) :: nil | Cache.class_t()
   def feature_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.feature_ex(schema, id) end)
+    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, :feature, id) end)
   end
 
   @spec objects() :: map()
@@ -451,18 +436,18 @@ defmodule Schema.Repo do
     |> Map.update(:_links, [], fn links -> remove_extension_links(links, extensions) end)
   end
 
-  @spec object_ex(atom) :: nil | Cache.class_t()
-  def object_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.object_ex(schema, id) end)
+  @spec entity_ex(atom, atom) :: nil | Cache.class_t()
+  def entity_ex(type, id) do
+    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end)
   end
 
-  @spec object_ex(extensions_t() | nil, atom) :: nil | Cache.class_t()
-  def object_ex(nil, id) do
-    Agent.get(__MODULE__, fn schema -> Cache.object_ex(schema, id) end)
+  @spec entity_ex(extensions_t() | nil, atom, atom) :: nil | Cache.class_t()
+  def entity_ex(nil, type, id) do
+    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end)
   end
 
-  def object_ex(extensions, id) do
-    Agent.get(__MODULE__, fn schema -> Cache.object_ex(schema, id) end)
+  def entity_ex(extensions, type, id) do
+    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end)
     |> Map.update(:_links, [], fn links -> remove_extension_links(links, extensions) end)
   end
 

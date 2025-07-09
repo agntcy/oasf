@@ -1,49 +1,68 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+{{- range $index, $version := .Values.image.versions }}
+{{- $versionsHash := sha256sum (toYaml $.Values.image.versions) }}
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "chart.fullname" $ }}-{{ $version.schema | replace "." "-" }}
   labels:
-    {{- include "chart.labels" . | nindent 4 }}
+    {{- include "chart.labels" $ | nindent 4 }}
+    schema-version: {{ $version.schema }}
+    {{- if $version.default }}
+    default-schema: "true"
+    {{- end }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.autoscaling.replicaCount }}
-  {{- end }}
+  replicas: {{ $.Values.autoscaling.replicaCount | default 1 }}
   selector:
     matchLabels:
-      {{- include "chart.selectorLabels" . | nindent 6 }}
+      {{- include "chart.selectorLabels" $ | nindent 6 }}
+      schema-version: {{ $version.schema }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        versions-hash: "{{ $versionsHash }}"
+      {{- with $.Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "chart.selectorLabels" . | nindent 8 }}
+        {{- include "chart.selectorLabels" $ | nindent 8 }}
+        schema-version: {{ $version.schema }}
+        {{- if $version.default }}
+        default-schema: "true"
+        {{- end }}
     spec:
-      {{- with .Values.image.pullSecrets }}
+      {{- with $.Values.image.pullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      serviceAccountName: {{ include "chart.serviceAccountName" $ }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ $.Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          image: "{{ $.Values.image.repository }}:{{ $version.server }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
           env:
-          {{- range $key, $value := .Values.env }}
+          {{- range $key, $value := $.Values.env }}
             - name: {{ $key }}
               value: {{ $value | quote }}
           {{- end }}
+            - name: SCHEMA_VERSIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $.Release.Name }}-schema-versions
+                  key: versions
+            - name: SCHEMA_PATH
+              value: /{{ $version.schema }}
           ports:
             - name: http
-              containerPort: {{ .Values.config.server_port }}
+              containerPort: {{ $.Values.config.server_port }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -54,20 +73,19 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml $.Values.resources | nindent 12 }}
           volumeMounts:
-            {{- toYaml .Values.volumeMounts | default "" | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- with $.Values.volumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      volumes:
-        {{- toYaml .Values.volumes | default "" | nindent 8 }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
+        {{- toYaml $.Values.nodeSelector | nindent 8 }}
       tolerations:
+        {{- toYaml $.Values.tolerations | nindent 8 }}
+      affinity:
+        {{- toYaml $.Values.affinity | nindent 8 }}
+      volumes:
+        {{- with $.Values.volumes }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
+{{- end }}

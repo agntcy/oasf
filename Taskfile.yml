@@ -11,7 +11,7 @@ dotenv:
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
-  IMAGE_TAG: '{{ .IMAGE_TAG | default "latest" }}'
+  IMAGE_TAG: '{{ .IMAGE_TAG }}'
 
   ## Dependency config
   BIN_DIR: '{{ .ROOT_DIR }}/bin'
@@ -70,16 +70,18 @@ tasks:
         echo "$images" | while read image; do
           target_name="${image%%:*}"
           echo "Releasing images for $target_name"
-        
+
           docker tag $image $target_name:latest
           docker tag $image $target_name:{{.RELEASE_TAG}}
           docker image rm $image
-        
+
           docker push --all-tags $target_name
         done
 
   up:
     desc: Deploy services in an ephemeral kind cluster
+    preconditions:
+      - which yq
     deps:
       - deps:helm
       - deps:kubectl
@@ -92,7 +94,7 @@ tasks:
       # Deployment args
       HELM_NAMESPACE:   '{{ .HELM_NAMESPACE | default "default" }}'
       HELM_CHART_PATH:  '{{ .ROOT_DIR }}/install/charts/oasf'
-      HELM_VALUES_PATH: '{{ .ROOT_DIR }}/install/charts/oasf/values-test.yaml'
+      HELM_VALUES_PATH: '{{ .HELM_VALUES_PATH | default (printf "%s/install/charts/oasf/values-test.yaml" .ROOT_DIR) }}'
       RELEASE_NAME:     'oasf'
     cmds:
       # Clean up previous deployment
@@ -108,6 +110,16 @@ tasks:
             extraMounts:
               - hostPath: {{ .ROOT_DIR }}/schema
                 containerPath: /schema
+            kubeadmConfigPatches:
+            - |
+              kind: InitConfiguration
+              nodeRegistration:
+                kubeletExtraArgs:
+                  node-labels: "ingress-ready=true"
+            extraPortMappings:
+            - containerPort: 30080
+              hostPort: 8080
+              protocol: TCP
         EOF
 
       # Create ephemeral cluster
@@ -117,12 +129,17 @@ tasks:
       # Check cluster status
       - '{{ .KUBECTL_BIN }} cluster-info'
 
-      # Import images
+      # Extract images from values-test.yaml and load them into kind
       - |
-        images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
+        {{- if .IMAGE_TAG }}
+        {{ .KIND_BIN }} load docker-image "{{ .IMAGE_REPO }}/oasf-server:{{ .IMAGE_TAG }}" --name {{ .KIND_CLUSTER_NAME }}
+        {{- else }}
+        images=$(yq eval '.image.versions[].server' {{ .HELM_VALUES_PATH }})
+        echo "Images to load: $images"
         echo "$images" | while read image; do
-          {{ .KIND_BIN }} load docker-image $image --name {{ .KIND_CLUSTER_NAME }}
+          {{ .KIND_BIN }} load docker-image "{{ .IMAGE_REPO }}/oasf-server:$image" --name {{ .KIND_CLUSTER_NAME }}
         done
+        {{- end }}
 
       # Deploy chart
       - |
@@ -130,7 +147,9 @@ tasks:
           {{ .HELM_CHART_PATH }} \
           -f {{ .HELM_VALUES_PATH }} \
           --set image.repository="{{ .IMAGE_REPO }}/oasf-server" \
-          --set image.tag="{{ .IMAGE_TAG }}" \
+          {{- if .IMAGE_TAG }}
+          --set image.versions[0].server={{.IMAGE_TAG}} \
+          {{- end }}
           --namespace {{ .HELM_NAMESPACE }} \
           --create-namespace \
           --install \
@@ -138,12 +157,18 @@ tasks:
           --wait-for-jobs \
           --timeout "15m"
 
-      # Port-forward dependency services
+      # Wait for the ingress controller deployment to be available
       - |
-        {{ .KUBECTL_BIN }} port-forward service/{{.RELEASE_NAME}} 8080:8080 -n {{ .HELM_NAMESPACE }} &
-
-      # Delay to ensure services are online
-      - sleep 10
+        echo "Waiting for Deployment {{.RELEASE_NAME}}-ingress-controller in namespace {{.HELM_NAMESPACE}} to become available..."
+        if ! {{ .KUBECTL_BIN }} wait deployment/{{.RELEASE_NAME}}-ingress-controller \
+            --for=condition=Available \
+            -n {{ .HELM_NAMESPACE }} \
+            --timeout=120s; then
+          echo "Error: Deployment {{.RELEASE_NAME}}-ingress-controller did not become available within 120 seconds."
+          exit 1
+        fi
+        echo
+        echo "Deployment is available at http://localhost:8080."
 
   reload:
     desc: Hot reload schema changes after deployment
@@ -153,12 +178,15 @@ tasks:
     sources:
       - 'schema/**/*'
     vars:
-      RELEASE_NAME: 'oasf'
+      LABEL_SELECTOR: 'default-schema=true'
     preconditions:
-      - '{{ .KUBECTL_BIN }} get deploy/{{.RELEASE_NAME}}'
+      - '{{ .KUBECTL_BIN }} get po -l {{.LABEL_SELECTOR}}'
     cmds:
-      - '{{ .KUBECTL_BIN }} exec deploy/{{.RELEASE_NAME}} -- ./bin/schema_server rpc "Schema.reload()"'
-      - 'echo "Reloaded schema! Use CTRL + C to exit."'
+      - |
+        POD_NAME=$({{ .KUBECTL_BIN }} get pods -l {{.LABEL_SELECTOR}} -o jsonpath="{.items[0].metadata.name}")
+        {{.KUBECTL_BIN}} exec $POD_NAME -- ./bin/schema_server rpc "Schema.reload()"
+
+      - echo "Reloaded schema! Use CTRL + C to exit."
 
   down:
     desc: Stop services and remove ephemeral kind cluster

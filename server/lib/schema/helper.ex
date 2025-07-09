@@ -7,19 +7,19 @@ defmodule Schema.Helper do
   """
   require Logger
 
-  def enrich(data, enum_text, observables, type) when is_map(data) do
+  def enrich(data, enum_text, type) when is_map(data) do
     Logger.debug(fn ->
-      "enrich #{type}: #{inspect(data)}, enum_text: #{enum_text}, observables: #{observables}"
+      "enrich #{type}: #{inspect(data)}, enum_text: #{enum_text}"
     end)
 
-    enrich_class(data, enum_text, observables, type)
+    enrich_class(data, enum_text, type)
   end
 
   # this is not a class
-  def enrich(data, _enum_text, _observables, _type),
+  def enrich(data, _enum_text, _type),
     do: %{:error => "Not a JSON object", :data => data}
 
-  defp enrich_class(data, enum_text, _observables, type) do
+  defp enrich_class(data, enum_text, type) do
     class_uid = data["class_uid"]
     if class_uid == nil, do: %{:error => "Missing class_uid", :data => data}
     Logger.debug("enrich class: #{class_uid}")
