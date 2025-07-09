@@ -5,10 +5,10 @@ syntax = "proto3";
 
 package api.proto.v1;
 
-import "api/proto/v1/skill.proto";
-import "api/proto/v1/locator.proto";
-import "api/proto/v1/extension.proto";
-import "api/proto/v1/signature.proto";
+import "v1/skill.proto";
+import "v1/locator.proto";
+import "v1/extension.proto";
+import "v1/signature.proto";
 
 // AgentRecord defines a schema for versioned AI agent content representation.
 // The schema provides a way to describe an agent in a structured format.
