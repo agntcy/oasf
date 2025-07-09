@@ -673,7 +673,7 @@ defmodule Schema.Cache do
 
   @spec hidden_class?(atom(), map()) :: boolean()
   defp hidden_class?(class_key, class) do
-    ignored_keys = [:base_class, :base_feature, :base_skill, :base_domain]
+    ignored_keys = [:base_feature, :base_skill, :base_domain]
     class_key not in ignored_keys and !Map.has_key?(class, :uid)
   end
 
