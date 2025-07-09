@@ -10,5 +10,5 @@ breaking:
   use:
     - WIRE_JSON
 modules:
-  - path: objects
+  - path: .
     name: buf.build/agntcy/oasf
