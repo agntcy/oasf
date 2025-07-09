@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package api.proto.v1;
+package v1;
 
 // A specific skills that an agent record is capable of performing.
 // Supported skills: https://schema.oasf.agntcy.org/skills

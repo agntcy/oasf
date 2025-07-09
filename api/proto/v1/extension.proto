@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package api.proto.v1;
+package v1;
 
 import "google/protobuf/struct.proto";
 

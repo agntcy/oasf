@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package api.proto.v1;
+package v1;
 
 import "v1/skill.proto";
 import "v1/locator.proto";
