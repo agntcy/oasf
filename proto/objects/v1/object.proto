@@ -1,0 +1,43 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package objects.v1;
+
+import "objects/v1/agent.proto";
+
+// Reference to a typed object in the content store.
+message ObjectRef {
+  // Digest of the object data.
+  // Digest is used as a globally unique ID of an object.
+  // Specs: https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests
+  string digest = 1;
+  // Type of the object. Can be looked up from digest.
+  string type = 2;
+  // Size of the object. Can be looked up from digest.
+  uint64 size = 3;
+  // Additional metadata associated with this object.
+  // Can be looked up from digest.
+  map<string, string> annotations = 4;
+}
+
+// Object maps a given ref to an actual object.
+message Object {
+  // Opaque data held by this object. Arbitrary in size.
+  // Readers should know how to process this value.
+  bytes data = 1;
+  // This is only needed in push.
+  optional ObjectRef ref = 2;
+  // In case ref is pointing to an agent model, this can be set.
+  // This is only set on pull.
+  optional Agent agent = 3;
+}
+
+// ObjectType defines a list of native types.
+// Other types may be used but some operations
+// on the storage layer may not be supported.
+enum ObjectType {
+  OBJECT_TYPE_RAW = 0; // "raw"
+  OBJECT_TYPE_AGENT = 1; // "agent"
+}

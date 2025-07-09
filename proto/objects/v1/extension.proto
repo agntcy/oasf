@@ -7,22 +7,20 @@ package objects.v1;
 
 import "google/protobuf/struct.proto";
 
-// Extensions provide a generic way to attach additional information
-// about an agent to the record. For example, application-specific
-// details can be provided using an extension.
+// Extensions provide dynamic descriptors for an agent data model.
+// For example, arbitrary data and third-party features can be
+// described using extensions.
+//
+// Key := {name}/{version}
+//
+// This is an immutable object.
 message Extension {
-  // Name of the extension.
-  // Can be used as a fully qualified name.
-  // For example, "org.agntcy.oasf.schema/features/<feature-name>"
+  // Name of the extension attached to an agent.
   string name = 1;
-
-  // Version of the extension.
+  // Version of the extension attached to an agent.
   string version = 2;
-
-  // Metadata associated with the extension.
+  // Metadata associated with this extension.
   map<string, string> annotations = 3;
-
-  // Data attached to the extension.
-  // Usually a JSON-embedded object.
-  google.protobuf.Struct data = 4;
+  // Value of the data.
+  optional google.protobuf.Struct data = 4;
 }

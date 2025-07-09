@@ -3,12 +3,12 @@
 
 syntax = "proto3";
 
-package objects.v1;
+package objects.v2;
 
-import "objects/v1/extension.proto";
-import "objects/v1/locator.proto";
-import "objects/v1/signature.proto";
-import "objects/v1/skill.proto";
+import "objects/v2/extension.proto";
+import "objects/v2/locator.proto";
+import "objects/v2/signature.proto";
+import "objects/v2/skill.proto";
 
 // AgentRecord defines a schema for versioned AI agent content representation.
 // The schema provides a way to describe an agent in a structured format.
@@ -26,39 +26,28 @@ import "objects/v1/skill.proto";
 message AgentRecord {
   // Name of the agent.
   string name = 1;
-
   // Version of the agent.
   string version = 2;
-
   // Schema version of the agent.
   string schema_version = 3;
-
   // Description of the agent.
   string description = 4;
-
   // List of agent authors, e.g. in the form of `author-name <author-email>`.
   repeated string authors = 5;
-
   // Metadata associated with the agent.
   map<string, string> annotations = 6;
-
   // Creation timestamp of the agent in the RFC3339 format.
   // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
   string created_at = 7;
-
   // List of skills that the agent can perform.
   repeated Skill skills = 8;
-
   // List of source locators where the agent can be found or used from.
   repeated Locator locators = 9;
-
   // Additional information attached to the agent.
   // Extensions are used to generically extend the agent's functionality.
   repeated Extension extensions = 10;
-
   // Security signature of the agent.
   Signature signature = 11;
-
   // Reference to the previous agent record, if any.
   // Used to link the agent record to its previous versions.
   // Field number is explicitly reserved for extendability.

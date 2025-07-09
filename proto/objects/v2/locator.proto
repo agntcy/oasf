@@ -3,21 +3,19 @@
 
 syntax = "proto3";
 
-package objects.v1;
+package objects.v2;
 
-// Locator points to the artifact locators for an agent data model.
-// For example, this can include a reference to a helm chart.
-//
-// Key := {type}/{url}
-//
-// This is an immutable object.
+// Locator points to the source where agent can be found at.
+// For example, a locator can be a link to a helm chart.
 message Locator {
-  // Type of the locator. Can be custom or native LocatorType.
+  // Type of the locator.
+  // Supports custom types.
+  // Native types are defined in the LocatorType.
   string type = 1;
-  // Location URI where this source can be found/accessed.
+  // Location where the source can be found at.
   // Specs: https://datatracker.ietf.org/doc/html/rfc1738
   string url = 2;
-  // Metadata associated with this locator.
+  // Metadata associated with the locator.
   map<string, string> annotations = 3;
   // Size of the source in bytes pointed by the {url} property.
   optional uint64 size = 4;
@@ -26,9 +24,10 @@ message Locator {
   optional string digest = 5;
 }
 
-// LocatorType defines native types of locators.
+// LocatorType defines placeholders for supported locators.
+// Used in string format across APIs.
 enum LocatorType {
-  LOCATOR_TYPE_UNSPECIFIED = 0; // "", "unspecified"
+  LOCATOR_TYPE_UNSPECIFIED = 0; // ""
   LOCATOR_TYPE_HELM_CHART = 1; // "helm-chart"
   LOCATOR_TYPE_DOCKER_IMAGE = 2; // "docker-image"
   LOCATOR_TYPE_PYTHON_PACKAGE = 3; // "python-package"
