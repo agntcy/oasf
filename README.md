@@ -116,17 +116,19 @@ including ephemeral Kind clusters and Docker containers.
 task down
 ```
 
-## Artifacts distribution
+## Distribution
+
+### Artifacts
 
 See https://github.com/orgs/agntcy/packages?repo_name=oasf
 
-### Protocol Buffer Definitions
+### Protocol buffer definitions
 
 The `proto` directory contains the Protocol Buffer (`.proto`) files defining our data objects and APIs. The full proto
 module, generated language stubs and it's versions are hosted at the Buf Schema Registry:
 [https://buf.build/agntcy/oasf](https://buf.build/agntcy/oasf)
 
-## Copyright Notice
+## Copyright notice
 
 [Copyright Notice and License](./LICENSE.md)
 
