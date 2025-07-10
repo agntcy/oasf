@@ -50,13 +50,6 @@ spec:
         paths:
           {{- range $index, $version := $.Values.image.versions }}
             {{- if $version.default }}
-          {{/* - path: / */}}
-          {{/*   pathType: ImplementationSpecific */}}
-          {{/*   backend: */}}
-          {{/*     service: */}}
-          {{/*       name: {{ $fullName }}-{{ $version.schema | replace "." "-" }} */}}
-          {{/*       port: */}}
-          {{/*         number: {{ $svcPort }} */}}
           - path: /(.*)
             pathType: ImplementationSpecific
             backend:
