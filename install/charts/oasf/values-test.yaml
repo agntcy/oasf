@@ -1,6 +1,8 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+localDeploy: true
+
 image:
   repository: ghcr.io/agntcy/oasf-server
   versions:
@@ -24,6 +26,7 @@ service:
 env:
   HOST: localhost
   URL_PORT: 8080
+  SCHEMA_DIR: /schema
 
 volumes:
   - name: schema
@@ -34,6 +37,3 @@ volumes:
 volumeMounts:
   - name: schema
     mountPath: /schema
-
-env:
-  SCHEMA_DIR: /schema

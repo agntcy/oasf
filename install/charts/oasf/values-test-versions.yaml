@@ -1,6 +1,8 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+localDeploy: true
+
 # Enable the ingress
 ingress:
   enabled: true
