@@ -45,8 +45,6 @@ defmodule Schema.Helper do
         %{:error => "Invalid id: #{class_uid}", :data => data}
 
       class ->
-        data = type_uid(class_uid, data)
-
         if enum_text == "true" do
           enrich_type(class, data)
         else
@@ -84,23 +82,6 @@ defmodule Schema.Helper do
           end
       end
     end)
-  end
-
-  defp type_uid(class_uid, data) do
-    case data["activity_id"] do
-      nil ->
-        data
-
-      activity_id ->
-        uid =
-          if activity_id >= 0 do
-            Schema.Types.type_uid(class_uid, activity_id)
-          else
-            0
-          end
-
-        Map.put(data, "type_uid", uid)
-    end
   end
 
   defp to_atom(key) when is_atom(key), do: key
