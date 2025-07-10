@@ -28,7 +28,7 @@ message Locator {
 
 // LocatorType defines native types of locators.
 enum LocatorType {
-  LOCATOR_TYPE_UNSPECIFIED = 0; // "", "unspecified"
+  LOCATOR_TYPE_UNSPECIFIED = 0; // ""
   LOCATOR_TYPE_HELM_CHART = 1; // "helm-chart"
   LOCATOR_TYPE_DOCKER_IMAGE = 2; // "docker-image"
   LOCATOR_TYPE_PYTHON_PACKAGE = 3; // "python-package"

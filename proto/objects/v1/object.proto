@@ -38,6 +38,7 @@ message Object {
 // Other types may be used but some operations
 // on the storage layer may not be supported.
 enum ObjectType {
-  OBJECT_TYPE_RAW = 0; // "raw"
-  OBJECT_TYPE_AGENT = 1; // "agent"
+  OBJECT_TYPE_UNSPECIFIED = 0; // ""
+  OBJECT_TYPE_RAW = 1; // "raw"
+  OBJECT_TYPE_AGENT = 2; // "agent"
 }
