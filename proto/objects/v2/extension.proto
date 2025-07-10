@@ -15,10 +15,13 @@ message Extension {
   // Can be used as a fully qualified name.
   // For example, "org.agntcy.oasf.schema/features/<feature-name>"
   string name = 1;
+
   // Version of the extension.
   string version = 2;
+
   // Metadata associated with the extension.
   map<string, string> annotations = 3;
+
   // Data attached to the extension.
   // Usually a JSON-embedded object.
   google.protobuf.Struct data = 4;

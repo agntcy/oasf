@@ -14,13 +14,17 @@ package objects.v1;
 message Locator {
   // Type of the locator. Can be custom or native LocatorType.
   string type = 1;
+
   // Location URI where this source can be found/accessed.
   // Specs: https://datatracker.ietf.org/doc/html/rfc1738
   string url = 2;
+
   // Metadata associated with this locator.
   map<string, string> annotations = 3;
+
   // Size of the source in bytes pointed by the {url} property.
   optional uint64 size = 4;
+
   // Digest of the source pointed by the {url} property.
   // Specs: https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests
   optional string digest = 5;

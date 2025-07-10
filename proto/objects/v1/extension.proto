@@ -17,10 +17,13 @@ import "google/protobuf/struct.proto";
 message Extension {
   // Name of the extension attached to an agent.
   string name = 1;
+
   // Version of the extension attached to an agent.
   string version = 2;
+
   // Metadata associated with this extension.
   map<string, string> annotations = 3;
+
   // Value of the data.
   optional google.protobuf.Struct data = 4;
 }

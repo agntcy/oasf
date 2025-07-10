@@ -10,8 +10,10 @@ package objects.v2;
 message Skill {
   // Human-readable name of the skill.
   string name = 1;
+
   // Unique identifier of the skill.
   uint32 id = 2;
+
   // Metadata associated with the skill.
   map<string, string> annotations = 3;
 }
