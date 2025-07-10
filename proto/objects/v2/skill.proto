@@ -8,7 +8,6 @@ package objects.v2;
 // A specific skills that an agent record is capable of performing.
 // Supported skills: https://schema.oasf.agntcy.org/skills
 message Skill {
-  // Human-readable name of the skill.
   // UID of the skill in format: org.agntcy.oasf.schema/skills/<skill-name>
   string name = 1;
 
