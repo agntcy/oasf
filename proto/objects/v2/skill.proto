@@ -5,10 +5,13 @@ syntax = "proto3";
 
 package objects.v2;
 
-// A specific skills that an agent record is capable of performing.
-// Supported skills: https://schema.oasf.agntcy.org/skills
+// Skill defines specific capabilities attached to a record
+// that describe its functionality or features.
+//
+// Specs: https://schema.oasf.agntcy.org/objects/skill
+// Example: https://schema.oasf.agntcy.org/sample/objects/skill
 message Skill {
-  // UID of the skill in format: org.agntcy.oasf.schema/skills/<skill-name>
+  // Unique name of the skill.
   string name = 1;
 
   // Unique identifier of the skill.

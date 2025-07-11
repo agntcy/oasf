@@ -5,8 +5,11 @@ syntax = "proto3";
 
 package objects.v2;
 
-// Locator points to the source where agent can be found at.
-// For example, a locator can be a link to a helm chart.
+// Locator points to the artifact locators of a record.
+// For example, this can include a reference to a helm chart.
+//
+// Specs: https://schema.oasf.agntcy.org/objects/locator
+// Example: https://schema.oasf.agntcy.org/sample/objects/locator
 message Locator {
   // Type of the locator.
   // Supports custom types.
@@ -31,10 +34,10 @@ message Locator {
 // LocatorType defines placeholders for supported locators.
 // Used in string format across APIs.
 enum LocatorType {
-  LOCATOR_TYPE_UNSPECIFIED = 0; // ""
-  LOCATOR_TYPE_HELM_CHART = 1; // "helm_chart"
-  LOCATOR_TYPE_DOCKER_IMAGE = 2; // "docker_image"
-  LOCATOR_TYPE_PYTHON_PACKAGE = 3; // "python_package"
-  LOCATOR_TYPE_SOURCE_CODE = 4; // "source_code"
-  LOCATOR_TYPE_BINARY = 5; // "binary"
+  LOCATOR_TYPE_UNSPECIFIED = 0;     // ""
+  LOCATOR_TYPE_HELM_CHART = 1;      // "helm_chart"
+  LOCATOR_TYPE_DOCKER_IMAGE = 2;    // "docker_image"
+  LOCATOR_TYPE_PYTHON_PACKAGE = 3;  // "python_package"
+  LOCATOR_TYPE_SOURCE_CODE = 4;     // "source_code"
+  LOCATOR_TYPE_BINARY = 5;          // "binary"
 }

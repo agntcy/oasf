@@ -5,14 +5,19 @@ syntax = "proto3";
 
 package objects.v1;
 
+// Signature defines the signing information for a record.
+// For example, this can include full key-based signature.
+//
+// Specs: https://schema.oasf.agntcy.org/objects/signature
+// Example: https://schema.oasf.agntcy.org/sample/objects/signature
 message Signature {
-  // The signature algorithm used (e.g., "ECDSA_P256_SHA256")
+  // The signature algorithm used (e.g., "ECDSA_P256_SHA256").
   string algorithm = 1;
 
-  // Base64-encoded signature
+  // Base64-encoded signature.
   string signature = 2;
 
-  // Base64-encoded signing certificate
+  // Base64-encoded signing certificate.
   string certificate = 3;
 
   // Type of the signature content bundle.
