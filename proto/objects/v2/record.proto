@@ -10,7 +10,7 @@ import "objects/v2/locator.proto";
 import "objects/v2/signature.proto";
 import "objects/v2/skill.proto";
 
-// Record defines a schema for versioned agent content representation.
+// Record defines a schema for versioned Agentic AI content representation.
 // The data schema provides a way to describe features, constraints,
 // artifact locators, and other relevant details.
 //

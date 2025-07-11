@@ -8,8 +8,8 @@ package objects.v2;
 import "google/protobuf/struct.proto";
 
 // Extensions provide a generic way to attach additional information
-// about an agent to the record. For example, application-specific
-// details can be provided using an extension.
+// to the record. For example, application-specific details can be
+// provided using an extension.
 //
 // Specs: https://schema.oasf.agntcy.org/objects/extension
 // Example: https://schema.oasf.agntcy.org/sample/objects/extension
