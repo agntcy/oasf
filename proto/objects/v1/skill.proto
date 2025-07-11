@@ -5,10 +5,14 @@ syntax = "proto3";
 
 package objects.v1;
 
-// A specific skills that an agent is capable of performing.
-// Specs: https://schema.oasf.agntcy.org/skills.
+// Skill is used to specify capabilities of the underlying object described by the record.
+// For instance the capabilities of an LLM, prompt, MCP server, A2A remote agent and more.
+// Skills are used to announce a record in the agent directory system and used to discover
+// records in the agent directory network.
+// Skill may be verified by using evaluation systems and encoded using specific extensions.
 //
-// Example (https://schema.oasf.agntcy.org/skills/contextual_comprehension)
+// Specs: https://schema.oasf.agntcy.org/objects/skill
+// Example: https://schema.oasf.agntcy.org/sample/objects/skill
 message Skill {
   // Additional metadata for this skill.
   map<string, string> annotations = 1;
