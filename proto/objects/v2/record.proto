@@ -23,44 +23,40 @@ import "objects/v2/skill.proto";
 // Records are referenced by a globally-unique content identifier (CID).
 // Specs: https://github.com/multiformats/cid
 message Record {
-  // CID of the record.
-  // Specs: https://github.com/multiformats/cid
-  string cid = 1;
-
   // Schema version of the record.
-  string schema_version = 2;
+  string schema_version = 1;
 
   // Name of the record.
-  string name = 3;
+  string name = 2;
 
   // Version of the record.
-  string version = 4;
+  string version = 3;
 
   // Description of the record.
-  string description = 5;
+  string description = 4;
 
   // List of record authors, e.g. in the form of `author-name <author-email>`.
-  repeated string authors = 6;
+  repeated string authors = 5;
 
   // Metadata associated with the record.
-  map<string, string> annotations = 7;
+  map<string, string> annotations = 6;
 
   // Creation timestamp of the record in the RFC3339 format.
   // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
-  string created_at = 8;
+  string created_at = 7;
 
   // List of skills that the record can perform.
-  repeated Skill skills = 9;
+  repeated Skill skills = 8;
 
   // List of source locators where the record can be found or used from.
-  repeated Locator locators = 10;
+  repeated Locator locators = 9;
 
   // Additional information attached to the record.
   // Extensions are used to generically extend the record's functionality.
-  repeated Extension extensions = 11;
+  repeated Extension extensions = 10;
 
   // Security signature of the record.
-  Signature signature = 12;
+  Signature signature = 11;
 
   // Reference to the previous record record, if any.
   // Used to link the record record to its previous versions.
