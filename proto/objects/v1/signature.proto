@@ -5,8 +5,8 @@ syntax = "proto3";
 
 package objects.v1;
 
-// Signature defines the signing information for a record.
-// For example, this can include full key-based signature.
+// Signature defines the signing information of the data held by a record.
+// For example, this can include full key-based verifiable signature.
 //
 // Specs: https://schema.oasf.agntcy.org/objects/signature
 // Example: https://schema.oasf.agntcy.org/sample/objects/signature

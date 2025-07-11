@@ -5,7 +5,7 @@ syntax = "proto3";
 
 package objects.v1;
 
-// Locator points to the artifact locators of a record.
+// Locator defines a location of an artifact linked by the record.
 // For example, this can include a reference to a helm chart.
 //
 // Specs: https://schema.oasf.agntcy.org/objects/locator

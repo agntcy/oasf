@@ -5,8 +5,11 @@ syntax = "proto3";
 
 package objects.v1;
 
-// Skill defines specific capabilities attached to a record
-// that describe its functionality or features.
+// Skill is used to specify capabilities of the underlying object described by the record.
+// For instance the capabilities of an LLM, prompt, MCP server, A2A remote agent and more.
+// Skills are used to announce a record in the agent directory system and used to discover
+// records in the agent directory network.
+// Skill may be verified by using evaluation systems and encoded using specific extensions.
 //
 // Specs: https://schema.oasf.agntcy.org/objects/skill
 // Example: https://schema.oasf.agntcy.org/sample/objects/skill
