@@ -1,24 +1,70 @@
 {
   "caption": "MCP Server Configuration",
-  "description": "Data for the MCP server record extension.",
-  "extends": "extension_data",
+  "description": "Configuration for a public MCP server.",
+  "extends": "object",
   "name": "mcp_server_data",
   "attributes": {
-    "servers": {
-      "reference": "mcp_server_configurations",
-      "caption": "MCP Server Configurations",
-      "description": "List of MCP server configurations supported by the agent. Exact attribute names may vary depending on the client or platform.",
-      "requirement": "required",
-      "references": [
-        {
-          "description": "VS Code MCP Server Extension",
-          "url": "https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_configuration-format"
-        },
-        {
-          "description": "Claude MCP Connector",
-          "url": "https://docs.anthropic.com/en/docs/agents-and-tools/mcp-connector#field-descriptions"
-        }
-      ]
+    "name": {
+      "caption": "Server Name",
+      "description": "Name for the MCP server.",
+      "requirement": "required"
+    },
+    "type": {
+      "caption": "Server Type",
+      "description": "Type of MCP server (e.g., 'local', 'http', 'sse').",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "Server URL",
+      "description": "URL for the MCP server (used for remote servers).",
+      "requirement": "optional"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "Executable or runtime command (for local servers).",
+      "requirement": "optional"
+    },
+    "args": {
+      "caption": "Arguments",
+      "description": "Command-line arguments (for local servers).",
+      "requirement": "optional"
+    },
+    "env_vars": {
+      "caption": "Required Environment Variables",
+      "description": "List of environment variables the user must provide (e.g., tokens, API keys).",
+      "requirement": "optional"
+    },
+    "headers": {
+      "caption": "Headers",
+      "description": "HTTP headers for the MCP server (non-sensitive).",
+      "requirement": "optional"
+    },
+    "tools": {
+      "reference": "mcp_server_tools",
+      "caption": "Tools",
+      "description": "List of tools provided by the MCP server.",
+      "requirement": "recommended"
+    },
+    "capabilities": {
+      "reference": "mcp_server_capabilities",
+      "caption": "Capabilities",
+      "description": "Capabilities or features of the MCP server.",
+      "requirement": "recommended"
+    },
+    "scope": {
+      "caption": "Scope",
+      "description": "Scope of the MCP server configuration (e.g., 'global', 'workspace').",
+      "requirement": "optional"
+    },
+    "author": {
+      "caption": "Author",
+      "description": "Author or maintainer of the MCP server.",
+      "requirement": "required"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of the MCP server.",
+      "requirement": "optional"
     }
   }
 }
