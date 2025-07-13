@@ -60,6 +60,11 @@
       "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0' >Security Scheme Object</a>.",
       "type": "security_scheme"
     },
+    "author": {
+      "caption": "Author",
+      "description": "Name of the author of a service, tool, object, etc. See specific usage.",
+      "type": "string_t"
+    },
     "authors": {
       "caption": "Author",
       "description": "Specifies the authors list of an agent. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
@@ -180,6 +185,11 @@
       "description": "The description of the entity. See specific usage.",
       "type": "string_t"
     },
+    "destructive_hint": {
+      "caption": "Destructive Hint",
+      "description": "If true, the tool may perform destructive updates.",
+      "type": "boolean_t"
+    },
     "digest": {
       "caption": "Digest",
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
@@ -274,6 +284,11 @@
       "description": "A unique identifier. See specific usage.",
       "type": "integer_t"
     },
+    "idempotent_hint": {
+      "caption": "Idempotent Hint",
+      "description": "If true, repeated calls with the same arguments have no additional effect.",
+      "type": "boolean_t"
+    },
     "image": {
       "caption": "Docker Image",
       "description": "The Docker image that pertains to the class or object. See specific usage.",
@@ -343,15 +358,31 @@
       "description": "Data supported by the agent for runtime manifest.",
       "type": "manifest_data"
     },
+    "mcp_server_capabilities": {
+      "caption": "Capabilities",
+      "description": "Capabilities or features of the MCP server.",
+      "type": "string_t",
+      "is_array": true
+    },
     "mcp_server_data": {
       "caption": "Data",
       "description": "Data supported by the agent for MCP server.",
       "type": "mcp_server_data"
     },
-    "mcp_server_configurations": {
-      "caption": "MCP Server Configurations",
-      "description": "List of configurations of MCP servers that the agent can connect to.",
-      "type": "mcp_server_configuration",
+    "mcp_server_tool_annotations": {
+      "caption": "Annotations",
+      "description": "Optional hints about tool behavior (e.g., title, readOnlyHint, destructiveHint, idempotentHint, openWorldHint).",
+      "type": "mcp_server_tool_annotations"
+    },
+    "mcp_server_tool_input_schema": {
+      "caption": "Input Schema",
+      "description": "JSON Schema describing the tool's input parameters.",
+      "type": "mcp_server_tool_input_schema"
+    },
+    "mcp_server_tools": {
+      "caption": "Tools",
+      "description": "List of tools provided by the MCP server.",
+      "type": "mcp_server_tool",
       "is_array": true
     },
     "metadata": {
@@ -386,6 +417,11 @@
       "description": "Data schema supported by the agent for observability.",
       "type": "observability_data_schema"
     },
+    "open_world_hint": {
+      "caption": "Open World Hint",
+      "description": "If true, the tool interacts with external entities.",
+      "type": "boolean_t"
+    },
     "output": {
       "caption": "Output",
       "description": "A json output.",
@@ -411,6 +447,11 @@
       "description": "Content Identifier (CID) of an Agent Record's parent record.",
       "type": "uuid_t"
     },
+    "properties": {
+      "caption": "Properties",
+      "description": "Properties of the object. See specific usage.",
+      "type": "json_t"
+    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
@@ -435,6 +476,11 @@
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
+    },
+    "read_only_hint": {
+      "caption": "Read Only Hint",
+      "description": "If true, the tool does not modify its environment.",
+      "type": "boolean_t"
     },
     "ref": {
       "caption": "Reference",
@@ -524,10 +570,10 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
-    "tool_configuration": {
-      "caption": "Tool Configuration",
-      "description": "Configuration for tools that the MCP server can use.",
-      "type": "json_t"
+    "title": {
+      "caption": "Title",
+      "description": "A human-friendly title for the object.",
+      "type": "string_t"
     },
     "type": {
       "caption": "Type",
