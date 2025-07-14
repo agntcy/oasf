@@ -49,7 +49,7 @@ spec:
         paths:
           {{- range $index, $version := $.Values.image.versions }}
           - path: /{{ $version.schema }}/doc
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}-{{ $version.schema | replace "." "-" }}
@@ -57,7 +57,7 @@ spec:
                   number: {{ $svcPort }}
           {{- if $version.default }}
           - path: /doc
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: {{ $fullName }}-{{ $version.schema | replace "." "-" }}
