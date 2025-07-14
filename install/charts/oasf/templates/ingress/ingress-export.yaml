@@ -22,7 +22,7 @@ metadata:
   labels:
     {{- include "chart.labels" . | nindent 4 }}
   annotations:
-  {{- if eq .Values.ingress.className "nginx" }}
+  {{- if or (eq .Values.ingress.className "nginx") (eq .Values.ingress.className "nginx-internal") }}
     nginx.ingress.kubernetes.io/rewrite-target: /export/$2
     nginx.ingress.kubernetes.io/use-regex: "true"
   {{- end }}
