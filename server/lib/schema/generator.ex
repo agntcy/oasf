@@ -866,13 +866,13 @@ defmodule Schema.Generator do
     {all_classes_fn, class_fn} =
       case field[:family] do
         "skill" ->
-          {Schema.skills(), &Schema.skill/1}
+          {Schema.all_skills(), &Schema.skill/1}
 
         "domain" ->
-          {Schema.domains(), &Schema.domain/1}
+          {Schema.all_domains(), &Schema.domain/1}
 
         "feature" ->
-          {Schema.features(), &Schema.feature/1}
+          {Schema.all_features(), &Schema.feature/1}
 
         _ ->
           Logger.error("No matching class family found for #{field[:class_type]}")
