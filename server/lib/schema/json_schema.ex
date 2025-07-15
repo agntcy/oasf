@@ -53,14 +53,21 @@ defmodule Schema.JsonSchema do
         schema
       end
 
-    schema
-    |> Map.put("title", type[:caption])
-    |> Map.put("type", "object")
-    |> Map.put("properties", properties)
-    |> Map.put("additionalProperties", false)
-    |> put_required(required)
-    |> encode_entities(type[:entities])
-    |> empty_object(properties)
+    schema =
+      schema
+      |> Map.put("title", type[:caption])
+      |> Map.put("type", "object")
+      |> Map.put("properties", properties)
+      |> Map.put("additionalProperties", false)
+      |> put_required(required)
+      |> encode_entities(type[:entities])
+      |> empty_object(properties)
+
+    if top_level do
+      flatten_defs(schema)
+    else
+      schema
+    end
   end
 
   defp add_java_class(obj, name) do
@@ -330,4 +337,48 @@ defmodule Schema.JsonSchema do
         end
     end
   end
+
+  defp flatten_defs(schema) do
+    {schema, defs} = do_flatten_defs(schema, %{})
+
+    if map_size(defs) > 0 do
+      Map.put(schema, "$defs", defs)
+    else
+      Map.delete(schema, "$defs")
+    end
+  end
+
+  defp do_flatten_defs(%{"$defs" => defs} = schema, acc) do
+    {schema_flat, acc1} =
+      Map.delete(schema, "$defs")
+      |> Enum.reduce({%{}, acc}, fn {k, v}, {s_acc, d_acc} ->
+        if is_map(v) do
+          {v1, d_acc1} = do_flatten_defs(v, d_acc)
+          {Map.put(s_acc, k, v1), d_acc1}
+        else
+          {Map.put(s_acc, k, v), d_acc}
+        end
+      end)
+
+    acc_flat =
+      Enum.reduce(defs, acc1, fn {k, v}, a ->
+        {v_flat, a1} = do_flatten_defs(v, a)
+        Map.put(a1, k, v_flat)
+      end)
+
+    {schema_flat, acc_flat}
+  end
+
+  defp do_flatten_defs(%{} = schema, acc) do
+    Enum.reduce(schema, {%{}, acc}, fn {k, v}, {s_acc, d_acc} ->
+      if is_map(v) do
+        {v1, d_acc1} = do_flatten_defs(v, d_acc)
+        {Map.put(s_acc, k, v1), d_acc1}
+      else
+        {Map.put(s_acc, k, v), d_acc}
+      end
+    end)
+  end
+
+  defp do_flatten_defs(other, acc), do: {other, acc}
 end
