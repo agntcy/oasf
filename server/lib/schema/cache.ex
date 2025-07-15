@@ -556,12 +556,13 @@ defmodule Schema.Cache do
 
     classes =
       classes
-      # remove intermediate hidden classes
-      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
         enrich_class(class_tuple, categories_attributes, classes, version)
       end)
+      |> Utils.update_classes()
+      # remove intermediate hidden classes
+      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
 
     {classes, all_classes, categories}
   end
