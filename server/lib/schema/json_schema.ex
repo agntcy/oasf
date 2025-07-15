@@ -5,6 +5,9 @@ defmodule Schema.JsonSchema do
   @moduledoc """
   Json schema generator. This module defines functions that generate JSON schema (see http://json-schema.org) schemas for OASF schema.
   """
+
+  alias Schema.Utils
+
   @schema_base_uri "https://schema.oasf.agntcy.org/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
 
@@ -25,12 +28,12 @@ defmodule Schema.JsonSchema do
     end
   end
 
+  @spec encode_entity(map(), boolean) :: map()
   def encode_entity(type, top_level) do
     name = type[:name]
+    ext = type[:extension]
 
     {properties, required} = map_reduce(name, type[:attributes])
-
-    ext = type[:extension]
 
     schema = Map.new()
 
@@ -83,11 +86,15 @@ defmodule Schema.JsonSchema do
     "#{package}.#{name}"
   end
 
-  defp make_object_ref(name) do
-    Path.join([ref_object(), String.replace(name, "/", "_")])
+  defp make_class_ref(name) do
+    Path.join([ref_entity(), String.replace(name, "/", "_")])
   end
 
-  defp ref_object() do
+  defp make_object_ref(name) do
+    Path.join([ref_entity(), String.replace(name, "/", "_")])
+  end
+
+  defp ref_entity() do
     "#/$defs"
   end
 
@@ -133,9 +140,19 @@ defmodule Schema.JsonSchema do
 
   defp encode_entities(schema, entities) do
     defs =
-      Enum.into(entities, %{}, fn {name, entity} ->
-        key = Atom.to_string(name) |> String.replace("/", "_")
-        {key, encode_entity(entity, false)}
+      entities
+      |> Enum.reduce(%{}, fn {name, entity}, acc ->
+        # if an entity is an enum, we need to encode its children
+        if entity[:is_enum] do
+          entity[:_children]
+          |> Enum.reduce(acc, fn {name, item}, acc ->
+            key = name |> String.replace("/", "_")
+            Map.put(acc, key, encode_entity(item, false))
+          end)
+        else
+          key = Atom.to_string(name) |> String.replace("/", "_")
+          Map.put(acc, key, encode_entity(entity, false))
+        end
       end)
 
     Map.put(schema, "$defs", defs)
@@ -207,12 +224,41 @@ defmodule Schema.JsonSchema do
 
   defp encode_object(schema, _name, attr) do
     type = attr[:object_type]
-    Map.put(schema, "$ref", make_object_ref(type))
+
+    if attr[:is_enum] do
+      children_objects = Utils.find_children(Schema.objects(), type)
+
+      refs =
+        Enum.map(children_objects, fn item -> %{"$ref" => make_object_ref(item[:name])} end)
+
+      Map.put(schema, "anyOf", refs)
+    else
+      Map.put(schema, "$ref", make_object_ref(type))
+    end
   end
 
   defp encode_class(schema, _name, attr) do
     type = attr[:class_type]
-    Map.put(schema, "$ref", make_object_ref(type))
+    family = attr[:family]
+
+    if attr[:is_enum] do
+      all_classes_fn =
+        case family do
+          "skill" -> Schema.all_skills()
+          "domain" -> Schema.all_domains()
+          "feature" -> Schema.all_features()
+          _ -> schema
+        end
+
+      children_classes = Utils.find_children(all_classes_fn, type)
+
+      refs =
+        Enum.map(children_classes, fn item -> %{"$ref" => make_class_ref(item[:name])} end)
+
+      Map.put(schema, "anyOf", refs)
+    else
+      Map.put(schema, "$ref", make_class_ref(type))
+    end
   end
 
   defp encode_integer(schema, attr) do
@@ -261,8 +307,18 @@ defmodule Schema.JsonSchema do
   defp items_type(schema) do
     case Map.get(schema, "type") do
       nil ->
-        {ref, updated} = Map.pop(schema, "$ref")
-        {%{"$ref" => ref}, updated}
+        cond do
+          Map.has_key?(schema, "$ref") ->
+            {ref, updated} = Map.pop(schema, "$ref")
+            {%{"$ref" => ref}, updated}
+
+          Map.has_key?(schema, "anyOf") ->
+            {any_of, updated} = Map.pop(schema, "anyOf")
+            {%{"anyOf" => any_of}, updated}
+
+          true ->
+            {schema, schema}
+        end
 
       type ->
         case Map.pop(schema, "enum") do
