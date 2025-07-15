@@ -853,6 +853,21 @@ defmodule Schema.Generator do
   end
 
   defp get_valid_class(field) do
+    {all_classes_fn, class_fn} =
+      case field[:family] do
+        "skill" ->
+          {Schema.all_skills(), &Schema.skill/1}
+
+        "domain" ->
+          {Schema.all_domains(), &Schema.domain/1}
+
+        "feature" ->
+          {Schema.all_features(), &Schema.feature/1}
+
+        _ ->
+          Logger.error("No matching class family found for #{field[:class_type]}")
+      end
+
     valid_classes =
       if field[:is_enum] do
         # Filter to include only children classes that are not hidden
