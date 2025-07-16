@@ -1,17 +1,17 @@
 {
-  "caption": "Agent Record",
-  "description": "The data model defines a schema for AI agent content representation. The schema provides a way to describe agent's features, constraints, artifact locators, versioning, ownership, or relevant details.",
+  "caption": "Record",
+  "description": "The data model defines a schema for AI content representation. The schema provides a way to describe the workload's features, constraints, artifact locators, versioning, ownership, or relevant details.",
   "extends": "object",
-  "name": "agent_record",
+  "name": "record",
   "attributes": {
     "name": {
-      "caption": "Agent Name",
-      "description": "The name of the agent. For example: <code>Marketing Strategy Agent</code>.",
+      "caption": "Name",
+      "description": "The name of the record. For example: <code>Marketing Strategy Agent</code>.",
       "requirement": "required"
     },
     "version": {
-      "caption": "Agent Version",
-      "description": "The version of the agent. Values MAY conform to a specific versioning schema.",
+      "caption": "Version",
+      "description": "The version of the record. Values MAY conform to a specific versioning schema.",
       "requirement": "required"
     },
     "schema_version": {
@@ -20,18 +20,18 @@
       "requirement": "required"
     },
     "description": {
-      "caption": "Agent Description",
-      "description": "The description of the agent.",
+      "caption": "Description",
+      "description": "The description of the record.",
       "requirement": "required"
     },
     "authors": {
       "caption": "Authors",
-      "description": "Specifies the authors list of an agent.",
+      "description": "Specifies the authors list of a record.",
       "requirement": "required"
     },
     "annotations": {
       "caption": "Annotations",
-      "description": "Additional metadata associated with this agent.",
+      "description": "Additional metadata associated with this record.",
       "requirement": "optional"
     },
     "created_at": {
@@ -41,28 +41,28 @@
     },
     "skills": {
       "caption": "Skills",
-      "description": "List of skills associated with this agent.",
+      "description": "List of skills associated with this record.",
       "requirement": "required"
     },
     "locators": {
       "caption": "Locators",
-      "description": "List of source locators where this agent can be found or used from.",
+      "description": "List of source locators where this record can be found or used from.",
       "requirement": "required"
     },
     "extensions": {
       "caption": "Extensions",
-      "description": "List of extension models that describe this agent and its capabilities more in depth.",
+      "description": "List of extension models that describe this record and its capabilities more in depth.",
       "requirement": "recommanded"
     },
     "signature": {
-      "reference": "agent_signature",
+      "reference": "record_signature",
       "caption": "Signature",
-      "description": "A digital signature of the agent data model. This is used to verify the authenticity and integrity of the agent.",
+      "description": "A digital signature of the record data model. This is used to verify the authenticity and integrity of the record.",
       "requirement": "required"
     },
     "previous_record_cid": {
       "caption": "Previous Record CID",
-      "description": "Content Identifier (CID) of the data of the agent with the previous version.",
+      "description": "Content Identifier (CID) of the data of the record with the previous version.",
       "requirement": "optional"
     }
   }

@@ -1,0 +1,19 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package objects.v3;
+
+// A specific skills that a record is capable of performing.
+// Supported skills: https://schema.oasf.agntcy.org/skills
+message Skill {
+  // UID of the skill in format: org.agntcy.oasf.schema/skills/<skill-name>
+  string name = 1;
+
+  // Unique identifier of the skill.
+  uint32 id = 2;
+
+  // Metadata associated with the skill.
+  map<string, string> annotations = 3;
+}

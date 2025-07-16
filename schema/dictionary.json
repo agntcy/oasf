@@ -24,10 +24,10 @@
       "description": "Agent identifier",
       "type": "uuid_t"
     },
-    "agent_signature": {
+    "record_signature": {
       "caption": "Signature",
       "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
-      "type": "agent_signature"
+      "type": "record_signature"
     },
     "algorithm": {
       "caption": "Algorithm",
@@ -62,7 +62,7 @@
     },
     "authors": {
       "caption": "Author",
-      "description": "Specifies the authors list of an agent. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
+      "description": "Specifies the authors list of a record. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
       "type": "string_t",
       "is_array": true
     },
@@ -236,7 +236,7 @@
     },
     "extensions": {
       "caption": "Schema Extensions",
-      "description": "List of extension models that describe this agent and its capabilities more in depth.",
+      "description": "List of extension models that describe this record and its capabilities more in depth.",
       "type": "class_t",
       "class_type": "base_feature",
       "family": "feature",
@@ -245,7 +245,7 @@
     },
     "extension_data": {
       "caption": "Data",
-      "description": "Data associated with the agent extension. This is a JSON object that contains the data specific to the extension.",
+      "description": "Data associated with the record extension. This is a JSON object that contains the data specific to the extension.",
       "type": "json_t"
     },
     "framework_config": {
@@ -333,8 +333,8 @@
       "is_array": true
     },
     "locators": {
-      "caption": "Agent Locators",
-      "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
+      "caption": "Record Locators",
+      "description": "Locators provide actual artifact locators of a record. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
       "is_array": true
     },
@@ -407,8 +407,8 @@
       "type": "string_t"
     },
     "previous_record_cid": {
-      "caption": "Previous Agent Record CID",
-      "description": "Content Identifier (CID) of an Agent Record's parent record.",
+      "caption": "Previous Record CID",
+      "description": "Content Identifier (CID) of an Record's parent record.",
       "type": "uuid_t"
     },
     "protocol": {

@@ -1,6 +1,6 @@
 {
   "caption": "LLM Model Data",
-  "description": "Data for the LLM model agent record extension.",
+  "description": "Data for the LLM model record extension.",
   "extends": "extension_data",
   "name": "llm_model_data",
   "attributes": {

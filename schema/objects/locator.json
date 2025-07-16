@@ -1,6 +1,6 @@
 {
-  "caption": "Agent Locator",
-  "description": "Locators provide actual artifact locators of an agent. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
+  "caption": "Record Locator",
+  "description": "Locators provide actual artifact locators of a record. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
   "extends": "object",
   "name": "locator",
   "attributes": {
@@ -36,7 +36,7 @@
     },
     "annotations": {
       "caption": "Annotations",
-      "description": "Additional metadata associated with the agent locator.",
+      "description": "Additional metadata associated with the record locator.",
       "requirement": "optional"
     },
     "size": {
