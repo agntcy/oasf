@@ -62,7 +62,7 @@
     },
     "authors": {
       "caption": "Author",
-      "description": "Specifies the authors list of a record. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
+      "description": "Specifies the authors list of of the data's record. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
       "type": "string_t",
       "is_array": true
     },
@@ -334,7 +334,7 @@
     },
     "locators": {
       "caption": "Record Locators",
-      "description": "Locators provide actual artifact locators of a record. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
+      "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
       "is_array": true
     },
