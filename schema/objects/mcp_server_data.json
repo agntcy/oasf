@@ -1,6 +1,6 @@
 {
   "caption": "MCP Server Configuration",
-  "description": "Data for the MCP server agent record extension.",
+  "description": "Data for the MCP server record extension.",
   "extends": "extension_data",
   "name": "mcp_server_data",
   "attributes": {

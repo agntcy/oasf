@@ -1,12 +1,12 @@
 {
-  "caption": "Agent Signature",
-  "description": "Signature provides the signing and verification details about the agent record.",
+  "caption": "Record Signature",
+  "description": "Signature provides the signing and verification details about the record.",
   "extends": "object",
-  "name": "agent_signature",
+  "name": "record_signature",
   "attributes": {
     "annotations": {
       "caption": "Annotations",
-      "description": "Additional metadata associated with this agent.",
+      "description": "Additional metadata associated with this record.",
       "requirement": "optional"
     },
     "signed_at": {
