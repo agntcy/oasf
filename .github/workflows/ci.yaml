@@ -9,6 +9,7 @@ on:
       - main
     tags:
       - "v*.*.*"
+      - "helm/v*.*.*"
   pull_request:
 
 permissions:
@@ -107,8 +108,8 @@ jobs:
       artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
 
   release:
-    name: Release
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    name: Server Release
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && !startsWith(github.ref, 'refs/tags/helm/') }}
     needs:
       - prepare
       - build
@@ -120,6 +121,17 @@ jobs:
       release_tag: ${{ needs.prepare.outputs.release_tag }}
       artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
 
+  helm_release:
+    name: Helm Chart Release
+    if: ${{ startsWith(github.ref, 'refs/tags/helm/') }}
+    needs:
+      - prepare
+      - verify
+    uses: ./.github/workflows/reusable-helm-release.yaml
+    with:
+      image_repo: ghcr.io/agntcy
+      release_tag: ${{ replace(needs.prepare.outputs.release_tag, 'helm/', '') }}
+
   success:
     name: Success
     # https://github.com/actions/runner/issues/2566
@@ -129,7 +141,8 @@ jobs:
       - prepare
       - build
       - test
-      - release
+      - release # This job might be skipped
+      - helm_release # This job might be skipped
     runs-on: ubuntu-latest
     steps:
       - name: Echo Success
