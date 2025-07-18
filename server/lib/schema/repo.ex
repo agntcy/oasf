@@ -309,11 +309,6 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.feature(schema, id) end)
   end
 
-  @spec feature_ex(atom) :: nil | Cache.class_t()
-  def feature_ex(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, :feature, id) end)
-  end
-
   @spec objects() :: map()
   def objects() do
     Agent.get(__MODULE__, fn schema -> Cache.objects(schema) end)
