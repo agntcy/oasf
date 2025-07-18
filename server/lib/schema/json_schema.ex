@@ -7,6 +7,7 @@ defmodule Schema.JsonSchema do
   """
 
   alias Schema.Utils
+  alias Schema.Types
 
   @schema_base_uri "https://schema.oasf.agntcy.org/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
@@ -262,7 +263,7 @@ defmodule Schema.JsonSchema do
       refs =
         Enum.map(children_objects, fn item -> %{"$ref" => make_object_ref(item[:name])} end)
 
-      Map.put(schema, "anyOf", refs)
+      Map.put(schema, "oneOf", refs)
     else
       Map.put(schema, "$ref", make_object_ref(type))
     end
@@ -284,9 +285,35 @@ defmodule Schema.JsonSchema do
       children_classes = Utils.find_children(all_classes_fn, type)
 
       refs =
-        Enum.map(children_classes, fn item -> %{"$ref" => make_class_ref(family, item[:name])} end)
+        if family == "feature" do
+          feature_names =
+            Enum.map(children_classes, fn item ->
+              Types.long_class_name(family, item[:name])
+            end)
 
-      Map.put(schema, "anyOf", refs)
+          Enum.map(children_classes, fn item ->
+            %{"$ref" => make_class_ref(family, item[:name])}
+          end) ++
+            [
+              %{
+                "type" => "object",
+                "properties" => %{
+                  "name" => %{"type" => "string"}
+                },
+                "not" => %{
+                  "properties" => %{
+                    "name" => %{"enum" => feature_names}
+                  }
+                }
+              }
+            ]
+        else
+          Enum.map(children_classes, fn item ->
+            %{"$ref" => make_class_ref(family, item[:name])}
+          end)
+        end
+
+      Map.put(schema, "oneOf", refs)
     else
       Map.put(schema, "$ref", make_class_ref(family, type))
     end
@@ -343,9 +370,9 @@ defmodule Schema.JsonSchema do
             {ref, updated} = Map.pop(schema, "$ref")
             {%{"$ref" => ref}, updated}
 
-          Map.has_key?(schema, "anyOf") ->
-            {any_of, updated} = Map.pop(schema, "anyOf")
-            {%{"anyOf" => any_of}, updated}
+          Map.has_key?(schema, "oneOf") ->
+            {one_of, updated} = Map.pop(schema, "oneOf")
+            {%{"oneOf" => one_of}, updated}
 
           true ->
             {schema, schema}
