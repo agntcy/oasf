@@ -93,12 +93,12 @@ defmodule Schema.JsonSchema do
     "#{package}.#{name}"
   end
 
-  defp make_class_ref(name) do
-    Path.join([ref_entity(), String.replace(name, "/", "_")])
+  defp make_class_ref(family, name) do
+    Path.join([ref_entity(), "#{family}s", String.replace(name, "/", "_")])
   end
 
   defp make_object_ref(name) do
-    Path.join([ref_entity(), String.replace(name, "/", "_")])
+    Path.join([ref_entity(), "objects", String.replace(name, "/", "_")])
   end
 
   defp ref_entity() do
@@ -146,21 +146,45 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_entities(schema, entities) do
-    defs =
-      entities
-      |> Enum.reduce(%{}, fn {name, entity}, acc ->
-        # if an entity is an enum, we need to encode its children
+    {skills, domains, features, objects} =
+      Enum.reduce(entities, {%{}, %{}, %{}, %{}}, fn {name, entity},
+                                                     {skills, domains, features, objects} ->
         if entity[:is_enum] do
-          entity[:_children]
-          |> Enum.reduce(acc, fn {name, item}, acc ->
-            key = name |> String.replace("/", "_")
-            Map.put(acc, key, encode_entity(item, false))
+          Enum.reduce(entity[:_children], {skills, domains, features, objects}, fn {child_name,
+                                                                                    item},
+                                                                                   {skills,
+                                                                                    domains,
+                                                                                    features,
+                                                                                    objects} ->
+            key = String.replace(child_name, "/", "_")
+            value = encode_entity(item, false)
+
+            case item[:family] do
+              "skill" -> {Map.put(skills, key, value), domains, features, objects}
+              "domain" -> {skills, Map.put(domains, key, value), features, objects}
+              "feature" -> {skills, domains, Map.put(features, key, value), objects}
+              _ -> {skills, domains, features, Map.put(objects, key, value)}
+            end
           end)
         else
           key = Atom.to_string(name) |> String.replace("/", "_")
-          Map.put(acc, key, encode_entity(entity, false))
+          value = encode_entity(entity, false)
+
+          case entity[:family] do
+            "skill" -> {Map.put(skills, key, value), domains, features, objects}
+            "domain" -> {skills, Map.put(domains, key, value), features, objects}
+            "feature" -> {skills, domains, Map.put(features, key, value), objects}
+            _ -> {skills, domains, features, Map.put(objects, key, value)}
+          end
         end
       end)
+
+    defs =
+      %{}
+      |> (fn m -> if map_size(skills) > 0, do: Map.put(m, "skills", skills), else: m end).()
+      |> (fn m -> if map_size(domains) > 0, do: Map.put(m, "domains", domains), else: m end).()
+      |> (fn m -> if map_size(features) > 0, do: Map.put(m, "features", features), else: m end).()
+      |> (fn m -> if map_size(objects) > 0, do: Map.put(m, "objects", objects), else: m end).()
 
     Map.put(schema, "$defs", defs)
   end
@@ -260,11 +284,11 @@ defmodule Schema.JsonSchema do
       children_classes = Utils.find_children(all_classes_fn, type)
 
       refs =
-        Enum.map(children_classes, fn item -> %{"$ref" => make_class_ref(item[:name])} end)
+        Enum.map(children_classes, fn item -> %{"$ref" => make_class_ref(family, item[:name])} end)
 
       Map.put(schema, "anyOf", refs)
     else
-      Map.put(schema, "$ref", make_class_ref(type))
+      Map.put(schema, "$ref", make_class_ref(family, type))
     end
   end
 
@@ -339,41 +363,51 @@ defmodule Schema.JsonSchema do
   end
 
   defp flatten_defs(schema) do
-    {schema, defs} = do_flatten_defs(schema, %{})
+    {schema, defs} =
+      do_flatten_defs(schema, %{
+        "skills" => %{},
+        "domains" => %{},
+        "features" => %{},
+        "objects" => %{}
+      })
 
-    if map_size(defs) > 0 do
-      Map.put(schema, "$defs", defs)
-    else
-      Map.delete(schema, "$defs")
-    end
+    # Remove empty maps from $defs
+    defs =
+      defs
+      |> Enum.filter(fn {_k, v} -> map_size(v) > 0 end)
+      |> Enum.into(%{})
+
+    Map.put(schema, "$defs", defs)
   end
 
-  defp do_flatten_defs(%{"$defs" => defs} = schema, acc) do
-    {schema_flat, acc1} =
-      Map.delete(schema, "$defs")
-      |> Enum.reduce({%{}, acc}, fn {k, v}, {s_acc, d_acc} ->
-        if is_map(v) do
-          {v1, d_acc1} = do_flatten_defs(v, d_acc)
-          {Map.put(s_acc, k, v1), d_acc1}
-        else
-          {Map.put(s_acc, k, v), d_acc}
-        end
+  defp do_flatten_defs(%{"$defs" => nested_defs} = schema, acc) do
+    # Remove $defs from current schema
+    schema = Map.delete(schema, "$defs")
+    # Recursively flatten all values in nested $defs
+    acc =
+      Enum.reduce(nested_defs, acc, fn {group, group_map}, acc1 ->
+        Enum.reduce(group_map, acc1, fn {k, v}, acc2 ->
+          {v_flat, acc3} = do_flatten_defs(v, acc2)
+          Map.update(acc3, group, %{k => v_flat}, &Map.put(&1, k, v_flat))
+        end)
       end)
 
-    acc_flat =
-      Enum.reduce(defs, acc1, fn {k, v}, a ->
-        {v_flat, a1} = do_flatten_defs(v, a)
-        Map.put(a1, k, v_flat)
-      end)
-
-    {schema_flat, acc_flat}
+    # Continue flattening the rest of the schema
+    Enum.reduce(schema, {schema, acc}, fn {k, v}, {s_acc, d_acc} ->
+      if is_map(v) do
+        {v_flat, d_acc2} = do_flatten_defs(v, d_acc)
+        {Map.put(s_acc, k, v_flat), d_acc2}
+      else
+        {Map.put(s_acc, k, v), d_acc}
+      end
+    end)
   end
 
   defp do_flatten_defs(%{} = schema, acc) do
-    Enum.reduce(schema, {%{}, acc}, fn {k, v}, {s_acc, d_acc} ->
+    Enum.reduce(schema, {schema, acc}, fn {k, v}, {s_acc, d_acc} ->
       if is_map(v) do
-        {v1, d_acc1} = do_flatten_defs(v, d_acc)
-        {Map.put(s_acc, k, v1), d_acc1}
+        {v_flat, d_acc2} = do_flatten_defs(v, d_acc)
+        {Map.put(s_acc, k, v_flat), d_acc2}
       else
         {Map.put(s_acc, k, v), d_acc}
       end
