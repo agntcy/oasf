@@ -1,0 +1,18 @@
+{
+  "caption": "MCP Server Configuration",
+  "description": "Configuration for a public MCP server.",
+  "extends": "object",
+  "name": "mcp_server_resource",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Name of the MCP server.",
+      "requirement": "required"
+    },
+    "author": {
+      "caption": "Author",
+      "description": "Author or maintainer of the MCP server.",
+      "requirement": "optional"
+    }
+  }
+}

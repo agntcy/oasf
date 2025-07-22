@@ -1,0 +1,83 @@
+{
+  "caption": "MCP Server Configuration",
+  "description": "Configuration for a public MCP server.",
+  "extends": "object",
+  "name": "mcp_server",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Name of the MCP server.",
+      "requirement": "required"
+    },
+    "author": {
+      "caption": "Author",
+      "description": "Author or maintainer of the MCP server.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of the MCP server.",
+      "requirement": "optional"
+    },
+    "type": {
+      "caption": "Type",
+      "description": "Type of the MCP server (e.g., 'local', 'http', 'sse').",
+      "requirement": "required"
+    },
+    "url": {
+      "caption": "URL",
+      "description": "URL for the MCP server (for remote servers).",
+      "requirement": "optional"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "Executable or runtime command (for local servers).",
+      "requirement": "optional"
+    },
+    "args": {
+      "caption": "Arguments",
+      "description": "Command-line arguments (for local servers).",
+      "requirement": "optional"
+    },
+    "env": {
+      "reference": "env_vars",
+      "caption": "Environment Variables",
+      "description": "List of environment variables such as tokens or API keys (for local servers).",
+      "requirement": "optional"
+    },
+    "headers": {
+      "caption": "Headers",
+      "description": "Request headers for the MCP server authentication (non-sensitive).",
+      "requirement": "optional"
+    },
+    "scope": {
+      "caption": "Scope",
+      "description": "Scope of the MCP server accessibility and sharing (e.g., 'local', 'project', 'user').",
+      "requirement": "optional"
+    },
+    "prompts": {
+      "reference": "mcp_server_prompts",
+      "caption": "Prompts",
+      "description": "List of prompts supported by the MCP server.",
+      "requirement": "recommended"
+    },
+    "resources": {
+      "reference": "mcp_server_resources",
+      "caption": "Prompts",
+      "description": "List of prompts supported by the MCP server.",
+      "requirement": "recommended"
+    },
+    "tools": {
+      "reference": "mcp_server_tools",
+      "caption": "Tools",
+      "description": "List of tools provided by the MCP server.",
+      "requirement": "recommended"
+    },
+    "capabilities": {
+      "reference": "mcp_server_capabilities_data",
+      "caption": "Capabilities",
+      "description": "Capabilities or features of the MCP server.",
+      "requirement": "recommended"
+    }
+  }
+}

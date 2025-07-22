@@ -9,28 +9,10 @@
       "description": "Unique identifier for the tool.",
       "requirement": "required"
     },
-    "description": {
-      "caption": "Tool Description",
-      "description": "Human-readable summary of the tool's purpose.",
-      "requirement": "optional"
-    },
-    "input_schema": {
-      "reference": "mcp_server_tool_input_schema",
-      "caption": "Input Schema",
-      "description": "JSON Schema describing the tool's input parameters.",
+    "title": {
+      "caption": "Tool Name",
+      "description": "Unique identifier for the tool.",
       "requirement": "required"
-    },
-    "annotations": {
-      "reference": "mcp_server_tool_annotations",
-      "caption": "Annotations",
-      "description": "Optional hints about tool behavior (e.g., title, readOnlyHint, destructiveHint, idempotentHint, openWorldHint).",
-      "requirement": "optional"
     }
-  },
-  "references": [
-    {
-      "description": "Model Context Protocol tool definition structure.",
-      "url": "https://modelcontextprotocol.io/docs/concepts/tools#tool-definition-structure"
-    }
-  ]
+  }
 }

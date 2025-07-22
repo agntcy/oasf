@@ -358,11 +358,15 @@
       "description": "Data supported by the agent for runtime manifest.",
       "type": "manifest_data"
     },
-    "mcp_server_capabilities": {
+    "mcp_server_capabilities_data": {
       "caption": "Capabilities",
       "description": "Capabilities or features of the MCP server.",
-      "type": "string_t",
-      "is_array": true
+      "type": "mcp_server_capabilities"
+    },
+    "mcp_server_feature_capability_data": {
+      "caption": "Capabilities",
+      "description": "Capabilities or features of the MCP server.",
+      "type": "mcp_server_feature_capability"
     },
     "mcp_server_data": {
       "caption": "Data",
@@ -383,6 +387,18 @@
       "caption": "Tools",
       "description": "List of tools provided by the MCP server.",
       "type": "mcp_server_tool",
+      "is_array": true
+    },
+    "mcp_server_prompts": {
+      "caption": "Prompts",
+      "description": "List of tools provided by the MCP server.",
+      "type": "mcp_server_prompt",
+      "is_array": true
+    },
+    "mcp_server_resources": {
+      "caption": "Resources",
+      "description": "List of tools provided by the MCP server.",
+      "type": "mcp_server_resource",
       "is_array": true
     },
     "metadata": {
@@ -492,6 +508,11 @@
       "description": "Evaluations associated to the Agent.",
       "type": "referred_evaluation",
       "is_array": true
+    },
+    "boolean_t": {
+      "caption": "Boolean",
+      "description": "True or false.",
+      "type": "boolean_t"
     },
     "required": {
       "caption": "Required",

@@ -1,0 +1,29 @@
+{
+  "caption": "MCP Server Prompt",
+  "description": "Configuration for an MCP server prompt.",
+  "extends": "object",
+  "name": "mcp_server_prompt",
+  "attributes": {
+    "name": {
+      "caption": "Prompt Name",
+      "description": "The name of the prompt.",
+      "requirement": "required"
+    },
+    "title": {
+      "caption": "Prompt Title",
+      "description": "An optional human-readable title for the prompt.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Prompt Description",
+      "description": "An optional description of what this prompt is for.",
+      "requirement": "optional"
+    },
+    "arguments": {
+      "reference": "mcp_server_prompt_arguments",
+      "caption": "Arguments",
+      "description": "List of arguments that can be used when templating this prompt.",
+      "requirement": "recommended"
+    }
+  }
+}

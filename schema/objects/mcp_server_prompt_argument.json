@@ -1,0 +1,24 @@
+{
+  "caption": "MCP Server Prompt Argument",
+  "description": "Configuration for an MCP server prompt argument.",
+  "extends": "object",
+  "name": "mcp_server_prompt_argument",
+  "attributes": {
+    "name": {
+      "caption": "Argument Name",
+      "description": "The name of the prompt argument.",
+      "requirement": "required"
+    },
+    "description": {
+      "caption": "Argument Description",
+      "description": "An optional description of what this prompt argument is for.",
+      "requirement": "optional"
+    },
+    "required": {
+      "type": "boolean_t",
+      "caption": "Argument Requirement",
+      "description": "Whether this prompt argument is required for the prompt.",
+      "requirement": "optional"
+    }
+  }
+}
