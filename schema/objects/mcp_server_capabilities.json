@@ -1,6 +1,6 @@
 {
   "caption": "MCP Server Capabilities",
-  "description": "Describes the capabilities of the MCP server.",
+  "description": "Describes the capabilities of an MCP server.",
   "extends": "object",
   "name": "mcp_server_capabilities",
   "attributes": {
@@ -8,19 +8,19 @@
       "caption": "Prompts",
       "description": "Indicates if the server supports prompts.",
       "requirement": "optional",
-      "reference": "mcp_server_feature_capability_data"
+      "reference": "mcp_server_feature_capability"
     },
     "resources": {
       "caption": "Resources",
       "description": "Indicates if the server supports resources.",
       "requirement": "optional",
-      "reference": "mcp_server_feature_capability_data"
+      "reference": "mcp_server_feature_capability"
     },
     "tools": {
       "caption": "Tools",
       "description": "Indicates if the server supports tools.",
       "requirement": "optional",
-      "reference": "mcp_server_feature_capability_data"
+      "reference": "mcp_server_feature_capability"
     }
   }
 }

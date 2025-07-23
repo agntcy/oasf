@@ -1,6 +1,6 @@
 {
   "caption": "MCP Server Tool Annotations",
-  "description": "Optional hints about tool behavior.",
+  "description": "Defines hints about MCP server tool behavior.",
   "extends": "object",
   "name": "mcp_server_tool_annotations",
   "attributes": {

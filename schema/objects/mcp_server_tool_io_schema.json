@@ -10,7 +10,7 @@
       "requirement": "required"
     },
     "properties": {
-      "reference": "string_object_map_t",
+      "reference": "unmapped",
       "caption": "Properties",
       "description": "Tool-specific IO parameters as a String-Object map.",
       "requirement": "required"

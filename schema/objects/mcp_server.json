@@ -57,7 +57,6 @@
       "requirement": "optional"
     },
     "headers": {
-      "reference": "string_map_t",
       "caption": "Headers",
       "description": "Request headers for the server authentication (non-sensitive).",
       "requirement": "optional"
