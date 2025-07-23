@@ -1,17 +1,18 @@
 {
-  "caption": "MCP Server Resource",
-  "description": "Configuration for an MCP server resource.",
+  "caption": "MCP Server Resource Template",
+  "description": "Configuration for an MCP server resource template.",
   "extends": "object",
-  "name": "mcp_server_resource",
+  "name": "mcp_server_resource_template",
   "attributes": {
-    "uri": {
-      "caption": "URI",
-      "description": "Unique identifier for the resource.",
+    "uri_template": {
+      "reference": "uri",
+      "caption": "URI Template",
+      "description": "The URI template of the resource.",
       "requirement": "required"
     },
     "name": {
       "caption": "Name",
-      "description": "The name of the resource.",
+      "description": "The name of the resource template.",
       "requirement": "required"
     },
     "title": {
@@ -33,7 +34,7 @@
     "annotations": {
       "reference": "mcp_server_resource_annotations",
       "caption": "Annotations",
-      "description": "Annotations for the resource, providing additional metadata.",
+      "description": "Annotations for the resource template, providing additional metadata.",
       "requirement": "optional"
     }
   }

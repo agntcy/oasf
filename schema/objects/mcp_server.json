@@ -1,32 +1,43 @@
 {
-  "caption": "MCP Server Configuration",
-  "description": "Configuration for a public MCP server.",
+  "caption": "MCP Server",
+  "description": "Configuration for an MCP server.",
   "extends": "object",
   "name": "mcp_server",
   "attributes": {
     "name": {
       "caption": "Name",
-      "description": "Name of the MCP server.",
+      "description": "Name of the server.",
       "requirement": "required"
     },
     "author": {
       "caption": "Author",
-      "description": "Author or maintainer of the MCP server.",
+      "description": "Author or maintainer of the server.",
       "requirement": "optional"
     },
     "description": {
       "caption": "Description",
-      "description": "Description of the MCP server.",
+      "description": "Short description of the server.",
       "requirement": "optional"
     },
     "type": {
       "caption": "Type",
-      "description": "Type of the MCP server (e.g., 'local', 'http', 'sse').",
-      "requirement": "required"
+      "description": "Type of the server.",
+      "requirement": "required",
+      "enum": {
+        "local": {
+          "caption": "Local server"
+        },
+        "http": {
+          "caption": "HTTP-based server"
+        },
+        "sse": {
+          "caption": "SSE-based server"
+        }
+      }
     },
     "url": {
       "caption": "URL",
-      "description": "URL for the MCP server (for remote servers).",
+      "description": "URL of the server (for remote servers).",
       "requirement": "optional"
     },
     "command": {
@@ -46,37 +57,55 @@
       "requirement": "optional"
     },
     "headers": {
+      "reference": "string_map_t",
       "caption": "Headers",
-      "description": "Request headers for the MCP server authentication (non-sensitive).",
+      "description": "Request headers for the server authentication (non-sensitive).",
       "requirement": "optional"
     },
     "scope": {
       "caption": "Scope",
-      "description": "Scope of the MCP server accessibility and sharing (e.g., 'local', 'project', 'user').",
-      "requirement": "optional"
+      "description": "Scope of the server accessibility and sharing options.",
+      "requirement": "optional",
+      "enum": {
+        "local": {
+          "caption": "Local scope"
+        },
+        "project": {
+          "caption": "Project scope"
+        },
+        "user": {
+          "caption": "User scope"
+        }
+      }
     },
     "prompts": {
       "reference": "mcp_server_prompts",
       "caption": "Prompts",
-      "description": "List of prompts supported by the MCP server.",
+      "description": "List of prompts supported by the server.",
       "requirement": "recommended"
     },
     "resources": {
       "reference": "mcp_server_resources",
-      "caption": "Prompts",
-      "description": "List of prompts supported by the MCP server.",
+      "caption": "Resources",
+      "description": "List of resources supported by the server.",
+      "requirement": "recommended"
+    },
+    "resource_templates": {
+      "reference": "mcp_server_resource_templates",
+      "caption": "Resource Templates",
+      "description": "List of resource templates supported by the server.",
       "requirement": "recommended"
     },
     "tools": {
       "reference": "mcp_server_tools",
       "caption": "Tools",
-      "description": "List of tools provided by the MCP server.",
+      "description": "List of tools supported by the server.",
       "requirement": "recommended"
     },
     "capabilities": {
-      "reference": "mcp_server_capabilities_data",
+      "reference": "mcp_server_capabilities",
       "caption": "Capabilities",
-      "description": "Capabilities or features of the MCP server.",
+      "description": "Capabilities supported by the server.",
       "requirement": "recommended"
     }
   }

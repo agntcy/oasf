@@ -1,18 +1,41 @@
 {
   "caption": "MCP Server Tool",
-  "description": "Description of a tool provided by an MCP server.",
+  "description": "Configuration for an MCP server tool.",
   "extends": "object",
   "name": "mcp_server_tool",
   "attributes": {
     "name": {
-      "caption": "Tool Name",
+      "caption": "Name",
       "description": "Unique identifier for the tool.",
       "requirement": "required"
     },
     "title": {
-      "caption": "Tool Name",
-      "description": "Unique identifier for the tool.",
+      "caption": "Title",
+      "description": "Human-readable title for the tool.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of what the tool is for.",
+      "requirement": "optional"
+    },
+    "input_schema": {
+      "reference": "mcp_server_tool_io_schema",
+      "caption": "Input Schema",
+      "description": "Schema for the input data required by the tool.",
       "requirement": "required"
+    },
+    "output_schema": {
+      "reference": "mcp_server_tool_io_schema",
+      "caption": "Output Schema",
+      "description": "Schema for the output data required by the tool.",
+      "requirement": "optional"
+    },
+    "annotations": {
+      "reference": "mcp_server_tool_annotations",
+      "caption": "Annotations",
+      "description": "Annotations for the tool.",
+      "requirement": "optional"
     }
   }
 }

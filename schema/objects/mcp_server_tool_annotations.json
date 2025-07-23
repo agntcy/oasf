@@ -1,5 +1,5 @@
 {
-  "caption": "Annotations",
+  "caption": "MCP Server Tool Annotations",
   "description": "Optional hints about tool behavior.",
   "extends": "object",
   "name": "mcp_server_tool_annotations",
@@ -12,22 +12,26 @@
     "read_only_hint": {
       "caption": "Read Only Hint",
       "description": "If true, the tool does not modify its environment.",
-      "requirement": "optional"
+      "requirement": "optional",
+      "reference": "boolean_t"
     },
     "destructive_hint": {
       "caption": "Destructive Hint",
       "description": "If true, the tool may perform destructive updates.",
-      "requirement": "optional"
+      "requirement": "optional",
+      "reference": "boolean_t"
     },
     "idempotent_hint": {
       "caption": "Idempotent Hint",
       "description": "If true, repeated calls with the same arguments have no additional effect.",
-      "requirement": "optional"
+      "requirement": "optional",
+      "reference": "boolean_t"
     },
     "open_world_hint": {
       "caption": "Open World Hint",
       "description": "If true, the tool interacts with external entities.",
-      "requirement": "optional"
+      "requirement": "optional",
+      "reference": "boolean_t"
     }
   }
 }

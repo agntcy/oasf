@@ -5,18 +5,23 @@
   "name": "mcp_server_prompt_argument",
   "attributes": {
     "name": {
-      "caption": "Argument Name",
+      "caption": "Name",
       "description": "The name of the prompt argument.",
       "requirement": "required"
     },
+    "title": {
+      "caption": "Title",
+      "description": "The title of the prompt argument.",
+      "requirement": "optional"
+    },
     "description": {
-      "caption": "Argument Description",
+      "caption": "Description",
       "description": "An optional description of what this prompt argument is for.",
       "requirement": "optional"
     },
     "required": {
-      "type": "boolean_t",
-      "caption": "Argument Requirement",
+      "reference": "boolean_t",
+      "caption": "Required",
       "description": "Whether this prompt argument is required for the prompt.",
       "requirement": "optional"
     }
