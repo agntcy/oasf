@@ -106,25 +106,6 @@
       },
       "is_array": true
     },
-    "mcp_server_resource_audience": {
-      "caption": "MCP Server Resource Audience",
-      "description": "An array indicating the intended audience(s) for the MCP server resource.",
-      "type": "string_t",
-      "enum": {
-        "user": {
-          "caption": "User Audience"
-        },
-        "assistant": {
-          "caption": "Assistance Audience"
-        }
-      },
-      "is_array": true
-    },
-    "mcp_server_resource_annotations": {
-      "caption": "MCP Server Resource Annptations",
-      "description": "MCP server resource annotations.",
-      "type": "mcp_server_resource_annotations"
-    },
     "config": {
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
@@ -367,6 +348,25 @@
       "description": "Data supported by the agent for runtime manifest.",
       "type": "manifest_data"
     },
+    "mcp_server_resource_audience": {
+      "caption": "MCP Server Resource Audience",
+      "description": "An array indicating the intended audience(s) for the MCP server resource.",
+      "type": "string_t",
+      "enum": {
+        "user": {
+          "caption": "User Audience"
+        },
+        "assistant": {
+          "caption": "Assistance Audience"
+        }
+      },
+      "is_array": true
+    },
+    "mcp_server_resource_annotations": {
+      "caption": "MCP Server Resource Annptations",
+      "description": "MCP server resource annotations.",
+      "type": "mcp_server_resource_annotations"
+    },
     "mcp_server_capabilities": {
       "caption": "MCP Server Capabilities",
       "description": "Describes the capabilities of an MCP server.",
@@ -388,8 +388,8 @@
       "type": "mcp_server_tool_annotations"
     },
     "mcp_server_tool_io_schema": {
-      "caption": "Input Schema",
-      "description": "JSON Schema describing the tool's input parameters.",
+      "caption": "MCP Server Tool IO Schema",
+      "description": "Configuration for MCP server tool IO schema.",
       "type": "mcp_server_tool_io_schema"
     },
     "mcp_server_tools": {
