@@ -441,11 +441,6 @@
       "description": "The unique identifier. See specific usage.",
       "type": "string_t"
     },
-    "unmapped": {
-      "caption": "Unmapped Data",
-      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
-      "type": "object"
-    },
     "url": {
       "caption": "URL",
       "description": "The URL object that pertains to the class or object. See specific usage.",
