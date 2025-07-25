@@ -375,10 +375,11 @@ defmodule Schema.Cache do
             skills,
             domains,
             features,
-            Map.new()
+            Map.new(),
+            entity[:is_enum] || false
           )
 
-        Map.put(entity_ex, :objects, Map.to_list(ref_entities))
+        Map.put(entity_ex, :entities, Map.to_list(ref_entities))
     end
   end
 
@@ -407,8 +408,17 @@ defmodule Schema.Cache do
     end)
   end
 
-  defp enrich_ex(type, dictionary_attributes, objects, skills, domains, features, ref_objects) do
-    {attributes, ref_objects} =
+  defp enrich_ex(
+         type,
+         dictionary_attributes,
+         objects,
+         skills,
+         domains,
+         features,
+         ref_entities,
+         is_enum
+       ) do
+    {attributes, ref_entities} =
       update_attributes_ex(
         type[:attributes],
         dictionary_attributes,
@@ -416,10 +426,40 @@ defmodule Schema.Cache do
         skills,
         domains,
         features,
-        ref_objects
+        ref_entities
       )
 
-    {Map.put(type, :attributes, attributes), ref_objects}
+    enriched_type =
+      type
+      |> Map.put(:attributes, attributes)
+      |> (fn map -> if is_enum, do: Map.put(map, :is_enum, true), else: map end).()
+
+    enriched_children =
+      if is_enum do
+        Enum.into(type[:_children] || %{}, %{}, fn {key, child} ->
+          {enriched_child, ref_entities} =
+            enrich_ex(
+              child,
+              dictionary_attributes,
+              objects,
+              skills,
+              domains,
+              features,
+              Map.new(),
+              child[:is_enum] || false
+            )
+
+          enriched_child = Map.put(enriched_child, :entities, Map.to_list(ref_entities))
+
+          {key, enriched_child}
+        end)
+      else
+        type[:_children] || %{}
+      end
+
+    enriched_type = Map.put(enriched_type, :_children, enriched_children)
+
+    {enriched_type, ref_entities}
   end
 
   defp update_attributes_ex(
@@ -429,9 +469,9 @@ defmodule Schema.Cache do
          skills,
          domains,
          features,
-         ref_objects
+         ref_entities
        ) do
-    Enum.map_reduce(attributes, ref_objects, fn {name, attribute}, acc ->
+    Enum.map_reduce(attributes, ref_entities, fn {name, attribute}, acc ->
       reference =
         if Map.has_key?(attribute, :reference) do
           String.to_atom(attribute[:reference])
@@ -481,7 +521,8 @@ defmodule Schema.Cache do
                 skills,
                 domains,
                 features,
-                Map.put(acc, entity_name, nil)
+                Map.put(acc, entity_name, nil),
+                attribute[:is_enum] || false
               )
             end,
             acc
@@ -501,8 +542,8 @@ defmodule Schema.Cache do
       if Map.has_key?(acc, entity_name) do
         acc
       else
-        {object, acc} = enrich.(entity_name)
-        Map.put(acc, entity_name, object)
+        {entity, acc} = enrich.(entity_name)
+        Map.put(acc, entity_name, entity)
       end
 
     {{name, attribute}, acc}
@@ -556,12 +597,13 @@ defmodule Schema.Cache do
 
     classes =
       classes
-      # remove intermediate hidden classes
-      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
         enrich_class(class_tuple, categories_attributes, classes, version)
       end)
+      |> Utils.update_classes()
+      # remove intermediate hidden classes
+      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
 
     {classes, all_classes, categories}
   end

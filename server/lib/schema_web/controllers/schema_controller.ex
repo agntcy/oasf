@@ -734,7 +734,7 @@ defmodule SchemaWeb.SchemaController do
 
     default_version = %{
       :version => Schema.version(),
-      :url => "#{base_url}/#{Schema.version()}/api"
+      :url => "#{base_url}/api/#{Schema.version()}"
     }
 
     versions_response =
@@ -2916,7 +2916,7 @@ defmodule SchemaWeb.SchemaController do
     objects = update_objects(Map.new(), data[:attributes])
 
     if map_size(objects) > 0 do
-      Map.put(data, :objects, objects)
+      Map.put(data, :entities, objects)
     else
       data
     end
