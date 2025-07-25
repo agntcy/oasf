@@ -1,0 +1,40 @@
+{
+  "caption": "MCP Server Resource",
+  "description": "Configuration for an MCP server resource.",
+  "extends": "object",
+  "name": "mcp_server_resource",
+  "attributes": {
+    "uri": {
+      "caption": "URI",
+      "description": "Unique identifier for the resource.",
+      "requirement": "required"
+    },
+    "name": {
+      "caption": "Name",
+      "description": "The name of the resource.",
+      "requirement": "required"
+    },
+    "title": {
+      "caption": "Title",
+      "description": "Human-readable title for the resource.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of what the resource is for.",
+      "requirement": "optional"
+    },
+    "mime_type": {
+      "reference": "string_t",
+      "caption": "MIME Type",
+      "description": "The MIME type of the resource.",
+      "requirement": "optional"
+    },
+    "annotations": {
+      "reference": "mcp_server_resource_annotations",
+      "caption": "Annotations",
+      "description": "Annotations for the resource, providing additional metadata.",
+      "requirement": "optional"
+    }
+  }
+}

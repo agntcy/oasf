@@ -3,6 +3,42 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
+    "boolean_t": {
+      "caption": "Boolean",
+      "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
+      "type": "boolean_t"
+    },
+    "datetime_t": {
+      "caption": "Datetime",
+      "description": "The Internet Date/Time format as defined in <a target='_blank' href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC-3339</a>. For example:<br><code>2024-09-10T23:20:50.520Z</code>,<br><code>2024-09-10 23:20:50.520789Z</code>.",
+      "type": "datetime_t"
+    },
+    "string_t": {
+      "caption": "String",
+      "description": "UTF-8 encoded byte sequence.",
+      "type": "string_t"
+    },
+    "float_t": {
+      "caption": "Float",
+      "description": "Real floating-point value. For example:<br><code>3.14</code>.",
+      "type": "float_t"
+    },
+    "string_map_t": {
+      "caption": "String Map",
+      "description": "A map of string to string.",
+      "type": "string_map_t"
+    },
+    "string_array_t": {
+      "caption": "String Array",
+      "description": "An array of strings.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "object_t": {
+      "caption": "Generic Object",
+      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
+      "type": "object"
+    },
     "a2a_card_data": {
       "caption": "A2A Agent Card Data",
       "description": "Content of the A2A card in JSON format.",
@@ -59,6 +95,11 @@
       "caption": "Authentication",
       "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0' >Security Scheme Object</a>.",
       "type": "security_scheme"
+    },
+    "author": {
+      "caption": "Author",
+      "description": "Name of the author of a service, tool, object, etc. See specific usage.",
+      "type": "string_t"
     },
     "authors": {
       "caption": "Author",
@@ -185,21 +226,11 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
     },
-    "env": {
-      "caption": "Environment Variables",
-      "description": "Environment variables. See specific usage.",
-      "type": "string_map_t"
-    },
     "env_deps": {
       "caption": "Values for Dependencies",
       "description": "List of environment variable values to be set for the agent dependencies.",
       "type": "env_var_values",
       "is_array": true
-    },
-    "env_file": {
-      "caption": "Environment Variables File",
-      "description": "Path to a file containing environment variables.",
-      "type": "string_t"
     },
     "env_vars": {
       "caption": "Environment Variables",
@@ -266,7 +297,7 @@
     },
     "headers": {
       "caption": "Headers",
-      "description": "HTTP headers (e.g. for authentication). See specific usage.",
+      "description": "Request headers (e.g. for authentication). See specific usage.",
       "type": "string_map_t"
     },
     "id": {
@@ -343,15 +374,78 @@
       "description": "Data supported by the agent for runtime manifest.",
       "type": "manifest_data"
     },
-    "mcp_server_data": {
-      "caption": "Data",
-      "description": "Data supported by the agent for MCP server.",
-      "type": "mcp_server_data"
+    "mcp_server_resource_audience": {
+      "caption": "MCP Server Resource Audience",
+      "description": "An array indicating the intended audience(s) for the MCP server resource.",
+      "type": "string_t",
+      "enum": {
+        "user": {
+          "caption": "User Audience"
+        },
+        "assistant": {
+          "caption": "Assistance Audience"
+        }
+      },
+      "is_array": true
     },
-    "mcp_server_configurations": {
-      "caption": "MCP Server Configurations",
-      "description": "List of configurations of MCP servers that the agent can connect to.",
-      "type": "mcp_server_configuration",
+    "mcp_server_resource_annotations": {
+      "caption": "MCP Server Resource Annptations",
+      "description": "MCP server resource annotations.",
+      "type": "mcp_server_resource_annotations"
+    },
+    "mcp_server_capabilities": {
+      "caption": "MCP Server Capabilities",
+      "description": "Describes the capabilities of an MCP server.",
+      "type": "mcp_server_capabilities"
+    },
+    "mcp_server_feature_capability": {
+      "caption": "MCP Server Feature Capability",
+      "description": "Describes the capabilities of a given MCP server feature.",
+      "type": "mcp_server_feature_capability"
+    },
+    "mcp_server": {
+      "caption": "MCP Server",
+      "description": "Configuration for an MCP server.",
+      "type": "mcp_server"
+    },
+    "mcp_server_tool_annotations": {
+      "caption": "Annotations",
+      "description": "Defines hints about MCP server tool behavior.",
+      "type": "mcp_server_tool_annotations"
+    },
+    "mcp_server_tool_io_schema": {
+      "caption": "MCP Server Tool IO Schema",
+      "description": "Configuration for MCP server tool IO schema.",
+      "type": "mcp_server_tool_io_schema"
+    },
+    "mcp_server_tools": {
+      "caption": "MCP Server Tools",
+      "description": "Configuration for an MCP server tools.",
+      "type": "mcp_server_tool",
+      "is_array": true
+    },
+    "mcp_server_prompts": {
+      "caption": "MCP Server Prompts",
+      "description": "Configuration for an MCP server prompts.",
+      "type": "mcp_server_prompt",
+      "is_array": true
+    },
+    "mcp_server_prompt_arguments": {
+      "caption": "MCP Server Prompt Arguments",
+      "description": "Configuration for an MCP server prompt arguments.",
+      "type": "mcp_server_prompt_argument",
+      "is_array": true
+    },
+    "mcp_server_resources": {
+      "caption": "MCP Server Resources",
+      "description": "Configuration for an MCP server resources.",
+      "type": "mcp_server_resource",
+      "is_array": true
+    },
+    "mcp_server_resource_templates": {
+      "caption": "MCP Server Resource Templates",
+      "description": "Configuration for an MCP server resource templates.",
+      "type": "mcp_server_resource_template",
       "is_array": true
     },
     "metadata": {
@@ -524,25 +618,25 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
-    "tool_configuration": {
-      "caption": "Tool Configuration",
-      "description": "Configuration for tools that the MCP server can use.",
-      "type": "json_t"
+    "title": {
+      "caption": "Title",
+      "description": "A human-friendly title for the object.",
+      "type": "string_t"
     },
     "type": {
       "caption": "Type",
       "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
       "type": "string_t"
     },
-    "unmapped": {
-      "caption": "Unmapped Data",
-      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
-      "type": "object"
-    },
     "url": {
       "caption": "URL",
       "description": "The URL object that pertains to the class or object. See specific usage.",
       "type": "url_t"
+    },
+    "uri": {
+      "caption": "URI",
+      "description": "The URI object that pertains to the class or object. See specific usage.",
+      "type": "uri_t"
     },
     "unit_of_measurement": {
       "caption": "Unit of Measurement",
@@ -687,6 +781,12 @@
       "url_t": {
         "caption": "URL String",
         "description": "Uniform Resource Locator (URL) string. For example:<br><code>http://www.example.com/download/trouble.exe</code>.",
+        "type": "string_t",
+        "type_name": "String"
+      },
+      "uri_t": {
+        "caption": "URI String",
+        "description": "Uniform Resource Identifier (URI) string. For example:<br><code>file://hostname/sharename/example.pdf</code>.",
         "type": "string_t",
         "type_name": "String"
       },

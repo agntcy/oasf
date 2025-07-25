@@ -1,0 +1,111 @@
+{
+  "caption": "MCP Server",
+  "description": "Configuration for an MCP server.",
+  "extends": "object",
+  "name": "mcp_server",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Name of the server.",
+      "requirement": "required"
+    },
+    "author": {
+      "caption": "Author",
+      "description": "Author or maintainer of the server.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Short description of the server.",
+      "requirement": "optional"
+    },
+    "type": {
+      "caption": "Type",
+      "description": "Type of the server.",
+      "requirement": "required",
+      "enum": {
+        "local": {
+          "caption": "Local server"
+        },
+        "http": {
+          "caption": "HTTP-based server"
+        },
+        "sse": {
+          "caption": "SSE-based server"
+        }
+      }
+    },
+    "url": {
+      "caption": "URL",
+      "description": "URL of the server (for remote servers).",
+      "requirement": "optional"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "Executable or runtime command (for local servers).",
+      "requirement": "optional"
+    },
+    "args": {
+      "caption": "Arguments",
+      "description": "Command-line arguments (for local servers).",
+      "requirement": "optional"
+    },
+    "env": {
+      "reference": "env_vars",
+      "caption": "Environment Variables",
+      "description": "List of environment variables such as tokens or API keys (for local servers).",
+      "requirement": "optional"
+    },
+    "headers": {
+      "caption": "Headers",
+      "description": "Request headers for the server authentication (non-sensitive).",
+      "requirement": "optional"
+    },
+    "scope": {
+      "caption": "Scope",
+      "description": "Scope of the server accessibility and sharing options.",
+      "requirement": "optional",
+      "enum": {
+        "local": {
+          "caption": "Local scope"
+        },
+        "project": {
+          "caption": "Project scope"
+        },
+        "user": {
+          "caption": "User scope"
+        }
+      }
+    },
+    "prompts": {
+      "reference": "mcp_server_prompts",
+      "caption": "Prompts",
+      "description": "List of prompts supported by the server.",
+      "requirement": "recommended"
+    },
+    "resources": {
+      "reference": "mcp_server_resources",
+      "caption": "Resources",
+      "description": "List of resources supported by the server.",
+      "requirement": "recommended"
+    },
+    "resource_templates": {
+      "reference": "mcp_server_resource_templates",
+      "caption": "Resource Templates",
+      "description": "List of resource templates supported by the server.",
+      "requirement": "recommended"
+    },
+    "tools": {
+      "reference": "mcp_server_tools",
+      "caption": "Tools",
+      "description": "List of tools supported by the server.",
+      "requirement": "recommended"
+    },
+    "capabilities": {
+      "reference": "mcp_server_capabilities",
+      "caption": "Capabilities",
+      "description": "Capabilities supported by the server.",
+      "requirement": "recommended"
+    }
+  }
+}

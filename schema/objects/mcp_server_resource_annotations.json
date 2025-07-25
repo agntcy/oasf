@@ -1,0 +1,26 @@
+{
+  "caption": "MCP Server Resource Annotation",
+  "description": "Configuration for an MCP server resource annotations.",
+  "extends": "object",
+  "name": "mcp_server_resource_annotations",
+  "attributes": {
+    "audience": {
+      "reference": "mcp_server_resource_audience",
+      "caption": "Audience",
+      "description": "Intended audience(s) for the resource.",
+      "requirement": "required"
+    },
+    "priority": {
+      "reference": "float_t",
+      "caption": "Priority",
+      "description": "A number from 0.0 to 1.0 indicating the importance of the resource.",
+      "requirement": "optional"
+    },
+    "last_modified": {
+      "reference": "datetime_t",
+      "caption": "Last Modified",
+      "description": "An ISO 8601 formatted timestamp indicating when the resource was last modified.",
+      "requirement": "optional"
+    }
+  }
+}
