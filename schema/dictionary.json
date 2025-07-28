@@ -188,7 +188,7 @@
     },
     "domain": {
       "caption": "Domain",
-      "description": "A domain that applies to an agent.",
+      "description": "A domain that the agent can operate in.",
       "type": "class_t",
       "class_type": "base_domain",
       "family": "domain",

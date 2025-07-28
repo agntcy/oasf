@@ -6,9 +6,8 @@ syntax = "proto3";
 package objects.v3;
 
 // A specific domain under which the record can operate in.
-// Supported domains: https://schema.oasf.agntcy.org/domains
 message Domain {
-  // UID of the domain in format: schema.oasf.agntcy.org/domains/<domain-name>
+  // Unique name of the domain.
   string name = 1;
 
   // Unique identifier of the domain.
