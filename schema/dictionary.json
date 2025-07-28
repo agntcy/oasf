@@ -13,28 +13,6 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "agent_connect_protocol"
     },
-    "action": {
-      "caption": "Action",
-      "description": "An action that can be performed by an entity. See specific usage.",
-      "type": "string_t",
-      "enum": {
-        "read": {
-          "caption": "Read"
-        },
-        "write": {
-          "caption": "Write"
-        },
-        "update": {
-          "caption": "Update"
-        }
-      }
-    },
-    "action_scopes": {
-      "caption": "Action Scope",
-      "description": "The scope of how an action can be performed by an entity. See specific usage.",
-      "type": "string_t",
-      "is_array": true
-    },
     "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
@@ -531,8 +509,14 @@
     },
     "scope": {
       "caption": "Scope",
-      "description": "Boundaries or permissions within which a program or process can operate. See specific usage.",
+      "description": "Boundary or permission within which an entity can operate in. See specific usage.",
       "type": "string_t"
+    },
+    "scopes": {
+      "caption": "Scopes",
+      "description": "Boundaries or permissions within which an entity can operate in. See specific usage.",
+      "type": "string_t",
+      "is_array": true
     },
     "security_score": {
       "caption": "Security Score",
@@ -600,6 +584,11 @@
       "caption": "Unit of Measurement",
       "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
       "type": "string_t"
+    },
+    "unmapped": {
+      "caption": "Unmapped Data",
+      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
+      "type": "object"
     },
     "uri": {
       "caption": "URI",
