@@ -1,22 +1,22 @@
 {
   "caption": "MCP Server",
-  "description": "Configuration for an MCP server.",
+  "description": "Describes the configuration for an MCP server.",
   "extends": "object",
   "name": "mcp_server",
   "attributes": {
     "name": {
       "caption": "Name",
-      "description": "Name of the server.",
+      "description": "The name of the server.",
       "requirement": "required"
     },
-    "author": {
-      "caption": "Author",
-      "description": "Author or maintainer of the server.",
+    "title": {
+      "caption": "Title",
+      "description": "Human-readable title for the server.",
       "requirement": "optional"
     },
     "description": {
       "caption": "Description",
-      "description": "Short description of the server.",
+      "description": "The description of the server.",
       "requirement": "optional"
     },
     "type": {
@@ -38,20 +38,19 @@
     "url": {
       "caption": "URL",
       "description": "URL of the server (for remote servers).",
-      "requirement": "optional"
+      "requirement": "recommended"
     },
     "command": {
       "caption": "Command",
       "description": "Executable or runtime command (for local servers).",
-      "requirement": "optional"
+      "requirement": "recommended"
     },
     "args": {
       "caption": "Arguments",
       "description": "Command-line arguments (for local servers).",
       "requirement": "optional"
     },
-    "env": {
-      "reference": "env_vars",
+    "env_vars": {
       "caption": "Environment Variables",
       "description": "List of environment variables such as tokens or API keys (for local servers).",
       "requirement": "optional"
@@ -78,34 +77,41 @@
       }
     },
     "prompts": {
-      "reference": "mcp_server_prompts",
       "caption": "Prompts",
       "description": "List of prompts supported by the server.",
-      "requirement": "recommended"
+      "requirement": "recommended",
+      "reference": "mcp_server_prompts"
     },
     "resources": {
-      "reference": "mcp_server_resources",
       "caption": "Resources",
       "description": "List of resources supported by the server.",
-      "requirement": "recommended"
-    },
-    "resource_templates": {
-      "reference": "mcp_server_resource_templates",
-      "caption": "Resource Templates",
-      "description": "List of resource templates supported by the server.",
-      "requirement": "recommended"
+      "requirement": "recommended",
+      "reference": "mcp_server_resources"
     },
     "tools": {
-      "reference": "mcp_server_tools",
       "caption": "Tools",
       "description": "List of tools supported by the server.",
-      "requirement": "recommended"
+      "requirement": "recommended",
+      "reference": "mcp_server_tools"
     },
-    "capabilities": {
-      "reference": "mcp_server_capabilities",
-      "caption": "Capabilities",
-      "description": "Capabilities supported by the server.",
-      "requirement": "recommended"
+    "features": {
+      "caption": "Features",
+      "description": "Features supported by the server.",
+      "requirement": "required",
+      "enum": {
+        "subscribe": {
+          "caption": "The server can subscribe to events."
+        },
+        "notify": {
+          "caption": "The server can notify on events."
+        }
+      }
     }
+  },  
+  "constraints": {
+    "at_least_one": [
+      "url",
+      "command"
+    ]
   }
 }

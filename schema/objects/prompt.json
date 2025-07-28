@@ -1,0 +1,23 @@
+{
+  "caption": "Prompt",
+  "description": "Defines the structure for prompts for interaction with an entity.",
+  "extends": "object",
+  "name": "prompt",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Name of the prompt, used to identify it in the system.",
+      "requirement": "required"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of the prompt, providing context and usage information.",
+      "requirement": "required"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "A specific instruction given to a prompt to perform a task.",
+      "requirement": "required"
+    }
+  }
+}

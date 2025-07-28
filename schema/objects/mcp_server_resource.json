@@ -1,6 +1,6 @@
 {
   "caption": "MCP Server Resource",
-  "description": "Configuration for an MCP server resource.",
+  "description": "Describes the configuration for an MCP server resource.",
   "extends": "object",
   "name": "mcp_server_resource",
   "attributes": {
@@ -8,6 +8,12 @@
       "caption": "URI",
       "description": "Unique identifier for the resource.",
       "requirement": "required"
+    },
+    "uri_template": {
+      "caption": "URI Template",
+      "description": "The URI template of the resource.",
+      "requirement": "required",
+      "reference": "uri"
     },
     "name": {
       "caption": "Name",
@@ -25,16 +31,38 @@
       "requirement": "optional"
     },
     "mime_type": {
-      "reference": "string_t",
       "caption": "MIME Type",
       "description": "The MIME type of the resource.",
       "requirement": "optional"
     },
-    "annotations": {
-      "reference": "mcp_server_resource_annotations",
-      "caption": "Annotations",
-      "description": "Annotations for the resource, providing additional metadata.",
+    "audience": {
+      "caption": "Audience",
+      "description": "Intended audience(s) for the resource.",
+      "enum": {
+        "user": {
+          "caption": "User Audience"
+        },
+        "assistant": {
+          "caption": "Assistant Audience"
+        }
+      },
+      "requirement": "required"
+    },
+    "priority": {
+      "caption": "Priority",
+      "description": "A number from 0.0 to 1.0 indicating the importance of the resource.",
+      "requirement": "optional"
+    },
+    "modified_at": {
+      "caption": "Modified At",
+      "description": "Timestamp indicating when the resource was last modified.",
       "requirement": "optional"
     }
+  },
+  "constraints": {
+    "at_least_one": [
+      "uri",
+      "uri_template"
+    ]
   }
 }
