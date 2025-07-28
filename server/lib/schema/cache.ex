@@ -619,9 +619,8 @@ defmodule Schema.Cache do
     objects =
       objects
       |> Enum.into(%{}, fn object_tuple -> attribute_source(object_tuple) end)
-      |> resolve_extends()
-      |> Enum.into(%{})
       |> patch_type("object")
+      |> resolve_extends()
 
     # all_objects has just enough info to interrogate the complete object hierarchy,
     # removing most details. It can be used to get the caption and parent (extends) of
@@ -981,7 +980,9 @@ defmodule Schema.Cache do
   end
 
   defp merge_profiles(:profiles, v1, nil), do: v1
+  defp merge_profiles(:profiles, nil, v2), do: v2
   defp merge_profiles(:profiles, v1, v2), do: Enum.concat(v1, v2) |> Enum.uniq()
+  defp merge_profiles(_profiles, v1, nil), do: v1
   defp merge_profiles(_profiles, _v1, v2), do: v2
 
   # Final fix up a map of many name -> entity key-value pairs.
