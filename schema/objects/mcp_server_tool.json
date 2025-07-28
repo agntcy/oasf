@@ -1,0 +1,46 @@
+{
+  "caption": "MCP Server Tool",
+  "description": "Describes the configuration for an MCP server tool.",
+  "extends": "object",
+  "name": "mcp_server_tool",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "Unique identifier for the tool.",
+      "requirement": "required"
+    },
+    "title": {
+      "caption": "Title",
+      "description": "Human-readable title for the tool.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of what the tool is for.",
+      "requirement": "optional"
+    },
+    "scopes": {
+      "caption": "Scopes",
+      "description": "List of scopes in which the tool can perform an action.",
+      "requirement": "optional",
+      "enum": {
+        "idempotent": {
+          "caption": "Idempotent",
+          "description": "Tool produces the same result when run multiple times with the same input."
+        },
+        "destructive": {
+          "caption": "Destructive",
+          "description": "Tool may perform destructive operations."
+        },
+        "read_only": {
+          "caption": "Read-only",
+          "description": "Tool does not modify the environment."
+        },
+        "external": {
+          "caption": "External Interaction",
+          "description": "Tool interacts with external entities."
+        }
+      }
+    }
+  }
+}

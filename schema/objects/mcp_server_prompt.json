@@ -1,0 +1,13 @@
+{
+  "caption": "MCP Server Prompt",
+  "description": "Describes the configuration for an MCP server prompt.",
+  "extends": "prompt",
+  "name": "mcp_server_prompt",
+  "attributes": {
+    "args": {
+      "caption": "Arguments",
+      "description": "List of arguments for the prompt.",
+      "requirement": "optional"
+    }
+  }
+}

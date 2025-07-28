@@ -1,0 +1,63 @@
+{
+  "caption": "MCP Server Resource",
+  "description": "Describes the configuration for an MCP server resource.",
+  "extends": "object",
+  "name": "mcp_server_resource",
+  "attributes": {
+    "uri": {
+      "caption": "URI",
+      "description": "Unique identifier for the resource.",
+      "requirement": "required"
+    },
+    "uri_template": {
+      "caption": "URI Template",
+      "description": "The URI template of the resource.",
+      "requirement": "required",
+      "reference": "uri"
+    },
+    "name": {
+      "caption": "Name",
+      "description": "The name of the resource.",
+      "requirement": "required"
+    },
+    "title": {
+      "caption": "Title",
+      "description": "Human-readable title for the resource.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of what the resource is for.",
+      "requirement": "optional"
+    },
+    "mime_type": {
+      "caption": "MIME Type",
+      "description": "The MIME type of the resource.",
+      "requirement": "optional"
+    },
+    "audience": {
+      "caption": "Audience",
+      "description": "Intended audience(s) for the resource.",
+      "enum": {
+        "user": {
+          "caption": "User Audience"
+        },
+        "assistant": {
+          "caption": "Assistant Audience"
+        }
+      },
+      "requirement": "required"
+    },
+    "priority": {
+      "caption": "Priority",
+      "description": "A number from 0.0 to 1.0 indicating the importance of the resource.",
+      "requirement": "optional"
+    }
+  },
+  "constraints": {
+    "just_one": [
+      "uri",
+      "uri_template"
+    ]
+  }
+}

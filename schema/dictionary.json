@@ -24,11 +24,6 @@
       "description": "Agent identifier",
       "type": "uuid_t"
     },
-    "record_signature": {
-      "caption": "Signature",
-      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
-      "type": "record_signature"
-    },
     "algorithm": {
       "caption": "Algorithm",
       "description": "The algorithm used. See specific usage.",
@@ -52,6 +47,12 @@
     "args": {
       "caption": "Arguments",
       "description": "A list of arguments to be passed to a command. See specific usage.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "audience": {
+      "caption": "Audience",
+      "description": "Intended audience(s) for an entity. See specific usage.",
       "type": "string_t",
       "is_array": true
     },
@@ -80,6 +81,11 @@
       "caption": "Certificate",
       "description": "Base64-encoded signing certificate.",
       "type": "bytestring_t"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "A command to be ran. See specific usage.",
+      "type": "string_t"
     },
     "communication_protocols": {
       "caption": "Communication Protocols",
@@ -114,11 +120,6 @@
     "content_type": {
       "caption": "Content Type",
       "description": "Type of the content. See specific usage.",
-      "type": "string_t"
-    },
-    "command": {
-      "caption": "Command",
-      "description": "A command to be ran. See specific usage.",
       "type": "string_t"
     },
     "cost_score": {
@@ -185,32 +186,22 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
     },
-    "env": {
-      "caption": "Environment Variables",
-      "description": "Environment variables. See specific usage.",
-      "type": "string_map_t"
-    },
     "env_deps": {
       "caption": "Values for Dependencies",
       "description": "List of environment variable values to be set for the agent dependencies.",
       "type": "env_var_values",
       "is_array": true
     },
-    "env_file": {
-      "caption": "Environment Variables File",
-      "description": "Path to a file containing environment variables.",
-      "type": "string_t"
+    "env_var_values": {
+      "caption": "Environment Variable Values",
+      "description": "List of values of the environment variables for a specific agent and it's dependencies.",
+      "type": "env_var_values",
+      "is_array": true
     },
     "env_vars": {
       "caption": "Environment Variables",
       "description": "List of possible environment variables that the agent may require to be set before it can be used.",
       "type": "env_var",
-      "is_array": true
-    },
-    "env_var_values": {
-      "caption": "Environment Variable Values",
-      "description": "List of values of the environment variables for a specific agent and it's dependencies.",
-      "type": "env_var_values",
       "is_array": true
     },
     "evaluation_data": {
@@ -234,6 +225,11 @@
       "description": "Format used by the agent for exporting observability data.",
       "type": "string_t"
     },
+    "extension_data": {
+      "caption": "Data",
+      "description": "Data associated with the record extension. This is a JSON object that contains the data specific to the extension.",
+      "type": "json_t"
+    },
     "extensions": {
       "caption": "Schema Extensions",
       "description": "List of extension models that describe this record and its capabilities more in depth.",
@@ -242,11 +238,6 @@
       "family": "feature",
       "is_enum": true,
       "is_array": true
-    },
-    "extension_data": {
-      "caption": "Data",
-      "description": "Data associated with the record extension. This is a JSON object that contains the data specific to the extension.",
-      "type": "json_t"
     },
     "framework_config": {
       "caption": "Agentic Framework Config",
@@ -266,7 +257,7 @@
     },
     "headers": {
       "caption": "Headers",
-      "description": "HTTP headers (e.g. for authentication). See specific usage.",
+      "description": "Request headers (e.g. for authentication). See specific usage.",
       "type": "string_map_t"
     },
     "id": {
@@ -343,15 +334,52 @@
       "description": "Data supported by the agent for runtime manifest.",
       "type": "manifest_data"
     },
-    "mcp_server_data": {
-      "caption": "Data",
-      "description": "Data supported by the agent for MCP server.",
-      "type": "mcp_server_data"
+    "mcp_data": {
+      "caption": "MCP Data",
+      "description": "Data supported by the agent for MCP.",
+      "type": "mcp_data"
     },
-    "mcp_server_configurations": {
-      "caption": "MCP Server Configurations",
-      "description": "List of configurations of MCP servers that the agent can connect to.",
-      "type": "mcp_server_configuration",
+    "mcp_server": {
+      "caption": "MCP Server",
+      "description": "Describes the configuration for an MCP server.",
+      "type": "mcp_server"
+    },
+    "mcp_server_capabilities": {
+      "caption": "MCP Server Capabilities",
+      "description": "Describes the capabilities supported by an MCP server.",
+      "type": "string_t",
+      "enum": {
+        "subscribe": {
+          "caption": "The server can subscribe to events."
+        },
+        "notify": {
+          "caption": "The server can notify on events."
+        }
+      },
+      "is_array": true
+    },
+    "mcp_server_prompts": {
+      "caption": "MCP Server Prompts",
+      "description": "Describes the configuration for an MCP server prompts.",
+      "type": "mcp_server_prompt",
+      "is_array": true
+    },
+    "mcp_server_resources": {
+      "caption": "MCP Server Resources",
+      "description": "Describes the configuration for an MCP server resources.",
+      "type": "mcp_server_resource",
+      "is_array": true
+    },
+    "mcp_server_tools": {
+      "caption": "MCP Server Tools",
+      "description": "Describes the configuration for an MCP server tools.",
+      "type": "mcp_server_tool",
+      "is_array": true
+    },
+    "mcp_servers": {
+      "caption": "MCP Servers",
+      "description": "Describes the list of MCP servers.",
+      "type": "mcp_server",
       "is_array": true
     },
     "metadata": {
@@ -365,6 +393,11 @@
       "description": "Defines the key metrics used to evaluate system performance, cost, and other critical factors.",
       "type": "metric",
       "is_array": true
+    },
+    "mime_type": {
+      "caption": "MIME Type",
+      "description": "The MIME type of the content. For example: <code>application/json</code>, <code>text/plain</code>.",
+      "type": "mime_type"
     },
     "model": {
       "caption": "Model",
@@ -411,15 +444,15 @@
       "description": "Content Identifier (CID) of an Record's parent record.",
       "type": "uuid_t"
     },
+    "priority": {
+      "caption": "Priority",
+      "description": "Value that indicates a priority of an entity. See specific usage.",
+      "type": "float_t"
+    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
       "type": "acp_endpoint"
-    },
-    "prompt": {
-      "caption": "Prompt Text",
-      "description": "A specific input or instruction given to a large language model (LLM) to generate text or perform a task.",
-      "type": "string_t"
     },
     "provider": {
       "caption": "Provider",
@@ -435,6 +468,11 @@
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
+    },
+    "record_signature": {
+      "caption": "Signature",
+      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
+      "type": "record_signature"
     },
     "ref": {
       "caption": "Reference",
@@ -469,23 +507,29 @@
     },
     "scope": {
       "caption": "Scope",
-      "description": "Boundaries or permissions within which a program or process can operate. See specific usage.",
+      "description": "Boundary or permission within which an entity can operate in. See specific usage.",
       "type": "string_t"
+    },
+    "scopes": {
+      "caption": "Scopes",
+      "description": "Boundaries or permissions within which an entity can operate in. See specific usage.",
+      "type": "string_t",
+      "is_array": true
     },
     "security_score": {
       "caption": "Security Score",
       "description": "Security score.",
       "type": "float_t"
     },
-    "signed_at": {
-      "caption": "Signed Time",
-      "description": "Timestamp when signing occurred. See specific usage.",
-      "type": "datetime_t"
-    },
     "signature": {
       "caption": "Signature",
       "description": "Base64-encoded signature.",
       "type": "bytestring_t"
+    },
+    "signed_at": {
+      "caption": "Signed Time",
+      "description": "Timestamp when signing occurred. See specific usage.",
+      "type": "datetime_t"
     },
     "size": {
       "caption": "Size",
@@ -524,14 +568,19 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
-    "tool_configuration": {
-      "caption": "Tool Configuration",
-      "description": "Configuration for tools that the MCP server can use.",
-      "type": "json_t"
+    "title": {
+      "caption": "Title",
+      "description": "A human-friendly title for the object.",
+      "type": "string_t"
     },
     "type": {
       "caption": "Type",
       "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
+      "type": "string_t"
+    },
+    "unit_of_measurement": {
+      "caption": "Unit of Measurement",
+      "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
       "type": "string_t"
     },
     "unmapped": {
@@ -539,20 +588,15 @@
       "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
       "type": "object"
     },
+    "uri": {
+      "caption": "URI",
+      "description": "The URI object that pertains to the class or object. See specific usage.",
+      "type": "uri_t"
+    },
     "url": {
       "caption": "URL",
       "description": "The URL object that pertains to the class or object. See specific usage.",
       "type": "url_t"
-    },
-    "unit_of_measurement": {
-      "caption": "Unit of Measurement",
-      "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
-      "type": "string_t"
-    },
-    "version": {
-      "caption": "Version",
-      "description": "The version that pertains to the class or object. See specific usage.",
-      "type": "string_t"
     },
     "value": {
       "caption": "Value",
@@ -564,6 +608,11 @@
       "description": "List of key/value pairs.",
       "type": "key_value_object",
       "is_array": true
+    },
+    "version": {
+      "caption": "Version",
+      "description": "The version that pertains to the class or object. See specific usage.",
+      "type": "string_t"
     }
   },
   "types": {
@@ -573,7 +622,10 @@
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [false, true]
+        "values": [
+          false,
+          true
+        ]
       },
       "bytestring_t": {
         "caption": "Byte String",
@@ -644,12 +696,22 @@
         "type": "string_t",
         "type_name": "String"
       },
+      "mime_type": {
+        "caption": "MIME Type",
+        "description": "MIME type of the content. For example:<br><code>application/json</code>,<br><code>text/plain</code>.",
+        "regex": "^([a-zA-Z0-9!#$%&'*+\\-.^_`|~]+/)?[a-zA-Z0-9!#$%&'*+\\-.^_`|~]+$",
+        "type": "string_t",
+        "type_name": "String"
+      },
       "port_t": {
         "caption": "Port",
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [0, 65535]
+        "range": [
+          0,
+          65535
+        ]
       },
       "process_name_t": {
         "caption": "Process Name",
@@ -663,13 +725,13 @@
         "type": "string_t",
         "type_name": "String"
       },
-      "string_t": {
-        "caption": "String",
-        "description": "UTF-8 encoded byte sequence."
-      },
       "string_map_t": {
         "caption": "String Map",
         "description": "A map of string to string."
+      },
+      "string_t": {
+        "caption": "String",
+        "description": "UTF-8 encoded byte sequence."
       },
       "subnet_t": {
         "max_len": 42,
@@ -683,6 +745,12 @@
         "description": "The timestamp format is the number of milliseconds since the Epoch 01/01/1970 00:00:00 UTC. For example:<br><code>1618524549901</code>.",
         "type": "long_t",
         "type_name": "Long"
+      },
+      "uri_t": {
+        "caption": "URI String",
+        "description": "Uniform Resource Identifier (URI) string. For example:<br><code>file://hostname/sharename/example.pdf</code>.",
+        "type": "string_t",
+        "type_name": "String"
       },
       "url_t": {
         "caption": "URL String",
