@@ -21,7 +21,7 @@
     },
     "scopes": {
       "caption": "Scopes",
-      "description": "A scope in which the tool can perform an action.",
+      "description": "List of scopes in which the tool can perform an action.",
       "requirement": "optional",
       "enum": {
         "idempotent": {
