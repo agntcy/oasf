@@ -5,11 +5,11 @@ syntax = "proto3";
 
 package objects.v3;
 
+import "objects/v3/domain.proto";
 import "objects/v3/extension.proto";
 import "objects/v3/locator.proto";
 import "objects/v3/signature.proto";
 import "objects/v3/skill.proto";
-import "objects/v3/domain.proto";
 
 // Record defines a schema for versioned AI agentic content representation.
 // The schema provides a way to describe an agentic record in a structured format.
