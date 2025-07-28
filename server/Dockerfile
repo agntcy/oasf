@@ -32,7 +32,8 @@ ENV MIX_ENV="prod"
 # This (apparently) fixes a known QEMU issue. See:
 # * https://elixirforum.com/t/elixir-docker-image-wont-build-for-linux-arm64-v8-using-github-actions/56383/12
 # * https://elixirforum.com/t/unable-to-compile-default-elixir-project-from-the-getting-started-guide/57199/12
-ENV ERL_FLAGS="+JPperf true"
+ARG ERL_FLAGS="+JPperf true"
+ENV ERL_FLAGS=${ERL_FLAGS}
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
