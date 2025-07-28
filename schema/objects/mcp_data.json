@@ -1,0 +1,24 @@
+{
+  "caption": "MCP Data",
+  "description": "Data for the MCP record extension.",
+  "extends": "extension_data",
+  "name": "mcp_data",
+  "attributes": {
+    "servers": {
+      "caption": "MCP Servers",
+      "description": "List of MCP servers supported by the agent. Exact properties may vary depending on the client or platform.",
+      "requirement": "required",
+      "reference": "mcp_servers",
+      "references": [
+        {
+          "description": "VS Code MCP Server Extension",
+          "url": "https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_configuration-format"
+        },
+        {
+          "description": "Claude MCP Connector",
+          "url": "https://docs.anthropic.com/en/docs/agents-and-tools/mcp-connector#field-descriptions"
+        }
+      ]
+    }
+  }
+}

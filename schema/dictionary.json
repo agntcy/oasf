@@ -13,6 +13,28 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "agent_connect_protocol"
     },
+    "action": {
+      "caption": "Action",
+      "description": "An action that can be performed by an entity. See specific usage.",
+      "type": "string_t",
+      "enum": {
+        "read": {
+          "caption": "Read"
+        },
+        "write": {
+          "caption": "Write"
+        },
+        "update": {
+          "caption": "Update"
+        }
+      }
+    },
+    "action_scopes": {
+      "caption": "Action Scope",
+      "description": "The scope of how an action can be performed by an entity. See specific usage.",
+      "type": "string_t",
+      "is_array": true
+    },
     "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
@@ -24,11 +46,6 @@
       "description": "Agent identifier",
       "type": "uuid_t"
     },
-    "record_signature": {
-      "caption": "Signature",
-      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
-      "type": "record_signature"
-    },
     "algorithm": {
       "caption": "Algorithm",
       "description": "The algorithm used. See specific usage.",
@@ -38,11 +55,6 @@
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
       "type": "string_map_t"
-    },
-    "priority": {
-      "caption": "Priority",
-      "description": "Value that indicates a priority of an entity. See specific usage.",
-      "type": "float_t"
     },
     "api_base": {
       "caption": "API Base URL",
@@ -57,6 +69,12 @@
     "args": {
       "caption": "Arguments",
       "description": "A list of arguments to be passed to a command. See specific usage.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "audience": {
+      "caption": "Audience",
+      "description": "Intended audience(s) for an entity. See specific usage.",
       "type": "string_t",
       "is_array": true
     },
@@ -91,6 +109,11 @@
       "description": "Base64-encoded signing certificate.",
       "type": "bytestring_t"
     },
+    "command": {
+      "caption": "Command",
+      "description": "A command to be ran. See specific usage.",
+      "type": "string_t"
+    },
     "communication_protocols": {
       "caption": "Communication Protocols",
       "description": "Communication protocols supported.",
@@ -111,52 +134,6 @@
       },
       "is_array": true
     },
-    "features": {
-      "caption": "Content",
-      "description": "An list of features supported by an entity. See specific usage.",
-      "type": "string_t",
-      "is_array": true
-    },
-    "action": {
-      "caption": "Action",
-      "description": "An action that can be performed by an entity. See specific usage.",
-      "type": "string_t",
-      "enum": {
-        "read": {
-          "caption": "Read"
-        },
-        "write": {
-          "caption": "Write"
-        },
-        "update": {
-          "caption": "Update"
-        }
-      }
-    },
-    "action_scopes": {
-      "caption": "Action Scope",
-      "description": "The scope of how an action can be performed by an entity. See specific usage.",
-      "type": "string_t",
-      "enum": {
-        "idempotent": {
-          "caption": "Idempotent",
-          "description": "The action can be performed multiple times without changing the result."
-        },
-        "destructive": {
-          "caption": "Destructive",
-          "description": "The action may perform destructive operations."
-        },
-        "read_only": {
-          "caption": "Read-only",
-          "description": "The action does not modify the environment."
-        },
-        "external": {
-          "caption": "External Interaction",
-          "description": "The action interacts with external entities."
-        }
-      },
-      "is_array": true
-    },
     "config": {
       "caption": "Configuration",
       "description": "This object contains an instance of an OpenAPI schema object.",
@@ -170,11 +147,6 @@
     "content_type": {
       "caption": "Content Type",
       "description": "Type of the content. See specific usage.",
-      "type": "string_t"
-    },
-    "command": {
-      "caption": "Command",
-      "description": "A command to be ran. See specific usage.",
       "type": "string_t"
     },
     "cost_score": {
@@ -247,16 +219,16 @@
       "type": "env_var_values",
       "is_array": true
     },
-    "env_vars": {
-      "caption": "Environment Variables",
-      "description": "List of possible environment variables that the agent may require to be set before it can be used.",
-      "type": "env_var",
-      "is_array": true
-    },
     "env_var_values": {
       "caption": "Environment Variable Values",
       "description": "List of values of the environment variables for a specific agent and it's dependencies.",
       "type": "env_var_values",
+      "is_array": true
+    },
+    "env_vars": {
+      "caption": "Environment Variables",
+      "description": "List of possible environment variables that the agent may require to be set before it can be used.",
+      "type": "env_var",
       "is_array": true
     },
     "evaluation_data": {
@@ -280,6 +252,11 @@
       "description": "Format used by the agent for exporting observability data.",
       "type": "string_t"
     },
+    "extension_data": {
+      "caption": "Data",
+      "description": "Data associated with the record extension. This is a JSON object that contains the data specific to the extension.",
+      "type": "json_t"
+    },
     "extensions": {
       "caption": "Schema Extensions",
       "description": "List of extension models that describe this record and its capabilities more in depth.",
@@ -289,10 +266,11 @@
       "is_enum": true,
       "is_array": true
     },
-    "extension_data": {
-      "caption": "Data",
-      "description": "Data associated with the record extension. This is a JSON object that contains the data specific to the extension.",
-      "type": "json_t"
+    "features": {
+      "caption": "Content",
+      "description": "An list of features supported by an entity. See specific usage.",
+      "type": "string_t",
+      "is_array": true
     },
     "framework_config": {
       "caption": "Agentic Framework Config",
@@ -389,22 +367,15 @@
       "description": "Data supported by the agent for runtime manifest.",
       "type": "manifest_data"
     },
-    "audience": {
-      "caption": "Audience",
-      "description": "Intended audience(s) for an entity. See specific usage.",
-      "type": "string_t",
-      "is_array": true
+    "mcp_data": {
+      "caption": "MCP Data",
+      "description": "Data supported by the agent for MCP.",
+      "type": "mcp_data"
     },
     "mcp_server": {
       "caption": "MCP Server",
       "description": "Describes the configuration for an MCP server.",
       "type": "mcp_server"
-    },
-    "mcp_server_tools": {
-      "caption": "MCP Server Tools",
-      "description": "Configuration for an MCP server tools.",
-      "type": "mcp_server_tool",
-      "is_array": true
     },
     "mcp_server_prompts": {
       "caption": "MCP Server Prompts",
@@ -418,6 +389,18 @@
       "type": "mcp_server_resource",
       "is_array": true
     },
+    "mcp_server_tools": {
+      "caption": "MCP Server Tools",
+      "description": "Describes the configuration for an MCP server tools.",
+      "type": "mcp_server_tool",
+      "is_array": true
+    },
+    "mcp_servers": {
+      "caption": "MCP Servers",
+      "description": "Describes the list of MCP servers.",
+      "type": "mcp_server",
+      "is_array": true
+    },
     "metadata": {
       "caption": "Metadata",
       "description": "Metadata.",
@@ -429,6 +412,11 @@
       "description": "Defines the key metrics used to evaluate system performance, cost, and other critical factors.",
       "type": "metric",
       "is_array": true
+    },
+    "mime_type": {
+      "caption": "MIME Type",
+      "description": "The MIME type of the content. For example: <code>application/json</code>, <code>text/plain</code>.",
+      "type": "mime_type"
     },
     "model": {
       "caption": "Model",
@@ -475,15 +463,20 @@
       "description": "Content Identifier (CID) of an Record's parent record.",
       "type": "uuid_t"
     },
-    "protocol": {
-      "caption": "ACP Endpoint",
-      "description": "ACP endpoint description.",
-      "type": "acp_endpoint"
+    "priority": {
+      "caption": "Priority",
+      "description": "Value that indicates a priority of an entity. See specific usage.",
+      "type": "float_t"
     },
     "prompt": {
       "caption": "Prompt Text",
       "description": "A specific input or instruction given to a large language model (LLM) to generate text or perform a task.",
       "type": "string_t"
+    },
+    "protocol": {
+      "caption": "ACP Endpoint",
+      "description": "ACP endpoint description.",
+      "type": "acp_endpoint"
     },
     "provider": {
       "caption": "Provider",
@@ -499,6 +492,11 @@
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
+    },
+    "record_signature": {
+      "caption": "Signature",
+      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
+      "type": "record_signature"
     },
     "ref": {
       "caption": "Reference",
@@ -541,15 +539,15 @@
       "description": "Security score.",
       "type": "float_t"
     },
-    "signed_at": {
-      "caption": "Signed Time",
-      "description": "Timestamp when signing occurred. See specific usage.",
-      "type": "datetime_t"
-    },
     "signature": {
       "caption": "Signature",
       "description": "Base64-encoded signature.",
       "type": "bytestring_t"
+    },
+    "signed_at": {
+      "caption": "Signed Time",
+      "description": "Timestamp when signing occurred. See specific usage.",
+      "type": "datetime_t"
     },
     "size": {
       "caption": "Size",
@@ -598,30 +596,20 @@
       "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
       "type": "string_t"
     },
-    "url": {
-      "caption": "URL",
-      "description": "The URL object that pertains to the class or object. See specific usage.",
-      "type": "url_t"
+    "unit_of_measurement": {
+      "caption": "Unit of Measurement",
+      "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
+      "type": "string_t"
     },
     "uri": {
       "caption": "URI",
       "description": "The URI object that pertains to the class or object. See specific usage.",
       "type": "uri_t"
     },
-    "unit_of_measurement": {
-      "caption": "Unit of Measurement",
-      "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
-      "type": "string_t"
-    },
-    "version": {
-      "caption": "Version",
-      "description": "The version that pertains to the class or object. See specific usage.",
-      "type": "string_t"
-    },
-    "mime_type": {
-      "caption": "MIME Type",
-      "description": "The MIME type of the content. For example: <code>application/json</code>, <code>text/plain</code>.",
-      "type": "mime_type"
+    "url": {
+      "caption": "URL",
+      "description": "The URL object that pertains to the class or object. See specific usage.",
+      "type": "url_t"
     },
     "value": {
       "caption": "Value",
@@ -633,23 +621,24 @@
       "description": "List of key/value pairs.",
       "type": "key_value_object",
       "is_array": true
+    },
+    "version": {
+      "caption": "Version",
+      "description": "The version that pertains to the class or object. See specific usage.",
+      "type": "string_t"
     }
   },
   "types": {
     "caption": "Data Types",
     "description": "The data types available in OASF. Each data type specifies constraints in the form regular expressions, max lengths or value limits. Implementers of OASF should ensure they abide to these constraints.",
     "attributes": {
-      "mime_type": {
-        "caption": "MIME Type",
-        "description": "MIME type of the content. For example:<br><code>application/json</code>,<br><code>text/plain</code>.",
-        "regex": "^([a-zA-Z0-9!#$%&'*+\\-.^_`|~]+/)?[a-zA-Z0-9!#$%&'*+\\-.^_`|~]+$",
-        "type": "string_t",
-        "type_name": "String"
-      },
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [false, true]
+        "values": [
+          false,
+          true
+        ]
       },
       "bytestring_t": {
         "caption": "Byte String",
@@ -720,12 +709,22 @@
         "type": "string_t",
         "type_name": "String"
       },
+      "mime_type": {
+        "caption": "MIME Type",
+        "description": "MIME type of the content. For example:<br><code>application/json</code>,<br><code>text/plain</code>.",
+        "regex": "^([a-zA-Z0-9!#$%&'*+\\-.^_`|~]+/)?[a-zA-Z0-9!#$%&'*+\\-.^_`|~]+$",
+        "type": "string_t",
+        "type_name": "String"
+      },
       "port_t": {
         "caption": "Port",
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [0, 65535]
+        "range": [
+          0,
+          65535
+        ]
       },
       "process_name_t": {
         "caption": "Process Name",
@@ -739,13 +738,13 @@
         "type": "string_t",
         "type_name": "String"
       },
-      "string_t": {
-        "caption": "String",
-        "description": "UTF-8 encoded byte sequence."
-      },
       "string_map_t": {
         "caption": "String Map",
         "description": "A map of string to string."
+      },
+      "string_t": {
+        "caption": "String",
+        "description": "UTF-8 encoded byte sequence."
       },
       "subnet_t": {
         "max_len": 42,
@@ -760,15 +759,15 @@
         "type": "long_t",
         "type_name": "Long"
       },
-      "url_t": {
-        "caption": "URL String",
-        "description": "Uniform Resource Locator (URL) string. For example:<br><code>http://www.example.com/download/trouble.exe</code>.",
-        "type": "string_t",
-        "type_name": "String"
-      },
       "uri_t": {
         "caption": "URI String",
         "description": "Uniform Resource Identifier (URI) string. For example:<br><code>file://hostname/sharename/example.pdf</code>.",
+        "type": "string_t",
+        "type_name": "String"
+      },
+      "url_t": {
+        "caption": "URL String",
+        "description": "Uniform Resource Locator (URL) string. For example:<br><code>http://www.example.com/download/trouble.exe</code>.",
         "type": "string_t",
         "type_name": "String"
       },

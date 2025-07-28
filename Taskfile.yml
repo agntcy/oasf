@@ -188,6 +188,16 @@ tasks:
 
       - echo "Reloaded schema! Use CTRL + C to exit."
 
+  fmt:
+    desc: Format schema files
+    preconditions:
+      - which jq
+    dir: ./schema
+    cmd: |
+      ## Format dictionary file
+      jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
+      mv sorted.dictionary.json dictionary.json
+
   down:
     desc: Stop services and remove ephemeral kind cluster
     deps:

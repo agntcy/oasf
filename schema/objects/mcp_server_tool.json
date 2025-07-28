@@ -19,10 +19,33 @@
       "description": "Description of what the tool is for.",
       "requirement": "optional"
     },
+    "unmapped": {
+      "caption": "Unmapped Data",
+      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
+      "type": "object"
+    },
     "action_scopes": {
       "caption": "Action Scopes",
       "description": "List of action scopes that the tool can operate within.",
-      "requirement": "optional"
+      "requirement": "optional",
+      "enum": {
+        "idempotent": {
+          "caption": "Idempotent",
+          "description": "The action can be performed multiple times without changing the result."
+        },
+        "destructive": {
+          "caption": "Destructive",
+          "description": "The action may perform destructive operations."
+        },
+        "read_only": {
+          "caption": "Read-only",
+          "description": "The action does not modify the environment."
+        },
+        "external": {
+          "caption": "External Interaction",
+          "description": "The action interacts with external entities."
+        }
+      }
     }
   }
 }

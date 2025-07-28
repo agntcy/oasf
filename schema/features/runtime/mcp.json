@@ -6,9 +6,9 @@
   "name": "mcp",
   "attributes": {
     "data": {
-      "reference": "mcp_server",
+      "reference": "mcp_data",
       "caption": "Data",
-      "description": "Data supported by the agent for MCP server.",
+      "description": "Data supported by the agent for MCP.",
       "requirement": "required"
     }
   }
