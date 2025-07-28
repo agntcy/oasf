@@ -52,15 +52,10 @@
       "caption": "Priority",
       "description": "A number from 0.0 to 1.0 indicating the importance of the resource.",
       "requirement": "optional"
-    },
-    "modified_at": {
-      "caption": "Modified At",
-      "description": "Timestamp indicating when the resource was last modified.",
-      "requirement": "optional"
     }
   },
   "constraints": {
-    "at_least_one": [
+    "just_one": [
       "uri",
       "uri_template"
     ]
