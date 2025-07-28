@@ -61,11 +61,6 @@
       "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0' >Security Scheme Object</a>.",
       "type": "security_scheme"
     },
-    "author": {
-      "caption": "Author",
-      "description": "Name of the author of a service, tool, object, etc. See specific usage.",
-      "type": "string_t"
-    },
     "authors": {
       "caption": "Author",
       "description": "Specifies the authors list of of the data's record. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
@@ -244,12 +239,6 @@
       "is_enum": true,
       "is_array": true
     },
-    "features": {
-      "caption": "Content",
-      "description": "An list of features supported by an entity. See specific usage.",
-      "type": "string_t",
-      "is_array": true
-    },
     "framework_config": {
       "caption": "Agentic Framework Config",
       "description": "Config for an agent of an agentic framework.",
@@ -355,6 +344,20 @@
       "description": "Describes the configuration for an MCP server.",
       "type": "mcp_server"
     },
+    "mcp_server_capabilities": {
+      "caption": "MCP Server Capabilities",
+      "description": "Describes the capabilities supported by an MCP server.",
+      "type": "string_t",
+      "enum": {
+        "subscribe": {
+          "caption": "The server can subscribe to events."
+        },
+        "notify": {
+          "caption": "The server can notify on events."
+        }
+      },
+      "is_array": true
+    },
     "mcp_server_prompts": {
       "caption": "MCP Server Prompts",
       "description": "Describes the configuration for an MCP server prompts.",
@@ -445,11 +448,6 @@
       "caption": "Priority",
       "description": "Value that indicates a priority of an entity. See specific usage.",
       "type": "float_t"
-    },
-    "prompt": {
-      "caption": "Prompt Text",
-      "description": "A specific input or instruction given to a large language model (LLM) to generate text or perform a task.",
-      "type": "string_t"
     },
     "protocol": {
       "caption": "ACP Endpoint",

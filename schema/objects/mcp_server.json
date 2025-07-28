@@ -94,18 +94,11 @@
       "requirement": "recommended",
       "reference": "mcp_server_tools"
     },
-    "features": {
-      "caption": "Features",
-      "description": "Features supported by the server.",
+    "capabilities": {
+      "caption": "Capabilities",
+      "description": "Capabilities supported by the server.",
       "requirement": "required",
-      "enum": {
-        "subscribe": {
-          "caption": "The server can subscribe to events."
-        },
-        "notify": {
-          "caption": "The server can notify on events."
-        }
-      }
+      "reference": "mcp_server_capabilities"
     }
   },  
   "constraints": {
