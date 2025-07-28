@@ -9,6 +9,7 @@ import "objects/v3/extension.proto";
 import "objects/v3/locator.proto";
 import "objects/v3/signature.proto";
 import "objects/v3/skill.proto";
+import "objects/v3/domain.proto";
 
 // Record defines a schema for versioned AI agentic content representation.
 // The schema provides a way to describe an agentic record in a structured format.
@@ -58,6 +59,9 @@ message Record {
 
   // Security signature of the record.
   Signature signature = 11;
+
+  // List of domains under which the record can operate in.
+  repeated Domain domains = 12;
 
   // Reference to the previous record, if any.
   // Used to link the record to its previous versions.

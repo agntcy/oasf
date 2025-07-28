@@ -44,6 +44,11 @@
       "description": "List of skills associated with this record.",
       "requirement": "required"
     },
+    "domains": {
+      "caption": "Domains",
+      "description": "List of domains associated with this record.",
+      "requirement": "required"
+    },
     "locators": {
       "caption": "Locators",
       "description": "List of source locators where this record can be found or used from.",

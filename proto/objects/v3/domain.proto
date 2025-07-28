@@ -1,0 +1,19 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package objects.v3;
+
+// A specific domain under which the record can operate in.
+// Supported domains: https://schema.oasf.agntcy.org/domains
+message Domain {
+  // UID of the domain in format: schema.oasf.agntcy.org/domains/<domain-name>
+  string name = 1;
+
+  // Unique identifier of the domain.
+  uint32 id = 2;
+
+  // Metadata associated with the domain.
+  map<string, string> annotations = 3;
+}
