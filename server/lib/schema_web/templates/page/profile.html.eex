@@ -55,8 +55,8 @@ SPDX-License-Identifier: Apache-2.0
   <table id="data-table" class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 12%">Caption</th>
         <th style="width: 12%">Name</th>
+        <th style="width: 12%">Caption</th>
         <th style="width: 10%">Group</th>
         <th style="width: 8%">Requirement</th>
         <th style="width: 8%">Type</th>
@@ -66,8 +66,8 @@ SPDX-License-Identifier: Apache-2.0
     <tbody class="searchable">
       <%= for {key, field} <- @data[:attributes] do %>
       <tr class="<%= field_classes(field)%>">
-        <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
-        <td data-toggle="tooltip" title="<%= field[:_source] %>"><%= key %></td>
+        <td class="name" data-toggle="tooltip" title="<%= field[:_source] %>"><%= key %></td>
+        <td><%= raw format_attribute_caption(@conn, key, field) %></td>
         <td class="capitalize"><%= field[:group] %></td>
         <td><%= raw format_requirement(nil, key, field) %></td>
         <td><%= raw format_type(@conn, field) %></td>

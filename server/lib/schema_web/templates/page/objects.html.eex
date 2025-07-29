@@ -31,8 +31,8 @@ SPDX-License-Identifier: Apache-2.0
   <table class="table table-striped table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 15%">Caption</th>
         <th style="width: 10%">Name</th>
+        <th style="width: 15%">Caption</th>
         <th style="width: 30%">Referenced By</th>
         <th>Description</th>
       </tr>
@@ -42,8 +42,8 @@ SPDX-License-Identifier: Apache-2.0
         <% name = Atom.to_string(key) %>
         <% path = Routes.static_path(@conn, "/objects/" <> name) %>
         <tr class="oasf-class" <%= raw format_profiles(map[:profiles])%>>
-          <td class="name"><%= raw format_attribute_caption(@conn, name, map) %></td>
-          <td class="extensions"><a href="<%= path %>"><%= name %></a></td>
+          <td class="name"><a href="<%= path %>"><%= name %></a></td>
+          <td class="extensions"><%= raw format_attribute_caption(@conn, name, map) %></td>
           <td class="extensions"><%= raw object_links(@conn, map[:name], map[:_links], :collapse) %></td>
           <td><%= raw description(map) %></td>
         </tr>

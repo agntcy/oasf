@@ -31,8 +31,8 @@ SPDX-License-Identifier: Apache-2.0
   <table class="table table-striped table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 15%">Caption</th>
         <th style="width: 10%">Name</th>
+        <th style="width: 15%">Caption</th>
         <th style="width: 30%">Referenced By</th>
         <th>Description</th>
       </tr>
@@ -41,8 +41,8 @@ SPDX-License-Identifier: Apache-2.0
       <%= for {name, map} <- @data do %>
         <% path = Routes.static_path(@conn, "/profiles/" <> name) %>
         <tr>
-          <td class="name"><a href="<%= path %>"><%= raw format_caption(name, map) %></a></td>
-          <td><a href="<%= path %>"><%= name %></a></td>
+          <td class="name"><a href="<%= path %>"><%= name %></a></td>
+          <td><a href="<%= path %>"><%= raw format_caption(name, map) %></a></td>
           <td><%= raw profile_links(@conn, map[:name], map[:_links], :collapse) %></td>
           <td><%= raw map[:description] %></td>
         </tr>
