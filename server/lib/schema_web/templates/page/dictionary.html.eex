@@ -46,7 +46,7 @@ SPDX-License-Identifier: Apache-2.0
           <td><%= raw format_attribute_caption(@conn, key, field) %></td>
           <td class="extensions"><%= raw format_type(@conn, field) %></td>
           <td class="extensions"><%= raw dictionary_links(@conn, key, field[:_links]) %></td>
-          <td><%= raw format_desc(@conn, key, field) %></td>
+          <td><%= raw format_dictionary_attribute_desc(@conn, key, field) %></td>
         </tr>
       <% end %>
     </tbody>

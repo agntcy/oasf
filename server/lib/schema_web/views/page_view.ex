@@ -406,16 +406,20 @@ defmodule SchemaWeb.PageView do
 
     case Map.get(field, :regex) do
       nil ->
-        case max_len do
-          "" ->
-            format_values(Map.get(field, :values))
-
-          len ->
-            len
+        if max_len == "" do
+          format_values(Map.get(field, :values))
+        else
+          max_len
         end
 
       r ->
-        max_len <> "<br>" <> r
+        safe_r = r |> html_escape() |> safe_to_string()
+
+        if max_len == "" do
+          safe_r
+        else
+          max_len <> "<br>" <> safe_r
+        end
     end
   end
 
@@ -482,37 +486,61 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  @spec format_desc(any, String.t() | atom(), map()) :: any
-  def format_desc(conn, key, obj) do
-    append_source_references(conn, base_format_desc(conn, key, obj), "<p><hr>", obj)
+  @spec format_attribute_desc(any, String.t() | atom(), map()) :: any
+  def format_attribute_desc(conn, attribute_key, attribute) do
+    append_source_references(
+      conn,
+      base_format_attribute_desc(conn, attribute_key, attribute, false),
+      "<p><hr>",
+      attribute
+    )
   end
 
-  @spec base_format_desc(any, String.t() | atom(), map()) :: any
-  defp base_format_desc(conn, key, obj) do
-    description = description(obj)
+  @spec format_dictionary_attribute_desc(any, String.t() | atom(), map()) :: any
+  def format_dictionary_attribute_desc(conn, attribute_key, attribute) do
+    append_source_references(
+      conn,
+      base_format_attribute_desc(conn, attribute_key, attribute, true),
+      "<p><hr>",
+      attribute
+    )
+  end
 
-    case Map.get(obj, :enum) do
-      nil ->
-        [description]
+  @spec base_format_attribute_desc(any, String.t() | atom(), map(), boolean()) :: any
+  defp base_format_attribute_desc(conn, attribute_key, attribute, is_dictionary_view) do
+    description = description(attribute)
 
-      values ->
+    cond do
+      Map.has_key?(attribute, :enum) or Map.has_key?(attribute, :sibling) ->
+        enum_description(conn, description, attribute_key, attribute)
+
+      Map.has_key?(attribute, :_sibling_of) ->
+        enum_sibling_description(description, attribute, is_dictionary_view)
+
+      true ->
+        description
+    end
+  end
+
+  defp enum_description(conn, description, attribute_key, attribute) do
+    enum_values_table =
+      if Map.has_key?(attribute, :enum) do
+        enum_values = attribute[:enum]
+
         sorted =
-          if Map.get(obj, :type) == "integer_t" do
+          if Map.get(attribute, :type) == "integer_t" do
             Enum.sort(
-              values,
+              enum_values,
               fn {k1, _}, {k2, _} ->
                 String.to_integer(Atom.to_string(k1)) >= String.to_integer(Atom.to_string(k2))
               end
             )
           else
-            Enum.sort(values, fn {k1, _}, {k2, _} -> k1 >= k2 end)
+            Enum.sort(enum_values, fn {k1, _}, {k2, _} -> k1 >= k2 end)
           end
 
         [
-          description,
-          """
-          <table class="mt-1 table-borderless"><tbody>
-          """,
+          "<table class=\"mt-1 table-borderless\"><tbody>",
           Enum.reduce(
             sorted,
             [],
@@ -520,15 +548,15 @@ defmodule SchemaWeb.PageView do
               id = to_string(id)
 
               [
-                "<tr class='bg-transparent'><td style='width: 25px' class='text-right' id='",
-                to_string(key),
+                "<tr class=\"bg-transparent\"><td style=\"width: 25px\" class=\"text-right\" id=\"",
+                to_string(attribute_key),
                 "-",
                 id,
-                "'><code>",
+                "\"><code>",
                 id,
-                "</code></td><td class='textnowrap'>",
+                "</code></td><td class=\"textnowrap\">",
                 Map.get(item, :caption, id),
-                "<div class='text-secondary'>",
+                "<div class=\"text-secondary\">",
                 append_source_references(conn, description(item), item),
                 "</div></td><tr>" | acc
               ]
@@ -536,6 +564,42 @@ defmodule SchemaWeb.PageView do
           ),
           "</tbody></table>"
         ]
+      else
+        ""
+      end
+
+    [
+      description,
+      enum_values_table,
+      if Map.has_key?(attribute, :sibling) do
+        [
+          "<div class=\"mt-2\">ℹ️ This is an enum attribute; its string sibling is <code>",
+          to_string(attribute[:sibling]),
+          "</code>.</div>"
+        ]
+      else
+        [
+          "<div class=\"mt-2\">ℹ️ This is an enum attribute. </div>"
+        ]
+      end
+    ]
+  end
+
+  defp enum_sibling_description(description, attribute, is_dictionary_view) do
+    if is_dictionary_view do
+      [
+        description,
+        "<div class=\"mt-2\">ℹ️ This is the string sibling of enum attribute <code>",
+        to_string(attribute[:_sibling_of]),
+        "</code> but can also be used independently. See specific usage.</div>"
+      ]
+    else
+      [
+        description,
+        "<div class=\"mt-2\">ℹ️ This is the string sibling of enum attribute <code>",
+        to_string(attribute[:_sibling_of]),
+        "</code>.</div>"
+      ]
     end
   end
 
@@ -546,6 +610,10 @@ defmodule SchemaWeb.PageView do
 
   @spec append_source_references(any(), any(), map()) :: any()
   defp append_source_references(conn, html, prefix_html, obj) do
+    if obj[:family] == "skill" do
+      IO.inspect(obj, label: "append_source_references")
+    end
+
     source = obj[:source]
     references = obj[:references]
     enum = obj[:is_enum]
@@ -591,11 +659,18 @@ defmodule SchemaWeb.PageView do
                     "</a>",
                     "</div>"
                   ]
-                end)
+                end),
+                "</dd>",
+                "<div class=\"mt-2\">ℹ️ This is an enum attribute. </div>"
               ]
             else
               ""
             end
+
+          "class_t" ->
+            [
+              "<div class=\"mt-2\">ℹ️ This is an enum attribute. </div>"
+            ]
 
           _ ->
             ""
