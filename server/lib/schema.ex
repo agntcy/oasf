@@ -746,7 +746,13 @@ defmodule Schema do
   end
 
   defp reduce_data(object) do
-    delete_links(object) |> Map.drop([:_source, :_source_patched])
+    Map.drop(object, internal_keys(object))
+  end
+
+  defp internal_keys(map) do
+    Enum.filter(Map.keys(map), fn key ->
+      String.starts_with?(to_string(key), "_")
+    end)
   end
 
   defp reduce_attributes(data) do
