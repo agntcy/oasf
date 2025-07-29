@@ -186,6 +186,23 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
     },
+    "domain": {
+      "caption": "Domain",
+      "description": "A domain that the agent can operate in.",
+      "type": "class_t",
+      "class_type": "base_domain",
+      "family": "domain",
+      "is_enum": true
+    },
+    "domains": {
+      "caption": "Domains",
+      "description": "Domains that the agent can operate in.",
+      "type": "class_t",
+      "class_type": "base_domain",
+      "family": "domain",
+      "is_enum": true,
+      "is_array": true
+    },
     "env_deps": {
       "caption": "Values for Dependencies",
       "description": "List of environment variable values to be set for the agent dependencies.",
@@ -538,7 +555,7 @@
     },
     "skill": {
       "caption": "Skill",
-      "description": "A skill that apply to an agent.",
+      "description": "A skill that applies to an agent.",
       "type": "class_t",
       "class_type": "base_skill",
       "family": "skill",
