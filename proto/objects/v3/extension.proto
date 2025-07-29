@@ -13,7 +13,6 @@ import "google/protobuf/struct.proto";
 message Extension {
   // Name of the extension.
   // Can be used as a fully qualified name.
-  // For example, "org.agntcy.oasf.schema/features/<feature-name>"
   string name = 1;
 
   // Version of the extension.

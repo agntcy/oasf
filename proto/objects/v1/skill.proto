@@ -6,9 +6,6 @@ syntax = "proto3";
 package objects.v1;
 
 // A specific skills that an agent is capable of performing.
-// Specs: https://schema.oasf.agntcy.org/skills.
-//
-// Example (https://schema.oasf.agntcy.org/skills/contextual_comprehension)
 message Skill {
   // Additional metadata for this skill.
   map<string, string> annotations = 1;
