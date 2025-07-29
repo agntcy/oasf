@@ -5,23 +5,23 @@
   "name": "base_feature",
   "attributes": {
     "name": {
-      "description": "The agent extension name.",
+      "description": "The name as a unique identifier of the extension.",
       "requirement": "required"
     },
     "version": {
       "caption": "Version",
-      "description": "The agent extension version. For example: <code>1.0.0-alpha.2</code>.",
+      "description": "The version of the extension. For example: <code>1.0.0-alpha.2</code>.",
       "requirement": "optional"
     },
     "annotations": {
       "caption": "Annotations",
-      "description": "Additional metadata associated with the agent extension.",
+      "description": "Additional metadata associated with the extension.",
       "requirement": "optional"
     },
     "data": {
       "reference": "extension_data",
       "caption": "Data",
-      "description": "The data associated with the agent extension.",
+      "description": "The data associated with the extension.",
       "requirement": "required"
     }
   }
