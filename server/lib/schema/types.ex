@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule Schema.Types do
-  @schema_uri "schema.oasf.agntcy.org"
+  @schema_uri "schema.oasf.outshift.com"
 
   @moduledoc """
   Schema types and helpers functions to make unique identifiers.
