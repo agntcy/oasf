@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule Schema.Types do
-  @schema_addr "schema.oasf.agntcy.org"
+  @schema_uri "schema.oasf.agntcy.org"
 
   @moduledoc """
   Schema types and helpers functions to make unique identifiers.
@@ -48,10 +48,10 @@ defmodule Schema.Types do
   Makes longer class name from class type/family, category and name.
   """
   def long_class_name(family, name) do
-    "#{@schema_addr}/#{family}s/#{name}"
+    "#{@schema_uri}/#{family}s/#{name}"
   end
 
   def is_oasf_class?(name) do
-    String.starts_with?(name, @schema_addr)
+    String.starts_with?(name, @schema_uri)
   end
 end
