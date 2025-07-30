@@ -258,7 +258,9 @@ defmodule Schema.JsonSchema do
     type = attr[:object_type]
 
     if attr[:is_enum] do
-      children_objects = Utils.find_children(Schema.objects(), type)
+      children_objects =
+        Utils.find_children(Schema.all_objects(), type)
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
 
       refs =
         Enum.map(children_objects, fn item -> %{"$ref" => make_object_ref(item[:name])} end)
@@ -282,7 +284,9 @@ defmodule Schema.JsonSchema do
           _ -> schema
         end
 
-      children_classes = Utils.find_children(all_classes_fn, type)
+      children_classes =
+        Utils.find_children(all_classes_fn, type)
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
 
       refs =
         if family == "feature" do
