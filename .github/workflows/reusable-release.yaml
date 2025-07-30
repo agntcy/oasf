@@ -72,7 +72,6 @@ jobs:
     name: Release
     needs:
       - images
-      - chart
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
