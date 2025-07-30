@@ -572,7 +572,9 @@ defmodule SchemaWeb.PageView do
       if enum do
         case obj[:type] do
           "object_t" ->
-            children = Schema.Utils.find_children(Schema.objects(), obj[:object_type])
+            children =
+              Schema.Utils.find_children(Schema.all_objects(), obj[:object_type])
+              |> Enum.reject(fn item -> item[:hidden?] == true end)
 
             if children != nil and !Enum.empty?(children) do
               [

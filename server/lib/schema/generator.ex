@@ -882,6 +882,7 @@ defmodule Schema.Generator do
       if field[:is_enum] do
         # Filter to include only children classes that are not hidden
         Utils.find_children(all_classes_fn, field[:class_type])
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
         |> Enum.map(&class_fn.(&1.name))
         |> Enum.filter(&(&1 != nil))
       else
@@ -900,7 +901,8 @@ defmodule Schema.Generator do
   defp get_valid_object(field) do
     valid_objects =
       if field[:is_enum] do
-        Utils.find_children(Schema.objects(), field[:object_type])
+        Utils.find_children(Schema.all_objects(), field[:object_type])
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
         |> Enum.map(fn descendant ->
           descendant[:name]
           |> String.to_atom()

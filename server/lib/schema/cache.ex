@@ -106,20 +106,26 @@ defmodule Schema.Cache do
     # Missing description warnings, datetime attributes, and profiles
     objects =
       objects
-      |> Utils.update_objects(dictionary_attributes)
+      |> Utils.update_objects(all_objects, dictionary_attributes)
       |> update_objects()
       |> final_check(dictionary_attributes)
 
     skills =
-      update_classes(skills, objects)
+      skills
+      |> Utils.update_classes(all_skills)
+      |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
     domains =
-      update_classes(domains, objects)
+      domains
+      |> Utils.update_classes(all_domains)
+      |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
     features =
-      update_classes(features, objects)
+      features
+      |> Utils.update_classes(all_features)
+      |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
     base_class = final_check(:base_class, base_class, dictionary_attributes)
@@ -597,13 +603,12 @@ defmodule Schema.Cache do
 
     classes =
       classes
+      # remove intermediate hidden classes
+      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
         enrich_class(class_tuple, categories_attributes, classes, version)
       end)
-      |> Utils.update_classes()
-      # remove intermediate hidden classes
-      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
 
     {classes, all_classes, categories}
   end
