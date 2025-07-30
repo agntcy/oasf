@@ -1,8 +1,0 @@
-{
-  "caption": "Specific Device",
-  "description": "A object based on Device that exists simply to be a grandchild of Endpoint.",
-  "extends": "device",
-  "name": "specific_device",
-  "attributes": {
-  }
-}
