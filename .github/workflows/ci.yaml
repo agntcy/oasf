@@ -55,6 +55,7 @@ jobs:
       targets: ${{ steps.targets.outputs.targets }}
       image_tag: ${{ steps.resolve.outputs.image_tag }}
       release_tag: ${{ steps.resolve.outputs.release_tag }}
+      helm_release_tag: ${{ steps.resolve.outputs.helm_release_tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -73,9 +74,17 @@ jobs:
             image_tag="${{ format('{0}', github.sha) }}"
           fi
 
+          # Original release_tag
+          RAW_RELEASE_TAG="${GITHUB_REF#refs/tags/}"
+
+          # Calculate helm_release_tag using bash parameter expansion
+          # This removes the "helm/" prefix if it exists
+          HELM_RELEASE_TAG="${RAW_RELEASE_TAG#helm/}"
+
           # Export vars
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
-          echo "release_tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$RAW_RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "helm_release_tag=$HELM_RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
       - name: List targets
         id: targets
@@ -127,18 +136,10 @@ jobs:
     needs:
       - prepare
       - verify
-    runs-on: ubuntu-latest
-    steps:
-      - name: Calculate Helm Release Tag
-        id: calculate_helm_tag
-        run: |
-          RAW_RELEASE_TAG="${{ needs.prepare.outputs.release_tag }}"
-          HELM_RELEASE_TAG="${RAW_RELEASE_TAG#helm/}"
-          echo "helm_release_tag=$HELM_RELEASE_TAG" >> "$GITHUB_OUTPUT"
     uses: ./.github/workflows/reusable-helm-release.yaml
     with:
       image_repo: ghcr.io/agntcy
-      release_tag: ${{ steps.calculate_helm_tag.outputs.helm_release_tag }}
+      release_tag: ${{ needs.prepare.outputs.helm_release_tag }}
 
   success:
     name: Success
@@ -149,8 +150,8 @@ jobs:
       - prepare
       - build
       - test
-      - release # This job might be skipped
-      - helm_release # This job might be skipped
+      - release
+      - helm_release
     runs-on: ubuntu-latest
     steps:
       - name: Echo Success
