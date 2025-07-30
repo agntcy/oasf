@@ -514,4 +514,43 @@ defmodule Schema.Utils do
       [elem | find_children(map, elem[:name])]
     end)
   end
+
+  @spec add_sibling_of_to_attributes(list() | map() | nil) :: list() | nil
+  def add_sibling_of_to_attributes(nil), do: nil
+
+  def add_sibling_of_to_attributes(attributes) when is_list(attributes) do
+    _add_sibling_of_to_attributes(attributes)
+  end
+
+  def add_sibling_of_to_attributes(attributes) when is_map(attributes) do
+    attributes
+    |> _add_sibling_of_to_attributes()
+    |> Enum.into(%{})
+  end
+
+  defp _add_sibling_of_to_attributes(attributes) do
+    # Enum attributes point to their enum sibling through the :sibling attribute,
+    # however the siblings do _not_ refer back to the related enum attribute, so let's build that.
+    sibling_of_map =
+      Enum.reduce(attributes, %{}, fn {attribute_key, attribute}, acc ->
+        if Map.has_key?(attribute, :sibling) do
+          Map.put(acc, String.to_atom(attribute[:sibling]), attribute_key)
+        else
+          acc
+        end
+      end)
+
+    Enum.map(attributes, fn {attribute_key, attribute} ->
+      attribute =
+        case sibling_of_map[attribute_key] do
+          nil ->
+            attribute
+
+          enum_attribute_key ->
+            Map.put(attribute, :_sibling_of, enum_attribute_key)
+        end
+
+      {attribute_key, attribute}
+    end)
+  end
 end

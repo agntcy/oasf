@@ -108,16 +108,16 @@ defmodule SchemaWeb.PageController do
         extension -> "#{extension}/#{id}"
       end
 
-    data = SchemaController.get_profiles(params)
+    profiles = SchemaController.get_profiles(params)
 
-    case Map.get(data, name) do
+    case Schema.profile(profiles, name) do
       nil ->
         send_resp(conn, 404, "Not Found: #{name}")
 
       profile ->
         render(conn, "profile.html",
           extensions: Schema.extensions(),
-          profiles: data,
+          profiles: profiles,
           data: sort_attributes_by_key(profile)
         )
     end

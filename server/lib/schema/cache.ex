@@ -394,7 +394,8 @@ defmodule Schema.Cache do
   end
 
   defp update_attributes(attributes, dictionary_attributes) do
-    Enum.map(attributes, fn {name, attribute} ->
+    attributes
+    |> Enum.map(fn {name, attribute} ->
       # Use referece if exists instead of the name
       reference =
         if Map.has_key?(attribute, :reference) do
@@ -412,6 +413,7 @@ defmodule Schema.Cache do
           {name, Utils.deep_merge(base, attribute)}
       end
     end)
+    |> Utils.add_sibling_of_to_attributes()
   end
 
   defp enrich_ex(
@@ -1179,15 +1181,6 @@ defmodule Schema.Cache do
   defp update_dictionary(dictionary) do
     types = get_in(dictionary, [:types, :attributes])
 
-    sibling_of_map =
-      Enum.reduce(dictionary[:attributes], %{}, fn {attribute_key, attribute}, acc ->
-        if Map.has_key?(attribute, :sibling) do
-          Map.put(acc, String.to_atom(attribute[:sibling]), attribute_key)
-        else
-          acc
-        end
-      end)
-
     Map.update!(dictionary, :attributes, fn attributes ->
       Enum.into(attributes, %{}, fn {attribute_key, attribute} ->
         type = attribute[:type] || "object_t"
@@ -1201,15 +1194,6 @@ defmodule Schema.Cache do
 
             _type ->
               attribute
-          end
-
-        attribute =
-          case sibling_of_map[attribute_key] do
-            nil ->
-              attribute
-
-            enum_attribute_key ->
-              Map.put(attribute, :_sibling_of, enum_attribute_key)
           end
 
         {attribute_key, attribute}
@@ -1264,6 +1248,7 @@ defmodule Schema.Cache do
     |> copy_new(from, :object_type)
     |> copy_new(from, :source)
     |> copy_new(from, :references)
+    |> copy_new(from, :sibling)
   end
 
   defp copy_new(to, from, key) do
