@@ -116,27 +116,10 @@ defmodule Schema.Generator do
   end
 
   defp generate_sample_class(class) do
-    data =
-      generate_sample(class)
-      |> generate_class_name(class)
-
-    case data[:activity_id] do
-      nil ->
-        data
-
-      activity_id ->
-        uid =
-          if activity_id >= 0 do
-            Types.type_uid(data[:id], activity_id)
-          else
-            @other
-          end
-
-        Map.put(data, :type_uid, uid)
-        |> put_type_name(uid, class)
-        |> Map.delete(:raw_data)
-        |> Map.delete(:unmapped)
-    end
+    generate_sample(class)
+    |> generate_class_name(class)
+    |> Map.delete(:raw_data)
+    |> Map.delete(:unmapped)
   end
 
   defp generate_class_name(data, class) do
@@ -184,18 +167,6 @@ defmodule Schema.Generator do
       |> Enum.reduce(uid, fn {_, file}, next -> update_classes(file, next) end)
     else
       update_class_uid(path, uid)
-    end
-  end
-
-  defp put_type_name(data, uid, class) do
-    case get_in(class, [:attributes, :type_uid, :enum]) do
-      nil ->
-        data
-
-      enum ->
-        key = Integer.to_string(uid) |> String.to_atom()
-        name = get_in(enum, [key, :caption]) || "Unknown"
-        Map.put(data, :type_name, name)
     end
   end
 
