@@ -12,17 +12,19 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="col-md-auto fixed-right mt-2">
     <div class="navbar-expand-md">
-      <div class="form-inline">
-        <ul class="navbar-nav">
-          <li class="nav-item mr-2">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
-          </li>
-          <li class="nav-item">
-            <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
-          </li>
-        </ul>
-      </div>
+      <ul class="navbar-nav">
+        <li class="nav-item mr-2">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
+        </li>
+        <li class="nav-item">
+          <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
+          <div class="mt-1">
+            <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+            <label for="show-deprecated">Show deprecated</label>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
@@ -42,7 +44,7 @@ SPDX-License-Identifier: Apache-2.0
         <% path = Routes.static_path(@conn, "/profiles/" <> name) %>
         <tr>
           <td class="name"><a href="<%= path %>"><%= name %></a></td>
-          <td><a href="<%= path %>"><%= raw format_caption(name, map) %></a></td>
+          <td><%= raw format_caption(name, map) %></td>
           <td><%= raw profile_links(@conn, map[:name], map[:_links], :collapse) %></td>
           <td><%= raw map[:description] %></td>
         </tr>
@@ -50,6 +52,8 @@ SPDX-License-Identifier: Apache-2.0
     </tbody>
   </table>
 </div>
+
 <script>
   init_class_profiles();
+  init_show_deprecated();
 </script>

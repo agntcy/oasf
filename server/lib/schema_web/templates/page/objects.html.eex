@@ -12,23 +12,25 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="col-md-auto fixed-right mt-2">
     <div class="navbar-expand-md">
-      <div class="form-inline">
-        <ul class="navbar-nav">
-          <li class="nav-item mr-2">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
-          </li>
-          <li class="nav-item">
-            <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
-          </li>
-        </ul>
-      </div>
+      <ul class="navbar-nav">
+        <li class="mr-2">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
+        </li>
+        <li>
+          <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
+          <div class="mt-1">
+            <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+            <label for="show-deprecated">Show deprecated</label>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
 
 <div class="mt-4">
-  <table class="table table-striped table-bordered sortable">
+  <table class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
         <th style="width: 10%">Name</th>
@@ -38,19 +40,21 @@ SPDX-License-Identifier: Apache-2.0
       </tr>
     </thead>
     <tbody class="searchable">
-      <%= for {key, map} <- @data do %>
-        <% name = Atom.to_string(key) %>
-        <% path = Routes.static_path(@conn, "/objects/" <> name) %>
-        <tr class="oasf-class" <%= raw format_profiles(map[:profiles])%>>
-          <td class="name"><a href="<%= path %>"><%= name %></a></td>
-          <td class="extensions"><%= raw format_attribute_caption(@conn, name, map) %></td>
-          <td class="extensions"><%= raw object_links(@conn, map[:name], map[:_links], :collapse) %></td>
-          <td><%= raw description(map) %></td>
+      <%= for {object_key, object} <- @data do %>
+        <% object_key_str = Atom.to_string(object_key) %>
+        <% object_path = Routes.static_path(@conn, "/objects/" <> object_key_str) %>
+        <tr class=<%= show_deprecated_css_classes(object, "oasf-class") %>" <%= raw format_profiles(object[:profiles])%>>
+          <td class="name"><a href="<%= object_path %>"><%= object_key_str %></a></td>
+          <td class="extensions"><%= raw format_attribute_caption(@conn, object_key_str, object) %></td>
+          <td class="extensions"><%= raw object_links(@conn, object[:name], object[:_links], :collapse) %></td>
+          <td><%= raw description(object) %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
 </div>
+
 <script>
   init_class_profiles();
+  init_show_deprecated();
 </script>
