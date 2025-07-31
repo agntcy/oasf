@@ -308,11 +308,11 @@ table.table-borderless tr td {
 
 tr.thead-color {
   background-color: #187adc;
-  color: lightgrey;
+  color: white;
 }
 
 tr th a {
-  color: lightgrey;
+  color: white;
 }
 
 tr th a:hover {
@@ -425,16 +425,45 @@ input[type="checkbox"]:hover {
 }
 
 .indent-level-0 {
-  padding: 0 10px !important;
-  font-size: 0.8rem;
+  padding: 4px 10px 0 10px !important;
 }
 
 .indent-level-1 {
-  padding: 0 10px 0 20px !important;
-  font-size: 0.75rem;
+  padding: 0 10px 0 30px !important;
 }
 
 .indent-level-2 {
-  padding: 0 10px 0 40px !important;
-  font-size: 0.7rem;
+  padding: 0 10px 0 60px !important;
+}
+
+.multi-col {
+  -webkit-columns: 4 18rem;
+     -moz-columns: 4 18rem;
+          columns: 4 18rem;
+}
+
+section.category {
+  border: 1px solid;
+  border-color: rgb(222, 226, 230);
+  padding: 1em;
+  margin-bottom: 1em;
+  -webkit-break-inside: avoid;
+     -moz-break-inside: avoid;
+          break-inside: avoid;
+}
+
+section.category header {
+  background-color: #187adc;
+  color: white;
+  font-weight: bold;
+  padding: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+section.category header a {
+  color: white;
+}
+
+section.category div.ocsf-class {
+  margin-left: 1em;
 }
