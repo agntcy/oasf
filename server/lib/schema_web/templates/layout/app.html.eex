@@ -66,8 +66,8 @@
         });
       });
 
-      // init the dropdown filters
-      init_select();
+      // init the attributes dropdown filters
+      init_selected_attributes();
 
       $("a.nav-item.nav-link.active").removeClass("active");
       switch (window.location.pathname) {
