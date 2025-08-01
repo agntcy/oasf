@@ -887,8 +887,7 @@ defmodule Schema.Cache do
         # that way the previous modifications are taken into account
         case Map.get(acc, base_key, Map.get(items, base_key)) do
           nil ->
-            Logger.error("#{key} #{kind} attempted to patch invalid item: #{base_key}")
-            System.stop(1)
+            error("#{key} #{kind} attempted to patch invalid item: #{base_key}")
             acc
 
           base ->
@@ -964,8 +963,7 @@ defmodule Schema.Cache do
 
         case parent_item do
           nil ->
-            Logger.error("#{inspect(item[:name])} extends undefined item: #{inspect(extends)}")
-            System.stop(1)
+            error("#{inspect(item[:name])} extends undefined item: #{inspect(extends)}")
 
           base ->
             base = resolve_extends(items, base)
