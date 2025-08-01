@@ -26,6 +26,9 @@ defmodule Schema.Repo do
   @spec version :: String.t()
   def version(), do: Agent.get(__MODULE__, fn schema -> Cache.version(schema) end)
 
+  @spec parsed_version :: Utils.version_or_error_t()
+  def parsed_version(), do: Agent.get(__MODULE__, fn schema -> Cache.parsed_version(schema) end)
+
   @spec profiles :: map()
   def profiles() do
     Agent.get(__MODULE__, fn schema -> Cache.profiles(schema) end)

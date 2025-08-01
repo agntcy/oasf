@@ -15,6 +15,7 @@ defmodule Schema.Cache do
 
   @enforce_keys [
     :version,
+    :parsed_version,
     :profiles,
     :dictionary,
     :base_class,
@@ -34,7 +35,22 @@ defmodule Schema.Cache do
     :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class objects all_objects skills all_skills main_skills domains all_domains main_domains features all_features main_features
+    version
+    parsed_version
+    profiles
+    dictionary
+    base_class
+    objects
+    all_objects
+    skills
+    all_skills
+    main_skills
+    domains
+    all_domains
+    main_domains
+    features
+    all_features
+    main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -61,6 +77,12 @@ defmodule Schema.Cache do
   @spec init() :: __MODULE__.t()
   def init() do
     version = JsonReader.read_version()
+    parsed_version = Utils.parse_version(version[:version])
+
+    if not is_map(parsed_version) do
+      {:error, error_message, original_version} = parsed_version
+      error("Schema version #{inspect(original_version)} is invalid: #{error_message}")
+    end
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
@@ -150,6 +172,7 @@ defmodule Schema.Cache do
 
     %__MODULE__{
       version: version,
+      parsed_version: parsed_version,
       profiles: profiles,
       dictionary: dictionary,
       base_class: base_class,
@@ -184,6 +207,9 @@ defmodule Schema.Cache do
 
   @spec version(__MODULE__.t()) :: String.t()
   def version(%__MODULE__{version: version}), do: version[:version]
+
+  @spec parsed_version(__MODULE__.t()) :: Utils.version_or_error_t()
+  def parsed_version(%__MODULE__{parsed_version: parsed_version}), do: parsed_version
 
   @spec profiles(__MODULE__.t()) :: map()
   def profiles(%__MODULE__{profiles: profiles}), do: profiles

@@ -20,6 +20,9 @@ defmodule Schema do
   @spec version :: String.t()
   def version(), do: Repo.version()
 
+  @spec parsed_version :: Utils.version_or_error_t()
+  def parsed_version(), do: Repo.parsed_version()
+
   @spec build_version :: String.t()
   def build_version() do
     Application.spec(:schema_server)

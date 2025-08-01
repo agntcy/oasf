@@ -13,6 +13,17 @@ defmodule Schema.Utils do
           optional(:attribute_keys) => nil | MapSet.t(String.t())
         }
 
+  @type version_t() :: %{
+          :major => integer(),
+          :minor => integer(),
+          :patch => integer(),
+          optional(:prerelease) => nil | String.t()
+        }
+
+  @type version_error_t() :: {:error, String.t(), any()}
+
+  @type version_or_error_t() :: version_t() | version_error_t()
+
   require Logger
 
   @spec to_uid(binary() | atom()) :: atom
@@ -552,5 +563,115 @@ defmodule Schema.Utils do
 
       {attribute_key, attribute}
     end)
+  end
+
+  @version_regex ~r/^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>.+))?$/
+
+  @spec version_regex_source() :: String.t()
+  def version_regex_source(), do: @version_regex.source
+
+  @spec parse_version(any()) :: version_or_error_t()
+  def parse_version(s) when is_binary(s) do
+    captured = Regex.named_captures(@version_regex, s)
+
+    if captured do
+      major = parse_integer(captured["major"])
+      minor = parse_integer(captured["minor"])
+      patch = parse_integer(captured["patch"])
+      prerelease = captured["prerelease"]
+
+      if major && minor && patch do
+        if prerelease && prerelease != "" do
+          %{major: major, minor: minor, patch: patch, prerelease: prerelease}
+        else
+          %{major: major, minor: minor, patch: patch}
+        end
+      else
+        # This should never happen due to regex, but here to be defensive
+        {:error, "non-integral", s}
+      end
+    else
+      {:error, "malformed", s}
+    end
+  end
+
+  def parse_version(v) do
+    {:error, "not a string", v}
+  end
+
+  defp parse_integer(s) do
+    case Integer.parse(s) do
+      {number, ""} -> number
+      _ -> nil
+    end
+  end
+
+  @spec version_is_initial_development?(version_or_error_t()) :: boolean()
+  def version_is_initial_development?(v) when is_map(v) do
+    v[:major] == 0
+  end
+
+  def version_is_initial_development?(v) when is_tuple(v), do: false
+
+  @spec version_is_prerelease?(version_or_error_t()) :: boolean()
+  def version_is_prerelease?(v) when is_map(v) do
+    prerelease = v[:prerelease]
+    is_binary(prerelease) and prerelease != ""
+  end
+
+  def version_is_prerelease?(v) when is_tuple(v), do: false
+
+  @spec version_sorter(version_or_error_t(), version_or_error_t()) :: boolean()
+  def version_sorter(v1, v2) when is_map(v1) and is_map(v2) do
+    cond do
+      v1 == v2 ->
+        true
+
+      v1[:major] < v2[:major] ->
+        true
+
+      v1[:major] == v2[:major] and v1[:minor] < v2[:minor] ->
+        true
+
+      v1[:major] == v2[:major] and v1[:minor] == v2[:minor] and v1[:patch] < v2[:patch] ->
+        true
+
+      v1[:major] == v2[:major] and v1[:minor] == v2[:minor] and v1[:patch] == v2[:patch] ->
+        cond do
+          Map.has_key?(v1, :prerelease) and Map.has_key?(v2, :prerelease) ->
+            v1[:prerelease] <= v2[:prerelease]
+
+          Map.has_key?(v1, :prerelease) and not Map.has_key?(v2, :prerelease) ->
+            true
+
+          not Map.has_key?(v1, :prerelease) and Map.has_key?(v2, :prerelease) ->
+            false
+
+          # Covered by v1 == v2:
+          #   not Map.has_key?(v1, :prerelease) and not Map.has_key?(v2, :prerelease)
+
+          true ->
+            true
+        end
+
+      true ->
+        false
+    end
+  end
+
+  def version_sorter(v1, v2) do
+    case {v1, v2} do
+      {{:error, _, original1}, {:error, _, original2}} ->
+        original1 <= original2
+
+      {{:error, _, _}, _} ->
+        true
+
+      {_, {:error, _, _}} ->
+        false
+
+      _ ->
+        false
+    end
   end
 end
