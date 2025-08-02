@@ -86,6 +86,9 @@
         case '/objects':
           $('#objects_id').addClass("active");
           break;
+        case '/data_types':
+          $('#data_type_id').addClass("active");
+          break;
       }
     });
   </script>
@@ -194,6 +197,9 @@
       <li id="objects_id"  class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects") %>'>Objects</a>
       </li>
+      <li id="data_type_id" class="nav-item">
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>Data Types</a>
+      </li>
 
       <div class="navbar-text">|</div>
 
@@ -201,10 +207,10 @@
         <div class="dropdown">
           Resources
           <div class="dropdown-content">
-            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
-            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
-            <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>OASF Data Types</a>
+            <a class="nav-link" target="_blank" href='https://docs.agntcy.org/oasf/open-agentic-schema-framework/'> Documentation</a>
             <a class="nav-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
+            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
+            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
           </div>
         </div>
       </li>
