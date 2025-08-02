@@ -20,6 +20,9 @@ defmodule Schema do
   @spec version :: String.t()
   def version(), do: Repo.version()
 
+  @spec parsed_version :: Utils.version_or_error_t()
+  def parsed_version(), do: Repo.parsed_version()
+
   @spec build_version :: String.t()
   def build_version() do
     Application.spec(:schema_server)
@@ -43,6 +46,16 @@ defmodule Schema do
   @spec profiles(Repo.extensions_t()) :: map()
   def profiles(extensions) do
     Repo.profiles(extensions)
+  end
+
+  def profile(profiles, name) do
+    case profiles[name] do
+      nil ->
+        nil
+
+      profile ->
+        Map.update!(profile, :attributes, &Schema.Utils.add_sibling_of_to_attributes/1)
+    end
   end
 
   @doc """
@@ -157,7 +170,10 @@ defmodule Schema do
     Returns the attribute dictionary including the extension.
   """
   @spec dictionary(Repo.extensions_t()) :: Cache.dictionary_t()
-  def dictionary(extensions), do: Repo.dictionary(extensions)
+  def dictionary(extensions) do
+    Repo.dictionary(extensions)
+    |> Map.update!(:attributes, &Schema.Utils.add_sibling_of_to_attributes/1)
+  end
 
   @doc """
     Returns the data types defined in dictionary.
@@ -746,7 +762,13 @@ defmodule Schema do
   end
 
   defp reduce_data(object) do
-    delete_links(object) |> Map.drop([:_source, :_source_patched])
+    Map.drop(object, internal_keys(object))
+  end
+
+  defp internal_keys(map) do
+    Enum.filter(Map.keys(map), fn key ->
+      String.starts_with?(to_string(key), "_")
+    end)
   end
 
   defp reduce_attributes(data) do

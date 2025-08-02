@@ -13,6 +13,17 @@ defmodule Schema.Utils do
           optional(:attribute_keys) => nil | MapSet.t(String.t())
         }
 
+  @type version_t() :: %{
+          :major => integer(),
+          :minor => integer(),
+          :patch => integer(),
+          optional(:prerelease) => nil | String.t()
+        }
+
+  @type version_error_t() :: {:error, String.t(), any()}
+
+  @type version_or_error_t() :: version_t() | version_error_t()
+
   require Logger
 
   @spec to_uid(binary() | atom()) :: atom
@@ -205,38 +216,38 @@ defmodule Schema.Utils do
   end
 
   defp update_data_types(attributes, types, objects) do
-    Enum.into(attributes, %{}, fn {name, value} ->
-      data =
-        if value[:type] == "object_t" do
-          update_object_type(name, value, objects)
+    Enum.into(attributes, %{}, fn {attribute_key, attribute} ->
+      attribute_update =
+        if attribute[:type] == "object_t" do
+          update_object_type(attribute_key, attribute, objects)
         else
-          update_data_type(name, value, types)
+          update_data_type(attribute_key, attribute, types)
         end
 
-      {name, data}
+      {attribute_key, attribute_update}
     end)
   end
 
-  defp update_object_type(name, value, objects) do
-    key = value[:object_type]
+  defp update_object_type(attribute_key, attribute, objects) do
+    object_key = attribute[:object_type]
 
-    case find_entity(objects, value, key) do
-      {key, nil} ->
-        Logger.warning("Undefined object type: #{key}, for #{name}")
-        Map.put(value, :object_name, "_undefined_")
+    case find_entity(objects, attribute, object_key) do
+      {object_key, nil} ->
+        Logger.error("Undefined object type: #{object_key}, for #{attribute_key}")
+        Map.put(attribute, :object_name, "_undefined_")
 
-      {key, object} ->
-        value
+      {object_key, object} ->
+        attribute
         |> Map.put(:object_name, object[:caption])
-        |> Map.put(:object_type, Atom.to_string(key))
+        |> Map.put(:object_type, Atom.to_string(object_key))
     end
   end
 
-  defp update_data_type(name, value, types) do
+  defp update_data_type(attribute_key, attribute, types) do
     type =
-      case value[:type] do
+      case attribute[:type] do
         nil ->
-          Logger.warning("Missing data type for: #{name}, will use string_t type")
+          Logger.error("Missing data type for: #{attribute_key}, will use string_t type")
           "string_t"
 
         t ->
@@ -245,11 +256,11 @@ defmodule Schema.Utils do
 
     case types[String.to_atom(type)] do
       nil ->
-        Logger.warning("Undefined data type: #{name}: #{type}")
-        value
+        Logger.error("Undefined data type: #{attribute_key}: #{type}")
+        attribute
 
       type ->
-        Map.put(value, :type_name, type[:caption])
+        Map.put(attribute, :type_name, type[:caption])
     end
   end
 
@@ -342,14 +353,14 @@ defmodule Schema.Utils do
                       update_links_fn.(item_attribute, link)
 
                     dictionary_attribute ->
-                      deep_merge(dictionary_attribute, item_attribute)
+                      deep_merge(item_attribute, dictionary_attribute)
                       |> update_links_fn.(link)
                   end
 
                 Map.put(dictionary_attributes, ext_key, data)
 
               _ ->
-                Logger.warning(
+                Logger.error(
                   "\"#{item[:caption]}\" uses undefined attribute:" <>
                     " #{item_attribute_key}: #{inspect(item_attribute)}"
                 )
@@ -513,5 +524,154 @@ defmodule Schema.Utils do
     |> Enum.flat_map(fn elem ->
       [elem | find_children(map, elem[:name])]
     end)
+  end
+
+  @spec add_sibling_of_to_attributes(list() | map() | nil) :: list() | nil
+  def add_sibling_of_to_attributes(nil), do: nil
+
+  def add_sibling_of_to_attributes(attributes) when is_list(attributes) do
+    _add_sibling_of_to_attributes(attributes)
+  end
+
+  def add_sibling_of_to_attributes(attributes) when is_map(attributes) do
+    attributes
+    |> _add_sibling_of_to_attributes()
+    |> Enum.into(%{})
+  end
+
+  defp _add_sibling_of_to_attributes(attributes) do
+    # Enum attributes point to their enum sibling through the :sibling attribute,
+    # however the siblings do _not_ refer back to the related enum attribute, so let's build that.
+    sibling_of_map =
+      Enum.reduce(attributes, %{}, fn {attribute_key, attribute}, acc ->
+        if Map.has_key?(attribute, :sibling) do
+          Map.put(acc, String.to_atom(attribute[:sibling]), attribute_key)
+        else
+          acc
+        end
+      end)
+
+    Enum.map(attributes, fn {attribute_key, attribute} ->
+      attribute =
+        case sibling_of_map[attribute_key] do
+          nil ->
+            attribute
+
+          enum_attribute_key ->
+            Map.put(attribute, :_sibling_of, enum_attribute_key)
+        end
+
+      {attribute_key, attribute}
+    end)
+  end
+
+  @version_regex ~r/^(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>.+))?$/
+
+  @spec version_regex_source() :: String.t()
+  def version_regex_source(), do: @version_regex.source
+
+  @spec parse_version(any()) :: version_or_error_t()
+  def parse_version(s) when is_binary(s) do
+    captured = Regex.named_captures(@version_regex, s)
+
+    if captured do
+      major = parse_integer(captured["major"])
+      minor = parse_integer(captured["minor"])
+      patch = parse_integer(captured["patch"])
+      prerelease = captured["prerelease"]
+
+      if major && minor && patch do
+        if prerelease && prerelease != "" do
+          %{major: major, minor: minor, patch: patch, prerelease: prerelease}
+        else
+          %{major: major, minor: minor, patch: patch}
+        end
+      else
+        # This should never happen due to regex, but here to be defensive
+        {:error, "non-integral", s}
+      end
+    else
+      {:error, "malformed", s}
+    end
+  end
+
+  def parse_version(v) do
+    {:error, "not a string", v}
+  end
+
+  defp parse_integer(s) do
+    case Integer.parse(s) do
+      {number, ""} -> number
+      _ -> nil
+    end
+  end
+
+  @spec version_is_initial_development?(version_or_error_t()) :: boolean()
+  def version_is_initial_development?(v) when is_map(v) do
+    v[:major] == 0
+  end
+
+  def version_is_initial_development?(v) when is_tuple(v), do: false
+
+  @spec version_is_prerelease?(version_or_error_t()) :: boolean()
+  def version_is_prerelease?(v) when is_map(v) do
+    prerelease = v[:prerelease]
+    is_binary(prerelease) and prerelease != ""
+  end
+
+  def version_is_prerelease?(v) when is_tuple(v), do: false
+
+  @spec version_sorter(version_or_error_t(), version_or_error_t()) :: boolean()
+  def version_sorter(v1, v2) when is_map(v1) and is_map(v2) do
+    cond do
+      v1 == v2 ->
+        true
+
+      v1[:major] < v2[:major] ->
+        true
+
+      v1[:major] == v2[:major] and v1[:minor] < v2[:minor] ->
+        true
+
+      v1[:major] == v2[:major] and v1[:minor] == v2[:minor] and v1[:patch] < v2[:patch] ->
+        true
+
+      v1[:major] == v2[:major] and v1[:minor] == v2[:minor] and v1[:patch] == v2[:patch] ->
+        cond do
+          Map.has_key?(v1, :prerelease) and Map.has_key?(v2, :prerelease) ->
+            v1[:prerelease] <= v2[:prerelease]
+
+          Map.has_key?(v1, :prerelease) and not Map.has_key?(v2, :prerelease) ->
+            true
+
+          not Map.has_key?(v1, :prerelease) and Map.has_key?(v2, :prerelease) ->
+            false
+
+          # Covered by v1 == v2:
+          #   not Map.has_key?(v1, :prerelease) and not Map.has_key?(v2, :prerelease)
+
+          true ->
+            true
+        end
+
+      true ->
+        false
+    end
+  end
+
+  def version_sorter(v1, v2) do
+    case {v1, v2} do
+      {{:error, _, original1}, {:error, _, original2}} ->
+        original1 <= original2
+
+      {{:error, _, _}, _} ->
+        true
+
+      {_, {:error, _, _}} ->
+        false
+
+      _ ->
+        false
+    end
   end
 end
