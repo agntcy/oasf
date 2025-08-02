@@ -1090,7 +1090,7 @@ defmodule Schema.Cache do
     list =
       Enum.reduce(attributes, [], fn {key, attribute}, acc ->
         missing_desc_warning(attribute[:description], name, key, dictionary)
-        add_datetime(Utils.find_entity(dictionary, map, key), key, attribute, acc)
+        add_datetime(find_attribute(dictionary, key, attribute[:_source]), key, attribute, acc)
       end)
 
     update_profiles(list, map, profiles, attributes)
@@ -1108,11 +1108,11 @@ defmodule Schema.Cache do
     :ok
   end
 
-  defp add_datetime({_k, nil}, _key, _attribute, acc) do
+  defp add_datetime(nil, _key, _attribute, acc) do
     acc
   end
 
-  defp add_datetime({_k, v}, key, attribute, acc) do
+  defp add_datetime(v, key, attribute, acc) do
     case Map.get(v, :type) do
       "timestamp_t" ->
         attribute =
