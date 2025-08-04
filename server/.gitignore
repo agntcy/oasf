@@ -44,3 +44,5 @@ erl_crash.dump
 
 # Ignore generated doc file
 priv/static/swagger.json
+
+/log

@@ -148,7 +148,7 @@ defmodule SchemaWeb.PageView do
 
   @spec format_attribute_name(String.t() | atom()) :: any
   def format_attribute_name(name) do
-    Path.basename(to_string(name))
+    Schema.Utils.descope(name)
   end
 
   @spec format_class_attribute_source(atom(), map(), String.t()) :: String.t()
