@@ -3,20 +3,22 @@ Copyright AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 ---%>
 
-<div class="row">
+<div class="row fade-in">
   <div class="col-md move-up">
-    <h3>
-      <%= @data[:caption] %>
-    </h3>
-    <div class="text-secondary">
+    <h3><%= @data[:caption] %></h3>
+    <div class="page-description">
       <%= raw @data[:description] %>
     </div>
   </div>
   <div class="navbar-nav col-md-auto fixed-right mt-2">
     <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
     <div class="mt-1">
-      <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
-      <label for="show-deprecated">Show deprecated</label>
+      <div class="show-deprecated-container">
+        <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)" class="show-deprecated-checkbox">
+        <label for="show-deprecated" class="show-deprecated-label">
+          <span class="show-deprecated-text">Show deprecated</span>
+        </label>
+      </div>
     </div>
   </div>
 </div>

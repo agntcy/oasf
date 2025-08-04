@@ -79,6 +79,72 @@ defmodule SchemaWeb.PageView do
     end
   end
 
+  def profile_badges(conn, class, profiles) do
+    case class[:profiles] || [] do
+      [] ->
+        ""
+
+      list ->
+        applicable_profiles =
+          Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
+
+        if Enum.empty?(applicable_profiles) do
+          ""
+        else
+          badges =
+            Enum.map(applicable_profiles, fn name ->
+              caption = get_in(profiles, [name, :caption]) || name
+              path = Routes.static_path(conn, "/profiles/" <> name)
+
+              [
+                "<span class='profile-badge'>",
+                "<a href='",
+                path,
+                "' title='Profile: ",
+                caption,
+                "'>",
+                "<i class='fas fa-tag'></i> ",
+                caption,
+                "</a>",
+                "</span>"
+              ]
+            end)
+
+          [
+            "<div class='profile-badges'><span class='profile-label'>Applicable Profiles:</span> ",
+            Enum.intersperse(badges, " "),
+            "</div>"
+          ]
+        end
+    end
+  end
+
+  @spec get_applicable_profiles(map(), map()) :: list()
+  def get_applicable_profiles(data, profiles) do
+    case data[:profiles] || [] do
+      [] ->
+        []
+
+      list ->
+        Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
+        |> Enum.to_list()
+    end
+  end
+
+  @spec format_applicable_profiles_json(list()) :: String.t()
+  def format_applicable_profiles_json(applicable_profiles) do
+    case applicable_profiles do
+      [] ->
+        "[]"
+
+      profiles ->
+        profiles
+        |> Enum.map(&"\"#{&1}\"")
+        |> Enum.join(",")
+        |> (fn str -> "[#{str}]" end).()
+    end
+  end
+
   defp profile_link(_conn, nil, name) do
     name
   end
@@ -131,8 +197,15 @@ defmodule SchemaWeb.PageView do
       end
 
     case field[:extension] do
-      nil -> name
-      extension -> name <> " <sup>#{extension}</sup>"
+      nil ->
+        name
+
+      extension when extension != "" ->
+        name <>
+          " <sup class='source-indicator extension-indicator' data-toggle='tooltip' title='From #{extension} extension'><i class='fas fa-layer-group'></i></sup>"
+
+      _ ->
+        name
     end
   end
 
@@ -140,9 +213,43 @@ defmodule SchemaWeb.PageView do
   def format_attribute_caption(_conn, entity_key, entity) do
     caption = entity[:caption] || to_string(entity_key)
 
-    case entity[:extension] do
-      nil -> caption
-      extension -> [caption, " <sup>#{extension}</sup>"]
+    # Add subtle source indicators with icons matching the sidebar
+    source_indicators = []
+
+    source_indicators =
+      case entity[:extension] do
+        nil ->
+          source_indicators
+
+        extension when extension != "" ->
+          [
+            "<sup class='source-indicator extension-indicator' data-toggle='tooltip' title='From #{extension} extension'><i class='fas fa-layer-group'></i></sup>"
+            | source_indicators
+          ]
+
+        _ ->
+          source_indicators
+      end
+
+    source_indicators =
+      case entity[:profile] do
+        nil ->
+          source_indicators
+
+        profile when profile != "" ->
+          [
+            "<sup class='source-indicator profile-indicator' data-toggle='tooltip' title='From #{profile} profile'><i class='fas fa-tag'></i></sup>"
+            | source_indicators
+          ]
+
+        _ ->
+          source_indicators
+      end
+
+    if Enum.empty?(source_indicators) do
+      caption
+    else
+      [caption, " ", Enum.reverse(source_indicators)]
     end
   end
 
@@ -572,13 +679,13 @@ defmodule SchemaWeb.PageView do
       enum_values_table,
       if Map.has_key?(attribute, :sibling) do
         [
-          "<div class=\"mt-2\">ℹ️ This is an enum attribute; its string sibling is <code>",
+          "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute; its string sibling is <code>",
           to_string(attribute[:sibling]),
-          "</code>.</div>"
+          "</code>.</small></div>"
         ]
       else
         [
-          "<div class=\"mt-2\">ℹ️ This is an enum attribute. </div>"
+          "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute. </small></div>"
         ]
       end
     ]
@@ -588,16 +695,16 @@ defmodule SchemaWeb.PageView do
     if is_dictionary_view do
       [
         description,
-        "<div class=\"mt-2\">ℹ️ This is the string sibling of enum attribute <code>",
+        "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is the string sibling of enum attribute <code>",
         to_string(attribute[:_sibling_of]),
-        "</code> but can also be used independently. See specific usage.</div>"
+        "</code> but can also be used independently. See specific usage.</small></div>"
       ]
     else
       [
         description,
-        "<div class=\"mt-2\">ℹ️ This is the string sibling of enum attribute <code>",
+        "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is the string sibling of enum attribute <code>",
         to_string(attribute[:_sibling_of]),
-        "</code>.</div>"
+        "</code>.</small></div>"
       ]
     end
   end
@@ -609,10 +716,6 @@ defmodule SchemaWeb.PageView do
 
   @spec append_source_references(any(), any(), map()) :: any()
   defp append_source_references(conn, html, prefix_html, obj) do
-    if obj[:family] == "skill" do
-      IO.inspect(obj, label: "append_source_references")
-    end
-
     source = obj[:source]
     references = obj[:references]
     enum = obj[:is_enum]
@@ -625,15 +728,7 @@ defmodule SchemaWeb.PageView do
         ""
       end
 
-    refs_html =
-      if references != nil and !Enum.empty?(references) do
-        [
-          "<dt>References",
-          Enum.map(references, fn ref -> ["<dd class=\"ml-3\">", reference_anchor(ref)] end)
-        ]
-      else
-        ""
-      end
+    refs_html = inline_references(references)
 
     options_html =
       if enum do
@@ -660,7 +755,7 @@ defmodule SchemaWeb.PageView do
                   ]
                 end),
                 "</dd>",
-                "<div class=\"mt-2\">ℹ️ This is an enum attribute. </div>"
+                "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute. </small></div>"
               ]
             else
               ""
@@ -668,7 +763,7 @@ defmodule SchemaWeb.PageView do
 
           "class_t" ->
             [
-              "<div class=\"mt-2\">ℹ️ This is an enum attribute. </div>"
+              "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute. </small></div>"
             ]
 
           _ ->
@@ -1329,6 +1424,44 @@ defmodule SchemaWeb.PageView do
       "</a>"
     ]
   end
+
+  @spec reference_tag(map()) :: any()
+  def reference_tag(reference) do
+    # New compact reference tag styling
+    [
+      "<a class=\"reference-tag\" target=\"_blank\" href=\"",
+      URI.encode(reference[:url]),
+      "\">",
+      reference[:description] |> Phoenix.HTML.html_escape() |> Phoenix.HTML.safe_to_string(),
+      "</a>"
+    ]
+  end
+
+  @spec object_references_section(list()) :: any()
+  def object_references_section(references) when is_list(references) and length(references) > 0 do
+    [
+      "<div class=\"object-references\">",
+      "<h6>References</h6>",
+      "<ul class=\"references-list\">",
+      Enum.map(references, fn ref -> ["<li>", reference_tag(ref), "</li>"] end),
+      "</ul>",
+      "</div>"
+    ]
+  end
+
+  def object_references_section(_), do: ""
+
+  @spec inline_references(list()) :: any()
+  def inline_references(references) when is_list(references) and length(references) > 0 do
+    [
+      "<div class=\"references-inline\">",
+      "<span class=\"references-label\">Refs:</span>",
+      Enum.intersperse(Enum.map(references, &reference_tag/1), " "),
+      "</div>"
+    ]
+  end
+
+  def inline_references(_), do: ""
 
   @spec show_deprecated_css_classes(map(), String.t()) :: String.t()
   def show_deprecated_css_classes(item, initial) do

@@ -3,13 +3,6 @@ Copyright AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 ---%>
 
-<script>
-  show("#schemas");
-  show("#sample-data");
-  show("#json-schema");
-  show("#schema");
-</script>
-
 <% category = @data[:category] %>
 <% category_name = @data[:category_name] %>
 <% extension = @data[:extension] %>
@@ -36,9 +29,10 @@ SPDX-License-Identifier: Apache-2.0
     %>
     <h3 class="extensions">
       <%= @data[:caption] %>
-      <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<sup><%= extension || "" %></sup>
+      <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
         <%= class_type %> class
       </span>
+      <%= raw profile_badges(@conn, @data, @profiles) %>
     </h3>
 
     <%= if category_name != nil do %>
@@ -50,16 +44,21 @@ SPDX-License-Identifier: Apache-2.0
     <div class="text-secondary">
       <%= raw description(@data) %>
     </div>
-    <%= if references != nil and !Enum.empty?(references) do %>
-    <dd>
-      <dt>References
-      <%= raw Enum.map(references, fn ref -> ["<dd class=\"ml-3\">", reference_anchor(ref)] end) %>
-    </dd>
-    <% end %>
+    <%= raw object_references_section(references) %>
   </div>
   <div class="col-md-auto fixed-right mt-2">
     <div class="navbar-expand-md">
       <ul class="navbar-nav">
+        <li class="nav-item mr-2">
+          <div class="btn-group" role="group" aria-label="Schema actions">
+            <button type="button" id="btn-json-schema" class="btn-sm" title="View JSON Schema">
+              JSON Schema
+            </button>
+            <button type="button" id="btn-sample-data" class="btn-sm" title="View Sample Data">
+              Sample
+            </button>
+          </div>
+        </li>
         <li class="nav-item mr-2">
           <select multiple
             id="attributes-select"
@@ -85,8 +84,12 @@ SPDX-License-Identifier: Apache-2.0
         <li class="nav-item">
           <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
           <div class="mt-1">
-            <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
-            <label for="show-deprecated">Show deprecated</label>
+            <div class="show-deprecated-container">
+              <input type="checkbox" id="show-deprecated" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+              <label for="show-deprecated" class="show-deprecated-label">
+                <span class="show-deprecated-text">Show deprecated</span>
+              </label>
+            </div>
           </div>
         </li>
       </ul>
@@ -98,12 +101,12 @@ SPDX-License-Identifier: Apache-2.0
   <table id="data-table" class="table table-bordered sortable">
     <thead >
     <tr class="thead-color">
-      <th style="width: 10%">Name</th>
-      <th style="width: 10%">Caption</th>
-      <th style="width: 10%">Group</th>
-      <th style="width: 10%">Requirement</th>
-      <th style="width: 10%">Type</th>
-      <th style="width: 50%">Description</th>
+      <th class="col-name">Name</th>
+      <th class="col-caption">Caption</th>
+      <th class="col-group">Group</th>
+      <th class="col-requirement">Requirement</th>
+      <th class="col-type">Type</th>
+      <th class="col-description">Description</th>
     </tr>
     </thead>
     <tbody class="searchable">
@@ -144,4 +147,20 @@ SPDX-License-Identifier: Apache-2.0
   init_schema_buttons();
   init_class_profiles();
   init_show_deprecated();
+
+  // Highlight applicable profiles in sidebar
+  <% applicable_profiles = get_applicable_profiles(@data, @profiles) %>
+  <% applicable_profiles_json = format_applicable_profiles_json(applicable_profiles) %>
+  $(document).ready(function() {
+    if (typeof window.highlightApplicableProfiles === 'function') {
+      window.highlightApplicableProfiles(<%= raw applicable_profiles_json %>);
+    }
+  });
+
+  // Clear highlighting when leaving the page
+  $(window).on('beforeunload', function() {
+    if (typeof window.clearProfileHighlighting === 'function') {
+      window.clearProfileHighlighting();
+    }
+  });
 </script>

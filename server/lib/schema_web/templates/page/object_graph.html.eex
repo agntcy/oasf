@@ -11,7 +11,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="col-md move-up">
     <h3 class="extensions">
       <a href="<%= object_path(@conn, class)  %>"><%= name %></a>
-      <sup><%= extension || "" %></sup>
+      <%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
       object
     </h3>
 

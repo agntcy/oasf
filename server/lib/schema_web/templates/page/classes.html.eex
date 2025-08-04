@@ -13,8 +13,12 @@ SPDX-License-Identifier: Apache-2.0
   <div class="navbar-nav col-md-auto fixed-right mt-2">
     <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
     <div class="mt-1">
-      <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
-      <label for="show-deprecated">Show deprecated</label>
+      <div class="show-deprecated-container">
+        <input type="checkbox" id="show-deprecated" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+        <label for="show-deprecated" class="show-deprecated-label">
+          <span class="show-deprecated-text">Show deprecated</span>
+        </label>
+      </div>
     </div>
   </div>
 </div>
@@ -23,10 +27,10 @@ SPDX-License-Identifier: Apache-2.0
   <table class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 15%">Name</th>
-        <th style="width: 20%">Caption</th>
-        <th style="width: 10%">ID</th>
-        <th>Description</th>
+        <th class="col-name">Name</th>
+        <th class="col-caption">Caption</th>
+        <th class="col-id">ID</th>
+        <th class="col-description">Description</th>
       </tr>
     </thead>
     <tbody class="searchable">

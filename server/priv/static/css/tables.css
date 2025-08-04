@@ -1,0 +1,380 @@
+/* Tables - Consolidated and Simplified */
+table {
+  background: var(--surface-color);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-sm);
+  width: 100%;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+/* Table headers */
+table thead th,
+table th {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+}
+
+table thead th:last-child,
+table th:last-child {
+  border-right: none;
+}
+
+/* Table cells */
+table tbody td,
+table td {
+  color: var(--text-primary);
+  background: var(--surface-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+  vertical-align: top;
+}
+
+table tbody td:last-child,
+table td:last-child {
+  border-right: none;
+}
+
+table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+table tbody tr:hover td {
+  background: var(--surface-elevated);
+}
+
+/* Table column widths and styling */
+.col-name {
+  width: 10%;
+}
+.col-caption {
+  width: 10%;
+}
+.col-group {
+  width: 10%;
+}
+.col-requirement {
+  width: 10%;
+}
+.col-type {
+  width: 8%;
+}
+.col-id {
+  width: 5%;
+}
+.col-constraints {
+  width: 15%;
+}
+.col-references {
+  width: 25%;
+}
+.col-description {
+  width: 40%;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 300px;
+  white-space: normal;
+}
+
+/* Name column styling - make it stand out */
+table td.name {
+  background: rgba(15, 27, 92, 0.05);
+  font-weight: 600;
+}
+
+table td.name a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+table td.name a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* Hover effect for name column rows */
+table tbody tr:hover td.name {
+  background: rgba(15, 27, 92, 0.1);
+}
+
+/* Description column word wrapping */
+table td:nth-child(3),
+table th:nth-child(3),
+table td[data-column="description"],
+table th[data-column="description"],
+table .description-column {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 300px;
+  white-space: normal;
+}
+
+/* Code elements in table description columns should wrap */
+table td code,
+.col-description code,
+td:last-child code {
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Special table classes */
+tr.thead-color {
+  background: var(--background-secondary);
+  color: var(--text-primary);
+}
+
+tr.thead-color th {
+  background: var(--background-secondary);
+  color: var(--text-primary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-weight: 600;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+}
+
+tr.thead-color th:last-child {
+  border-right: none;
+}
+
+tr.thead-color th a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+tr.thead-color th a:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+table.table-borderless {
+  border: none;
+  box-shadow: none;
+}
+
+table.table-borderless td,
+table.table-borderless th {
+  border: none;
+}
+
+/* Enum table styling - fix overlapping and spacing issues */
+.table-borderless tbody tr {
+  margin-bottom: 0;
+}
+
+.table-borderless tbody td {
+  padding: 0.2rem 0.5rem;
+  border: none;
+  vertical-align: top;
+}
+
+/* Enum number column - ensure adequate width */
+.table-borderless tbody td[style*="width: 25px"] {
+  width: 5rem !important;
+  min-width: 5rem;
+  padding-right: 1rem;
+  text-align: right;
+}
+
+/* Enum description column */
+.table-borderless tbody td:last-child {
+  width: auto;
+}
+
+/* Reduce spacing in enum item descriptions */
+.table-borderless .text-secondary {
+  margin-top: 0.125rem;
+  line-height: 1.3;
+  font-size: 0.8rem;
+}
+
+/* Multi-column layout for categories */
+.multi-col {
+  -webkit-columns: 4 18rem;
+  -moz-columns: 4 18rem;
+  columns: 4 18rem;
+}
+
+/* Categories and Multi-column Layout */
+section.category {
+  background: var(--surface-color);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal),
+    background-color var(--transition-normal);
+  -webkit-break-inside: avoid;
+  -moz-break-inside: avoid;
+  break-inside: avoid;
+}
+
+section.category:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-color);
+  background: var(--surface-elevated);
+}
+
+section.category header {
+  background: var(--primary-color);
+  color: var(--text-inverse);
+  font-weight: 600;
+  padding: var(--spacing-sm);
+  margin: calc(-1 * var(--spacing-md)) calc(-1 * var(--spacing-md))
+    var(--spacing-sm) calc(-1 * var(--spacing-md));
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+section.category header .uid {
+  color: var(--text-inverse-secondary);
+}
+
+section.category header a {
+  color: var(--text-inverse);
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+section.category header a:hover {
+  color: var(--accent-light);
+  text-decoration: none;
+}
+
+section.category div.oasf-class {
+  margin-left: 0;
+  border-bottom: 1px solid var(--border-light);
+  transition: var(--transition-fast);
+}
+
+section.category div.oasf-class:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+section.category div.oasf-class:hover {
+  background: var(--background-secondary);
+  border-radius: var(--radius-sm);
+}
+
+section.category div.oasf-class a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+section.category div.oasf-class a:hover {
+  color: var(--accent-color);
+}
+
+section.category div.indent-level-0 {
+  font-weight: 500;
+  padding: var(--spacing-xs) 0;
+}
+
+section.category div.indent-level-0:hover {
+  padding-left: var(--spacing-sm);
+}
+
+section.category div.indent-level-1 {
+  padding: var(--spacing-xs) var(--spacing-md);
+}
+
+section.category div.indent-level-1:hover {
+  padding-left: var(--spacing-lg);
+}
+
+section.category div.indent-level-2 {
+  padding: var(--spacing-xs) var(--spacing-xxl);
+}
+
+section.category div.indent-level-2:hover {
+  padding-left: var(--spacing-xxxl);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  section.category {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .multi-col {
+    -webkit-columns: 1;
+    -moz-columns: 1;
+    columns: 1;
+  }
+
+  /* Make tables more mobile-friendly */
+  table {
+    font-size: 0.8rem;
+  }
+
+  table td,
+  table th {
+    padding: var(--spacing-sm);
+  }
+
+  /* Stack table columns on very small screens */
+  @media (max-width: 480px) {
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      border: 1px solid var(--border-color);
+      margin-bottom: var(--spacing-sm);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-sm);
+    }
+
+    td {
+      border: none !important;
+      position: relative;
+      padding-left: 50% !important;
+      padding-top: var(--spacing-xs);
+      padding-bottom: var(--spacing-xs);
+    }
+
+    td:before {
+      content: attr(data-label) ": ";
+      position: absolute;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+  }
+}

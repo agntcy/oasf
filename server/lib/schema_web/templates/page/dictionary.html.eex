@@ -16,13 +16,16 @@ SPDX-License-Identifier: Apache-2.0
         <li class="nav-item mr-2">
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
           <button class="btn btn-outline-secondary dropdown-toggle" type="button" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
-          <br><small>Expand All and Collapse All are slow &mdash; be patient</small>
         </li>
         <li class="nav-item">
           <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
           <div class="mt-1">
-            <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
-            <label for="show-deprecated">Show deprecated</label>
+            <div class="show-deprecated-container">
+              <input type="checkbox" id="show-deprecated" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+              <label for="show-deprecated" class="show-deprecated-label">
+                <span class="show-deprecated-text">Show deprecated</span>
+              </label>
+            </div>
           </div>
         </li>
       </ul>
@@ -34,11 +37,11 @@ SPDX-License-Identifier: Apache-2.0
   <table class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 15%">Name</th>
-        <th style="width: 15%">Caption</th>
-        <th style="width: 10%">Type</th>
-        <th style="width: 30%">Referenced By</th>
-        <th style="width: 30%">Description</th>
+        <th class="col-name">Name</th>
+        <th class="col-caption">Caption</th>
+        <th class="col-type">Type</th>
+        <th class="col-references">Referenced By</th>
+        <th class="col-description">Description</th>
       </tr>
     </thead>
     <tbody class="searchable">

@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
     <h3>
       <%= @data[:caption] %>
       <span class="text-secondary">[<%= @data[:name] %>]</span>
-      <span class="text-secondary"><sup><%= @data[:extension] || "" %></sup>
+      <span class="text-secondary"><%= if @data[:extension] && @data[:extension] != "" do %><sup class='source-indicator extension-indicator' data-toggle='tooltip' title='From <%= @data[:extension] %> extension'><i class='fas fa-layer-group'></i></sup><% end %>
         Profile
       </span>
     </h3>
@@ -28,12 +28,6 @@ SPDX-License-Identifier: Apache-2.0
             data-selected-text-format="count > 3"
             data-actions-box="true"
             data-width="auto">
-            <optgroup id="groups-select" label="Groups">
-              <option selected value="classification">Classification</option>
-              <option selected value="context">Context</option>
-              <option selected value="occurrence">Occurrence</option>
-              <option selected value="primary">Primary</option>
-            </optgroup>
             <optgroup id="requirements-select" label="Requirements">
               <option class="optional" value="optional" title="Optional">Optional Attributes</option>
               <option class="recommended" value="recommended" title="Recommended">Recommended Attributes</option>
@@ -43,8 +37,12 @@ SPDX-License-Identifier: Apache-2.0
         <li class="nav-item">
           <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
           <div class="mt-1">
-            <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
-            <label for="show-deprecated">Show deprecated</label>
+            <div class="show-deprecated-container">
+              <input type="checkbox" id="show-deprecated" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+              <label for="show-deprecated" class="show-deprecated-label">
+                <span class="show-deprecated-text">Show deprecated</span>
+              </label>
+            </div>
           </div>
         </li>
       </ul>
@@ -56,12 +54,12 @@ SPDX-License-Identifier: Apache-2.0
   <table id="data-table" class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 12%">Name</th>
-        <th style="width: 12%">Caption</th>
-        <th style="width: 10%">Group</th>
-        <th style="width: 8%">Requirement</th>
-        <th style="width: 8%">Type</th>
-        <th style="width: 30%">Description</th>
+        <th class="col-name">Name</th>
+        <th class="col-caption">Caption</th>
+        <th class="col-group">Group</th>
+        <th class="col-requirement">Requirement</th>
+        <th class="col-type">Type</th>
+        <th class="col-description">Description</th>
       </tr>
     </thead>
     <tbody class="searchable">
@@ -82,9 +80,11 @@ SPDX-License-Identifier: Apache-2.0
 <%= if Enum.empty?(links) do %>
   <div></div>
 <% else %>
-  <a class="h5 links dropdown-toggle" data-toggle="collapse" data-target="#profile-links" aria-expanded="false" aria-controls="object-links">Referenced By</a>
-  <div class="references extensions collapse" id="profile-links">
-    <%= raw profile_links(@conn, @data[:name], links) %>
+  <div class="referenced-by-section">
+    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#profile-links" aria-expanded="false" aria-controls="profile-links">Referenced By</a>
+    <div class="referenced-by-content extensions collapse" id="profile-links">
+      <%= raw profile_links(@conn, @data[:name], links) %>
+    </div>
   </div>
 <% end %>
 
