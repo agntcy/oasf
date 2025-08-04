@@ -49,7 +49,7 @@ defmodule Schema.Translator do
             name ->
               if Schema.Types.is_oasf_class?(name) do
                 Logger.debug("translate feature class: #{name}")
-                Schema.feature(Path.basename(name))
+                Schema.feature(Schema.Utils.descope(name))
               else
                 Logger.debug("not an OASF extension: #{name}")
                 data
