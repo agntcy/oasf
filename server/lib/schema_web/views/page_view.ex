@@ -79,6 +79,72 @@ defmodule SchemaWeb.PageView do
     end
   end
 
+  def profile_badges(conn, class, profiles) do
+    case class[:profiles] || [] do
+      [] ->
+        ""
+
+      list ->
+        applicable_profiles =
+          Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
+
+        if Enum.empty?(applicable_profiles) do
+          ""
+        else
+          badges =
+            Enum.map(applicable_profiles, fn name ->
+              caption = get_in(profiles, [name, :caption]) || name
+              path = Routes.static_path(conn, "/profiles/" <> name)
+
+              [
+                "<span class='profile-badge'>",
+                "<a href='",
+                path,
+                "' title='Profile: ",
+                caption,
+                "'>",
+                "<i class='fas fa-tag'></i> ",
+                caption,
+                "</a>",
+                "</span>"
+              ]
+            end)
+
+          [
+            "<div class='profile-badges'><span class='profile-label'>Applicable Profiles:</span> ",
+            Enum.intersperse(badges, " "),
+            "</div>"
+          ]
+        end
+    end
+  end
+
+  @spec get_applicable_profiles(map(), map()) :: list()
+  def get_applicable_profiles(data, profiles) do
+    case data[:profiles] || [] do
+      [] ->
+        []
+
+      list ->
+        Stream.filter(list, fn profile -> Map.has_key?(profiles, profile) end)
+        |> Enum.to_list()
+    end
+  end
+
+  @spec format_applicable_profiles_json(list()) :: String.t()
+  def format_applicable_profiles_json(applicable_profiles) do
+    case applicable_profiles do
+      [] ->
+        "[]"
+
+      profiles ->
+        profiles
+        |> Enum.map(&"\"#{&1}\"")
+        |> Enum.join(",")
+        |> (fn str -> "[#{str}]" end).()
+    end
+  end
+
   defp profile_link(_conn, nil, name) do
     name
   end
@@ -131,8 +197,15 @@ defmodule SchemaWeb.PageView do
       end
 
     case field[:extension] do
-      nil -> name
-      extension -> name <> " <sup>#{extension}</sup>"
+      nil ->
+        name
+
+      extension when extension != "" ->
+        name <>
+          " <sup class='source-indicator extension-indicator' data-toggle='tooltip' title='From #{extension} extension'><i class='fas fa-layer-group'></i></sup>"
+
+      _ ->
+        name
     end
   end
 
@@ -140,9 +213,43 @@ defmodule SchemaWeb.PageView do
   def format_attribute_caption(_conn, entity_key, entity) do
     caption = entity[:caption] || to_string(entity_key)
 
-    case entity[:extension] do
-      nil -> caption
-      extension -> [caption, " <sup>#{extension}</sup>"]
+    # Add subtle source indicators with icons matching the sidebar
+    source_indicators = []
+
+    source_indicators =
+      case entity[:extension] do
+        nil ->
+          source_indicators
+
+        extension when extension != "" ->
+          [
+            "<sup class='source-indicator extension-indicator' data-toggle='tooltip' title='From #{extension} extension'><i class='fas fa-layer-group'></i></sup>"
+            | source_indicators
+          ]
+
+        _ ->
+          source_indicators
+      end
+
+    source_indicators =
+      case entity[:profile] do
+        nil ->
+          source_indicators
+
+        profile when profile != "" ->
+          [
+            "<sup class='source-indicator profile-indicator' data-toggle='tooltip' title='From #{profile} profile'><i class='fas fa-tag'></i></sup>"
+            | source_indicators
+          ]
+
+        _ ->
+          source_indicators
+      end
+
+    if Enum.empty?(source_indicators) do
+      caption
+    else
+      [caption, " ", Enum.reverse(source_indicators)]
     end
   end
 
@@ -298,47 +405,43 @@ defmodule SchemaWeb.PageView do
 
   @spec field_classes(map) :: nonempty_binary
   def field_classes(field) do
-    base =
+    css_classes =
       if field[:_source] == :base_class or field[:_source] == :class do
         "base-class "
       else
         "class "
       end
 
-    deprecation_status =
-      if field[:"@deprecated"] != nil do
-        base <> "deprecated "
-      else
-        base <> "not-deprecated "
-      end
-
-    classes =
+    css_classes =
       if required?(field) do
-        deprecation_status <> "required "
+        css_classes <> "required "
       else
         if recommended?(field) do
-          deprecation_status <> "recommended "
+          css_classes <> "recommended "
         else
-          deprecation_status <> "optional "
+          css_classes <> "optional "
         end
       end
 
     group = field[:group]
 
-    classes =
+    css_classes =
       if group != nil do
-        classes <> group
+        css_classes <> group
       else
-        classes <> "no-group"
+        css_classes <> "no-group"
       end
 
     profile = field[:profile]
 
-    if profile != nil do
-      classes <> " " <> String.replace(profile, "/", "-")
-    else
-      classes <> " no-profile"
-    end
+    css_classes =
+      if profile != nil do
+        css_classes <> " " <> String.replace(profile, "/", "-")
+      else
+        css_classes <> " no-profile"
+      end
+
+    show_deprecated_css_classes(field, css_classes)
   end
 
   defp required?(field) do
@@ -406,16 +509,20 @@ defmodule SchemaWeb.PageView do
 
     case Map.get(field, :regex) do
       nil ->
-        case max_len do
-          "" ->
-            format_values(Map.get(field, :values))
-
-          len ->
-            len
+        if max_len == "" do
+          format_values(Map.get(field, :values))
+        else
+          max_len
         end
 
       r ->
-        max_len <> "<br>" <> r
+        safe_r = r |> html_escape() |> safe_to_string()
+
+        if max_len == "" do
+          safe_r
+        else
+          max_len <> "<br>" <> safe_r
+        end
     end
   end
 
@@ -482,53 +589,80 @@ defmodule SchemaWeb.PageView do
     end
   end
 
-  @spec format_desc(any, String.t() | atom(), map()) :: any
-  def format_desc(conn, key, obj) do
-    append_source_references(conn, base_format_desc(conn, key, obj), "<p><hr>", obj)
+  @spec format_attribute_desc(any, String.t() | atom(), map()) :: any
+  def format_attribute_desc(conn, attribute_key, attribute) do
+    append_source_references(
+      conn,
+      base_format_attribute_desc(conn, attribute_key, attribute, false),
+      "<p><hr>",
+      attribute
+    )
   end
 
-  @spec base_format_desc(any, String.t() | atom(), map()) :: any
-  defp base_format_desc(conn, key, obj) do
-    description = description(obj)
+  @spec format_dictionary_attribute_desc(any, String.t() | atom(), map()) :: any
+  def format_dictionary_attribute_desc(conn, attribute_key, attribute) do
+    append_source_references(
+      conn,
+      base_format_attribute_desc(conn, attribute_key, attribute, true),
+      "<p><hr>",
+      attribute
+    )
+  end
 
-    case Map.get(obj, :enum) do
-      nil ->
-        [description]
+  @spec base_format_attribute_desc(any, String.t() | atom(), map(), boolean()) :: any
+  defp base_format_attribute_desc(conn, attribute_key, attribute, is_dictionary_view) do
+    description = description(attribute)
 
-      values ->
+    cond do
+      Map.has_key?(attribute, :enum) or Map.has_key?(attribute, :sibling) ->
+        enum_description(conn, description, attribute_key, attribute)
+
+      Map.has_key?(attribute, :_sibling_of) ->
+        enum_sibling_description(description, attribute, is_dictionary_view)
+
+      true ->
+        description
+    end
+  end
+
+  defp enum_description(conn, description, attribute_key, attribute) do
+    enum_values_table =
+      if Map.has_key?(attribute, :enum) do
+        enum_values = attribute[:enum]
+
         sorted =
-          if Map.get(obj, :type) == "integer_t" do
+          if Map.get(attribute, :type) == "integer_t" do
             Enum.sort(
-              values,
+              enum_values,
               fn {k1, _}, {k2, _} ->
                 String.to_integer(Atom.to_string(k1)) >= String.to_integer(Atom.to_string(k2))
               end
             )
           else
-            Enum.sort(values, fn {k1, _}, {k2, _} -> k1 >= k2 end)
+            Enum.sort(enum_values, fn {k1, _}, {k2, _} -> k1 >= k2 end)
           end
 
         [
-          description,
-          """
-          <table class="mt-1 table-borderless"><tbody>
-          """,
+          "<table class=\"mt-1 table-borderless\"><tbody>",
           Enum.reduce(
             sorted,
             [],
             fn {id, item}, acc ->
               id = to_string(id)
+              css_classes = show_deprecated_css_classes(item, "bg-transparent")
 
               [
-                "<tr class='bg-transparent'><td style='width: 25px' class='text-right' id='",
-                to_string(key),
+                "<tr class=\"",
+                css_classes,
+                "\"><td style=\"width: 25px\" class=\"text-right\" id=\"",
+                to_string(attribute_key),
                 "-",
                 id,
-                "'><code>",
+                "\"><code>",
                 id,
-                "</code></td><td class='textnowrap'>",
+                "</code></td><td class=\"textnowrap\">",
                 Map.get(item, :caption, id),
-                "<div class='text-secondary'>",
+                "<div class=\"text-secondary\">",
                 append_source_references(conn, description(item), item),
                 "</div></td><tr>" | acc
               ]
@@ -536,6 +670,42 @@ defmodule SchemaWeb.PageView do
           ),
           "</tbody></table>"
         ]
+      else
+        ""
+      end
+
+    [
+      description,
+      enum_values_table,
+      if Map.has_key?(attribute, :sibling) do
+        [
+          "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute; its string sibling is <code>",
+          to_string(attribute[:sibling]),
+          "</code>.</small></div>"
+        ]
+      else
+        [
+          "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute. </small></div>"
+        ]
+      end
+    ]
+  end
+
+  defp enum_sibling_description(description, attribute, is_dictionary_view) do
+    if is_dictionary_view do
+      [
+        description,
+        "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is the string sibling of enum attribute <code>",
+        to_string(attribute[:_sibling_of]),
+        "</code> but can also be used independently. See specific usage.</small></div>"
+      ]
+    else
+      [
+        description,
+        "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is the string sibling of enum attribute <code>",
+        to_string(attribute[:_sibling_of]),
+        "</code>.</small></div>"
+      ]
     end
   end
 
@@ -558,15 +728,7 @@ defmodule SchemaWeb.PageView do
         ""
       end
 
-    refs_html =
-      if references != nil and !Enum.empty?(references) do
-        [
-          "<dt>References",
-          Enum.map(references, fn ref -> ["<dd class=\"ml-3\">", reference_anchor(ref)] end)
-        ]
-      else
-        ""
-      end
+    refs_html = inline_references(references)
 
     options_html =
       if enum do
@@ -591,11 +753,18 @@ defmodule SchemaWeb.PageView do
                     "</a>",
                     "</div>"
                   ]
-                end)
+                end),
+                "</dd>",
+                "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute. </small></div>"
               ]
             else
               ""
             end
+
+          "class_t" ->
+            [
+              "<div class=\"mt-2 text-secondary\"><small><i class=\"fas fa-info-circle\"></i> This is an enum attribute. </small></div>"
+            ]
 
           _ ->
             ""
@@ -718,6 +887,14 @@ defmodule SchemaWeb.PageView do
     |> Enum.intersperse("<hr>")
   end
 
+  defp link_css_classes(link) do
+    if link[:deprecated?] == true do
+      "reference m-0 collapse deprecated"
+    else
+      "reference m-0"
+    end
+  end
+
   defp link_deprecated(link) do
     if link[:deprecated?] == true do
       " <sup class=\"bg-warning\" data-toggle=\"tooltip\" title=\"Deprecated\">D</sup>"
@@ -777,13 +954,15 @@ defmodule SchemaWeb.PageView do
               # This means the attribute's :_source is incorrectly missing. Show with warning.
               [
                 [
-                  "<a href=\"",
+                  "<div class=\"",
+                  link_css_classes(link),
+                  "\"><a href=\"",
                   type_path,
                   "\" data-toggle=\"tooltip\" title=\"No source\">",
                   link[:caption],
                   " Class</a>",
                   link_deprecated(link),
-                  " <span class=\"bg-warning\">No source</span>"
+                  " <span class=\"bg-warning\">No source</span></div>"
                 ]
                 | acc
               ]
@@ -791,12 +970,15 @@ defmodule SchemaWeb.PageView do
             source == class_key ->
               [
                 [
-                  "<a href=\"",
+                  "<div class=\"",
+                  link_css_classes(link),
+                  "\"><a href=\"",
                   type_path,
                   "\" data-toggle=\"tooltip\" title=\"Directly referenced\">",
                   link[:caption],
                   " Class</a>",
-                  link_deprecated(link)
+                  link_deprecated(link),
+                  "</div>"
                 ]
                 | acc
               ]
@@ -808,14 +990,17 @@ defmodule SchemaWeb.PageView do
               if ok do
                 [
                   [
-                    "<a href=\"",
+                    "<div class=\"",
+                    link_css_classes(link),
+                    "\"><a href=\"",
                     type_path,
                     "\" data-toggle=\"tooltip\" title=\"Indirectly referenced: ",
                     format_hierarchy(path, all_classes, "class"),
                     "\">",
                     link[:caption],
                     " Class</a>",
-                    link_deprecated(link)
+                    link_deprecated(link),
+                    "</div>"
                   ]
                   | acc
                 ]
@@ -823,13 +1008,15 @@ defmodule SchemaWeb.PageView do
                 # This means there's a bad class hierarchy. Show with warning.
                 [
                   [
-                    "<a href=\"",
+                    "<div class=\"",
+                    link_css_classes(link),
+                    "\"><a href=\"",
                     type_path,
                     "\" data-toggle=\"tooltip\" title=\"Referenced via unknown parent\">",
                     link[:caption],
                     " Class</a>",
                     link_deprecated(link),
-                    " <span class=\"bg-warning\">Unknown parent</span>"
+                    " <span class=\"bg-warning\">Unknown parent</span></div>"
                   ]
                   | acc
                 ]
@@ -843,10 +1030,22 @@ defmodule SchemaWeb.PageView do
     else
       noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
+      deprecated_count =
+        Enum.reduce(linked_classes, 0, fn link, acc ->
+          if link[:deprecated?], do: acc + 1, else: acc
+        end)
+
+      deprecated_text =
+        if deprecated_count > 0 do
+          [" (", to_string(deprecated_count), " deprecated)"]
+        else
+          ""
+        end
+
       collapse_html(
         ["#{family}-links-", to_css_selector(attribute_name)],
-        ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
-        Enum.intersperse(html_list, "<br>")
+        ["Referenced by ", Integer.to_string(length(html_list)), noun_text, deprecated_text],
+        html_list
       )
     end
   end
@@ -862,12 +1061,15 @@ defmodule SchemaWeb.PageView do
         fn link, acc ->
           [
             [
-              "<a href=\"",
+              "<div class=\"",
+              link_css_classes(link),
+              "\"><a href=\"",
               SchemaWeb.Router.Helpers.static_path(conn, "/objects/" <> link[:type]),
               "\">",
               link[:caption],
               " Object</a>",
-              link_deprecated(link)
+              link_deprecated(link),
+              "</div>"
             ]
             | acc
           ]
@@ -881,14 +1083,26 @@ defmodule SchemaWeb.PageView do
       list_presentation == :collapse ->
         noun_text = if length(html_list) == 1, do: " object", else: " objects"
 
+        deprecated_count =
+          Enum.reduce(linked_objects, 0, fn link, acc ->
+            if link[:deprecated?], do: acc + 1, else: acc
+          end)
+
+        deprecated_text =
+          if deprecated_count > 0 do
+            [" (", to_string(deprecated_count), " deprecated)"]
+          else
+            ""
+          end
+
         collapse_html(
           ["object-links-", to_css_selector(name)],
-          ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
-          Enum.intersperse(html_list, "<br>")
+          ["Referenced by ", Integer.to_string(length(html_list)), noun_text, deprecated_text],
+          html_list
         )
 
       true ->
-        Enum.intersperse(html_list, "<br>")
+        html_list
     end
   end
 
@@ -944,25 +1158,31 @@ defmodule SchemaWeb.PageView do
           [
             if list_presentation == :collapse do
               [
-                "<a href=\"",
+                "<div class=\"",
+                link_css_classes(link),
+                "\"><a href=\"",
                 type_path,
                 "\" data-toggle=\"tooltip\" title=\"",
                 link_attributes(link),
                 "\">",
                 link[:caption],
                 " Class</a>",
-                link_deprecated(link)
+                link_deprecated(link),
+                "</div>"
               ]
             else
               [
-                "<dt><a href=\"",
+                "<div class=\"",
+                link_css_classes(link),
+                "\"><dt><a href=\"",
                 type_path,
                 "\">",
                 link[:caption],
                 " Class</a>",
                 link_deprecated(link),
                 "<dd class=\"ml-3\">",
-                link_attributes(link)
+                link_attributes(link),
+                "</div>"
               ]
             end
             | acc
@@ -977,10 +1197,22 @@ defmodule SchemaWeb.PageView do
       list_presentation == :collapse ->
         noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
+        deprecated_count =
+          Enum.reduce(linked_classes, 0, fn link, acc ->
+            if link[:deprecated?], do: acc + 1, else: acc
+          end)
+
+        deprecated_text =
+          if deprecated_count > 0 do
+            [" (", to_string(deprecated_count), " deprecated)"]
+          else
+            ""
+          end
+
         collapse_html(
           ["#{family}-links-", to_css_selector(name)],
-          ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
-          Enum.intersperse(html_list, "<br>")
+          ["Referenced by ", Integer.to_string(length(html_list)), noun_text, deprecated_text],
+          html_list
         )
 
       true ->
@@ -1001,25 +1233,31 @@ defmodule SchemaWeb.PageView do
           [
             if list_presentation == :collapse do
               [
-                "<a href=\"",
+                "<div class=\"",
+                link_css_classes(link),
+                "\"><a href=\"",
                 type_path,
                 "\" data-toggle=\"tooltip\" title=\"",
                 link_attributes(link),
                 "\">",
                 link[:caption],
                 " Object</a>",
-                link_deprecated(link)
+                link_deprecated(link),
+                "</div>"
               ]
             else
               [
-                "<dt><a href=\"",
+                "<div class=\"",
+                link_css_classes(link),
+                "\"><dt><a href=\"",
                 type_path,
                 "\">",
                 link[:caption],
                 " Object</a>",
                 link_deprecated(link),
                 "<dd class=\"ml-3\">",
-                link_attributes(link)
+                link_attributes(link),
+                "</div>"
               ]
             end
             | acc
@@ -1034,10 +1272,22 @@ defmodule SchemaWeb.PageView do
       list_presentation == :collapse ->
         noun_text = if length(html_list) == 1, do: " object", else: " objects"
 
+        deprecated_count =
+          Enum.reduce(linked_objects, 0, fn link, acc ->
+            if link[:deprecated?], do: acc + 1, else: acc
+          end)
+
+        deprecated_text =
+          if deprecated_count > 0 do
+            [" (", to_string(deprecated_count), " deprecated)"]
+          else
+            ""
+          end
+
         collapse_html(
           ["object-links-", to_css_selector(name)],
-          ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
-          Enum.intersperse(html_list, "<br>")
+          ["Referenced by ", Integer.to_string(length(html_list)), noun_text, deprecated_text],
+          html_list
         )
 
       true ->
@@ -1096,12 +1346,15 @@ defmodule SchemaWeb.PageView do
         fn link, acc ->
           [
             [
-              "<a href=\"",
+              "<div class=\"",
+              link_css_classes(link),
+              "\"><a href=\"",
               SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/" <> link[:type]),
               "\">",
               link[:caption],
               " Class</a>",
-              link_deprecated(link)
+              link_deprecated(link),
+              "</div>"
             ]
             | acc
           ]
@@ -1115,14 +1368,26 @@ defmodule SchemaWeb.PageView do
       list_presentation == :collapse ->
         noun_text = if length(html_list) == 1, do: " #{family}", else: " #{family}s"
 
+        deprecated_count =
+          Enum.reduce(linked_classes, 0, fn link, acc ->
+            if link[:deprecated?], do: acc + 1, else: acc
+          end)
+
+        deprecated_text =
+          if deprecated_count > 0 do
+            [" (", to_string(deprecated_count), " deprecated)"]
+          else
+            ""
+          end
+
         collapse_html(
           ["#{family}-links-", to_css_selector(profile_name)],
-          ["Referenced by ", Integer.to_string(length(html_list)), noun_text],
-          Enum.intersperse(html_list, "<br>")
+          ["Referenced by ", Integer.to_string(length(html_list)), noun_text, deprecated_text],
+          html_list
         )
 
       true ->
-        Enum.intersperse(html_list, "<br>")
+        html_list
     end
   end
 
@@ -1158,5 +1423,57 @@ defmodule SchemaWeb.PageView do
       reference[:description] |> Phoenix.HTML.html_escape() |> Phoenix.HTML.safe_to_string(),
       "</a>"
     ]
+  end
+
+  @spec reference_tag(map()) :: any()
+  def reference_tag(reference) do
+    # New compact reference tag styling
+    [
+      "<a class=\"reference-tag\" target=\"_blank\" href=\"",
+      URI.encode(reference[:url]),
+      "\">",
+      reference[:description] |> Phoenix.HTML.html_escape() |> Phoenix.HTML.safe_to_string(),
+      "</a>"
+    ]
+  end
+
+  @spec object_references_section(list()) :: any()
+  def object_references_section(references) when is_list(references) and length(references) > 0 do
+    [
+      "<div class=\"object-references\">",
+      "<h6>References</h6>",
+      "<ul class=\"references-list\">",
+      Enum.map(references, fn ref -> ["<li>", reference_tag(ref), "</li>"] end),
+      "</ul>",
+      "</div>"
+    ]
+  end
+
+  def object_references_section(_), do: ""
+
+  @spec inline_references(list()) :: any()
+  def inline_references(references) when is_list(references) and length(references) > 0 do
+    [
+      "<div class=\"references-inline\">",
+      "<span class=\"references-label\">Refs:</span>",
+      Enum.intersperse(Enum.map(references, &reference_tag/1), " "),
+      "</div>"
+    ]
+  end
+
+  def inline_references(_), do: ""
+
+  @spec show_deprecated_css_classes(map(), String.t()) :: String.t()
+  def show_deprecated_css_classes(item, initial) do
+    if item[:"@deprecated"] != nil do
+      initial <> " collapse deprecated"
+    else
+      initial
+    end
+  end
+
+  @spec show_deprecated_css_classes(map()) :: String.t()
+  def show_deprecated_css_classes(item) do
+    show_deprecated_css_classes(item, "")
   end
 end

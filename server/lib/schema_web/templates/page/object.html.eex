@@ -3,12 +3,6 @@ Copyright AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 ---%>
 
-<script>
-  show("#schemas");
-  show("#sample-data");
-  show("#json-schema");
-</script>
-
 <% references = @data[:references] %>
 <% constraints = @data[:constraints] %>
 
@@ -16,9 +10,9 @@ SPDX-License-Identifier: Apache-2.0
   <div class="col-md move-up">
     <h3 class="extensions">
       <a href="<%= object_graph_path(@conn, @data)  %>"><%= @data[:caption] %></a>
-			<span class="small"><sup><%= @data[:extension] || "" %></sup>
-				object
-			</span>
+        <span class="small"><%= if @data[:extension] && @data[:extension] != "" do %><span class="extension-badge"><%= @data[:extension] %></span><% end %>
+        object
+      </span>
       <% extends = @data[:extends] || "object" %>
       <span class="small">
         <%= if extends != "object" and not String.starts_with?(extends, "_") do %>
@@ -27,42 +21,53 @@ SPDX-License-Identifier: Apache-2.0
           </span>
         <% end %>
       </span>
+      <%= raw profile_badges(@conn, @data, @profiles) %>
     </h3>
 
     <div class="text-secondary">
       <%= raw description(@data) %>
     </div>
-    <%= if references != nil and !Enum.empty?(references) do %>
-    <dd>
-      <dt>References
-      <%= raw Enum.map(references, fn ref -> ["<dd class=\"ml-3\">", reference_anchor(ref)] end) %>
-    </dd>
-    <% end %>
+    <%= raw object_references_section(references) %>
   </div>
   <div class="col-md-auto fixed-right mt-2">
     <div class="navbar-expand-md">
-      <div class="form-inline">
-        <ul class="navbar-nav">
-          <li class="nav-item mr-2">
-            <select multiple
-              id="attributes-select"
-              class="selectpicker"
-              data-style="btn-outline-secondary"
-              data-selected-text-format="count > 3"
-              data-actions-box="true"
-              data-width="auto">
-              <option value="deprecated" title="Deprecated">Deprecated Attributes</option>
-              <optgroup id="requirements-select" label="Requirements">
-                <option class="optional" value="optional" title="Optional">Optional Attributes</option>
-                <option class="recommended" value="recommended" title="Recommended">Recommended Attributes</option>
-              </optgroup>
-            </select>
-          </li>
-          <li class="nav-item">
-            <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
-          </li>
-        </ul>
-      </div>
+      <ul class="navbar-nav">
+        <li class="nav-item mr-2">
+          <div class="btn-group" role="group" aria-label="Schema actions">
+            <button type="button" id="btn-json-schema" class="btn-sm" title="View JSON Schema">
+              JSON Schema
+            </button>
+            <button type="button" id="btn-sample-data" class="btn-sm" title="View Sample Data">
+              Sample
+            </button>
+          </div>
+        </li>
+        <li class="nav-item mr-2">
+          <select multiple
+            id="attributes-select"
+            class="selectpicker"
+            data-style="btn-outline-secondary"
+            data-selected-text-format="count > 3"
+            data-actions-box="true"
+            data-width="auto">
+            <optgroup id="requirements-select" label="Requirements">
+              <option class="optional" value="optional" title="Optional">Optional Attributes</option>
+              <option class="recommended" value="recommended" title="Recommended">Recommended Attributes</option>
+            </optgroup>
+          </select>
+        </li>
+        <li class="nav-item">
+          <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
+          <div class="mt-1">
+            <div class="show-deprecated-container">
+              <input type="checkbox" id="show-deprecated" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+              <label for="show-deprecated" class="show-deprecated-label">
+                <span class="show-deprecated-text">Show deprecated</span>
+              </label>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
@@ -75,21 +80,21 @@ SPDX-License-Identifier: Apache-2.0
   <table id="data-table" class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 12%">Caption</th>
-        <th style="width: 12%">Name</th>
-        <th style="width: 8%">Requirement</th>
-        <th style="width: 8%">Type</th>
-        <th style="width: 30%">Description</th>
+        <th class="col-name">Name</th>
+        <th class="col-caption">Caption</th>
+        <th class="col-requirement">Requirement</th>
+        <th class="col-type">Type</th>
+        <th class="col-description">Description</th>
       </tr>
     </thead>
     <tbody class="searchable">
-      <%= for {key, field} <- @data[:attributes] do %>
-      <tr class="<%= field_classes(field)%>">
-        <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
-        <td data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:key], field) %>"><%= raw format_attribute_name(key) %></td>
-        <td><%= raw format_requirement(constraints, key, field) %></td>
-        <td class="extensions"><%= raw format_type(@conn, field) %></td>
-        <td><%= raw format_desc(@conn, key, field) %></td>
+      <%= for {attribute_key, attribute} <- @data[:attributes] do %>
+      <tr class="<%= field_classes(attribute)%>">
+        <td class="name" data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:attribute_key], attribute) %>"><%= format_attribute_name(attribute_key) %></td>
+        <td><%= raw format_attribute_caption(@conn, attribute_key, attribute) %></td>
+        <td><%= raw format_requirement(constraints, attribute_key, attribute) %></td>
+        <td class="extensions"><%= raw format_type(@conn, attribute) %></td>
+        <td><%= raw format_attribute_desc(@conn, attribute_key, attribute) %></td>
       </tr>
       <% end %>
     </tbody>
@@ -105,19 +110,19 @@ SPDX-License-Identifier: Apache-2.0
   <table id="data-table" class="table table-bordered sortable">
     <thead>
       <tr class="thead-color">
-        <th style="width: 12%">Caption</th>
-        <th style="width: 12%">Name</th>
-        <th style="width: 12%">Type</th>
-        <th style="width: 34%">Description</th>
+        <th class="col-name">Name</th>
+        <th class="col-caption">Caption</th>
+        <th class="col-type">Type</th>
+        <th class="col-description">Description</th>
       </tr>
     </thead>
     <tbody class="searchable">
-      <%= for {key, field} <- @data[:_children] do %>
-      <tr class="<%= field_classes(field)%>">
-        <td class="name"><%= raw format_attribute_caption(@conn, key, field) %></td>
-        <td data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:key], field) %>"><%= raw format_attribute_name(key) %></td>
-        <td class="extensions"><%= raw format_type(@conn, field) %></td>
-        <td><%= raw format_desc(@conn, key, field) %></td>
+      <%= for {attribute_key, attribute} <- @data[:_children] do %>
+      <tr class="<%= field_classes(attribute)%>">
+        <td class="name" data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:attribute_key], attribute) %>"><%= format_attribute_name(attribute_key) %></td>
+        <td><%= raw format_attribute_caption(@conn, attribute_key, attribute) %></td>
+        <td class="extensions"><%= raw format_type(@conn, attribute) %></td>
+        <td><%= raw format_attribute_desc(@conn, attribute_key, attribute) %></td>
       </tr>
       <% end %>
     </tbody>
@@ -129,9 +134,11 @@ SPDX-License-Identifier: Apache-2.0
 <%= if Enum.empty?(links) do %>
   <div></div>
 <% else %>
-  <a class="h5 links dropdown-toggle" data-toggle="collapse" data-target="#object-links" aria-expanded="false" aria-controls="object-links">Referenced By</a>
-  <div class="extensions collapse" id="object-links">
-    <%= raw object_links(@conn, @data[:name], links) %>
+  <div class="referenced-by-section">
+    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#object-links" aria-expanded="false" aria-controls="object-links">Referenced By</a>
+    <div class="referenced-by-content extensions collapse" id="object-links">
+      <%= raw object_links(@conn, @data[:name], links) %>
+    </div>
   </div>
 <% end %>
 <%= if constraints != nil and map_size(constraints) > 0 do %>
@@ -144,7 +151,25 @@ SPDX-License-Identifier: Apache-2.0
 <div class="extensions">
   <%= raw class_profiles(@conn, @data, @profiles) %>
 <div>
+
 <script>
   init_schema_buttons();
   init_class_profiles();
+  init_show_deprecated();
+
+  // Highlight applicable profiles in sidebar for objects
+  <% applicable_profiles = get_applicable_profiles(@data, @profiles) %>
+  <% applicable_profiles_json = format_applicable_profiles_json(applicable_profiles) %>
+  $(document).ready(function() {
+    if (typeof window.highlightApplicableProfiles === 'function') {
+      window.highlightApplicableProfiles(<%= raw applicable_profiles_json %>);
+    }
+  });
+
+  // Clear highlighting when leaving the page
+  $(window).on('beforeunload', function() {
+    if (typeof window.clearProfileHighlighting === 'function') {
+      window.clearProfileHighlighting();
+    }
+  });
 </script>
