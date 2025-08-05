@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule Schema.Types do
-  @schema_uri "schema.oasf.agntcy.org"
-
   @moduledoc """
   Schema types and helpers functions to make unique identifiers.
   """
@@ -65,9 +63,5 @@ defmodule Schema.Types do
       _ ->
         acc
     end
-  end
-
-  def is_oasf_class?(name) do
-    String.starts_with?(name, @schema_uri)
   end
 end

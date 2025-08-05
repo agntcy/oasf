@@ -142,19 +142,7 @@ defmodule Schema.Validator do
           validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
         :feature ->
-          if Schema.Types.is_oasf_class?(input["name"]) do
-            validate_class_id_or_name(response, input, nil, &Schema.feature/1)
-          else
-            response =
-              add_warning(
-                response,
-                "feature_unknown",
-                "Feature \"#{input["name"]}\" is not an OASF extension; skipping validation.",
-                %{attribute_path: "name", attribute: "name", value: input["name"]}
-              )
-
-            {response, nil}
-          end
+          validate_class_id_or_name(response, input, nil, &Schema.feature/1)
 
         :object ->
           validate_object_name_and_return_object(response, options)
@@ -1443,19 +1431,7 @@ defmodule Schema.Validator do
               validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
             "feature" ->
-              if Schema.Types.is_oasf_class?(value["name"]) do
-                validate_class_id_or_name(response, value, nil, &Schema.feature/1)
-              else
-                response =
-                  add_warning(
-                    response,
-                    "feature_unknown",
-                    "Feature \"#{value["name"]}\" is not an OASF extension; skipping validation.",
-                    %{attribute_path: "name", attribute: "name", value: value["name"]}
-                  )
-
-                {response, nil}
-              end
+              validate_class_id_or_name(response, value, nil, &Schema.feature/1)
 
             _ ->
               # This should never happen for published schemas (validator will catch this) but
