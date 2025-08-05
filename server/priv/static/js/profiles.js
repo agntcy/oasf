@@ -3,7 +3,6 @@
  *  SPDX-License-Identifier: Apache-2.0
  */
 
-
 function get_selected_profiles() {
   return JSON.parse(localStorage.getItem("schema_profiles")) || [];
 }
@@ -39,7 +38,7 @@ function init_selected_profiles(profiles) {
 }
 
 function init_class_profiles() {
-  let profiles = $("#checkbox-profiles :checkbox");
+  let profiles = $("#profiles-list :checkbox");
   profiles.on("change", function () {
     selected_profiles = [];
     profiles.each(function () {
@@ -50,4 +49,102 @@ function init_class_profiles() {
     init_selected_profiles(selected_profiles);
     refresh_selected_profiles();
   });
+}
+
+function init_extension_profile_dependencies() {
+  // Hide/show profiles based on extension selection on page load
+  updateProfileVisibility();
+
+  let extensions = $("#extensions-list :checkbox");
+  extensions.on("change", function () {
+    const extensionName = this.id;
+    const isExtensionChecked = this.checked;
+
+    if (!isExtensionChecked) {
+      // When extension is unchecked, uncheck all profiles that belong to this extension
+      let profiles = $("#profiles-list :checkbox");
+      profiles.each(function () {
+        const profileName = this.dataset["profile"];
+        if (profileName && profileName.startsWith(extensionName + "/")) {
+          this.checked = false;
+        }
+      });
+
+      // Update the selected profiles list
+      let selected_profiles = [];
+      profiles.each(function () {
+        if (this.checked) selected_profiles.push(this.dataset["profile"]);
+      });
+
+      set_selected_profiles(selected_profiles);
+      init_selected_profiles(selected_profiles);
+      if (typeof refresh_selected_profiles === "function") {
+        refresh_selected_profiles();
+      }
+    }
+
+    // Update profile visibility when extension selection changes
+    updateProfileVisibility();
+  });
+}
+
+function updateProfileVisibility() {
+  let extensions = $("#extensions-list :checkbox");
+  let profiles = $("#profiles-list .profile-item");
+
+  // Get list of selected extensions
+  let selectedExtensions = [];
+  extensions.each(function () {
+    if (this.checked) {
+      selectedExtensions.push(this.id);
+    }
+  });
+
+  // Show/hide profiles based on extension selection
+  profiles.each(function () {
+    const profileItem = $(this);
+    const profileName = profileItem.data("profile-name");
+
+    if (profileName) {
+      // Check if this profile belongs to an extension
+      let belongsToExtension = false;
+      let shouldShow = true;
+
+      for (let extension of selectedExtensions) {
+        if (profileName.startsWith(extension + "/")) {
+          belongsToExtension = true;
+          break;
+        }
+      }
+
+      // If profile belongs to an extension, only show it if that extension is selected
+      if (profileName.includes("/")) {
+        // This is an extension profile
+        shouldShow = belongsToExtension;
+      } else {
+        // This is a core profile, always show it
+        shouldShow = true;
+      }
+
+      if (shouldShow) {
+        profileItem.show();
+      } else {
+        profileItem.hide();
+        // Also uncheck hidden profiles
+        profileItem.find("input[type='checkbox']").prop("checked", false);
+      }
+    }
+  });
+
+  // Update the selected profiles list after hiding profiles
+  let selected_profiles = [];
+  $("#profiles-list :checkbox:visible").each(function () {
+    if (this.checked) selected_profiles.push(this.dataset["profile"]);
+  });
+
+  set_selected_profiles(selected_profiles);
+  init_selected_profiles(selected_profiles);
+  if (typeof refresh_selected_profiles === "function") {
+    refresh_selected_profiles();
+  }
 }

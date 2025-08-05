@@ -1,0 +1,66 @@
+/* CSS Custom Properties - Variables Only */
+:root {
+  /* Refined Color Palette - Sophisticated blue tones */
+  --primary-color: #187adc;
+  --primary-light: #79b9ff;
+  --primary-dark: #0063c2;
+  --accent-color: #0d274d;
+  --accent-light: #3d5270;
+  --accent-dark: #0a1c36;
+
+  /* RGB values for alpha transparency */
+  --accent-color-rgb: 8, 145, 178;
+  --primary-color-rgb: 15, 27, 92;
+
+  /* Neutral Colors - Light Mode */
+  --background-primary: #f5f8fd;
+  --background-secondary: #e8eefb;
+  --surface-color: #fbfcfe;
+  --surface-elevated: #eff3fc;
+  --border-color: #e3eafa;
+  --border-light: #e3eafa;
+
+  /* Text Colors - Light Mode */
+  --text-primary: #1a1f27;
+  --text-secondary: #59616b;
+  --text-muted: #c8d5f5;
+  --text-inverse: #ffffff;
+  --text-inverse-secondary: #c5c7cb;
+
+  /* Status Colors */
+  --success-color: #00b98d;
+  --warning-color: #fbaf45;
+  --error-color: #c62953;
+  --info-color: #0051af;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 2.5rem;
+  --spacing-xxxl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  /* Shadows - Light Mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  --shadow-md:
+    0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg:
+    0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+
+  /* Theme Toggle Sizes */
+  --toggle-width: 36px;
+  --toggle-height: 18px;
+  --toggle-slider-size: 13px;
+  --toggle-icon-size: 8px;
+}

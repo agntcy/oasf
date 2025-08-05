@@ -1276,6 +1276,7 @@ defmodule Schema.Cache do
     |> copy_new(from, :source)
     |> copy_new(from, :references)
     |> copy_new(from, :sibling)
+    |> copy_new(from, :"@deprecated")
   end
 
   defp copy_new(to, from, key) do

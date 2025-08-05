@@ -1,0 +1,296 @@
+/* Base Typography and Layout */
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: var(--background-secondary) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary);
+}
+
+p,
+div,
+span,
+td,
+th,
+li {
+  color: var(--text-primary);
+}
+
+strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+a:hover,
+a:focus,
+a:active {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+/* Code Elements */
+code {
+  color: #dc2626;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 0.875em;
+  font-weight: 500;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+pre {
+  color: var(--text-primary);
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-md);
+  overflow-x: auto;
+}
+
+/* Utility Classes */
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.required {
+  color: var(--error-color);
+  font-weight: 500;
+}
+
+.optional {
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.uid {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.enum-value,
+span[style*="color: red"] {
+  color: #dc2626;
+  white-space: nowrap;
+}
+
+/* Special Elements */
+blockquote {
+  font-style: italic;
+  color: var(--text-secondary);
+  border-left: 4px solid var(--accent-color);
+  padding-left: var(--spacing-md);
+  background: var(--background-secondary);
+}
+
+blockquote small {
+  font-style: normal;
+}
+
+sup {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+hr {
+  margin-top: 0.1rem;
+  margin-bottom: 0.3rem;
+  background-color: #68558e80;
+  border: none;
+  height: 1px;
+}
+
+/* Description lists */
+dt {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+dd {
+  color: var(--text-secondary);
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-badge.required {
+  background: rgba(220, 53, 69, 0.1);
+  color: var(--error-color);
+}
+
+.status-badge.optional {
+  background: rgba(108, 117, 125, 0.1);
+  color: var(--text-secondary);
+}
+
+.status-badge.deprecated {
+  background: rgba(255, 193, 7, 0.1);
+  color: var(--warning-color);
+}
+
+/* Deprecated "D" notation styling */
+.bg-warning,
+sup.bg-warning {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 0.7em;
+  line-height: 1;
+}
+
+/* Smooth deprecated element animations */
+.deprecated {
+  transition:
+    opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.deprecated-hidden {
+  opacity: 0;
+  transform: scaleY(0.8) translateY(-10px);
+  max-height: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  pointer-events: none;
+}
+
+.deprecated-showing {
+  opacity: 0;
+  transform: scaleY(0.8) translateY(-10px);
+  max-height: 1000px;
+}
+
+.deprecated-visible {
+  opacity: 1;
+  transform: scaleY(1) translateY(0);
+  max-height: 1000px;
+}
+
+.deprecated-hiding {
+  opacity: 0;
+  transform: scaleY(0.8) translateY(-10px);
+  max-height: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Collapsible Elements */
+[data-toggle="collapse"].collapsed .if-not-collapsed {
+  display: none;
+}
+
+[data-toggle="collapse"]:not(.collapsed) .if-collapsed {
+  display: none;
+}
+
+/* Tooltips */
+.tooltip-inner {
+  white-space: pre-wrap;
+  word-wrap: normal;
+  max-width: 500px;
+  color: var(--text-inverse);
+  text-align: left;
+  background: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Source Indicators - Icon-based approach for extensions and profiles */
+.source-indicator {
+  font-size: 0.7rem;
+  margin-left: 3px;
+  cursor: help;
+  transition: var(--transition-fast);
+}
+
+.extension-indicator {
+  color: var(--primary-color);
+}
+
+.extension-indicator:hover {
+  color: var(--accent-color);
+  transform: scale(1.1);
+}
+
+.profile-indicator {
+  color: var(--primary-color);
+}
+
+.profile-indicator:hover {
+  color: var(--accent-color);
+  transform: scale(1.1);
+}
+
+/* Profile highlighting in sidebar */
+.profile-item {
+  transition: var(--transition-fast);
+}
+
+.profile-item.profile-applicable {
+  background: linear-gradient(
+    90deg,
+    rgba(8, 145, 178, 0.1) 0%,
+    transparent 100%
+  );
+  padding-left: 4px;
+  margin-left: -4px;
+}
+
+.profile-item.profile-applicable label {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.profile-item.profile-not-applicable {
+  opacity: 0.4;
+}
+
+.profile-item.profile-not-applicable:hover {
+  opacity: 0.7;
+}
