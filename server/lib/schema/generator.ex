@@ -118,7 +118,6 @@ defmodule Schema.Generator do
   defp generate_sample_class(class) do
     data =
       generate_sample(class)
-      |> generate_class_name(class)
 
     case data[:activity_id] do
       nil ->
@@ -136,16 +135,6 @@ defmodule Schema.Generator do
         |> put_type_name(uid, class)
         |> Map.delete(:raw_data)
         |> Map.delete(:unmapped)
-    end
-  end
-
-  defp generate_class_name(data, class) do
-    if data[:name] == nil do
-      data
-    else
-      Map.update!(data, :name, fn _name ->
-        Types.long_class_name(class[:family], class[:name])
-      end)
     end
   end
 
