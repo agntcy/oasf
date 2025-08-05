@@ -64,7 +64,8 @@
       init_selected_attributes();
 
       $("a.nav-link.active").removeClass("active");
-      switch (window.location.pathname) {
+      let path = window.location.pathname.replace(/^\/[\d.]+(?:-[^\/]+)?/, '');
+      switch (path) {
         case '/':
           $('#home_id a.nav-link').addClass("active");
           break;
