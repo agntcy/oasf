@@ -625,6 +625,10 @@ defmodule SchemaWeb.PageView do
     end
   end
 
+  defp break_on_slash(str) do
+    String.replace(str, "/", "/<wbr>")
+  end
+
   defp enum_description(conn, description, attribute_key, attribute) do
     enum_values_table =
       if Map.has_key?(attribute, :enum) do
@@ -654,12 +658,12 @@ defmodule SchemaWeb.PageView do
               [
                 "<tr class=\"",
                 css_classes,
-                "\"><td style=\"width: 25px\" class=\"text-right\" id=\"",
+                "\"><td class=\"text-right\" id=\"",
                 to_string(attribute_key),
                 "-",
                 id,
                 "\"><code>",
-                id,
+                break_on_slash(id),
                 "</code></td><td class=\"textnowrap\">",
                 Map.get(item, :caption, id),
                 "<div class=\"text-secondary\">",
