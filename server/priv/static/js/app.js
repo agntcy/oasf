@@ -197,7 +197,7 @@ function searchInCategories(filter) {
     }
 
     // Check classes within the category
-    const classes = category.querySelectorAll("div.ocsf-class");
+    const classes = category.querySelectorAll("div.oasf-class");
     let visibleClassCount = 0;
 
     classes.forEach((classDiv) => {
