@@ -14,7 +14,7 @@ defmodule Schema.JsonSchema do
 
   @doc """
   Generates a JSON schema corresponding to the `type` parameter.
-  The `type` can be either a class or an object defintion.
+  The `type` can be either a class or an object definition.
 
   Options: :package_name | :schema_version
   """
