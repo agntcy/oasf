@@ -24,7 +24,14 @@ defmodule Schema.Translator do
         :skill ->
           case Map.get(data, "id") do
             nil ->
-              data
+              case Map.get(data, "name") do
+                nil ->
+                  data
+
+                name ->
+                  Logger.debug("translate skill class: #{name}")
+                  Schema.skill(Schema.Utils.descope(name))
+              end
 
             class_uid ->
               Logger.debug("translate skill class: #{class_uid}")
@@ -34,7 +41,14 @@ defmodule Schema.Translator do
         :domain ->
           case Map.get(data, "id") do
             nil ->
-              data
+              case Map.get(data, "name") do
+                nil ->
+                  data
+
+                name ->
+                  Logger.debug("translate domain class: #{name}")
+                  Schema.domain(Schema.Utils.descope(name))
+              end
 
             class_uid ->
               Logger.debug("translate domain class: #{class_uid}")
@@ -47,13 +61,8 @@ defmodule Schema.Translator do
               data
 
             name ->
-              if Schema.Types.is_oasf_class?(name) do
-                Logger.debug("translate feature class: #{name}")
-                Schema.feature(Schema.Utils.descope(name))
-              else
-                Logger.debug("not an OASF extension: #{name}")
-                data
-              end
+              Logger.debug("translate feature class: #{name}")
+              Schema.feature(Schema.Utils.descope(name))
           end
 
         :object ->

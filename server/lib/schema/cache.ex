@@ -635,7 +635,7 @@ defmodule Schema.Cache do
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
-        enrich_class(class_tuple, categories_attributes, classes, version)
+        enrich_class(class_tuple, categories_attributes, classes, version, all_classes)
       end)
 
     {classes, all_classes, categories}
@@ -694,12 +694,12 @@ defmodule Schema.Cache do
   end
 
   # Add category_uid, class_uid, and type_uid
-  defp enrich_class({class_key, class}, categories, classes, version) do
+  defp enrich_class({class_key, class}, categories, classes, version, all_classes) do
     class =
       class
       |> update_class_uid(categories, classes)
       |> add_class_uid(class_key)
-      |> add_class_name(class_key)
+      |> add_class_name(class_key, all_classes)
       |> add_schema_version(version)
 
     {class_key, class}
@@ -816,11 +816,11 @@ defmodule Schema.Cache do
     end)
   end
 
-  defp add_class_name(data, name) do
+  defp add_class_name(data, name, all_classes) do
     if is_nil(data[:attributes][:name]) do
       data
     else
-      class_name = Types.long_class_name(data[:family], data[:name])
+      class_name = Types.class_name_with_hierarchy(data[:name], all_classes)
 
       enum = %{
         :caption => data[:caption],

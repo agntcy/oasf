@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 defmodule Schema.Types do
-  @schema_uri "schema.oasf.agntcy.org"
-
   @moduledoc """
   Schema types and helpers functions to make unique identifiers.
   """
@@ -45,13 +43,25 @@ defmodule Schema.Types do
   end
 
   @doc """
-  Makes longer class name from class type/family, category and name.
+  Makes class name as its unique identifier within OASF by adding classes it extends from,
+  excluding base classes.
   """
-  def long_class_name(family, name) do
-    "#{@schema_uri}/#{family}s/#{name}"
+  def class_name_with_hierarchy(name, all_classes) do
+    base_items = ["base_class", "base_skill", "base_domain", "base_feature"]
+    hierarchy = build_hierarchy(name, all_classes, [])
+    filtered = Enum.reject(hierarchy, &(&1 in base_items))
+    Enum.join(filtered ++ [name], "/")
   end
 
-  def is_oasf_class?(name) do
-    String.starts_with?(name, @schema_uri)
+  defp build_hierarchy(name, class_map, acc) do
+    key = if is_atom(name), do: name, else: String.to_atom(name)
+
+    case Map.get(class_map, key) do
+      %{extends: parent} when parent not in [nil, ""] ->
+        build_hierarchy(parent, class_map, [parent | acc])
+
+      _ ->
+        acc
+    end
   end
 end

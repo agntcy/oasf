@@ -6,7 +6,6 @@ table {
   overflow: hidden;
   box-shadow: var(--shadow-sm);
   margin-bottom: var(--spacing-sm);
-  width: 100%;
   table-layout: fixed;
   word-wrap: break-word;
 }
@@ -164,6 +163,7 @@ tr.thead-color th a:hover {
 }
 
 table.table-borderless {
+  table-layout: auto;
   border: none;
   box-shadow: none;
 }
@@ -185,9 +185,9 @@ table.table-borderless th {
 }
 
 /* Enum number column - ensure adequate width */
-.table-borderless tbody td[style*="width: 25px"] {
-  width: 5rem !important;
-  min-width: 5rem;
+.table-borderless tbody td:first-child {
+	min-width: 5rem;
+  white-space: nowrap;
   padding-right: 1rem;
   text-align: right;
 }

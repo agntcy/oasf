@@ -364,7 +364,7 @@ defmodule SchemaWeb.SchemaController do
 
           example(%{
             id: 10101,
-            name: "schema.oasf.agntcy.org/skills/contextual_comprehension"
+            name: "natural_language_processing/natural_language_understanding/contextual_comprehension"
           })
         end,
       Domain:
@@ -384,7 +384,7 @@ defmodule SchemaWeb.SchemaController do
 
           example(%{
             id: 101,
-            name: "schema.oasf.agntcy.org/domains/technology"
+            name: "technology/internet_of_things"
           })
         end,
       Feature:
@@ -419,7 +419,7 @@ defmodule SchemaWeb.SchemaController do
               },
               export_format: "csv"
             },
-            name: "schema.oasf.agntcy.org/features/observability",
+            name: "observability",
             version: "v0.2.2"
           })
         end,
@@ -500,11 +500,11 @@ defmodule SchemaWeb.SchemaController do
             inputs: [
               %{
                 id: 10101,
-                name: "schema.oasf.agntcy.org/skills/contextual_comprehension"
+                name: "natural_language_processing/natural_language_understanding/contextual_comprehension"
               },
               %{
                 id: 10203,
-                name: "schema.oasf.agntcy.org/skills/paraphrasing"
+                name: "natural_language_processing/natural_language_generation/paraphrasing"
               }
             ]
           })
@@ -565,11 +565,11 @@ defmodule SchemaWeb.SchemaController do
             inputs: [
               %{
                 id: 101,
-                name: "schema.oasf.agntcy.org/domains/internet_of_things"
+                name: "technology/internet_of_things	"
               },
               %{
                 id: 403,
-                name: "schema.oasf.agntcy.org/domains/fraud_prevention"
+                name: "trust_and_safety_domain/fraud_prevention"
               }
             ]
           })
@@ -640,7 +640,7 @@ defmodule SchemaWeb.SchemaController do
                   },
                   export_format: "csv"
                 },
-                name: "schema.oasf.agntcy.org/features/observability",
+                name: "observability",
                 version: "v0.2.2"
               }
             ]
