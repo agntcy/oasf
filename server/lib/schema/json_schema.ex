@@ -34,7 +34,7 @@ defmodule Schema.JsonSchema do
     name = type[:name]
     ext = type[:extension]
 
-    {properties, required} = map_reduce(name, type[:attributes])
+    {properties, required, just_one, at_least_one} = map_reduce(name, type)
 
     schema = Map.new()
 
@@ -61,6 +61,8 @@ defmodule Schema.JsonSchema do
       |> Map.put("properties", properties)
       |> Map.put("additionalProperties", false)
       |> put_required(required)
+      |> put_just_one(just_one)
+      |> put_at_least_one(at_least_one)
       |> encode_entities(type[:entities])
       |> empty_object(properties)
 
@@ -138,6 +140,37 @@ defmodule Schema.JsonSchema do
     Map.put(map, "required", Enum.sort(required))
   end
 
+  defp put_just_one(map, []) do
+    map
+  end
+
+  defp put_just_one(map, just_one) do
+    one_of =
+      Enum.map(just_one, fn item ->
+        others = Enum.reject(just_one, &(&1 == item))
+
+        %{
+          "required" => [item],
+          "not" => %{"required" => others}
+        }
+      end)
+
+    Map.put(map, "oneOf", one_of)
+  end
+
+  defp put_at_least_one(map, []) do
+    map
+  end
+
+  defp put_at_least_one(map, at_least_one) do
+    any_of =
+      Enum.map(at_least_one, fn item ->
+        %{"required" => [item]}
+      end)
+
+    Map.put(map, "anyOf", any_of)
+  end
+
   defp encode_entities(schema, nil) do
     schema
   end
@@ -190,25 +223,37 @@ defmodule Schema.JsonSchema do
     Map.put(schema, "$defs", defs)
   end
 
-  defp map_reduce(type_name, attributes) do
-    {properties, required} =
-      Enum.map_reduce(attributes, [], fn {key, attribute}, acc ->
+  defp map_reduce(type_name, type) do
+    {properties, {required, just_one, at_least_one}} =
+      Enum.map_reduce(type[:attributes], {[], [], []}, fn {key, attribute},
+                                                          {required, just_one, at_least_one} ->
         name = Atom.to_string(key)
+        just_one_list = List.wrap(type[:constraints][:just_one])
+        at_least_one_list = List.wrap(type[:constraints][:at_least_one])
 
-        acc =
-          case attribute[:requirement] do
-            "required" -> [name | acc]
-            _ -> acc
-          end
+        cond do
+          name in just_one_list ->
+            {required, [name | just_one], at_least_one}
 
-        schema =
-          encode_attribute(type_name, attribute[:type], attribute)
-          |> encode_array(attribute[:is_array])
+          name in at_least_one_list ->
+            {required, just_one, [name | at_least_one]}
 
-        {{name, schema}, acc}
+          attribute[:requirement] == "required" ->
+            {[name | required], just_one, at_least_one}
+
+          true ->
+            {required, just_one, at_least_one}
+        end
+        |> (fn {required, just_one, at_least_one} ->
+              schema =
+                encode_attribute(type_name, attribute[:type], attribute)
+                |> encode_array(attribute[:is_array])
+
+              {{name, schema}, {required, just_one, at_least_one}}
+            end).()
       end)
 
-    {Map.new(properties), required}
+    {Map.new(properties), required, just_one, at_least_one}
   end
 
   defp encode_attribute(_name, "string_map_t", attr) do

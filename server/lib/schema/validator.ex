@@ -731,6 +731,25 @@ defmodule Schema.Validator do
          options,
          dictionary
        ) do
+    just_one_keys = schema_item[:constraints][:just_one] |> List.wrap()
+    present_keys = Enum.filter(just_one_keys, &Map.has_key?(input_item, &1))
+
+    schema_item =
+      if length(present_keys) == 1 do
+        present_key = hd(present_keys)
+
+        filtered_attributes =
+          Enum.filter(schema_item[:attributes], fn {k, _v} ->
+            attr_name = Atom.to_string(k)
+            # Keep if not in just_one_keys or is the present_key
+            not Enum.member?(just_one_keys, attr_name) or attr_name == present_key
+          end)
+
+        %{schema_item | attributes: filtered_attributes}
+      else
+        schema_item
+      end
+
     schema_attributes = filter_with_profiles(schema_item[:attributes], profiles)
 
     response
