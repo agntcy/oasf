@@ -484,7 +484,7 @@ defmodule Schema.Generator do
   defp generate_data(:ref_time, _type, _field),
     do: DateTime.utc_now() |> DateTime.to_iso8601()
 
-  defp generate_data(:schema_version, _type, _field), do: "v" <> Schema.version()
+  defp generate_data(:schema_version, _type, _field), do: Schema.version()
   defp generate_data(:version, _type, _field), do: "v" <> version()
   defp generate_data(:lang, _type, _field), do: "en"
   defp generate_data(:uuid, _type, _field), do: uuid()
