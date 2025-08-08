@@ -8,6 +8,11 @@
       "description": "Content of the A2A card in JSON format.",
       "type": "json_t"
     },
+    "a2a_data": {
+      "caption": "A2A Data",
+      "description": "Data supported by the agent for A2A.",
+      "type": "a2a_data"
+    },
     "acp": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
@@ -639,10 +644,7 @@
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [
-          false,
-          true
-        ]
+        "values": [false, true]
       },
       "bytestring_t": {
         "caption": "Byte String",
@@ -725,10 +727,7 @@
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [
-          0,
-          65535
-        ]
+        "range": [0, 65535]
       },
       "process_name_t": {
         "caption": "Process Name",
