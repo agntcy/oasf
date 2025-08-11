@@ -162,10 +162,17 @@ defmodule SchemaWeb.PageView do
     ["data-profiles='", Enum.join(profiles, ","), "'"]
   end
 
-  def indent_class(uid) do
-    digits = Integer.to_string(uid) |> String.length()
+  def indent_class(class) do
+    digits = Integer.to_string(class[:uid]) |> String.length()
+
     # Calculate level based on uid length
-    level = div(digits - 3, 2)
+    level =
+      if class[:extension_id] != nil do
+        div(digits - 3, 2) - 1
+      else
+        div(digits - 3, 2)
+      end
+
     "indent-level-#{level}"
   end
 

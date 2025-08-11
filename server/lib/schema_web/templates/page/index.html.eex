@@ -32,7 +32,7 @@ SPDX-License-Identifier: Apache-2.0
     <%= for {class_key, class} <- category[:classes] do %>
     <% class_key_str = Atom.to_string(class_key) %>
     <% class_path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> class_key_str) %>
-    <div class="<%= show_deprecated_css_classes(class, "oasf-class") %> <%= indent_class(class[:uid]) %>" <%= raw format_profiles(class[:profiles])%>>
+    <div class="<%= show_deprecated_css_classes(class, "oasf-class") %> <%= indent_class(class) %>" <%= raw format_profiles(class[:profiles])%>>
       <%= raw format_linked_class_caption(class_path, class_key_str, class) %>
     </div>
     <% end %>
