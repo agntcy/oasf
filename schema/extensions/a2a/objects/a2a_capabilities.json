@@ -1,0 +1,23 @@
+{
+  "caption": "A2A Capabilities",
+  "description": "Capabilities supported by the agent for A2A communication.",
+  "extends": "object",
+  "name": "a2a_capabilities",
+  "attributes": {
+    "push_notifications": {
+      "caption": "Push Notifications",
+      "description": "Indicates whether the agent supports push notifications for A2A communication.",
+      "requirement": "optional"
+    },
+    "streaming": {
+      "caption": "Streaming",
+      "description": "Indicates whether the agent supports streaming for A2A communication.",
+      "requirement": "optional"
+    },
+    "state_transition_history": {
+      "caption": "State Transition History",
+      "description": "Indicates whether the agent supports state transition history for A2A communication.",
+      "requirement": "optional"
+    }
+  }
+}

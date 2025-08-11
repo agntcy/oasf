@@ -1,0 +1,7 @@
+{
+  "uid": 1,
+  "caption": "A2A",
+  "description": "The A2A extension defines attributes, objects and classes specific to the A2A protocol.",
+  "name": "a2a",
+  "version": "0.0.1-dev"
+}

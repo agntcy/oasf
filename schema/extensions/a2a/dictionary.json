@@ -1,0 +1,104 @@
+{
+  "caption": "Attribute Dictionary",
+  "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
+  "name": "dictionary",
+  "attributes": {
+    "a2a_capabilities": {
+      "caption": "Capabilities",
+      "description": "List of capabilities supported by the agent for A2A communication.",
+      "type": "a2a_capabilities"
+    },
+    "a2a_card_data": {
+      "caption": "A2A Agent Card Data",
+      "description": "Content of the A2A card in JSON format.",
+      "type": "json_t"
+    },
+    "a2a_data": {
+      "caption": "A2A Data",
+      "description": "Data supported by the agent for A2A.",
+      "type": "a2a_data"
+    },
+    "a2a_protocol_version": {
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "type": "string_t"
+    },
+    "a2a_supported_transports": {
+      "caption": "Preferred Transport",
+      "description": "Preferred transport protocol for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "jsonrpc": {
+          "caption": "JSONRPC",
+          "description": "JSON-RPC transport protocol for A2A communication."
+        },
+        "grpc": {
+          "caption": "GRPC",
+          "description": "gRPC transport protocol for A2A communication."
+        },
+        "http": {
+          "caption": "HTTP+JS",
+          "description": "HTTP transport protocol for A2A communication."
+        }
+      }
+    },
+    "default_input_modes": {
+      "caption": "Default Input Modes",
+      "description": "Default input modes supported by the agent for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "application/json": {
+          "caption": "Application/JSON"
+        },
+        "text/plain": {
+          "caption": "Text/Plain"
+        }
+      }
+    },
+    "default_output_modes": {
+      "caption": "Default Output Modes",
+      "description": "Default output modes supported by the agent for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "application/json": {
+          "caption": "Application/JSON"
+        },
+        "application/vnd.geo+json": {
+          "caption": "Application/Geo+JSON"
+        },
+        "image/jpeg": {
+          "caption": "Image/JPEG"
+        },
+        "image/png": {
+          "caption": "Image/PNG"
+        },
+        "text/html": {
+          "caption": "Text/HTML"
+        }
+      }
+    },
+    "push_notifications": {
+      "caption": "Push Notifications",
+      "description": "Indicates whether the agent supports push notifications for A2A communication.",
+      "type": "boolean_t"
+    },
+    "streaming": {
+      "caption": "Streaming",
+      "description": "Indicates whether the agent supports streaming for A2A communication.",
+      "type": "boolean_t"
+    },
+    "state_transition_history": {
+      "caption": "State Transition History",
+      "description": "Indicates whether the agent supports state transition history for A2A communication.",
+      "type": "boolean_t"
+    },
+    "supports_authenticated_extended_card": {
+      "caption": "Supports Authenticated Extended Card",
+      "description": "Indicates whether the agent supports authenticated extended A2A card.",
+      "type": "boolean_t"
+    }
+  }
+}
