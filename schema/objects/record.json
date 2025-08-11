@@ -19,6 +19,11 @@
       "description": "Version of the OASF schema.",
       "requirement": "required"
     },
+    "schema_url": {
+      "caption": "Schema URL",
+      "description": "Uniform Resource Locator (URL) of the schema that describes the record. This URL MUST point to a valid schema that can be used to validate the record data model.",
+      "requirement": "optional"
+    },
     "description": {
       "caption": "Description",
       "description": "The description of the record.",
