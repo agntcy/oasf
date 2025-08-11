@@ -536,6 +536,7 @@ defmodule Schema.Generator do
 
   defp generate_data(_name, "file_hash_t", _field), do: sha256()
   defp generate_data(_name, "url_t", _field), do: url()
+  defp generate_data(_name, "unit_interval_t", _field), do: unit_interval()
   defp generate_data(_name, "uuid_t", _field), do: uuid()
   defp generate_data(_name, "ip_t", _field), do: ipv4()
   defp generate_data(_name, "subnet_t", _field), do: subnet()
@@ -696,6 +697,12 @@ defmodule Schema.Generator do
 
   def uuid() do
     UUID.uuid1()
+  end
+
+  def unit_interval() do
+    max_representable_int = :math.pow(2, 53) |> trunc
+    random_integer = random(max_representable_int + 1)
+    random_integer / max_representable_int
   end
 
   def timezone() do
