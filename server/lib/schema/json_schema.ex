@@ -7,7 +7,6 @@ defmodule Schema.JsonSchema do
   """
 
   alias Schema.Utils
-  alias Schema.Types
 
   @schema_base_uri "https://schema.oasf.outshift.com/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
