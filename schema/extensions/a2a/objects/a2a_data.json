@@ -4,12 +4,14 @@
   "extends": "extension_data",
   "name": "a2a_data",
   "attributes": {
-    "a2a_capabilities": {
-      "caption": "Capabilities",
-      "description": "List of capabilities supported by the agent for A2A communication.",
-      "requirement": "optional"
+    "protocol_version": {
+      "reference": "a2a_protocol_version",
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "requirement": "required"
     },
-    "a2a_card_data": {
+    "card_data": {
+      "reference": "a2a_card_data",
       "caption": "A2A Card Data",
       "description": "The A2A card data structure itself that contains information about the agent's capabilities and communication details.",
       "requirement": "required",
@@ -20,29 +22,33 @@
         }
       ]
     },
-    "a2a_protocol_version": {
-      "caption": "Protocol Version",
-      "description": "Version of the A2A protocol used by the agent.",
-      "requirement": "required"
+    "capabilities": {
+      "reference": "a2a_capabilities",
+      "caption": "Capabilities",
+      "description": "List of capabilities supported by the agent for A2A communication.",
+      "requirement": "optional"
     },
-    "a2a_supported_transports": {
-      "caption": "Preferred Transport",
+    "transports": {
+      "reference": "a2a_supported_transports",
+      "caption": "Supported Transports",
       "description": "Preferred transport protocol for A2A communication.",
       "requirement": "optional"
     },
-    "default_input_modes": {
-      "caption": "Default Input Modes",
-      "description": "Default input modes supported by the agent for A2A communication.",
+    "input_modes": {
+      "reference": "a2a_input_modes",
+      "caption": "Supported Input Modes",
+      "description": "Supported input modes supported by the agent for A2A communication.",
       "requirement": "optional"
     },
-    "default_output_modes": {
-      "caption": "Default Output Modes",
-      "description": "Default output modes supported by the agent for A2A communication.",
+    "output_modes": {
+      "reference": "a2a_output_modes",
+      "caption": "Supported Output Modes",
+      "description": "Supported output modes supported by the agent for A2A communication.",
       "requirement": "optional"
     },
-    "supports_authenticated_extended_card": {
-      "caption": "Supports Authenticated Extended Card",
-      "description": "Indicates whether the agent supports authenticated extended A2A card.",
+    "security_schemes": {
+      "caption": "Supported Security Schemes",
+      "description": "Supported security schemes for A2A communication.",
       "requirement": "optional"
     }
   }
