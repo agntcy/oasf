@@ -181,31 +181,6 @@ defmodule Schema do
   @spec data_types :: map()
   def data_types(), do: Repo.data_types()
 
-  @spec data_type?(binary(), binary() | list(binary())) :: boolean()
-  def data_type?(type, type), do: true
-
-  def data_type?(type, base_type) when is_binary(base_type) do
-    types = Map.get(Repo.data_types(), :attributes)
-
-    case Map.get(types, String.to_atom(type)) do
-      nil -> false
-      data -> data[:type] == base_type
-    end
-  end
-
-  def data_type?(type, base_types) do
-    types = Map.get(Repo.data_types(), :attributes)
-
-    case Map.get(types, String.to_atom(type)) do
-      nil ->
-        false
-
-      data ->
-        t = data[:type] || type
-        Enum.any?(base_types, fn b -> b == t end)
-    end
-  end
-
   @spec all_objects() :: map()
   def all_objects(), do: Repo.all_objects()
 
