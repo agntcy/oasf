@@ -283,19 +283,49 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_attribute(_name, type, attr) do
-    new_schema(attr) |> Map.put("type", encode_type(type))
+    new_schema(attr) |> put_type(type)
   end
 
   defp new_schema(attr), do: %{"title" => attr[:caption]}
 
+  defp put_type(schema, type) do
+    types = Map.get(Schema.data_types(), :attributes)
+
+    case Map.get(types, String.to_atom(type)) do
+      nil ->
+        schema
+
+      data ->
+        # use the base type from the data if available
+        base_type = data[:type] || type
+
+        schema =
+          schema
+          |> Map.put("type", encode_type(base_type))
+
+        # add range from the type if available
+        case data[:range] do
+          [min, max | _] ->
+            schema
+            |> Map.put("minimum", min)
+            |> Map.put("maximum", max)
+
+          _ ->
+            schema
+        end
+    end
+  end
+
   defp encode_type(type) do
-    cond do
-      Schema.data_type?(type, "string_t") -> "string"
-      Schema.data_type?(type, "integer_t") -> "integer"
-      Schema.data_type?(type, "long_t") -> "integer"
-      Schema.data_type?(type, "float_t") -> "number"
-      Schema.data_type?(type, "boolean_t") -> "boolean"
-      true -> type
+    IO.inspect(type, label: "Encoding type")
+
+    case type do
+      "string_t" -> "string"
+      "integer_t" -> "integer"
+      "long_t" -> "integer"
+      "float_t" -> "number"
+      "boolean_t" -> "boolean"
+      _ -> type
     end
   end
 
