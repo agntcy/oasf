@@ -1,0 +1,14 @@
+{
+  "uid": 23,
+  "caption": "Time Utilities",
+  "description": "Date time utility functions for scheduling, timestamps, and temporal operations.",
+  "extends": "tools",
+  "name": "time",
+  "attributes": {
+    "category": "time_automation",
+    "mcp_server": "time",
+    "capabilities": ["date_time_operations", "scheduling", "temporal_functions"],
+    "docker_image": "mcp/time",
+    "environment_variables": ["TIMEZONE", "DATE_FORMAT"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "uid": 19,
+  "caption": "EverArt AI",
+  "description": "AI image generation tools for creative content production and visual asset creation.",
+  "extends": "tools",
+  "name": "everart_ai",
+  "attributes": {
+    "category": "ai_analysis",
+    "mcp_server": "everart",
+    "capabilities": ["image_generation", "creative_content", "visual_assets"],
+    "docker_image": "mcp/everart",
+    "environment_variables": ["EVERART_API_KEY", "EVERART_MODEL"]
+  }
+}

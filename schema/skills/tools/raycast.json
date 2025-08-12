@@ -1,0 +1,14 @@
+{
+  "uid": 26,
+  "caption": "Raycast",
+  "description": "Productivity launcher automation tools for quick access and workflow enhancement.",
+  "extends": "tools",
+  "name": "raycast",
+  "attributes": {
+    "category": "time_automation",
+    "mcp_server": "raycast",
+    "capabilities": ["productivity_launcher", "automation_tools", "workflow_enhancement"],
+    "docker_image": "mcp/raycast",
+    "environment_variables": ["RAYCAST_API_TOKEN", "RAYCAST_EXTENSION_ID"]
+  }
+}

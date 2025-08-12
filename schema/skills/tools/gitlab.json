@@ -1,0 +1,14 @@
+{
+  "uid": 6,
+  "caption": "GitLab",
+  "description": "GitLab project management tools for repository operations and DevOps workflows.",
+  "extends": "tools",
+  "name": "gitlab",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "gitlab",
+    "capabilities": ["project_management", "ci_cd", "repository_operations"],
+    "docker_image": "mcp/gitlab",
+    "environment_variables": ["GITLAB_TOKEN", "GITLAB_URL"]
+  }
+}

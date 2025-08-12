@@ -1,0 +1,14 @@
+{
+  "uid": 16,
+  "caption": "MySQL",
+  "description": "MySQL database operations management for web applications and data storage solutions.",
+  "extends": "tools",
+  "name": "mysql",
+  "attributes": {
+    "category": "databases_storage",
+    "mcp_server": "mysql",
+    "capabilities": ["database_operations", "web_applications", "data_storage"],
+    "docker_image": "mcp/mysql",
+    "environment_variables": ["MYSQL_CONNECTION_STRING", "MYSQL_SSL_CA"]
+  }
+}

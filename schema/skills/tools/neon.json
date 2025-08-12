@@ -1,0 +1,14 @@
+{
+  "uid": 18,
+  "caption": "Neon Database",
+  "description": "Neon database cloud platform for serverless PostgreSQL and branching capabilities.",
+  "extends": "tools",
+  "name": "neon",
+  "attributes": {
+    "category": "databases_storage",
+    "mcp_server": "neon",
+    "capabilities": ["serverless_postgresql", "database_branching", "cloud_platform"],
+    "docker_image": "mcp/neon",
+    "environment_variables": ["NEON_API_KEY", "NEON_DATABASE_URL"]
+  }
+}

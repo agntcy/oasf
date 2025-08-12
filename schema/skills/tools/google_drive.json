@@ -1,0 +1,14 @@
+{
+  "uid": 3,
+  "caption": "Google Drive",
+  "description": "Google Drive file operations for document management and cloud storage integration.",
+  "extends": "tools",
+  "name": "google_drive",
+  "attributes": {
+    "category": "communication_productivity",
+    "mcp_server": "google-drive",
+    "capabilities": ["file_management", "document_operations", "cloud_storage"],
+    "docker_image": "mcp/google-drive",
+    "environment_variables": ["GOOGLE_DRIVE_CREDENTIALS", "GOOGLE_DRIVE_TOKEN"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "uid": 15,
+  "caption": "PostgreSQL",
+  "description": "PostgreSQL database management system for advanced relational database operations.",
+  "extends": "tools",
+  "name": "postgresql",
+  "attributes": {
+    "category": "databases_storage",
+    "mcp_server": "postgresql",
+    "capabilities": ["relational_database", "advanced_queries", "data_management"],
+    "docker_image": "mcp/postgresql",
+    "environment_variables": ["POSTGRES_CONNECTION_STRING", "POSTGRES_SSL_MODE"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "uid": 8,
+  "caption": "Docker",
+  "description": "Docker container management operations for application containerization and deployment.",
+  "extends": "tools",
+  "name": "docker",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "docker",
+    "capabilities": ["container_management", "image_operations", "deployment_automation"],
+    "docker_image": "mcp/docker",
+    "environment_variables": ["DOCKER_HOST", "DOCKER_CERT_PATH"]
+  }
+}

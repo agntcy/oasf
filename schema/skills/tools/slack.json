@@ -1,0 +1,14 @@
+{
+  "uid": 2,
+  "caption": "Slack Integration",
+  "description": "Slack workspace messaging integration for channel communication and team collaboration.",
+  "extends": "tools",
+  "name": "slack",
+  "attributes": {
+    "category": "communication_productivity",
+    "mcp_server": "slack",
+    "capabilities": ["messaging", "channel_management", "team_collaboration"],
+    "docker_image": "mcp/slack",
+    "environment_variables": ["SLACK_BOT_TOKEN", "SLACK_APP_TOKEN"]
+  }
+}

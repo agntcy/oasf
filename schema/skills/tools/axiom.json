@@ -1,0 +1,14 @@
+{
+  "uid": 22,
+  "caption": "Axiom Analytics",
+  "description": "Log analytics data platform for monitoring, observability, and data insights.",
+  "extends": "tools",
+  "name": "axiom",
+  "attributes": {
+    "category": "ai_analysis",
+    "mcp_server": "axiom",
+    "capabilities": ["log_analytics", "data_monitoring", "observability_insights"],
+    "docker_image": "mcp/axiom",
+    "environment_variables": ["AXIOM_API_TOKEN", "AXIOM_ORG_ID"]
+  }
+}

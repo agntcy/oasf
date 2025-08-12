@@ -1,0 +1,14 @@
+{
+  "uid": 17,
+  "caption": "Everart Storage",
+  "description": "Cloud storage file management for digital asset organization and content delivery.",
+  "extends": "tools",
+  "name": "everart_storage",
+  "attributes": {
+    "category": "databases_storage",
+    "mcp_server": "everart",
+    "capabilities": ["cloud_storage", "file_management", "content_delivery"],
+    "docker_image": "mcp/everart",
+    "environment_variables": ["EVERART_API_KEY", "EVERART_WORKSPACE"]
+  }
+}

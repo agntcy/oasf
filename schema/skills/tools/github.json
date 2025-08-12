@@ -1,0 +1,14 @@
+{
+  "uid": 5,
+  "caption": "GitHub",
+  "description": "GitHub repository operations management for version control and collaborative development.",
+  "extends": "tools",
+  "name": "github",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "github",
+    "capabilities": ["repository_management", "version_control", "collaboration"],
+    "docker_image": "mcp/github",
+    "environment_variables": ["GITHUB_PERSONAL_ACCESS_TOKEN"]
+  }
+}

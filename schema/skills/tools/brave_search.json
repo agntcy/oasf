@@ -1,0 +1,14 @@
+{
+  "uid": 1,
+  "caption": "Brave Search",
+  "description": "Brave web search API integration for retrieving search results and web content.",
+  "extends": "tools",
+  "name": "brave_search",
+  "attributes": {
+    "category": "communication_productivity",
+    "mcp_server": "brave-search",
+    "capabilities": ["web_search", "search_results", "content_retrieval"],
+    "docker_image": "mcp/brave-search",
+    "environment_variables": ["BRAVE_API_KEY"]
+  }
+}

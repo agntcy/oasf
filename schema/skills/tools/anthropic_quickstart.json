@@ -1,0 +1,14 @@
+{
+  "uid": 20,
+  "caption": "Anthropic Quickstart",
+  "description": "Anthropic API integration starter for conversational AI and language model interactions.",
+  "extends": "tools",
+  "name": "anthropic_quickstart",
+  "attributes": {
+    "category": "ai_analysis",
+    "mcp_server": "anthropic-quickstart",
+    "capabilities": ["conversational_ai", "language_models", "api_integration"],
+    "docker_image": "mcp/anthropic-quickstart",
+    "environment_variables": ["ANTHROPIC_API_KEY", "ANTHROPIC_MODEL"]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "uid": 4,
+  "caption": "Gmail",
+  "description": "Gmail email account management for sending, receiving, and organizing email communications.",
+  "extends": "tools",
+  "name": "gmail",
+  "attributes": {
+    "category": "communication_productivity",
+    "mcp_server": "gmail",
+    "capabilities": ["email_management", "message_operations", "account_integration"],
+    "docker_image": "mcp/gmail",
+    "environment_variables": ["GMAIL_CREDENTIALS", "GMAIL_TOKEN"]
+  }
+}

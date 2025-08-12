@@ -1,0 +1,14 @@
+{
+  "uid": 21,
+  "caption": "AWS Bedrock",
+  "description": "AWS AI model services for machine learning inference and foundation model access.",
+  "extends": "tools",
+  "name": "aws_bedrock",
+  "attributes": {
+    "category": "ai_analysis",
+    "mcp_server": "aws-bedrock",
+    "capabilities": ["machine_learning", "foundation_models", "ai_inference"],
+    "docker_image": "mcp/aws-bedrock",
+    "environment_variables": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION"]
+  }
+}
