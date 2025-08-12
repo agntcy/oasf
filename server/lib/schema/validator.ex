@@ -440,7 +440,6 @@ defmodule Schema.Validator do
       dictionary
     )
     |> validate_version(input)
-    |> validate_type_uid(input)
     |> validate_constraints(input, class)
   end
 
@@ -574,38 +573,6 @@ defmodule Schema.Validator do
           end
       end
     else
-      response
-    end
-  end
-
-  @spec validate_type_uid(map(), map()) :: map()
-  defp validate_type_uid(response, input) do
-    class_uid = input["id"]
-    activity_id = input["activity_id"]
-    type_uid = input["type_uid"]
-
-    if is_integer(class_uid) and is_integer(activity_id) and is_integer(type_uid) do
-      expected_type_uid = class_uid * 100 + activity_id
-
-      if type_uid == expected_type_uid do
-        response
-      else
-        add_error(
-          response,
-          "type_uid_incorrect",
-          "input's \"type_uid\" value of #{type_uid}" <>
-            " does not match expected value of #{expected_type_uid}" <>
-            " (id #{class_uid} * 100 + activity_id #{activity_id} = #{expected_type_uid}).",
-          %{
-            attribute_path: "type_uid",
-            attribute: "type_uid",
-            value: type_uid,
-            expected_value: expected_type_uid
-          }
-        )
-      end
-    else
-      # One or more of the values is missing or the wrong type, which is caught elsewhere
       response
     end
   end
