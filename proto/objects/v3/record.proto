@@ -63,6 +63,10 @@ message Record {
   // List of domains under which the record can operate in.
   repeated Domain domains = 12;
 
+  // Optional URL of the schema the record can be validated against.
+  // If empty, default OASF schema will be used for validation.
+  string schema_url = 13;
+
   // Reference to the previous record, if any.
   // Used to link the record to its previous versions.
   // Field number is explicitly reserved for extendability.
