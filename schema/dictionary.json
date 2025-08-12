@@ -464,7 +464,7 @@
     "priority": {
       "caption": "Priority",
       "description": "Value that indicates a priority of an entity. See specific usage.",
-      "type": "float_t"
+      "type": "unit_interval_t"
     },
     "protocol": {
       "caption": "ACP Endpoint",
@@ -762,6 +762,13 @@
         "description": "The timestamp format is the number of milliseconds since the Epoch 01/01/1970 00:00:00 UTC. For example:<br><code>1618524549901</code>.",
         "type": "long_t",
         "type_name": "Long"
+      },
+      "unit_interval_t": {
+        "caption": "Unit Interval",
+        "description": "Unit interval is defined as the closed interval, which includes all real numbers greater than or equal to 0 and less than or equal to 1.",
+        "type": "float_t",
+        "type_name": "Float",
+        "range": [0, 1]
       },
       "uri_t": {
         "caption": "URI String",
