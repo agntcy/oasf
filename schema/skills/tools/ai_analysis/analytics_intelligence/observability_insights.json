@@ -1,0 +1,8 @@
+{
+  "uid": 1011,
+  "caption": "Observability Insights",
+  "description": "System performance and health analytics for operational intelligence",
+  "extends": "analytics_intelligence",
+  "name": "observability_insights",
+  "attributes": {}
+}

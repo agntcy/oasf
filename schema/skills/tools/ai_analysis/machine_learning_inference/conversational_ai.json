@@ -1,0 +1,8 @@
+{
+  "uid": 1005,
+  "caption": "Conversational AI",
+  "description": "Dialogue systems and chat interface capabilities for interactive agents",
+  "extends": "machine_learning_inference",
+  "name": "conversational_ai",
+  "attributes": {}
+}

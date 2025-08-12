@@ -1,0 +1,8 @@
+{
+  "caption": "Tools",
+  "category": "tools",
+  "description": "MCP (Model Context Protocol) server tools for agent integration and capability extension",
+  "name": "tools",
+  "extends": "base_skill",
+  "attributes": {}
+}
