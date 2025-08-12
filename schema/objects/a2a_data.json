@@ -31,7 +31,7 @@
     "transports": {
       "reference": "a2a_supported_transports",
       "caption": "Supported Transports",
-      "description": "Preferred transport protocol for A2A communication.",
+      "description": "Supported transport protocols for A2A communication.",
       "requirement": "optional"
     },
     "input_modes": {
@@ -47,6 +47,7 @@
       "requirement": "optional"
     },
     "security_schemes": {
+      "reference": "a2a_security_schemes",
       "caption": "Supported Security Schemes",
       "description": "Supported security schemes for A2A communication.",
       "requirement": "optional"

@@ -3,6 +3,130 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
+    "a2a_capabilities": {
+      "caption": "Capabilities",
+      "description": "List of capabilities supported by the agent for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "push_notifications": {
+          "caption": "Push Notifications",
+          "description": "Indicates whether the agent supports push notifications for A2A communication."
+        },
+        "streaming": {
+          "caption": "Streaming",
+          "description": "Indicates whether the agent supports streaming for A2A communication."
+        },
+        "state_transition_history": {
+          "caption": "State Transition History",
+          "description": "Indicates whether the agent supports state transition history for A2A communication."
+        }
+      }
+    },
+    "a2a_card_data": {
+      "caption": "A2A Agent Card Data",
+      "description": "Content of the A2A card in JSON format.",
+      "type": "json_t"
+    },
+    "a2a_data": {
+      "caption": "A2A Data",
+      "description": "Data supported by the agent for A2A.",
+      "type": "a2a_data"
+    },
+    "a2a_protocol_version": {
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "type": "string_t"
+    },
+    "a2a_input_modes": {
+      "caption": "Supported Input Modes",
+      "description": "Supported input modes supported by the agent for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "application/json": {
+          "caption": "Application/JSON"
+        },
+        "text/plain": {
+          "caption": "Text/Plain"
+        }
+      }
+    },
+    "a2a_output_modes": {
+      "caption": "Supported Output Modes",
+      "description": "Supported output modes supported by the agent for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "application/json": {
+          "caption": "Application/JSON"
+        },
+        "application/vnd.geo+json": {
+          "caption": "Application/Geo+JSON"
+        },
+        "image/jpeg": {
+          "caption": "Image/JPEG"
+        },
+        "image/png": {
+          "caption": "Image/PNG"
+        },
+        "text/html": {
+          "caption": "Text/HTML"
+        }
+      }
+    },
+    "a2a_security_schemes": {
+      "caption": "Supported Security Schemes",
+      "description": "Supported security schemes for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "none": {
+          "caption": "None",
+          "description": "No security scheme is used."
+        },
+        "oauth2": {
+          "caption": "OAuth2",
+          "description": "OAuth2 security scheme for A2A communication."
+        },
+        "api_key": {
+          "caption": "API Key",
+          "description": "API Key security scheme for A2A communication."
+        },
+        "http": {
+          "caption": "HTTP Basic",
+          "description": "HTTP Basic security scheme for A2A communication."
+        },
+        "openid": {
+          "caption": "OpenID Connect",
+          "description": "OpenID Connect security scheme for A2A communication."
+        },
+        "mtls": {
+          "caption": "Mutual TLS",
+          "description": "Mutual TLS security scheme for A2A communication."
+        }
+      }
+    },
+    "a2a_supported_transports": {
+      "caption": "Supported Transports",
+      "description": "Supported transport protocols for A2A communication.",
+      "type": "string_t",
+      "is_array": true,
+      "enum": {
+        "jsonrpc": {
+          "caption": "JSONRPC",
+          "description": "JSON-RPC transport protocol for A2A communication."
+        },
+        "grpc": {
+          "caption": "GRPC",
+          "description": "gRPC transport protocol for A2A communication."
+        },
+        "http": {
+          "caption": "HTTP+JS",
+          "description": "HTTP transport protocol for A2A communication."
+        }
+      }
+    },
     "acp": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
