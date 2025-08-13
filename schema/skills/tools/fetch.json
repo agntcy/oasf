@@ -1,0 +1,14 @@
+{
+  "uid": 13,
+  "caption": "Fetch",
+  "description": "HTTP requests web content retrieval for API interactions and data fetching.",
+  "extends": "tools",
+  "name": "fetch",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "fetch",
+    "capabilities": ["http_requests", "api_interactions", "content_retrieval"],
+    "docker_image": "mcp/fetch",
+    "environment_variables": ["HTTP_TIMEOUT", "USER_AGENT"]
+  }
+}

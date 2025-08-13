@@ -1,0 +1,8 @@
+{
+  "uid": 1006,
+  "caption": "Image Generation",
+  "description": "AI-powered image creation and synthesis capabilities",
+  "extends": "computer_vision_creative",
+  "name": "image_generation",
+  "attributes": {}
+}

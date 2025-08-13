@@ -1,0 +1,14 @@
+{
+  "uid": 24,
+  "caption": "Sentry Monitoring",
+  "description": "Error tracking monitoring platform for application performance and issue detection.",
+  "extends": "tools",
+  "name": "sentry",
+  "attributes": {
+    "category": "time_automation",
+    "mcp_server": "sentry",
+    "capabilities": ["error_tracking", "performance_monitoring", "issue_detection"],
+    "docker_image": "mcp/sentry",
+    "environment_variables": ["SENTRY_DSN", "SENTRY_AUTH_TOKEN"]
+  }
+}
