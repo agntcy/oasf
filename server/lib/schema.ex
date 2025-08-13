@@ -20,6 +20,9 @@ defmodule Schema do
   @spec version :: String.t()
   def version(), do: Repo.version()
 
+  @spec parsed_version :: Utils.version_or_error_t()
+  def parsed_version(), do: Repo.parsed_version()
+
   @spec build_version :: String.t()
   def build_version() do
     Application.spec(:schema_server)
@@ -43,6 +46,16 @@ defmodule Schema do
   @spec profiles(Repo.extensions_t()) :: map()
   def profiles(extensions) do
     Repo.profiles(extensions)
+  end
+
+  def profile(profiles, name) do
+    case profiles[name] do
+      nil ->
+        nil
+
+      profile ->
+        Map.update!(profile, :attributes, &Schema.Utils.add_sibling_of_to_attributes/1)
+    end
   end
 
   @doc """
@@ -157,38 +170,16 @@ defmodule Schema do
     Returns the attribute dictionary including the extension.
   """
   @spec dictionary(Repo.extensions_t()) :: Cache.dictionary_t()
-  def dictionary(extensions), do: Repo.dictionary(extensions)
+  def dictionary(extensions) do
+    Repo.dictionary(extensions)
+    |> Map.update!(:attributes, &Schema.Utils.add_sibling_of_to_attributes/1)
+  end
 
   @doc """
     Returns the data types defined in dictionary.
   """
   @spec data_types :: map()
   def data_types(), do: Repo.data_types()
-
-  @spec data_type?(binary(), binary() | list(binary())) :: boolean()
-  def data_type?(type, type), do: true
-
-  def data_type?(type, base_type) when is_binary(base_type) do
-    types = Map.get(Repo.data_types(), :attributes)
-
-    case Map.get(types, String.to_atom(type)) do
-      nil -> false
-      data -> data[:type] == base_type
-    end
-  end
-
-  def data_type?(type, base_types) do
-    types = Map.get(Repo.data_types(), :attributes)
-
-    case Map.get(types, String.to_atom(type)) do
-      nil ->
-        false
-
-      data ->
-        t = data[:type] || type
-        Enum.any?(base_types, fn b -> b == t end)
-    end
-  end
 
   @spec all_objects() :: map()
   def all_objects(), do: Repo.all_objects()
@@ -746,7 +737,13 @@ defmodule Schema do
   end
 
   defp reduce_data(object) do
-    delete_links(object) |> Map.drop([:_source, :_source_patched])
+    Map.drop(object, internal_keys(object))
+  end
+
+  defp internal_keys(map) do
+    Enum.filter(Map.keys(map), fn key ->
+      String.starts_with?(to_string(key), "_")
+    end)
   end
 
   defp reduce_attributes(data) do

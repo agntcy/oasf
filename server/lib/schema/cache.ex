@@ -15,6 +15,7 @@ defmodule Schema.Cache do
 
   @enforce_keys [
     :version,
+    :parsed_version,
     :profiles,
     :dictionary,
     :base_class,
@@ -34,7 +35,22 @@ defmodule Schema.Cache do
     :main_features
   ]
   defstruct ~w[
-    version profiles dictionary base_class objects all_objects skills all_skills main_skills domains all_domains main_domains features all_features main_features
+    version
+    parsed_version
+    profiles
+    dictionary
+    base_class
+    objects
+    all_objects
+    skills
+    all_skills
+    main_skills
+    domains
+    all_domains
+    main_domains
+    features
+    all_features
+    main_features
   ]a
 
   @type t() :: %__MODULE__{}
@@ -61,6 +77,12 @@ defmodule Schema.Cache do
   @spec init() :: __MODULE__.t()
   def init() do
     version = JsonReader.read_version()
+    parsed_version = Utils.parse_version(version[:version])
+
+    if not is_map(parsed_version) do
+      {:error, error_message, original_version} = parsed_version
+      error("Schema version #{inspect(original_version)} is invalid: #{error_message}")
+    end
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
     base_class = JsonReader.read_base_class()
@@ -150,6 +172,7 @@ defmodule Schema.Cache do
 
     %__MODULE__{
       version: version,
+      parsed_version: parsed_version,
       profiles: profiles,
       dictionary: dictionary,
       base_class: base_class,
@@ -184,6 +207,9 @@ defmodule Schema.Cache do
 
   @spec version(__MODULE__.t()) :: String.t()
   def version(%__MODULE__{version: version}), do: version[:version]
+
+  @spec parsed_version(__MODULE__.t()) :: Utils.version_or_error_t()
+  def parsed_version(%__MODULE__{parsed_version: parsed_version}), do: parsed_version
 
   @spec profiles(__MODULE__.t()) :: map()
   def profiles(%__MODULE__{profiles: profiles}), do: profiles
@@ -394,7 +420,8 @@ defmodule Schema.Cache do
   end
 
   defp update_attributes(attributes, dictionary_attributes) do
-    Enum.map(attributes, fn {name, attribute} ->
+    attributes
+    |> Enum.map(fn {name, attribute} ->
       # Use referece if exists instead of the name
       reference =
         if Map.has_key?(attribute, :reference) do
@@ -412,6 +439,7 @@ defmodule Schema.Cache do
           {name, Utils.deep_merge(base, attribute)}
       end
     end)
+    |> Utils.add_sibling_of_to_attributes()
   end
 
   defp enrich_ex(
@@ -619,9 +647,8 @@ defmodule Schema.Cache do
     objects =
       objects
       |> Enum.into(%{}, fn object_tuple -> attribute_source(object_tuple) end)
-      |> resolve_extends()
-      |> Enum.into(%{})
       |> patch_type("object")
+      |> resolve_extends()
 
     # all_objects has just enough info to interrogate the complete object hierarchy,
     # removing most details. It can be used to get the caption and parent (extends) of
@@ -886,8 +913,7 @@ defmodule Schema.Cache do
         # that way the previous modifications are taken into account
         case Map.get(acc, base_key, Map.get(items, base_key)) do
           nil ->
-            Logger.error("#{key} #{kind} attempted to patch invalid item: #{base_key}")
-            System.stop(1)
+            error("#{key} #{kind} attempted to patch invalid item: #{base_key}")
             acc
 
           base ->
@@ -899,6 +925,9 @@ defmodule Schema.Cache do
               |> Map.put(:profiles, profiles)
               |> Map.put(:attributes, attributes)
               |> Utils.put_non_nil(:references, item[:references])
+              # Top-level attribute associations.
+              # Only occurs in classes, but is safe to do for objects too.
+              |> Utils.put_non_nil(:associations, item[:associations])
               |> patch_constraints(item)
 
             Map.put(acc, base_key, patched_base)
@@ -963,8 +992,7 @@ defmodule Schema.Cache do
 
         case parent_item do
           nil ->
-            Logger.error("#{inspect(item[:name])} extends undefined item: #{inspect(extends)}")
-            System.stop(1)
+            error("#{inspect(item[:name])} extends undefined item: #{inspect(extends)}")
 
           base ->
             base = resolve_extends(items, base)
@@ -981,7 +1009,9 @@ defmodule Schema.Cache do
   end
 
   defp merge_profiles(:profiles, v1, nil), do: v1
+  defp merge_profiles(:profiles, nil, v2), do: v2
   defp merge_profiles(:profiles, v1, v2), do: Enum.concat(v1, v2) |> Enum.uniq()
+  defp merge_profiles(_profiles, v1, nil), do: v1
   defp merge_profiles(_profiles, _v1, v2), do: v2
 
   # Final fix up a map of many name -> entity key-value pairs.
@@ -1063,7 +1093,7 @@ defmodule Schema.Cache do
     list =
       Enum.reduce(attributes, [], fn {key, attribute}, acc ->
         missing_desc_warning(attribute[:description], name, key, dictionary)
-        add_datetime(Utils.find_entity(dictionary, map, key), key, attribute, acc)
+        add_datetime(find_attribute(dictionary, key, attribute[:_source]), key, attribute, acc)
       end)
 
     update_profiles(list, map, profiles, attributes)
@@ -1081,11 +1111,11 @@ defmodule Schema.Cache do
     :ok
   end
 
-  defp add_datetime({_k, nil}, _key, _attribute, acc) do
+  defp add_datetime(nil, _key, _attribute, acc) do
     acc
   end
 
-  defp add_datetime({_k, v}, key, attribute, acc) do
+  defp add_datetime(v, key, attribute, acc) do
     case Map.get(v, :type) do
       "timestamp_t" ->
         attribute =
@@ -1179,7 +1209,7 @@ defmodule Schema.Cache do
     types = get_in(dictionary, [:types, :attributes])
 
     Map.update!(dictionary, :attributes, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, attribute} ->
+      Enum.into(attributes, %{}, fn {attribute_key, attribute} ->
         type = attribute[:type] || "object_t"
 
         attribute =
@@ -1193,7 +1223,7 @@ defmodule Schema.Cache do
               attribute
           end
 
-        {name, attribute}
+        {attribute_key, attribute}
       end)
     end)
   end
@@ -1245,6 +1275,8 @@ defmodule Schema.Cache do
     |> copy_new(from, :object_type)
     |> copy_new(from, :source)
     |> copy_new(from, :references)
+    |> copy_new(from, :sibling)
+    |> copy_new(from, :"@deprecated")
   end
 
   defp copy_new(to, from, key) do

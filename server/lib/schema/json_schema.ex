@@ -14,7 +14,7 @@ defmodule Schema.JsonSchema do
 
   @doc """
   Generates a JSON schema corresponding to the `type` parameter.
-  The `type` can be either a class or an object defintion.
+  The `type` can be either a class or an object definition.
 
   Options: :package_name | :schema_version
   """
@@ -34,7 +34,7 @@ defmodule Schema.JsonSchema do
     name = type[:name]
     ext = type[:extension]
 
-    {properties, required} = map_reduce(name, type[:attributes])
+    {properties, required, just_one, at_least_one} = map_reduce(name, type)
 
     schema = Map.new()
 
@@ -61,6 +61,8 @@ defmodule Schema.JsonSchema do
       |> Map.put("properties", properties)
       |> Map.put("additionalProperties", false)
       |> put_required(required)
+      |> put_just_one(just_one)
+      |> put_at_least_one(at_least_one)
       |> encode_entities(type[:entities])
       |> empty_object(properties)
 
@@ -138,6 +140,37 @@ defmodule Schema.JsonSchema do
     Map.put(map, "required", Enum.sort(required))
   end
 
+  defp put_just_one(map, []) do
+    map
+  end
+
+  defp put_just_one(map, just_one) do
+    one_of =
+      Enum.map(just_one, fn item ->
+        others = Enum.reject(just_one, &(&1 == item))
+
+        %{
+          "required" => [item],
+          "not" => %{"required" => others}
+        }
+      end)
+
+    Map.put(map, "oneOf", one_of)
+  end
+
+  defp put_at_least_one(map, []) do
+    map
+  end
+
+  defp put_at_least_one(map, at_least_one) do
+    any_of =
+      Enum.map(at_least_one, fn item ->
+        %{"required" => [item]}
+      end)
+
+    Map.put(map, "anyOf", any_of)
+  end
+
   defp encode_entities(schema, nil) do
     schema
   end
@@ -190,25 +223,37 @@ defmodule Schema.JsonSchema do
     Map.put(schema, "$defs", defs)
   end
 
-  defp map_reduce(type_name, attributes) do
-    {properties, required} =
-      Enum.map_reduce(attributes, [], fn {key, attribute}, acc ->
+  defp map_reduce(type_name, type) do
+    {properties, {required, just_one, at_least_one}} =
+      Enum.map_reduce(type[:attributes], {[], [], []}, fn {key, attribute},
+                                                          {required, just_one, at_least_one} ->
         name = Atom.to_string(key)
+        just_one_list = List.wrap(type[:constraints][:just_one])
+        at_least_one_list = List.wrap(type[:constraints][:at_least_one])
 
-        acc =
-          case attribute[:requirement] do
-            "required" -> [name | acc]
-            _ -> acc
-          end
+        cond do
+          name in just_one_list ->
+            {required, [name | just_one], at_least_one}
 
-        schema =
-          encode_attribute(type_name, attribute[:type], attribute)
-          |> encode_array(attribute[:is_array])
+          name in at_least_one_list ->
+            {required, just_one, [name | at_least_one]}
 
-        {{name, schema}, acc}
+          attribute[:requirement] == "required" ->
+            {[name | required], just_one, at_least_one}
+
+          true ->
+            {required, just_one, at_least_one}
+        end
+        |> (fn {required, just_one, at_least_one} ->
+              schema =
+                encode_attribute(type_name, attribute[:type], attribute)
+                |> encode_array(attribute[:is_array])
+
+              {{name, schema}, {required, just_one, at_least_one}}
+            end).()
       end)
 
-    {Map.new(properties), required}
+    {Map.new(properties), required, just_one, at_least_one}
   end
 
   defp encode_attribute(_name, "string_map_t", attr) do
@@ -238,19 +283,47 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_attribute(_name, type, attr) do
-    new_schema(attr) |> Map.put("type", encode_type(type))
+    new_schema(attr) |> put_type(type)
   end
 
   defp new_schema(attr), do: %{"title" => attr[:caption]}
 
+  defp put_type(schema, type) do
+    types = Map.get(Schema.data_types(), :attributes)
+
+    case Map.get(types, String.to_atom(type)) do
+      nil ->
+        schema
+
+      data ->
+        # use the base type from the data if available
+        base_type = data[:type] || type
+
+        schema =
+          schema
+          |> Map.put("type", encode_type(base_type))
+
+        # add range from the type if available
+        case data[:range] do
+          [min, max | _] ->
+            schema
+            |> Map.put("minimum", min)
+            |> Map.put("maximum", max)
+
+          _ ->
+            schema
+        end
+    end
+  end
+
   defp encode_type(type) do
-    cond do
-      Schema.data_type?(type, "string_t") -> "string"
-      Schema.data_type?(type, "integer_t") -> "integer"
-      Schema.data_type?(type, "long_t") -> "integer"
-      Schema.data_type?(type, "float_t") -> "number"
-      Schema.data_type?(type, "boolean_t") -> "boolean"
-      true -> type
+    case type do
+      "string_t" -> "string"
+      "integer_t" -> "integer"
+      "long_t" -> "integer"
+      "float_t" -> "number"
+      "boolean_t" -> "boolean"
+      _ -> type
     end
   end
 

@@ -8,23 +8,14 @@
   <meta name="description" content="Open Agents Schema Framework">
   <title>Open Agents Schema Framework</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
-      integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn"
-      crossorigin="anonymous">
-
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+  <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap-4.6.2.min.css") %>'/>
+  <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap.select-1.13.18.min.css") %>'/>
+  <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/fontawesome-6.4.0.min.css") %>'/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/app.css") %>'/>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-          integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-          crossorigin="anonymous"></script>
+  <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/jquery-3.5.1.slim.min.js") %>'></script>
 
   <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/app.js") %>'></script>
   <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/profiles.js") %>'></script>
@@ -41,59 +32,66 @@
 
         // update the links with the selected extensions
         const params = select_extensions(selected_extensions);
-        $(".extensions a").each(function() {
+        $(".sidebar-section a").each(function() {
           this.href = this.href + params;
         });
 
         // set the profile checkboxes
         init_selected_profiles();
+
+        // initialize extension-profile dependencies
+        init_extension_profile_dependencies();
       }
     };
 
     $(document).ready(function () {
       let selected_extensions = get_selected_extensions();
-      let extensions = $("#checkbox-extensions :checkbox");
+      let extensions = $("#extensions-list :checkbox");
       extensions.on("change", function() {
         extensions.each(function(){
-          selected_extensions[this.id] = this.checked;
+        selected_extensions[this.id] = this.checked;
         });
         set_selected_extensions(selected_extensions);
 
         const params = select_extensions(selected_extensions);
         window.location.search = params;
-        $(".extensions a").each(function() {
+        $(".sidebar-section a").each(function() {
           this.href = this.href + params;
         });
       });
 
-      // init the dropdown filters
-      init_select();
+      // init the attributes dropdown filters
+      init_selected_attributes();
 
-      $("a.nav-item.nav-link.active").removeClass("active");
-      switch (window.location.pathname) {
+      $("a.nav-link.active").removeClass("active");
+      let path = window.location.pathname.replace(/^\/[\d.]+(?:-[^\/]+)?/, '');
+      switch (path) {
         case '/':
-          $('#home_id').addClass("active");
+          $('#home_id a.nav-link').addClass("active");
           break;
         case '/main_skills':
-          $('#skills_id').addClass("active");
-          $('#classes_id').addClass("active");
+          $('#skills_id a.nav-link').addClass("active");
+          $('#classes_id a.nav-link').addClass("active");
           break;
         case '/main_domains':
-          $('#domains_id').addClass("active");
-          $('#classes_id').addClass("active");
+          $('#domains_id a.nav-link').addClass("active");
+          $('#classes_id a.nav-link').addClass("active");
           break;
         case '/main_features':
-          $('#features_id').addClass("active");
-          $('#classes_id').addClass("active");
+          $('#features_id a.nav-link').addClass("active");
+          $('#classes_id a.nav-link').addClass("active");
           break;
         case '/objects/record':
-          $('#record_id').addClass("active");
+          $('#record_id a.nav-link').addClass("active");
           break;
         case '/dictionary':
-          $('#dictionary_id').addClass("active");
+          $('#dictionary_id a.nav-link').addClass("active");
           break;
         case '/objects':
-          $('#objects_id').addClass("active");
+          $('#objects_id a.nav-link').addClass("active");
+          break;
+        case '/data_types':
+          $('#data_types_id a.nav-link').addClass("active");
           break;
       }
     });
@@ -103,86 +101,100 @@
 <body class="bg-light">
 
 <nav class="navbar navbar-light navbar-expand-md">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse">
-    <span class="navbar-toggler-icon"></span>
+  <a class="navbar-brand d-md-none" href="<%= Routes.static_path(@conn, "/?extensions=") %>" onclick="reset_home_page()">
+    <img src='<%= Routes.static_path(@conn, "/images/oasf.png") %>' alt="OASF" height="48" class="d-inline-block align-top">
+  </a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-chevron-down"></i>
   </button>
-  <a class="navbar-brand" href="<%= Routes.static_path(@conn, "/") %>">Open Agentic Schema Framework</a>
 
   <nav class="navbar navbar-bg collapse navbar-collapse navbar-expand-md navbar-light fixed-left">
-    <a href="<%= Routes.static_path(@conn, "/") %>" onclick="reset_home_page()" class="navbar-brand oasf-logo">
-      <img src='<%= Routes.static_path(@conn, "/images/oasf.png") %>' alt="OASF"/>
-    </a>
-    <h6 class="container-fluid version">
-    <form autocomplete="off">
-      <select
-        class="select-version"
-        id="select_version"
-        onchange="selectVersionFun()">
-        <%= raw select_versions(@conn) %>
-      </select>
-      </form>
-    </h6>
+    <!-- Sidebar Header (Logo and Version) - Static -->
+    <div class="sidebar-header">
+      <div class="oasf-logo">
+        <a href="<%= Routes.static_path(@conn, "/?extensions=") %>" onclick="reset_home_page()">
+          <img src='<%= Routes.static_path(@conn, "/images/oasf.png") %>' alt="OASF"/>
+        </a>
+      </div>
+      <h6 class="container-fluid version">
+      <form autocomplete="off">
+        <select
+          class="select-version"
+          id="select_version"
+          onchange="selectVersionFun()">
+          <%= raw select_versions(@conn) %>
+        </select>
+        </form>
+      </h6>
 
-    <script>
-    function selectVersionFun() {
-      let x = document.getElementById("select_version").value;
-      reset_home_page();
-      window.open(x, "_self");
-    }
-    </script>
-
-    <!--<div class="navbar-brand">
-      <a target="_blank" href=https://github.com/agntcy/oasf/blob/main/schema/extensions.md>Extensions</a>
-      <hr class="divider"/>
-    </div>-->
-    <div class="collapse navbar-collapse" id="checkbox-extensions">
-      <ul class="navbar-nav">
-        <%= for {_key, map} <- @extensions do %>
-        <% name = map[:name] %>
-        <li class="nav-item">
-          <a style="display: inline-block;">
-            <input
-              type="checkbox"
-              id="<%= name %>">
-              <label for="checkbox"><%= raw format_extension(map) %><label>
-          </a>
-        </li>
-      <% end %>
-      </ul>
+      <script>
+      function selectVersionFun() {
+        let x = document.getElementById("select_version").value;
+        reset_home_page();
+        window.open(x, "_self");
+      }
+      </script>
     </div>
 
-    <%= if map_size(@profiles) > 0 do %>
-    <div class="container-fluid"></div>
-    <span class="extensions">
-      <a id="profiles" class="navbar-brand" href='<%= Routes.static_path(@conn, "/profiles") %>'>Profiles
-        <hr class="divider"/>
-      </a>
-    </span>
-    <div class="collapse navbar-collapse" id="checkbox-profiles">
-      <ul class="navbar-nav">
-        <%= for {name, map} <- @profiles do %>
-        <span class="d-inline-block" tabindex="0"
-         data-toggle="tooltip" data-delay='{"show": 1000}' title='<%= raw format_profile(map) %>' >
-          <li class="extensions nav-item">
-            <label><input type="checkbox" data-profile="<%= name %>" id="<%= String.replace(name, "/", "-") %>"> <%= map[:caption] %></label>
-          </li>
-        </span>
+    <!-- Sidebar Content - Scrollable -->
+    <div class="sidebar-content">
+      <%= if map_size(@extensions) > 0 do %>
+      <!-- Extensions Section -->
+      <div class="sidebar-section">
+        <a target="_blank" class="sidebar-section-header" href=https://github.com/agntcy/oasf/blob/main/schema/extensions.md>
+          <i class="fas fa-layer-group"></i> Extensions
+          <hr class="divider"/>
+        </a>
+        <div class="sidebar-section-content" id="extensions-list">
+          <ul class="sidebar-nav">
+            <%= for {_key, map} <- @extensions do %>
+            <% name = map[:name] %>
+            <li class="sidebar-nav-item">
+              <label for="<%= name %>">
+                <input type="checkbox" id="<%= name %>">
+                <%= raw format_extension(map) %>
+              </label>
+            </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
       <% end %>
-      </ul>
+
+      <%= if map_size(@profiles) > 0 do %>
+      <!-- Profiles Section -->
+      <div class="sidebar-section">
+        <a id="profiles-link" class="sidebar-section-header" href='<%= Routes.static_path(@conn, "/profiles") %>'>
+          <i class="fas fa-tag"></i> Profiles
+          <hr class="divider"/>
+        </a>
+        <div class="sidebar-section-content" id="profiles-list">
+          <ul class="sidebar-nav">
+            <%= for {name, map} <- @profiles do %>
+            <li class="sidebar-nav-item profile-item" data-profile-name="<%= name %>"
+                data-toggle="tooltip" title='<%= raw format_profile(map) %>'>
+              <label>
+                <input type="checkbox" data-profile="<%= name %>" id="<%= String.replace(name, "/", "-") %>">
+                <%= map[:caption] %>
+              </label>
+            </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <% end %>
     </div>
-    <% end %>
   </nav>
 
   <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="extensions navbar-nav ml-auto">
-      <li id=classes_id class="nav-link">
-        <div class="dropdown">
-          Classes
-          <div class="dropdown-content">
-            <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
-            <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
-            <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_features") %>'>Features</a>
-          </div>
+    <ul class="top-navbar-nav navbar-nav ml-auto">
+      <li id="classes_id" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button">Classes</a>
+        <div class="dropdown-content">
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_features") %>'>Features</a>
         </div>
       </li>
       <li id="skills_id" class="nav-item">
@@ -203,40 +215,29 @@
       <li id="objects_id"  class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects") %>'>Objects</a>
       </li>
+      <li id="data_types_id" class="nav-item">
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>Data Types</a>
+      </li>
 
       <div class="navbar-text">|</div>
 
-      <li id=resources_id class="nav-link">
-        <div class="dropdown">
-          Resources
-          <div class="dropdown-content">
-            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
-            <a class="nav-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
-            <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>OASF Data Types</a>
-            <a class="nav-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
-          </div>
-        </div>
-      </li>
-
-      <li id="schemas" class="nav-link d-none">
-        <div class="dropdown">
-          Schemas
-          <div class="dropdown-content">
-            <div id="json-schema" class="d-none">
-              <button type="button" id="btn-json-schema" class="btn btn-link btn-sm">JSON Schema</button>
-            </div>
-            <div id="schema" class="d-none">
-              <button type="button" id="btn-schema" class="btn btn-link btn-sm">Schema</button>
-            </div>
-            <div id="sample-data" class="d-none">
-              <button type="button" id="btn-sample-data" class="btn btn-link btn-sm">Sample</button>
-            </div>
-          </div>
+      <li id="resources_id" class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button">Resources</a>
+        <div class="dropdown-content">
+          <a class="dropdown-link" target="_blank" href='https://docs.agntcy.org/oasf/open-agentic-schema-framework/'> Documentation</a>
+          <a class="dropdown-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
+          <a class="dropdown-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
+          <a class="dropdown-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
         </div>
       </li>
     </ul>
   </div>
 </nav>
+
+<!-- Sidebar Toggle Button - positioned in top-left corner -->
+<button id="sidebar-toggle" class="sidebar-toggle" title="Toggle sidebar">
+  <i id="sidebar-toggle-icon" class="fas fa-chevron-left"></i>
+</button>
 
 <div class="main-page">
   <main role="main" class="container-fluid">
@@ -250,23 +251,42 @@
   <a href="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html">Terms & Conditions</a> | <a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html">Privacy Policy</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-    crossorigin="anonymous">
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"
-    integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2"
-    crossorigin="anonymous">
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/popper.min.js") %>'></script>
+<script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/bootstrap-4.6.2.bundle.min.js") %>'></script>
+<script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/bootstrap.select-1.13.18.min.js") %>'></script>
 <script type="text/javascript" src='<%= Routes.static_path(@conn, "/js/sorttable.js") %>'></script>
 
 <script>
   $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip({
+      delay: { "show": 300, "hide": 100 }
+    })
   });
+
+  // Profile highlighting functionality
+  window.highlightApplicableProfiles = function(applicableProfiles) {
+    // Reset all profile highlighting
+    $('.profile-item').removeClass('profile-applicable profile-not-applicable');
+
+    if (!applicableProfiles || applicableProfiles.length === 0) {
+      return;
+    }
+
+    // Add highlighting classes
+    $('.profile-item').each(function() {
+      const profileName = $(this).data('profile-name');
+      if (applicableProfiles.includes(profileName)) {
+        $(this).addClass('profile-applicable');
+      } else {
+        $(this).addClass('profile-not-applicable');
+      }
+    });
+  };
+
+  // Clear profile highlighting
+  window.clearProfileHighlighting = function() {
+    $('.profile-item').removeClass('profile-applicable profile-not-applicable');
+  };
 </script>
 
 </body>
