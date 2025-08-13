@@ -1,21 +1,15 @@
 {
   "uid": 5,
-  "caption": "A2A Card",
+  "caption": "A2A",
   "description": "Describes A2A card details for communication and usage with A2A protocol.",
   "extends": "runtime",
   "name": "a2a",
   "attributes": {
     "data": {
-      "reference": "a2a_card_data",
+      "reference": "a2a_data",
       "caption": "Data",
       "description": "Data supported by the agent for A2A card.",
-      "requirement": "required",
-      "references": [
-        {
-          "description": "A2A Card Data Schema",
-          "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
-        }
-      ]
+      "requirement": "required"
     }
   }
 }

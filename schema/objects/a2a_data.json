@@ -1,0 +1,56 @@
+{
+  "caption": "A2A Data",
+  "description": "Data for the A2A record extension.",
+  "extends": "extension_data",
+  "name": "a2a_data",
+  "attributes": {
+    "protocol_version": {
+      "reference": "a2a_protocol_version",
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "requirement": "required"
+    },
+    "card_data": {
+      "reference": "a2a_card_data",
+      "caption": "A2A Card Data",
+      "description": "The A2A card data structure itself that contains information about the agent's capabilities and communication details.",
+      "requirement": "required",
+      "references": [
+        {
+          "description": "A2A Card Data Schema",
+          "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+        }
+      ]
+    },
+    "capabilities": {
+      "reference": "a2a_capabilities",
+      "caption": "Capabilities",
+      "description": "List of capabilities supported by the agent for A2A communication.",
+      "requirement": "optional"
+    },
+    "transports": {
+      "reference": "a2a_supported_transports",
+      "caption": "Supported Transports",
+      "description": "Supported transport protocols for A2A communication.",
+      "requirement": "optional"
+    },
+    "input_modes": {
+      "reference": "a2a_input_modes",
+      "caption": "Supported Input Modes",
+      "description": "Supported input modes supported by the agent for A2A communication.",
+      "requirement": "optional"
+    },
+    "output_modes": {
+      "reference": "a2a_output_modes",
+      "caption": "Supported Output Modes",
+      "description": "Supported output modes supported by the agent for A2A communication.",
+      "requirement": "optional"
+    },
+    "security_schemes": {
+      "reference": "a2a_security_schemes",
+      "caption": "Supported Security Schemes",
+      "description": "Supported security schemes for A2A communication.",
+      "requirement": "optional"
+    }
+  }
+}
