@@ -316,8 +316,6 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_type(type) do
-    IO.inspect(type, label: "Encoding type")
-
     case type do
       "string_t" -> "string"
       "integer_t" -> "integer"
