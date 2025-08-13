@@ -661,7 +661,7 @@ defmodule SchemaWeb.PageView do
               [
                 "<tr class=\"",
                 css_classes,
-                "\"><td style=\"width: 25px\" class=\"text-right\" id=\"",
+                "\"><td class=\"text-right\" id=\"",
                 to_string(attribute_key),
                 "-",
                 id,
