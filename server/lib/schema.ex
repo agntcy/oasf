@@ -644,14 +644,6 @@ defmodule Schema do
     |> reduce_objects()
   end
 
-  # ----------------------------#
-  # Enrich Class Data Functions #
-  # ----------------------------#
-
-  def enrich(data, enum_text, type) do
-    Schema.Helper.enrich(data, enum_text, type)
-  end
-
   # -------------------------------#
   # Generate Sample Data Functions #
   # -------------------------------#

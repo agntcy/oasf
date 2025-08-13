@@ -693,7 +693,7 @@ defmodule Schema.Cache do
     class_key not in ignored_keys and !Map.has_key?(class, :uid)
   end
 
-  # Add category_uid, class_uid, and type_uid
+  # Add class_uid, class_name, and schema_version to the class.
   defp enrich_class({class_key, class}, categories, classes, version, all_classes) do
     class =
       class

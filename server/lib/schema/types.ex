@@ -29,12 +29,6 @@ defmodule Schema.Types do
   def class_uid(category_uid, class_id), do: category_uid * 100 + class_id
 
   @doc """
-  Makes a type uid for the given class and activity identifiers.
-  """
-  @spec type_uid(number, number) :: number
-  def type_uid(class_uid, activity_id), do: class_uid * 100 + activity_id
-
-  @doc """
   Makes type name from class name and type uid enum name.
   """
   @spec type_name(binary, binary) :: binary

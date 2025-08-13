@@ -118,12 +118,10 @@ defmodule SchemaWeb.Router do
 
     get "/data_types", SchemaController, :data_types
 
-    post "/enrich/skill", SchemaController, :enrich_skill
     post "/translate/skill", SchemaController, :translate_skill
     post "/validate/skill", SchemaController, :validate_skill
     post "/validate_bundle/skill", SchemaController, :validate_bundle_skill
 
-    post "/enrich/domain", SchemaController, :enrich_domain
     post "/translate/domain", SchemaController, :translate_domain
     post "/validate/domain", SchemaController, :validate_domain
     post "/validate_bundle/domain", SchemaController, :validate_bundle_domain
@@ -195,7 +193,7 @@ defmodule SchemaWeb.Router do
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        version: "0.5.0"
+        version: "0.4.0"
       }
     }
   end

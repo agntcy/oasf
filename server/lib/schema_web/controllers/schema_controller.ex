@@ -14,8 +14,6 @@ defmodule SchemaWeb.SchemaController do
   @spaces "_spaces"
   @missing_recommended "missing_recommended"
 
-  @enum_text "_enum_text"
-
   @extensions_param_description "When included in request, filters response to included only the" <>
                                   " supplied schema extensions, or no extensions if this parameter has" <>
                                   " no value. When not included, all extensions are returned in" <>
@@ -1819,142 +1817,8 @@ defmodule SchemaWeb.SchemaController do
   end
 
   # ---------------------------------------------
-  # Enrichment, validation, and translation API's
+  # Validation, and translation API's
   # ---------------------------------------------
-
-  @doc """
-  Enrich skill class data by adding type_uid, and enumerated text.
-  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
-  objects.
-  """
-  swagger_path :enrich_skill do
-    post("/api/enrich/skill")
-    summary("Enrich skill class")
-
-    description(
-      "The purpose of this API is to enrich the provided skill class data with <code>type_uid</code>," <>
-        " and enumerated text. Each class is represented as a" <>
-        " JSON object, while multiple classes are encoded as a JSON array of objects."
-    )
-
-    produces("application/json")
-    tag("Enrichment")
-
-    parameters do
-      _enum_text(
-        :query,
-        :boolean,
-        """
-        Enhance the class data by adding the enumerated text values.<br/>
-
-        |Value|Example|
-        |-----|-------|
-        |true|Untranslated:<br/><code>{"id":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized", "name": "Base Class", "id": 0}</code>|
-        """,
-        default: false
-      )
-
-      data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class data to be enriched.",
-        required: true
-      )
-    end
-
-    response(200, "Success")
-  end
-
-  @spec enrich_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def enrich_skill(conn, params) do
-    enum_text = conn.query_params[@enum_text]
-
-    {status, result} =
-      case params["_json"] do
-        # Enrich a single class
-        class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, :skill)}
-
-        # Enrich a list of classes
-        list when is_list(list) ->
-          {200,
-           Enum.map(
-             list,
-             &Task.async(fn -> Schema.enrich(&1, enum_text, :skill) end)
-           )
-           |> Enum.map(&Task.await/1)}
-
-        # something other than json data
-        _ ->
-          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
-      end
-
-    send_json_resp(conn, status, result)
-  end
-
-  @doc """
-  Enrich domain class data by adding type_uid, and enumerated text.
-  A single class is encoded as a JSON object and multiple classes are encoded as JSON array of
-  objects.
-  """
-  swagger_path :enrich_domain do
-    post("/api/enrich/domain")
-    summary("Enrich domain class")
-
-    description(
-      "The purpose of this API is to enrich the provided domain class data with <code>type_uid</code>," <>
-        " and enumerated text. Each class is represented as a" <>
-        " JSON object, while multiple classes are encoded as a JSON array of objects."
-    )
-
-    produces("application/json")
-    tag("Enrichment")
-
-    parameters do
-      _enum_text(
-        :query,
-        :boolean,
-        """
-        Enhance the class data by adding the enumerated text values.<br/>
-
-        |Value|Example|
-        |-----|-------|
-        |true|Untranslated:<br/><code>{"id":0</code><br/><br/>Translated:<br/><code>{"category_name": "Uncategorized",  "name": "Base Class", "id": 0}</code>|
-        """,
-        default: false
-      )
-
-      data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class data to be enriched.",
-        required: true
-      )
-    end
-
-    response(200, "Success")
-  end
-
-  @spec enrich_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def enrich_domain(conn, params) do
-    enum_text = conn.query_params[@enum_text]
-
-    {status, result} =
-      case params["_json"] do
-        # Enrich a single class
-        class when is_map(class) ->
-          {200, Schema.enrich(class, enum_text, :domain)}
-
-        # Enrich a list of classes
-        list when is_list(list) ->
-          {200,
-           Enum.map(
-             list,
-             &Task.async(fn -> Schema.enrich(&1, enum_text, :domain) end)
-           )
-           |> Enum.map(&Task.await/1)}
-
-        # something other than json data
-        _ ->
-          {400, %{error: "Unexpected body. Expected a JSON object or array."}}
-      end
-
-    send_json_resp(conn, status, result)
-  end
 
   @doc """
   Translate skill class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
@@ -2714,8 +2578,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp sample_skill(conn, id, options) do
-    # TODO: honor constraints
-
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
@@ -2763,8 +2625,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp sample_domain(conn, id, options) do
-    # TODO: honor constraints
-
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
@@ -2812,8 +2672,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp sample_feature(conn, id, options) do
-    # TODO: honor constraints
-
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
@@ -2857,8 +2715,6 @@ defmodule SchemaWeb.SchemaController do
 
   @spec sample_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def sample_object(conn, %{"id" => id} = options) do
-    # TODO: honor constraints
-
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
