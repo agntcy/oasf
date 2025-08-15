@@ -866,10 +866,19 @@ defmodule Schema.Validator do
                 input_item[attribute_name],
                 {response, 0},
                 fn value, {response, index} ->
-                  value_str = to_string(value)
-                  value_atom = String.to_atom(value_str)
+                  value_atom =
+                    cond do
+                      is_atom(value) ->
+                        value
 
-                  if Map.has_key?(attribute_details[:enum], value_atom) do
+                      is_binary(value) or is_integer(value) or is_float(value) ->
+                        String.to_atom(to_string(value))
+
+                      true ->
+                        nil
+                    end
+
+                  if value_atom && Map.has_key?(attribute_details[:enum], value_atom) do
                     # The enum array value is good - check sibling and deprecation
                     response =
                       response
@@ -920,10 +929,20 @@ defmodule Schema.Validator do
             # The enum values are always strings, so rather than use elaborate conversions,
             # we just use Kernel.to_string/1. (The value is type checked elsewhere anyway.)
             value = input_item[attribute_name]
-            value_str = to_string(value)
-            value_atom = String.to_atom(value_str)
 
-            if Map.has_key?(attribute_details[:enum], value_atom) do
+            value_atom =
+              cond do
+                is_atom(value) ->
+                  value
+
+                is_binary(value) or is_integer(value) or is_float(value) ->
+                  String.to_atom(to_string(value))
+
+                true ->
+                  nil
+              end
+
+            if value_atom && Map.has_key?(attribute_details[:enum], value_atom) do
               # The enum value is good - check sibling and deprecation
               response
               |> validate_enum_sibling(
@@ -2309,16 +2328,34 @@ defmodule Schema.Validator do
     errors = lenient_reverse(response[:errors])
     warnings = lenient_reverse(response[:warnings])
 
-    Map.merge(response, %{
-      error_count: length(errors),
-      warning_count: length(warnings),
-      errors: errors,
-      warnings: warnings
-    })
+    response =
+      Map.merge(response, %{
+        error_count: length(errors),
+        warning_count: length(warnings),
+        errors: errors,
+        warnings: warnings
+      })
+
+    sanitize_for_json(response)
   end
 
   defp lenient_reverse(nil), do: []
   defp lenient_reverse(list) when is_list(list), do: Enum.reverse(list)
+
+  # Recursively convert tuples in the response to lists (for JSON encoding)
+  defp sanitize_for_json(term) when is_tuple(term) do
+    Tuple.to_list(term)
+  end
+
+  defp sanitize_for_json(term) when is_map(term) do
+    Map.new(term, fn {k, v} -> {k, sanitize_for_json(v)} end)
+  end
+
+  defp sanitize_for_json(term) when is_list(term) do
+    Enum.map(term, &sanitize_for_json/1)
+  end
+
+  defp sanitize_for_json(term), do: term
 
   # Returns approximate OASF type as a string for a value parsed from JSON. This is intended for
   # use when an attribute's type is incorrect. For integer values, this returns smallest type that
