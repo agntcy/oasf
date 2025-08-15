@@ -62,7 +62,7 @@
     "extensions": {
       "caption": "Extensions",
       "description": "List of extension models that describe this record and its capabilities more in depth.",
-      "requirement": "recommanded"
+      "requirement": "recommended"
     },
     "signature": {
       "reference": "record_signature",
