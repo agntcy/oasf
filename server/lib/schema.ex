@@ -328,6 +328,13 @@ defmodule Schema do
     end
   end
 
+
+  @doc """
+  Finds a feature by the feature uid value.
+  """
+  @spec find_feature(integer()) :: nil | Cache.class_t()
+  def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
+
   @doc """
     Returns all objects.
   """
