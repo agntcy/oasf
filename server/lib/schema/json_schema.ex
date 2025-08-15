@@ -7,7 +7,6 @@ defmodule Schema.JsonSchema do
   """
 
   alias Schema.Utils
-  alias Schema.Types
 
   @schema_base_uri "https://schema.oasf.outshift.com/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
@@ -386,7 +385,7 @@ defmodule Schema.JsonSchema do
         if family == "feature" do
           feature_names =
             Enum.map(children_classes, fn item ->
-              Types.class_name_with_hierarchy(item[:name], Schema.all_features())
+              Utils.class_name_with_hierarchy(item[:name], Schema.all_features())
             end)
 
           Enum.map(children_classes, fn item ->

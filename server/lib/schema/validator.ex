@@ -142,7 +142,7 @@ defmodule Schema.Validator do
           validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
         :feature ->
-          if Schema.Types.is_oasf_class?(type, input["name"]) do
+          if Schema.Utils.is_oasf_class?(type, input["name"]) do
             validate_class_id_or_name(response, input, &Schema.find_feature/1, &Schema.feature/1)
           else
             response =
@@ -1530,7 +1530,7 @@ defmodule Schema.Validator do
               validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
             "feature" ->
-              if Schema.Types.is_oasf_class?(
+              if Schema.Utils.is_oasf_class?(
                    String.to_atom(attribute_details[:family]),
                    value["name"]
                  ) do
