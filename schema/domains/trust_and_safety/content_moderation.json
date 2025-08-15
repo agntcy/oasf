@@ -2,7 +2,7 @@
     "uid": 2,
     "caption": "Content Moderation",
     "description": "Reviewing and managing user-generated content to ensure it complies with community guidelines and legal standards. Subdomains: Automated Moderation, Community Guidelines, Human Moderation, and Harmful Content Detection.",
-    "extends": "trust_and_safety_domain",
-    "name": "content_moderation_domain",
+    "extends": "trust_and_safety",
+    "name": "content_moderation",
     "attributes": {}
   }
