@@ -54,8 +54,8 @@ message Record {
   repeated Locator locators = 9;
 
   // Additional information attached to the record.
-  // Extensions are used to generically extend the record's functionality.
-  repeated Extension extensions = 10;
+  // Features are used to generically extend the record's functionality.
+  repeated Feature features = 10;
 
   // Security signature of the record.
   Signature signature = 11;

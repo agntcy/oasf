@@ -59,9 +59,9 @@
       "description": "List of source locators where this record can be found or used from.",
       "requirement": "required"
     },
-    "extensions": {
-      "caption": "Extensions",
-      "description": "List of extension models that describe this record and its capabilities more in depth.",
+    "features": {
+      "caption": "Features",
+      "description": "List of features that describe this record and its capabilities more in depth.",
       "requirement": "recommended"
     },
     "signature": {
