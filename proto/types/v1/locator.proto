@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package objects.v3;
+package types.v1;
 
 // Locator points to the source where record can be found at.
 // For example, a locator can be a link to a helm chart.
