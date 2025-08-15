@@ -390,7 +390,7 @@ defmodule Schema.Cache do
   defp update_attributes(attributes, dictionary_attributes) do
     attributes
     |> Enum.map(fn {name, attribute} ->
-      # Use referece if exists instead of the name
+      # Use reference if exists instead of the name
       reference =
         if Map.has_key?(attribute, :reference) do
           String.to_atom(attribute[:reference])

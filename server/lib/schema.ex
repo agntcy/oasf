@@ -627,7 +627,7 @@ defmodule Schema do
   end
 
   @doc """
-  Returns a randomly generated sample class, based on the spcified profiles.
+  Returns a randomly generated sample class, based on the specified profiles.
   """
   @spec generate_class(Cache.class_t(), Repo.profiles_t() | nil) :: map()
   def generate_class(class, profiles) when is_map(class) do
@@ -647,7 +647,7 @@ defmodule Schema do
   end
 
   @doc """
-  Returns randomly generated sample object data, based on the spcified profiles.
+  Returns randomly generated sample object data, based on the specified profiles.
   """
   @spec generate_object(Cache.object_t(), Repo.profiles_t() | nil) :: map()
   def generate_object(type, profiles) when is_map(type) do
