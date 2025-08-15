@@ -47,25 +47,21 @@ message Record {
   // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
   string created_at = 7;
 
-  // List of skills that the record can perform.
-  repeated Skill skills = 8;
-
   // List of source locators where the record can be found or used from.
-  repeated Locator locators = 9;
+  repeated Locator locators = 8;
+
+  // List of skills that the record can perform.
+  repeated Skill skills = 9;
+
+  // List of domains under which the record can operate in.
+  repeated Domain domains = 10;
 
   // Additional information attached to the record.
   // Features are used to generically extend the record's functionality.
-  repeated Feature features = 10;
+  repeated Feature features = 11;
 
   // Security signature of the record.
-  Signature signature = 11;
-
-  // List of domains under which the record can operate in.
-  repeated Domain domains = 12;
-
-  // Optional URL of the schema the record can be validated against.
-  // If empty, default OASF schema will be used for validation.
-  string schema_url = 13;
+  Signature signature = 12;
 
   // Reference to the previous record, if any.
   // Used to link the record to its previous versions.

@@ -641,11 +641,6 @@
       "description": "Version of the OASF schema.",
       "type": "string_t"
     },
-    "schema_url": {
-      "caption": "Schema URL",
-      "description": "Uniform Resource Locator (URL) of the schema that describes the record. This URL MUST point to a valid schema that can be used to validate the record data model.",
-      "type": "url_t"
-    },
     "scope": {
       "caption": "Scope",
       "description": "Boundary or permission within which an entity can operate in. See specific usage.",
