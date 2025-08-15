@@ -468,31 +468,6 @@ defmodule Schema.Cache do
       |> Map.put(:attributes, attributes)
       |> (fn map -> if is_enum, do: Map.put(map, :is_enum, true), else: map end).()
 
-    enriched_children =
-      if is_enum do
-        Enum.into(type[:_children] || %{}, %{}, fn {key, child} ->
-          {enriched_child, ref_entities} =
-            enrich_ex(
-              child,
-              dictionary_attributes,
-              objects,
-              skills,
-              domains,
-              features,
-              Map.new(),
-              child[:is_enum] || false
-            )
-
-          enriched_child = Map.put(enriched_child, :entities, Map.to_list(ref_entities))
-
-          {key, enriched_child}
-        end)
-      else
-        type[:_children] || %{}
-      end
-
-    enriched_type = Map.put(enriched_type, :_children, enriched_children)
-
     {enriched_type, ref_entities}
   end
 

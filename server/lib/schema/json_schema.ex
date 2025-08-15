@@ -183,12 +183,19 @@ defmodule Schema.JsonSchema do
       Enum.reduce(entities, {%{}, %{}, %{}, %{}}, fn {name, entity},
                                                      {skills, domains, features, objects} ->
         if entity[:is_enum] do
-          Enum.reduce(entity[:_children], {skills, domains, features, objects}, fn {child_name,
-                                                                                    item},
+          Enum.reduce(entity[:_children], {skills, domains, features, objects}, fn child_name,
                                                                                    {skills,
                                                                                     domains,
                                                                                     features,
                                                                                     objects} ->
+            item =
+              case entity[:family] do
+                "skill" -> Schema.entity_ex(:skill, child_name)
+                "domain" -> Schema.entity_ex(:domain, child_name)
+                "feature" -> Schema.entity_ex(:feature, child_name)
+                _ -> Schema.entity_ex(:object, child_name)
+              end
+
             key = String.replace(child_name, "/", "_")
             value = encode_entity(item, false)
 
@@ -316,8 +323,6 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_type(type) do
-    IO.inspect(type, label: "Encoding type")
-
     case type do
       "string_t" -> "string"
       "integer_t" -> "integer"

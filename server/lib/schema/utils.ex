@@ -108,22 +108,9 @@ defmodule Schema.Utils do
     Enum.into(classes, %{}, fn {name, class} ->
       children =
         find_children(all_classes, Atom.to_string(name))
-        |> Enum.map(fn child ->
-          case Map.get(classes, String.to_atom(child[:name])) do
-            nil ->
-              nil
-
-            child_class ->
-              child_class
-              |> Map.put(:class_name, child_class[:caption])
-              |> Map.put(:type, Atom.to_string(:class_t))
-              |> Map.put(:class_type, child_class[:name])
-          end
-        end)
-        |> Enum.reject(&is_nil/1)
-        |> Enum.into(%{}, fn child ->
-          {child.name, child}
-        end)
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
+        |> Enum.map(& &1[:name])
+        |> Enum.map(&to_string/1)
 
       class
       |> Map.put(:_children, children)
@@ -138,22 +125,9 @@ defmodule Schema.Utils do
 
       children =
         find_children(all_objects, Atom.to_string(name))
-        |> Enum.map(fn child ->
-          case Map.get(objects, String.to_atom(child[:name])) do
-            nil ->
-              nil
-
-            child_class ->
-              child_class
-              |> Map.put(:object_name, child_class[:caption])
-              |> Map.put(:type, Atom.to_string(:object_t))
-              |> Map.put(:object_type, child_class[:name])
-          end
-        end)
-        |> Enum.reject(&is_nil/1)
-        |> Enum.into(%{}, fn child ->
-          {child.name, child}
-        end)
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
+        |> Enum.map(& &1[:name])
+        |> Enum.map(&to_string/1)
 
       object
       |> Map.put(:_links, links)
