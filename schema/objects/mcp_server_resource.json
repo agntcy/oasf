@@ -55,9 +55,6 @@
     }
   },
   "constraints": {
-    "just_one": [
-      "uri",
-      "uri_template"
-    ]
+    "just_one": ["uri", "uri_template"]
   }
 }
