@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package objects.v3;
+package types.v1;
 
 // A specific skills that a record is capable of performing.
 message Skill {
