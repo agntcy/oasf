@@ -77,34 +77,31 @@
       }
     },
     "prompts": {
+      "reference": "mcp_server_prompts",
       "caption": "Prompts",
       "description": "List of prompts supported by the server.",
-      "requirement": "recommended",
-      "reference": "mcp_server_prompts"
+      "requirement": "recommended"
     },
     "resources": {
+      "reference": "mcp_server_resources",
       "caption": "Resources",
       "description": "List of resources supported by the server.",
-      "requirement": "recommended",
-      "reference": "mcp_server_resources"
+      "requirement": "recommended"
     },
     "tools": {
+      "reference": "mcp_server_tools",
       "caption": "Tools",
       "description": "List of tools supported by the server.",
-      "requirement": "recommended",
-      "reference": "mcp_server_tools"
+      "requirement": "recommended"
     },
     "capabilities": {
+      "reference": "mcp_server_capabilities",
       "caption": "Capabilities",
       "description": "Capabilities supported by the server.",
-      "requirement": "required",
-      "reference": "mcp_server_capabilities"
+      "requirement": "required"
     }
-  },  
+  },
   "constraints": {
-    "at_least_one": [
-      "url",
-      "command"
-    ]
+    "at_least_one": ["url", "command"]
   }
 }

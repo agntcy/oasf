@@ -2,7 +2,7 @@
   "caption": "Agent Manifest Reference",
   "description": "Reference to an Agent Manifest, it includes name, version and a locator.",
   "extends": "object",
-  "name": "agent_manifest_ref",
+  "name": "acp_agent_reference",
   "attributes": {
     "name": {
       "caption": "Name",
@@ -14,9 +14,8 @@
       "description": "Version of the agent in its manifest. Should be formatted according to <a target='_blank' href='https://semver.org' >Semantic Versioning</a>.",
       "requirement": "required"
     },
-    "url": {
+    "locator": {
       "caption": "Manifest URL",
-      "description": "URL of the manifest. Can be a network location or a file.",
       "requirement": "optional"
     }
   }

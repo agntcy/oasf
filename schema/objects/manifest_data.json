@@ -5,11 +5,13 @@
   "name": "manifest_data",
   "attributes": {
     "acp": {
+      "reference": "acp_agent",
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "requirement": "required"
     },
     "deployment": {
+      "reference": "acp_deployment",
       "caption": "Agent Workflow Server Deployment Manifest",
       "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
       "requirement": "required"

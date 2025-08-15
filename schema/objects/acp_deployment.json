@@ -2,14 +2,16 @@
   "caption": "Agent Workflow Server Deployment Manifest",
   "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
   "extends": "object",
-  "name": "deployment",
+  "name": "acp_deployment",
   "attributes": {
     "deployment_options": {
+      "reference": "acp_deployment_options",
       "caption": "Deployment Options",
       "description": "List of possible methods to instantiate or consume the agent.  Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
       "requirement": "required"
     },
     "agent_deps": {
+      "reference": "acp_agent_dependencies",
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
       "requirement": "optional"
