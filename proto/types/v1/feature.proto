@@ -15,13 +15,16 @@ message Feature {
   // Can be used as a fully qualified name.
   string name = 1;
 
+  // Unique identifier of the feature.
+  uint32 id = 2;
+
   // Version of the feature.
-  string version = 2;
+  string version = 3;
 
   // Metadata associated with the feature.
-  map<string, string> annotations = 3;
+  map<string, string> annotations = 4;
 
   // Data attached to the feature.
   // Usually a JSON-embedded object.
-  google.protobuf.Struct data = 4;
+  google.protobuf.Struct data = 5;
 }
