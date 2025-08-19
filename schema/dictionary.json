@@ -585,6 +585,11 @@
       "description": "Value that indicates a priority of an entity. See specific usage.",
       "type": "unit_interval_t"
     },
+    "prompt": {
+      "caption": "A simple prompt description",
+      "description": "A simple prompt description",
+      "type": "prompt"
+    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
@@ -714,6 +719,12 @@
       "description": "A human-friendly title for the object.",
       "type": "string_t"
     },
+    "tools_list": {
+      "caption": "List of tools",
+      "description": "List of tools",
+      "type": "string_t",
+      "is_array": true
+    },
     "type": {
       "caption": "Type",
       "description": "The type of an object or value, normalized to the caption of the type_id value. In the case of 'Other', it is defined by the source. See specific usage.",
@@ -754,6 +765,11 @@
       "caption": "Version",
       "description": "The version that pertains to the class or object. See specific usage.",
       "type": "string_t"
+    },
+    "vscode_chatmode_data": {
+      "caption": "VSCode Chat Mode Data",
+      "description": "Data supported by the ChatMode VSCode extension.",
+      "type": "vscode_chatmode_data"
     }
   },
   "types": {

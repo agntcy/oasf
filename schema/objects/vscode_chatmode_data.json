@@ -1,0 +1,24 @@
+{
+  "caption": "VSCode ChatMode Data",
+  "description": "VSCode Chat Mode data.",
+  "extends": "extension_data",
+  "name": "vscode_chatmode_data",
+  "attributes": {
+    "tools_list": {
+      "captions": "List of tools for the Chat Mode",
+      "description": "A list of tool or tool set names that are available for this chat mode. This can include built-in tools, tool sets, MCP tools, or tools contributed by extensions.",
+      "requirement": "optional"
+    },
+    "model": {
+      "captions": "The AI model to use when running the prompt.",
+      "description": "The AI model to use when running the prompt. If not specified, the currently selected model in model picker is used.",
+      "requirement": "optional"
+    },
+    "instructions": {
+      "reference": "prompt",
+      "captions": "Chat Mode instructions",
+      "description": "This is where you provide specific prompts, guidelines, or any other relevant information that you want the AI to follow when in this chat mode. You can also reference instructions files by using Markdown links. The chat mode instructions will complement whatever is specified in the chat prompt.",
+      "requirement": "required"
+    }
+  }
+}
