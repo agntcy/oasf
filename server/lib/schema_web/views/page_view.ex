@@ -481,6 +481,10 @@ defmodule SchemaWeb.PageView do
     format_integer_constraints(field)
   end
 
+  def format_constraints("float_t", field) do
+    format_integer_constraints(field)
+  end
+
   def format_constraints("long_t", field) do
     format_integer_constraints(field)
   end
