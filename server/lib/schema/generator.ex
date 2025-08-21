@@ -460,7 +460,6 @@ defmodule Schema.Generator do
   defp generate_data(:owner, _type, _field), do: full_name(2)
   defp generate_data(:labels, _type, _field), do: word()
   defp generate_data(:facility, _type, _field), do: facility()
-  defp generate_data(:mime_type, _type, _field), do: path_name(2)
 
   defp generate_data(key, "string_t", field) do
     name = Atom.to_string(key)
@@ -516,6 +515,7 @@ defmodule Schema.Generator do
   defp generate_data(_name, "float_t", _field), do: random_float(100, 100)
   defp generate_data(_name, "file_name_t", _field), do: file_name(0)
   defp generate_data(_name, "path_t", _field), do: root_dir(5)
+  defp generate_data(_name, "mime_t", _field), do: path_name(2)
 
   defp generate_data(:type, _type, _field), do: word()
   defp generate_data(:name, _type, _field), do: String.capitalize(word())
