@@ -1,0 +1,24 @@
+{
+  "caption": "Agent Behavior Data",
+  "description": "Data describing a specific behavior or capability of an agent in a runtime environment.",
+  "extends": "extension_data",
+  "name": "agent_behavior_data",
+  "attributes": {
+    "tools_list": {
+      "captions": "List of tools for the agent",
+      "description": "A list of tool or tool set names that are available for this agent behavior. This refers to tools available on the runtime environment. This can include built-in tools, tools from MCP servers or tools contributed by extensions.",
+      "requirement": "optional"
+    },
+    "model": {
+      "captions": "The AI model to use when running the agent.",
+      "description": "The AI model to use when executing the behavior. If not specified, the currently selected model in the environment is used.",
+      "requirement": "optional"
+    },
+    "instructions": {
+      "reference": "prompt",
+      "captions": "Agent instructions",
+      "description": "This is where you provide specific prompts, guidelines, or any other relevant information that you want the agent to follow when exhibiting this behavior. These instructions will complement whatever is specified in the main prompt.",
+      "requirement": "required"
+    }
+  }
+}

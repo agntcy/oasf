@@ -132,6 +132,11 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "agent_connect_protocol"
     },
+    "agent_behavior_data": {
+      "caption": "Agent Behavior Data",
+      "description": "Data representing a specific behavior or capability of an agent in a runtime environment.",
+      "type": "agent_behavior_data"
+    },
     "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
@@ -400,11 +405,6 @@
       "caption": "ID",
       "description": "A unique identifier. See specific usage.",
       "type": "integer_t"
-    },
-    "ide_agent_behavior_data": {
-      "caption": "IDE Agent Behavior Data",
-      "description": "Data representing a specific behavior or capability of an agent within an IDE environment.",
-      "type": "ide_agent_behavior_data"
     },
     "image": {
       "caption": "Docker Image",

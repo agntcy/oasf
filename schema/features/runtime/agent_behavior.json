@@ -1,0 +1,15 @@
+{
+  "uid": 6,
+  "caption": "Agent Behavior",
+  "description": "Describes a specific behavior or capability of an agent in a runtime environment.",
+  "extends": "runtime",
+  "name": "agent_behavior",
+  "attributes": {
+    "data": {
+      "reference": "agent_behavior_data",
+      "caption": "Data",
+      "description": "Data representing a specific agent behavior or capability in a runtime environment.",
+      "requirement": "required"
+    }
+  }
+}
