@@ -1,0 +1,15 @@
+{
+  "uid": 6,
+  "caption": "IDE Agent Behavior",
+  "description": "Describes a specific behavior or capability of an agent within an IDE environment.",
+  "extends": "runtime",
+  "name": "ide_agent_behavior",
+  "attributes": {
+    "data": {
+      "reference": "ide_agent_behavior_data",
+      "caption": "Data",
+      "description": "Data representing a specific agent behavior or capability in an IDE.",
+      "requirement": "required"
+    }
+  }
+}
