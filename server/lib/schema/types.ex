@@ -41,7 +41,7 @@ defmodule Schema.Types do
   excluding base classes.
   """
   def class_name_with_hierarchy(name, all_classes) do
-    base_items = ["base_class", "base_skill", "base_domain", "base_feature"]
+    base_items = ["base_skill", "base_domain", "base_feature"]
     hierarchy = build_hierarchy(name, all_classes, [])
     filtered = Enum.reject(hierarchy, &(&1 in base_items))
     Enum.join(filtered ++ [name], "/")
