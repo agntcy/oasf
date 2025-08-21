@@ -412,12 +412,7 @@ defmodule SchemaWeb.PageView do
 
   @spec field_classes(map) :: nonempty_binary
   def field_classes(field) do
-    css_classes =
-      if field[:_source] == :base_class or field[:_source] == :class do
-        "base-class "
-      else
-        "class "
-      end
+    css_classes = "class "
 
     css_classes =
       if required?(field) do

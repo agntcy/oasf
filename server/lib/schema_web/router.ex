@@ -59,7 +59,6 @@ defmodule SchemaWeb.Router do
     get "/feature/graph/:extension/:id", PageController, :feature_graph
 
     get "/dictionary", PageController, :dictionary
-    get "/base_class", PageController, :base_class
 
     get "/objects", PageController, :objects
     get "/objects/:id", PageController, :objects

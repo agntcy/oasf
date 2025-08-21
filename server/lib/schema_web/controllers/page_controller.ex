@@ -272,14 +272,6 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Redirects from the older /base_class URL to /classes/base_class.
-  """
-  @spec base_class(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_class(conn, _params) do
-    redirect(conn, to: "/classes/base_class")
-  end
-
-  @doc """
   Renders skills.
   """
   @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()

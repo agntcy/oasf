@@ -3,6 +3,22 @@
 	"category": "other",
   "description": "Skill classes",
   "name": "base_skill",
-  "extends": "base_class",
-  "attributes": {}
+  "attributes": {
+    "name": {
+      "description": "The name as a unique identifier of the class.",
+      "requirement": "recommended"
+    },
+    "id": {
+      "description": "The id as a unique identifier of the class.",
+      "requirement": "recommended"
+    },
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Additional metadata associated with the class.",
+      "requirement": "optional"
+    }
+  },
+  "constraints": {
+    "at_least_one": ["id", "name"]
+  }
 }
