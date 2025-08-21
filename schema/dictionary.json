@@ -533,7 +533,7 @@
     "mime_type": {
       "caption": "MIME Type",
       "description": "The MIME type of the content. For example: <code>application/json</code>, <code>text/plain</code>.",
-      "type": "mime_type"
+      "type": "mime_t"
     },
     "model": {
       "caption": "Model",
@@ -834,7 +834,7 @@
         "type": "string_t",
         "type_name": "String"
       },
-      "mime_type": {
+      "mime_t": {
         "caption": "MIME Type",
         "description": "MIME type of the content. For example:<br><code>application/json</code>,<br><code>text/plain</code>.",
         "regex": "^([a-zA-Z0-9!#$%&'*+\\-.^_`|~]+/)?[a-zA-Z0-9!#$%&'*+\\-.^_`|~]+$",
