@@ -401,6 +401,11 @@
       "description": "A unique identifier. See specific usage.",
       "type": "integer_t"
     },
+    "ide_agent_behavior_data": {
+      "caption": "IDE Agent Behavior Data",
+      "description": "Data representing a specific behavior or capability of an agent within an IDE environment.",
+      "type": "ide_agent_behavior_data"
+    },
     "image": {
       "caption": "Docker Image",
       "description": "The Docker image that pertains to the class or object. See specific usage.",
@@ -765,11 +770,6 @@
       "caption": "Version",
       "description": "The version that pertains to the class or object. See specific usage.",
       "type": "string_t"
-    },
-    "vscode_chatmode_data": {
-      "caption": "VSCode Chat Mode Data",
-      "description": "Data supported by the ChatMode VSCode extension.",
-      "type": "vscode_chatmode_data"
     }
   },
   "types": {
