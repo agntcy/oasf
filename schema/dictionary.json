@@ -132,6 +132,11 @@
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "agent_connect_protocol"
     },
+    "agent_behavior_data": {
+      "caption": "Agent Behavior Data",
+      "description": "Data representing a specific behavior or capability of an agent in a runtime environment.",
+      "type": "agent_behavior_data"
+    },
     "agent_deps": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
@@ -585,6 +590,11 @@
       "description": "Value that indicates a priority of an entity. See specific usage.",
       "type": "unit_interval_t"
     },
+    "prompt": {
+      "caption": "A simple prompt description",
+      "description": "A simple prompt description",
+      "type": "prompt"
+    },
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
@@ -713,6 +723,12 @@
       "caption": "Title",
       "description": "A human-friendly title for the object.",
       "type": "string_t"
+    },
+    "tools_list": {
+      "caption": "List of tools",
+      "description": "List of tools",
+      "type": "string_t",
+      "is_array": true
     },
     "type": {
       "caption": "Type",
