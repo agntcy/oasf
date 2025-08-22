@@ -1,8 +1,8 @@
 {
-  "caption": "Security Scheme",
-  "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0' >Security Scheme Object</a>.",
+  "caption": "OpenAPI Security Scheme",
+  "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs.",
   "extends": "object",
-  "name": "security_scheme",
+  "name": "openapi_security_scheme",
   "attributes": {
     "type": {
       "caption": "Type",
@@ -19,5 +19,11 @@
       "description": "Location of the object.",
       "requirement": "required"
     }
-  }
+  },
+  "references": [
+    {
+      "description": "OpenAPI Security Scheme Object",
+      "url": "https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0"
+    }
+  ]
 }

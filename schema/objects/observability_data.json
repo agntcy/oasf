@@ -1,7 +1,7 @@
 {
   "caption": "Observability Data",
   "description": "Data supported by the agent extension for observability.",
-  "extends": "extension_data",
+  "extends": "feature_data",
   "name": "observability_data",
   "attributes": {
     "data_schema": {

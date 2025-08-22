@@ -1,7 +1,7 @@
 {
   "caption": "Docker Deployment",
   "description": "Describes the docker deployment for this agent.",
-  "extends": "deployment_option",
+  "extends": "acp_deployment_option",
   "name": "docker_deployment",
   "attributes": {
     "type": {
