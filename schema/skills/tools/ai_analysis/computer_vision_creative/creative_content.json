@@ -1,0 +1,8 @@
+{
+  "uid": 1007,
+  "caption": "Creative Content",
+  "description": "Content generation for creative applications and artistic expression",
+  "extends": "computer_vision_creative",
+  "name": "creative_content",
+  "attributes": {}
+}

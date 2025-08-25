@@ -1,0 +1,14 @@
+{
+  "uid": 11,
+  "caption": "Sequential Thinking",
+  "description": "Step by step reasoning framework for structured problem-solving and logical analysis.",
+  "extends": "tools",
+  "name": "sequential_thinking",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "sequential-thinking",
+    "capabilities": ["step_by_step_reasoning", "logical_analysis", "problem_solving"],
+    "docker_image": "mcp/sequential-thinking",
+    "environment_variables": ["THINKING_MODEL", "REASONING_DEPTH"]
+  }
+}
