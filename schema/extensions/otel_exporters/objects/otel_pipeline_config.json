@@ -1,0 +1,81 @@
+{
+  "caption": "OpenTelemetry Pipeline Configuration",
+  "description": "Complete pipeline configuration for AGNTCY agent observability",
+  "extends": "object",
+  "name": "otel_pipeline_config",
+  "attributes": {
+    "pipeline_name": {
+      "caption": "Pipeline Name",
+      "description": "Unique name for this observability pipeline",
+      "requirement": "required",
+      "type": "string_t"
+    },
+    "pipeline_type": {
+      "caption": "Pipeline Type",
+      "description": "Type of telemetry data this pipeline handles",
+      "requirement": "required",
+      "enum": {
+        "traces": {
+          "caption": "Traces",
+          "description": "Distributed tracing pipeline"
+        },
+        "metrics": {
+          "caption": "Metrics",
+          "description": "Metrics collection pipeline"
+        },
+        "logs": {
+          "caption": "Logs",
+          "description": "Logs collection pipeline"
+        },
+        "all": {
+          "caption": "All",
+          "description": "Unified pipeline for all telemetry types"
+        }
+      }
+    },
+    "enabled": {
+      "caption": "Enabled",
+      "description": "Whether this pipeline is enabled",
+      "requirement": "required",
+      "type": "boolean_t"
+    },
+    "sampling_config": {
+      "reference": "otel_sampling_config",
+      "caption": "Sampling Configuration",
+      "description": "Configuration for sampling telemetry data",
+      "requirement": "recommended"
+    },
+    "exporters": {
+      "reference": "otel_exporter_config",
+      "caption": "Exporters",
+      "description": "List of exporters for this pipeline",
+      "requirement": "required",
+      "is_array": true
+    },
+    "resource_detection": {
+      "reference": "otel_resource_detection",
+      "caption": "Resource Detection",
+      "description": "Automatic resource detection configuration",
+      "requirement": "recommended"
+    },
+    "error_handling": {
+      "caption": "Error Handling",
+      "description": "How to handle errors in the pipeline",
+      "requirement": "optional",
+      "enum": {
+        "propagate": {
+          "caption": "Propagate",
+          "description": "Propagate errors to the application"
+        },
+        "log": {
+          "caption": "Log",
+          "description": "Log errors but don't propagate"
+        },
+        "ignore": {
+          "caption": "Ignore",
+          "description": "Silently ignore errors"
+        }
+      }
+    }
+  }
+}

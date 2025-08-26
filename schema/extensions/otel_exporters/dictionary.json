@@ -1,0 +1,77 @@
+{
+  "caption": "OpenTelemetry Exporters Dictionary",
+  "description": "Dictionary of attributes for the OpenTelemetry Exporters extension",
+  "name": "otel_exporters_dictionary",
+  "attributes": {
+    "otel_exporter_config": {
+      "caption": "OpenTelemetry Exporter Configuration",
+      "description": "Configuration for exporting observability data to various backends",
+      "type": "object"
+    },
+    "otel_auth_config": {
+      "caption": "OpenTelemetry Authentication Configuration",
+      "description": "Authentication configuration for OpenTelemetry exporters",
+      "type": "object"
+    },
+    "otel_retry_config": {
+      "caption": "OpenTelemetry Retry Configuration",
+      "description": "Configuration for retry behavior when exports fail",
+      "type": "object"
+    },
+    "otel_batch_config": {
+      "caption": "OpenTelemetry Batch Configuration",
+      "description": "Configuration for batching telemetry data before export",
+      "type": "object"
+    },
+    "otel_pipeline_config": {
+      "caption": "OpenTelemetry Pipeline Configuration",
+      "description": "Complete pipeline configuration for agent observability",
+      "type": "object"
+    },
+    "otel_sampling_config": {
+      "caption": "OpenTelemetry Sampling Configuration",
+      "description": "Configuration for sampling telemetry data",
+      "type": "object"
+    },
+    "exporter_type": {
+      "caption": "Exporter Type",
+      "description": "Type of OpenTelemetry exporter",
+      "type": "string_t"
+    },
+    "pipeline_type": {
+      "caption": "Pipeline Type",
+      "description": "Type of telemetry data the pipeline handles",
+      "type": "string_t"
+    },
+    "sampling_strategy": {
+      "caption": "Sampling Strategy",
+      "description": "Strategy for sampling telemetry data",
+      "type": "string_t"
+    },
+    "auth_type": {
+      "caption": "Authentication Type",
+      "description": "Type of authentication to use for exports",
+      "type": "string_t"
+    },
+    "protocol": {
+      "caption": "Protocol",
+      "description": "Protocol used for exporting data",
+      "type": "string_t"
+    },
+    "compression": {
+      "caption": "Compression",
+      "description": "Compression algorithm to use",
+      "type": "string_t"
+    },
+    "export_interval": {
+      "caption": "Export Interval",
+      "description": "Default export interval in seconds",
+      "type": "integer_t"
+    },
+    "sampling_rate": {
+      "caption": "Sampling Rate",
+      "description": "Sampling rate between 0.0 and 1.0",
+      "type": "float_t"
+    }
+  }
+}

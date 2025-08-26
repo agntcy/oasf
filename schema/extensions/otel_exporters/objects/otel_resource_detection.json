@@ -1,0 +1,70 @@
+{
+  "caption": "OpenTelemetry Resource Detection",
+  "description": "Automatic detection and enrichment of resource attributes",
+  "extends": "object",
+  "name": "otel_resource_detection",
+  "attributes": {
+    "enabled": {
+      "caption": "Enabled",
+      "description": "Whether automatic resource detection is enabled",
+      "requirement": "required",
+      "type": "boolean_t"
+    },
+    "detectors": {
+      "caption": "Detectors",
+      "description": "List of resource detectors to use",
+      "requirement": "recommended",
+      "is_array": true,
+      "enum": {
+        "env": {
+          "caption": "Environment",
+          "description": "Detect resource attributes from environment variables"
+        },
+        "host": {
+          "caption": "Host",
+          "description": "Detect host-related resource attributes"
+        },
+        "process": {
+          "caption": "Process",
+          "description": "Detect process-related resource attributes"
+        },
+        "os": {
+          "caption": "Operating System",
+          "description": "Detect OS-related resource attributes"
+        },
+        "container": {
+          "caption": "Container",
+          "description": "Detect container runtime attributes"
+        },
+        "k8s": {
+          "caption": "Kubernetes",
+          "description": "Detect Kubernetes cluster and pod attributes"
+        },
+        "aws": {
+          "caption": "AWS",
+          "description": "Detect AWS resource attributes (EC2, ECS, etc.)"
+        },
+        "gcp": {
+          "caption": "Google Cloud",
+          "description": "Detect Google Cloud resource attributes"
+        },
+        "azure": {
+          "caption": "Azure",
+          "description": "Detect Azure resource attributes"
+        }
+      }
+    },
+    "timeout": {
+      "caption": "Detection Timeout",
+      "description": "Timeout for resource detection in seconds",
+      "requirement": "optional",
+      "type": "integer_t"
+    },
+    "override_attributes": {
+      "caption": "Override Attributes",
+      "description": "Resource attributes that override detected values",
+      "requirement": "optional",
+      "is_array": true
+    }
+  }
+}

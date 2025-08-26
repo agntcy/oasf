@@ -1,0 +1,142 @@
+{
+  "caption": "Multi-Backend Observability Agent Example",
+  "description": "Example agent configuration with multiple observability backends",
+  "agent": {
+    "name": "customer-service-agent",
+    "version": "1.0.0",
+    "features": {
+      "observability": {
+        "data": {
+          "data_schema": "agntcy_observability_data_schema",
+          "export_format": "json",
+          "communication_protocols": ["grpc", "http"],
+          "data_platform_integrations": ["prometheus", "jaeger", "datadog"]
+        },
+        "otel_export": {
+          "pipelines": [
+            {
+              "pipeline_name": "production-traces",
+              "pipeline_type": "traces",
+              "enabled": true,
+              "sampling_config": {
+                "sampling_strategy": "adaptive",
+                "sampling_rate": 0.1,
+                "max_traces_per_second": 100,
+                "priority_sampling": true,
+                "excluded_operations": ["health_check", "metrics_scrape"]
+              },
+              "exporters": [
+                {
+                  "exporter_type": "jaeger",
+                  "endpoint": "https://jaeger-collector.monitoring.svc:14250",
+                  "protocol": "grpc",
+                  "compression": "gzip",
+                  "authentication": {
+                    "auth_type": "mtls",
+                    "client_cert": "/certs/client.crt",
+                    "client_key": "/certs/client.key"
+                  },
+                  "retry_config": {
+                    "enabled": true,
+                    "initial_interval": 5,
+                    "max_interval": 300,
+                    "max_elapsed_time": 900,
+                    "multiplier": 1.5,
+                    "max_attempts": 10
+                  },
+                  "batch_config": {
+                    "max_queue_size": 2048,
+                    "scheduled_delay": 5000,
+                    "export_timeout": 30000,
+                    "max_export_batch_size": 512
+                  }
+                },
+                {
+                  "exporter_type": "datadog",
+                  "endpoint": "https://trace.agent.datadoghq.com",
+                  "protocol": "http",
+                  "authentication": {
+                    "auth_type": "api_key",
+                    "api_key": "${DD_API_KEY}",
+                    "api_key_header": "DD-API-KEY"
+                  },
+                  "resource_attributes": [
+                    {"service": "customer-service"},
+                    {"env": "production"},
+                    {"version": "1.0.0"}
+                  ]
+                }
+              ]
+            },
+            {
+              "pipeline_name": "metrics-monitoring",
+              "pipeline_type": "metrics",
+              "enabled": true,
+              "export_interval": 60,
+              "exporters": [
+                {
+                  "exporter_type": "prometheus",
+                  "endpoint": "http://prometheus-pushgateway.monitoring.svc:9091",
+                  "protocol": "http",
+                  "authentication": {
+                    "auth_type": "basic",
+                    "username": "agent",
+                    "password": "${PROM_PASSWORD}"
+                  },
+                  "timeout": 10
+                },
+                {
+                  "exporter_type": "otlp",
+                  "endpoint": "https://otel-collector.monitoring.svc:4317",
+                  "protocol": "grpc",
+                  "compression": "zstd",
+                  "authentication": {
+                    "auth_type": "bearer_token",
+                    "bearer_token": "${OTEL_AUTH_TOKEN}"
+                  },
+                  "headers": [
+                    {"x-tenant-id": "customer-service-team"},
+                    {"x-environment": "production"}
+                  ]
+                }
+              ]
+            },
+            {
+              "pipeline_name": "error-logs",
+              "pipeline_type": "logs",
+              "enabled": true,
+              "error_handling": "log",
+              "exporters": [
+                {
+                  "exporter_type": "elastic_apm",
+                  "endpoint": "https://elastic-apm.logging.svc:8200",
+                  "protocol": "http",
+                  "authentication": {
+                    "auth_type": "api_key",
+                    "api_key": "${ELASTIC_APM_SECRET_TOKEN}"
+                  },
+                  "batch_config": {
+                    "max_queue_size": 1000,
+                    "scheduled_delay": 1000,
+                    "export_timeout": 10000,
+                    "max_export_batch_size": 100
+                  }
+                }
+              ]
+            }
+          ],
+          "agent_specific_metrics": [
+            "customer_satisfaction_score",
+            "average_response_time",
+            "escalation_rate"
+          ],
+          "custom_dimensions": [
+            {"team": "customer-support"},
+            {"region": "us-west-2"},
+            {"tier": "premium"}
+          ]
+        }
+      }
+    }
+  }
+}

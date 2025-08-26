@@ -1,0 +1,49 @@
+{
+  "caption": "OpenTelemetry TLS Configuration",
+  "description": "TLS configuration for secure connections",
+  "extends": "object",
+  "name": "otel_tls_config",
+  "attributes": {
+    "insecure": {
+      "caption": "Insecure",
+      "description": "Disable TLS verification (not recommended for production)",
+      "requirement": "optional",
+      "type": "boolean_t"
+    },
+    "ca_cert": {
+      "caption": "CA Certificate",
+      "description": "Path to CA certificate file",
+      "requirement": "recommended",
+      "type": "string_t"
+    },
+    "server_name": {
+      "caption": "Server Name",
+      "description": "Server name for TLS verification",
+      "requirement": "optional",
+      "type": "string_t"
+    },
+    "min_version": {
+      "caption": "Minimum TLS Version",
+      "description": "Minimum TLS version to accept",
+      "requirement": "optional",
+      "enum": {
+        "1.0": {
+          "caption": "TLS 1.0",
+          "description": "TLS version 1.0 (deprecated)"
+        },
+        "1.1": {
+          "caption": "TLS 1.1",
+          "description": "TLS version 1.1 (deprecated)"
+        },
+        "1.2": {
+          "caption": "TLS 1.2",
+          "description": "TLS version 1.2 (recommended minimum)"
+        },
+        "1.3": {
+          "caption": "TLS 1.3",
+          "description": "TLS version 1.3 (recommended)"
+        }
+      }
+    }
+  }
+}
