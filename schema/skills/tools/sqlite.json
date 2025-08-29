@@ -1,0 +1,14 @@
+{
+  "uid": 14,
+  "caption": "SQLite",
+  "description": "SQLite database query operations for lightweight embedded database management.",
+  "extends": "tools",
+  "name": "sqlite",
+  "attributes": {
+    "category": "databases_storage",
+    "mcp_server": "sqlite",
+    "capabilities": ["database_queries", "data_management", "embedded_storage"],
+    "docker_image": "mcp/sqlite",
+    "environment_variables": ["SQLITE_DATABASE_PATH", "SQLITE_READONLY"]
+  }
+}
