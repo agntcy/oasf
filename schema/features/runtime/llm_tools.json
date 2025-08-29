@@ -1,0 +1,15 @@
+{
+  "uid": 6,
+  "caption": "LLM Tools",
+  "description": "Defines a set of tools, prompts, and models that enable specific agent behaviors or capabilities within a runtime environment.",
+  "extends": "runtime",
+  "name": "llm_tools",
+  "attributes": {
+    "data": {
+      "reference": "llm_tools_data",
+      "caption": "Data",
+      "description": "Structured data that specifies the agent's behavior or capability enabled by this toolset within the runtime environment.",
+      "requirement": "required"
+    }
+  }
+}
