@@ -1,6 +1,6 @@
 {
   "uid": 1,
-  "caption": "Retrieval of information",
+  "caption": "Retrieval of Information",
   "description": "Retrieval of information is the process of fetching relevant data or documents from a large dataset or database based on a specific query or input.",
   "extends": "retrieval_augmented_generation",
   "name": "retrieval_of_information",

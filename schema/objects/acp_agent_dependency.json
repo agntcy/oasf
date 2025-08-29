@@ -2,7 +2,7 @@
   "caption": "Agent Dependency",
   "description": "Reference to an Agent Manifest, it includes name, version and a locator.",
   "extends": "object",
-  "name": "agent_dependency",
+  "name": "acp_agent_dependency",
   "attributes": {
     "name": {
       "caption": "Name",
@@ -10,11 +10,13 @@
       "requirement": "required"
     },
     "ref": {
+      "reference": "acp_agent_reference",
       "caption": "Reference",
       "description": "Reference to the agent in the agent directory. It includes the version and the locator.",
       "requirement": "required"
     },
     "deployment_option": {
+      "reference": "acp_deployment_option",
       "caption": "Deployment Option Name",
       "description": "Name of selected deployment option for this agent.",
       "requirement": "optional"
