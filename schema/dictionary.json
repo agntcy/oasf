@@ -435,6 +435,11 @@
       "type": "llm_prompt",
       "is_array": true
     },
+    "llm_tools_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for LLM tools.",
+      "type": "llm_tools_data"
+    },
     "locator": {
       "caption": "Locator",
       "description": "A locator provides an actual artifact locator. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
