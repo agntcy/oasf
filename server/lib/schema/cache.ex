@@ -18,7 +18,6 @@ defmodule Schema.Cache do
     :parsed_version,
     :profiles,
     :dictionary,
-    :base_class,
     :objects,
     :all_objects,
     # domain libs
@@ -39,7 +38,6 @@ defmodule Schema.Cache do
     parsed_version
     profiles
     dictionary
-    base_class
     objects
     all_objects
     skills
@@ -85,14 +83,12 @@ defmodule Schema.Cache do
     end
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
-    base_class = JsonReader.read_base_class()
 
     {skills, all_skills, main_skills} =
-      read_classes(base_class, @main_skills_file, @skills_dir, @skill_family, version[:version])
+      read_classes(@main_skills_file, @skills_dir, @skill_family, version[:version])
 
     {domains, all_domains, main_domains} =
       read_classes(
-        base_class,
         @main_domains_file,
         @domains_dir,
         @domain_family,
@@ -101,7 +97,6 @@ defmodule Schema.Cache do
 
     {features, all_features, main_features} =
       read_classes(
-        base_class,
         @main_features_file,
         @features_dir,
         @feature_family,
@@ -150,12 +145,9 @@ defmodule Schema.Cache do
       |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
-    base_class = final_check(:base_class, base_class, dictionary_attributes)
-
     # Check for each attribute in the schema if it has a requirement field.
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
-    {base_class, no_req_set} = fix_entity(base_class, no_req_set, :base_class, "class")
     {skills, no_req_set} = fix_entities(skills, no_req_set, "skill")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
     {features, no_req_set} = fix_entities(features, no_req_set, "feature")
@@ -175,7 +167,6 @@ defmodule Schema.Cache do
       parsed_version: parsed_version,
       profiles: profiles,
       dictionary: dictionary,
-      base_class: base_class,
       objects: objects,
       all_objects: all_objects,
       # skill libs
@@ -247,11 +238,6 @@ defmodule Schema.Cache do
   @spec all_objects(__MODULE__.t()) :: map()
   def all_objects(%__MODULE__{all_objects: all_objects}), do: all_objects
 
-  @spec export_base_class(__MODULE__.t()) :: map()
-  def export_base_class(%__MODULE__{base_class: base_class, dictionary: dictionary}) do
-    enrich(base_class, dictionary[:attributes])
-  end
-
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
 
@@ -263,11 +249,6 @@ defmodule Schema.Cache do
     Enum.into(skills, Map.new(), fn {name, skill} ->
       {name, enrich(skill, dictionary[:attributes])}
     end)
-  end
-
-  @spec skill(__MODULE__.t(), atom()) :: nil | class_t()
-  def skill(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
-    enrich(base_class, dictionary[:attributes])
   end
 
   def skill(%__MODULE__{dictionary: dictionary, skills: skills}, id) do
@@ -301,11 +282,6 @@ defmodule Schema.Cache do
     end)
   end
 
-  @spec domain(__MODULE__.t(), atom()) :: nil | class_t()
-  def domain(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
-    enrich(base_class, dictionary[:attributes])
-  end
-
   def domain(%__MODULE__{dictionary: dictionary, domains: domains}, id) do
     case Map.get(domains, id) do
       nil ->
@@ -335,11 +311,6 @@ defmodule Schema.Cache do
     Enum.into(features, Map.new(), fn {name, feature} ->
       {name, enrich(feature, dictionary[:attributes])}
     end)
-  end
-
-  @spec feature(__MODULE__.t(), atom()) :: nil | class_t()
-  def feature(%__MODULE__{dictionary: dictionary, base_class: base_class}, :base_class) do
-    enrich(base_class, dictionary[:attributes])
   end
 
   def feature(%__MODULE__{dictionary: dictionary, features: features}, id) do
@@ -573,13 +544,11 @@ defmodule Schema.Cache do
     end
   end
 
-  defp read_classes(base_class, categories_file, classes_dir, class_family, version) do
+  defp read_classes(categories_file, classes_dir, class_family, version) do
     categories = JsonReader.read_categories(categories_file) |> update_categories()
     categories_attributes = categories[:attributes]
 
     classes = JsonReader.read_classes(classes_dir)
-    # merge classes with base class
-    classes = Map.put(classes, :base_class, base_class)
 
     classes =
       classes
@@ -1004,7 +973,7 @@ defmodule Schema.Cache do
   end
 
   # Final fix up of an entity definition map.
-  # The term "entity" mean a single profile, object, class, or base_class (a special class).
+  # The term "entity" mean a single profile, object, or class.
   @spec fix_entity(map(), MapSet.t(), atom(), String.t()) :: {map(), MapSet.t()}
   defp fix_entity(entity, no_req_set, entity_key, kind) do
     attributes = entity[:attributes]
