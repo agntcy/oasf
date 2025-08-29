@@ -280,13 +280,7 @@ defmodule Schema.Utils do
 
   defp add_class_links(dictionary, {class_key, class}, family) do
     Map.update!(dictionary, :attributes, fn dictionary_attributes ->
-      type =
-        case class[:name] do
-          nil -> "base_class"
-          _ -> class_key
-        end
-
-      link = make_link(family, type, class)
+      link = make_link(family, class_key, class)
 
       update_attributes(
         class,
