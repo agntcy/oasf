@@ -1,6 +1,7 @@
 # OASF Extensions Registry
 
-The purpose of this file is to keep track of and avoid collisions in Extension `names` & `uid`s.
+The purpose of this file is to keep track of and avoid collisions in Extension
+`names` & `id`s.
 
 | Caption                             | Name | UID     | Notes                                    |
 | ----------------------------------- | ---- | ------- | ---------------------------------------- |
