@@ -1,26 +1,23 @@
 {
-    "category": "REPLACE me with the category name. For example, nlp.",
-    "description": "REPLACE me with a concise description of the class.",
-    "extends": "base_class",
-    "caption": "REPLACE me with a short, human friendly name of the base class.",
-    "name": "REPLACE me with a name of the class. It must be unique within the category. The name is all lower case letters, combine words using underscore.",
-    "uid": "REPLACE me with an INTEGER, it must be unique within the category.",
-    "attributes": {
+  "category": "REPLACE me with the category name. For example, natural_language_processing.",
+  "description": "REPLACE me with a concise description of the class.",
+  "extends": "REPLACE me with the name of the base class of the class family, or the class the new class extends.",
+  "caption": "REPLACE me with a short, human friendly name of the base class.",
+  "name": "REPLACE me with a name of the class. It must be unique within the category. The name is all lower case letters, combine words using underscore.",
+  "uid": "REPLACE me with an INTEGER, it must be unique within the category.",
+  "attributes": {
+    "DELETE ME": "Ensure you adjust 'requirement' for all the attributes as desired.",
 
-        "DELETE ME": "Ensure you adjust 'group' & 'requirement' for all the attributes as desired.",
-
-        "attribute_1": {
-            "description": "REPLACE me with an overridden description of an attribute, IF NEEDED.",
-            "group": "context",
-            "requirement": "optional"
-        },
-        "attribute_2": {
-            "group": "primary",
-            "requirement": "recommended"
-        },
-        "attribute_n": {
-            "group": "context",
-            "requirement": "optional"
-        }
+    "attribute_1": {
+      "caption": "REPLACE me with an overridden caption of an attribute, IF NEEDED.",
+      "description": "REPLACE me with an overridden description of an attribute, IF NEEDED.",
+      "requirement": "optional"
+    },
+    "attribute_2": {
+      "requirement": "recommended"
+    },
+    "attribute_n": {
+      "requirement": "optional"
     }
+  }
 }
