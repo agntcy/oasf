@@ -82,6 +82,8 @@ To access the schema server, open [`localhost:8080`](http://localhost:8080) in y
 
 Note that any changes made to the server backend itself will require running `task up` again.
 
+To set your own local OASF server using Elixir tooling, follow [these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
+
 ### Hot reload
 
 In order to run the server in hot-reload mode, you must first deploy
@@ -124,8 +126,7 @@ See https://github.com/orgs/agntcy/packages?repo_name=oasf
 
 ### Protocol buffer definitions
 
-The `proto` directory contains the Protocol Buffer (`.proto`) files defining our data objects and APIs. The full proto
-module, generated language stubs and it's versions are hosted at the Buf Schema Registry:
+The `proto` directory contains the Protocol Buffer (`.proto`) files defining our data objects and APIs. The full proto module, generated language stubs and it's versions are hosted at the Buf Schema Registry:
 [https://buf.build/agntcy/oasf](https://buf.build/agntcy/oasf)
 
 ## Copyright notice
