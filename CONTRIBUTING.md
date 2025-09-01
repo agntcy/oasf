@@ -87,7 +87,9 @@ contribute to the development of OASF Schemas and the framework itself.
    - Avoid repetition of words.
    - Avoid abbreviations when possible.
      Some exceptions can be made for well-accepted abbreviation like well known
-     acronyms (for example, LLM, AI)
+     acronyms (for example, LLM, AI).
+   - If the attribute can only be related to a `feature` class, prefix its name
+     with the feature's name.
 
 #### How to define a `field` in the dictionary?
 
@@ -221,7 +223,7 @@ true`
       list of files (relative to the root of the schema repository) that should
       contribute their attributes to this object.
       _e.g._
-      ```
+      ```json
       "attributes": {
         "$include": [
           "profiles/host.json"
@@ -229,18 +231,42 @@ true`
         ...
       }
       ```
+   3. `reference` → If the attribute's name differs from the name of the
+      attribute in the dictionary, you can specify the name of the dictionary
+      entry here.
+   4. `references` → You can add a list of web links as references to the
+      object.
+      _e.g._
+      ```json
+      "references": [
+        {
+          "description": "A2A Card Data Schema",
+          "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+        }
+       ]
+      ```
 9. `constraints` → For each class you can add constraints on the attribute
    requirements.
    Valid constraint types are `at_least_one`, `just_one`.
-   e.g.
-   ```
-    "constraints": {
-       "at_least_one": [
-           "id",
-           "name"
-        ]
+   _e.g._
+   ```json
+   "constraints": {
+     "at_least_one": [
+       "id",
+       "name"
+     ]
    }
    ```
+10. `references` → You can add a list of web links as references to the object.
+    _e.g._
+    ```json
+    "references": [
+      {
+        "description": "A2A Card Data Schema",
+        "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+      }
+     ]
+    ```
 
 **Note:** If you want to create an object which would act only as a base for
 other objects (without it being used as an enum object), you must prefix the
