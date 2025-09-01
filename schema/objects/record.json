@@ -47,7 +47,7 @@
     "domains": {
       "caption": "Domains",
       "description": "List of domains associated with this record.",
-      "requirement": "required"
+      "requirement": "recommended"
     },
     "locators": {
       "caption": "Locators",
@@ -63,7 +63,7 @@
       "reference": "record_signature",
       "caption": "Signature",
       "description": "A digital signature of the record data model. This is used to verify the authenticity and integrity of the record.",
-      "requirement": "required"
+      "requirement": "recommended"
     },
     "previous_record_cid": {
       "caption": "Previous Record CID",
