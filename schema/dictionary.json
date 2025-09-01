@@ -33,11 +33,6 @@
       "description": "Data supported by the agent for A2A.",
       "type": "a2a_data"
     },
-    "a2a_protocol_version": {
-      "caption": "Protocol Version",
-      "description": "Version of the A2A protocol used by the agent.",
-      "type": "string_t"
-    },
     "a2a_input_modes": {
       "caption": "Supported Input Modes",
       "description": "Supported input modes supported by the agent for A2A communication.",
@@ -74,6 +69,11 @@
           "caption": "Text/HTML"
         }
       }
+    },
+    "a2a_protocol_version": {
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "type": "string_t"
     },
     "a2a_security_schemes": {
       "caption": "Supported Security Schemes",
@@ -453,6 +453,12 @@
       "description": "Data supported by the agent for LLM prompts.",
       "type": "llm_prompt_data"
     },
+    "llm_prompt_names": {
+      "caption": "List of prompts",
+      "description": "List of prompts referencing prompt names",
+      "type": "string_t",
+      "is_array": true
+    },
     "llm_prompts": {
       "caption": "List of LLM Prompts",
       "description": "List of common prompts used for LLM interactions with the agent, including their configurations and parameters.",
@@ -509,6 +515,12 @@
       "caption": "MCP Server Resources",
       "description": "Describes the configuration for an MCP server resources.",
       "type": "mcp_server_resource",
+      "is_array": true
+    },
+    "mcp_server_tool_names": {
+      "caption": "List of MCP Server Names",
+      "description": "List of MCP Server referencing MCP Server names",
+      "type": "string_t",
       "is_array": true
     },
     "mcp_server_tools": {
@@ -641,15 +653,15 @@
       "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
       "type": "json_t"
     },
-    "schema_version": {
-      "caption": "Schema Version",
-      "description": "Version of the OASF schema.",
-      "type": "string_t"
-    },
     "schema_url": {
       "caption": "Schema URL",
       "description": "Uniform Resource Locator (URL) of the schema that describes the record. This URL MUST point to a valid schema that can be used to validate the record data model.",
       "type": "url_t"
+    },
+    "schema_version": {
+      "caption": "Schema Version",
+      "description": "Version of the OASF schema.",
+      "type": "string_t"
     },
     "scope": {
       "caption": "Scope",
@@ -768,7 +780,10 @@
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [false, true]
+        "values": [
+          false,
+          true
+        ]
       },
       "bytestring_t": {
         "caption": "Byte String",
@@ -851,7 +866,10 @@
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [0, 65535]
+        "range": [
+          0,
+          65535
+        ]
       },
       "process_name_t": {
         "caption": "Process Name",
@@ -891,7 +909,10 @@
         "description": "Unit interval is defined as the closed interval, which includes all real numbers greater than or equal to 0 and less than or equal to 1.",
         "type": "float_t",
         "type_name": "Float",
-        "range": [0, 1]
+        "range": [
+          0,
+          1
+        ]
       },
       "uri_t": {
         "caption": "URI String",

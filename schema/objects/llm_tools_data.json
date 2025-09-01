@@ -7,7 +7,7 @@
     "prompts": {
       "caption": "List of prompt names referencing the 'runtime/prompts' extension.",
       "requirement": "required",
-      "reference": "args"
+      "reference": "llm_prompt_names"
     },
     "tools": {
       "caption": "List of tools that couldn't be part of an extension.",
@@ -17,7 +17,7 @@
     "mcp_server_tools": {
       "caption": "List of MCP tools name referencing the 'runtime/mcp' extension.",
       "requirement": "optional",
-      "reference": "args"
+      "reference": "mcp_server_tool_names"
     }
   }
 }
