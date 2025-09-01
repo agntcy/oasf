@@ -47,6 +47,17 @@ jobs:
             exit 1
           fi
 
+      - name: Formatting
+        run: |
+          task fmt
+
+      - name: Check code changes
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "There are uncommitted changes after running 'task fmt'. Please commit these changes."
+            exit 1
+          fi
+
   prepare:
     name: Prepare
     needs:
