@@ -58,6 +58,9 @@ jobs:
             exit 1
           fi
 
+      - name: Linting
+        run: task lint
+
   prepare:
     name: Prepare
     needs:
