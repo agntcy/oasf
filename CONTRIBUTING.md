@@ -1,4 +1,4 @@
-# How to Contribute
+# OASF Contribution Guide
 
 Thanks for your interest in contributing to Open Agentic Schema Framework!
 Here are a few general guidelines on contributing and reporting bugs that we ask
@@ -17,14 +17,12 @@ This includes creation of issues or pull requests, commenting on issues or pull
 requests, and extends to all interactions in any real-time space for example,
 Slack, Discord, and others.
 
-# OASF Contribution Guide
-
 This documentation presents guidelines and expected etiquette to successfully
 contribute to the development of OASF Schemas and the framework itself.
 
 ---
 
-### Key OASF Terminology
+## Key OASF Terminology
 
 1. **Field**:
    A field is a unique identifier name for a piece of data contained in OASF.
@@ -99,7 +97,7 @@ file as described below.
 
 Sample entry in the dictionary:
 
-```
+```json
     "name": {
       "caption": "Name",
       "description": "The name of the entity. See specific usage.",
@@ -146,67 +144,67 @@ true`
    [/objects](https://github.com/agntcy/oasf/tree/main/schema/objects) folder.
 2. Review existing Objects, determine if a modification of the existing object
    would be sufficient or if there’s a need for a completely new object.
-3. Use the template available
-   [here](https://github.com/agntcy/oasf/blob/main/schema/templates/object_name.json),
+3. Use the template
+   [available here](https://github.com/agntcy/oasf/blob/main/schema/templates/object_name.json),
    to get started with `.json` file definition.
 
-An example `locator.json` object file,
+   An example `locator.json` object file:
 
-```
-{
-  "caption": "Record Locator",
-  "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
-  "extends": "object",
-  "name": "locator",
-  "attributes": {
-    "type": {
-      "caption": "Type",
-      "description": "Describes the type of the release manifest pointed by its URI. Allowed values MAY be defined for common manifest types.",
-      "requirement": "required",
-      "enum": {
-        "unspecified": {
-          "caption": "Unspecified"
-        },
-        "helm_chart": {
-          "caption": "Helm Chart"
-        },
-        "docker_image": {
-          "caption": "Docker Image"
-        },
-        "python_package": {
-          "caption": "Python Package"
-        },
-        "source_code": {
-          "caption": "Source Code"
-        },
-        "binary": {
-          "caption": "Binary"
-        }
-      }
-    },
-    "url": {
-      "caption": "URL",
-      "description": "Specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
-      "requirement": "required"
-    },
-    "annotations": {
-      "caption": "Annotations",
-      "description": "Additional metadata associated with the record locator.",
-      "requirement": "optional"
-    },
-    "size": {
-      "caption": "Size",
-      "description": "Specifies the size of the release manifest in bytes.",
-      "requirement": "optional"
-    },
-    "digest": {
-      "caption": "Digest",
-      "description": "Specifies the digest of the release manifest contents.",
-      "requirement": "optional"
-    }
-  }
-}
-```
+   ```json
+   {
+     "caption": "Record Locator",
+     "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
+     "extends": "object",
+     "name": "locator",
+     "attributes": {
+       "type": {
+         "caption": "Type",
+         "description": "Describes the type of the release manifest pointed by its URI. Allowed values MAY be defined for common manifest types.",
+         "requirement": "required",
+         "enum": {
+           "unspecified": {
+             "caption": "Unspecified"
+           },
+           "helm_chart": {
+             "caption": "Helm Chart"
+           },
+           "docker_image": {
+             "caption": "Docker Image"
+           },
+           "python_package": {
+             "caption": "Python Package"
+           },
+           "source_code": {
+             "caption": "Source Code"
+           },
+           "binary": {
+             "caption": "Binary"
+           }
+         }
+       },
+       "url": {
+         "caption": "URL",
+         "description": "Specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
+         "requirement": "required"
+       },
+       "annotations": {
+         "caption": "Annotations",
+         "description": "Additional metadata associated with the record locator.",
+         "requirement": "optional"
+       },
+       "size": {
+         "caption": "Size",
+         "description": "Specifies the size of the release manifest in bytes.",
+         "requirement": "optional"
+       },
+       "digest": {
+         "caption": "Digest",
+         "description": "Specifies the digest of the release manifest contents.",
+         "requirement": "optional"
+       }
+     }
+   }
+   ```
 
 4. `caption` → Add a user-friendly name to the object.
 5. `description` → Add a concise description to define the object.
@@ -252,7 +250,7 @@ The resultant object will not be visible in the
 
 Sample entry in the `dictionary.json`,
 
-```
+```json
     "locators": {
       "caption": "Record Locators",
       "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
@@ -288,14 +286,17 @@ To deprecate an attribute (`field`, `object`) follow the steps below:
 2. Utilize the following flag to allow deprecation of attributes.
    This flag needs to be added a json property of the attribute that is the
    subject of deprecation.
-   ```
+
+   ```json
          "@deprecated": {
            "message": "Use the <code> ALTERNATE_ATTRIBUTE </code> attribute instead.",
            "since": "semver"
          }
    ```
+
 3. Example of a deprecated field
-   ```
+
+   ```json
    "packages": {
      "@deprecated": {
        "message": "Use the <code> affected_packages </code> attribute instead.",
@@ -307,8 +308,10 @@ To deprecate an attribute (`field`, `object`) follow the steps below:
      "type": "package"
    }
    ```
+
 4. Example of a deprecated object
-   ```
+
+   ```json
     {
       "caption": "Finding",
       "description": "The Finding object describes metadata related to a security finding generated by a security tool or system.",
@@ -329,9 +332,9 @@ To deprecate an attribute (`field`, `object`) follow the steps below:
 Contributors should verify the changes before they submit the PR, the best
 method to test and verify their changes is to run a local instance of the
 [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
-Follow the instructions
-[here](https://github.com/agntcy/oasf/blob/main/README.md#deploy-locally) to
-deploy in a local Kind cluster, or
+Follow the
+[instructions here](https://github.com/agntcy/oasf/blob/main/README.md#deploy-locally)
+to deploy in a local Kind cluster, or
 [here](https://github.com/agntcy/oasf/blob/main/server/README.md) to set your
 own local OASF server using Elixir tooling.
 
@@ -339,7 +342,7 @@ If there are any problems with the newly made changes, the server will throw
 corresponding errors.
 Sample error messages:
 
-```
+```text
 [error] mfa=Schema.Utils.update_attributes/4 line=331  "Record" usesundefined attribute: locators: %{description: "List of source locators where this record can be found or used from.", requirement: "required", caption: "Locators", _source: :record}
 [error] mfa=Schema.Utils.update_data_type/3 line=224  Missing data type for: otel_exporters/otel_tls_config, will use string_t type
 ```
@@ -383,7 +386,7 @@ and add a new `extension.json` file, which defines the extension's `name` and
 `uid`.
 For example:
 
-```
+```json
 {
   "caption": "New Extension",
   "name": "new_ex",
@@ -396,24 +399,17 @@ The extension's directory structure is the same as the top level schema
 directory, and it may contain the following files and subdirectories, depending
 on what type of extension is desired:
 
-## | Name | Description | | -------------------- |
-
-| --- | | `main_skills.json` | Create it to define new skill categories.
-Note, to avoid collisions with the categories defined in the core schema, the
-category IDs must be greater than or equal to 30.
-| | `main_domains.json` | Create it to define new domain categories.
-Note, to avoid collisions with the categories defined in the core schema, the
-category IDs must be greater than or equal to 30.
-| | `main_features.json` | Create it to define new feature categories.
-Note, to avoid collisions with the categories defined in the core schema, the
-category IDs must be greater than or equal to 30.
-| | `dictionary.json` | Create it to define new attributes.
-| | `skills` | Create it to define new skill classes.
-| | | `domains` | Create it to define new domain classes.
-| | | `features` | Create it to define new feature classes.
-| | | `objects` | Create it to define new objects.
-| | `profiles` | Create it to define new profiles.
-|
+| Name                 | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `main_skills.json`   | Create it to define new skill categories.   |
+| `main_domains.json`  | Create it to define new domain categories.  |
+| `main_features.json` | Create it to define new feature categories. |
+| `dictionary.json`    | Create it to define new attributes.         |
+| `skills`             | Create it to define new skill classes.      |
+| `domains`            | Create it to define new domain classes.     |
+| `features`           | Create it to define new feature classes.    |
+| `objects`            | Create it to define new objects.            |
+| `profiles`           | Create it to define new profiles.           |
 
 ## Reporting Issues
 
@@ -450,9 +446,8 @@ You must include a sign-off in the commit message of your pull request for it to
 be accepted.
 The format for a sign-off is:
 
-```
-Signed-off-by: Random J Developer
-<random@developer.example.org>
+```text
+Signed-off-by: Random J Developer <random@developer.example.org>
 ```
 
 You can use the -s when you do a git commit to simplify including a properly
@@ -460,7 +455,7 @@ formatted sign-off in your commits.
 If you need to add your sign-off to a commit you have already made, you will
 need to amend:
 
-```
+```sh
 git commit --amend --signoff
 ```
 
