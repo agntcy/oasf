@@ -429,6 +429,12 @@
       "description": "Data supported by the agent for LLM prompts.",
       "type": "llm_prompt_data"
     },
+    "llm_prompt_names": {
+      "caption": "List of prompts",
+      "description": "List of prompts referencing prompt names",
+      "type": "string_t",
+      "is_array": true
+    },
     "llm_prompts": {
       "caption": "List of LLM Prompts",
       "description": "List of common prompts used for LLM interactions with the agent, including their configurations and parameters.",
@@ -490,6 +496,12 @@
       "caption": "MCP Server Resources",
       "description": "Describes the configuration for an MCP server resources.",
       "type": "mcp_server_resource",
+      "is_array": true
+    },
+    "mcp_server_tool_names": {
+      "caption": "List of MCP Server Names",
+      "description": "List of MCP Server referencing MCP Server names",
+      "type": "string_t",
       "is_array": true
     },
     "mcp_server_tools": {
