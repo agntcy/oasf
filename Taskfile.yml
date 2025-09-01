@@ -217,6 +217,21 @@ tasks:
       # chart can be deployed or not.
       # TODO: add test cases here
 
+  lint:
+    cmds:
+      - task: lint:charts
+
+  lint:charts:
+    desc: Lint helm charts
+    deps:
+      - deps:helm
+    vars:
+      HELM_ALL_CHART_PATHS:
+        sh: find . -name Chart.yaml -exec dirname {} \;
+    cmds:
+      - for: { var: HELM_ALL_CHART_PATHS }
+        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} lint'
+
   ##
   ## Dependencies
   ##
