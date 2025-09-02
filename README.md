@@ -22,10 +22,10 @@ OASF defines a set of standards for AI agent content representation that aims
 to:
 
 - Define common data structure to facilitate content standardization,
-  validation, and interoperability
+  validation, and interoperability.
 - Ensure unique agent identification to address content discovery and
-  consumption
-- Provide extension capabilities to enable third-party features
+  consumption.
+- Provide extension capabilities to enable third-party features.
 
 ## Future Expansion and Contributions
 
@@ -37,7 +37,7 @@ A key area of anticipated expansion includes the definition and management of
 We welcome contributions from the community to help shape the future of OASF.
 For detailed guidelines on how to contribute, including information on proposing
 new features, reporting bugs, and submitting code, please refer to our
-[contributiong guide](CONTRIBUTING.md).
+[contributing guide](CONTRIBUTING.md).
 
 ### Open Agentic Schema Framework Server
 
@@ -72,13 +72,13 @@ validating, deploying, and working with the project.
 Check the [example.env](example.env) to see the configuration for the operations
 below.
 
-### Clone the repository
+### Clone the Repository
 
 ```shell
 git clone https://github.com/agntcy/oasf.git
 ```
 
-### Build artifacts
+### Build Artifacts
 
 This step will fetch all project dependencies and subsequently build all project
 artifacts such as helm charts and docker images.
@@ -88,7 +88,7 @@ task deps
 task build
 ```
 
-### Deploy locally
+### Deploy Locally
 
 This step will create an ephemeral Kind cluster and deploy OASF services via
 Helm chart.
@@ -100,15 +100,15 @@ task up
 ```
 
 To access the schema server, open [`localhost:8080`](http://localhost:8080) in
-your Web browser.
+your browser.
 
-Note that any changes made to the server backend itself will require running
+**Note:** Any changes made to the server backend itself will require running
 `task up` again.
 
 To set your own local OASF server using Elixir tooling, follow
 [these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
 
-### Hot reload
+### Hot Reload
 
 In order to run the server in hot-reload mode, you must first deploy the
 services, and run another command to signal that the schema will be actively
@@ -120,10 +120,10 @@ This can be achieved by starting an interactive reload session via:
 task reload
 ```
 
-Note that this will only perform hot-reload for schema changes.
+**Note:** This will only perform hot-reload for schema changes.
 Reloading backend changes still requires re-running `task build && task up`.
 
-### Deploy locally with multiple versions
+### Deploy Locally with Multiple Versions
 
 Trying out OASF locally with multiple versions is also possible, with updating
 the `install/charts/oasf/values-test-versions.yaml` file with the required
@@ -149,7 +149,7 @@ task down
 
 See https://github.com/orgs/agntcy/packages?repo_name=oasf
 
-### Protocol buffer definitions
+### Protocol Buffer Definitions
 
 The `proto` directory contains the Protocol Buffer (`.proto`) files defining our
 data objects and APIs.
@@ -157,7 +157,7 @@ The full proto module, generated language stubs and it's versions are hosted at
 the Buf Schema Registry:
 [https://buf.build/agntcy/oasf](https://buf.build/agntcy/oasf)
 
-## Copyright notice
+## Copyright Notice
 
 [Copyright Notice and License](./LICENSE.md)
 

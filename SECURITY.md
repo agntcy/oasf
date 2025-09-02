@@ -28,4 +28,4 @@ the OASF team.
 The project team is committed to transparency in the security issue disclosure
 process.
 The OASF team announces security issues via
-[project GitHub Release notes](https://github.com/agtncy/oasf/releases).
+[project GitHub Release notes](https://github.com/agntcy/oasf/releases).

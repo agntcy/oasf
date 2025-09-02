@@ -7,7 +7,7 @@ use the OASF schema.
 
 This section describes how to build and run the OASF Schema server.
 
-### Required build tools
+### Required Build Tools
 
 The Schema server is written in [Elixir](https://elixir-lang.org) using the
 [Phoenix](https://phoenixframework.org/) Web framework.
@@ -15,18 +15,18 @@ The Schema server is written in [Elixir](https://elixir-lang.org) using the
 The Elixir site maintains a great installation page, see
 [this](https://elixir-lang.org/install.html) for help.
 
-### Building the schema server
+### Building the Schema Server
 
 Elixir uses the [`mix`](https://hexdocs.pm/mix/Mix.html) build tool, which is
 included in the Elixir installation package.
 
-#### Install the build tools
+#### Install the Build Tools
 
 ```shell
 mix local.hex --force && mix local.rebar --force
 ```
 
-#### Get the dependencies
+#### Get the Dependencies
 
 Change to the server directory, fetch, and compile the dependencies:
 
@@ -35,13 +35,13 @@ cd server
 mix do deps.get, deps.compile
 ```
 
-#### Compile the source code
+#### Compile the Source Code
 
 ```shell
 mix compile
 ```
 
-### Testing local schema changes
+### Testing Local Schema Changes
 
 You can use `mix test` command to test the changes made to the schema.
 For example, to ensure the JSON files are correct or the attributes are defined,
@@ -53,7 +53,7 @@ SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions mix test
 
 If everything is correct, then you should not see any errors or warnings.
 
-### Running the schema server
+### Running the Schema Server
 
 You can use the Elixir's interactive shell,
 [IEx](https://hexdocs.pm/iex/IEx.html), to start the schema server use:
@@ -65,7 +65,7 @@ SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
 Now you can access the Schema server at
 [`localhost:8080`](http://localhost:8080).
 
-### Reloading the schema
+### Reloading the Schema
 
 You can use the following command in the `iex` shell to force reloading the
 schema with extensions:
@@ -80,14 +80,14 @@ Reload the core schema without extensions:
 Schema.reload()
 ```
 
-Reload the schema only with the `example` extension (note the folder is relative
+Reload the schema only with the `example` extension (note that the folder is relative
 to the `SCHEMA_DIR` folder):
 
 ```elixir
 Schema.reload(["extensions/example"])
 ```
 
-Reload the schema with all extensions defined in the `extensions` folder (note
+Reload the schema with all extensions defined in the `extensions` folder (note that
 the folder is relative to the `SCHEMA_DIR` folder):
 
 ```elixir
@@ -101,7 +101,7 @@ an absolute or relative path):
 Schema.reload(["/home/schema/cloud", "../dev-ext"])
 ```
 
-### Runtime configuration
+### Runtime Configuration
 
 The schema server uses a number of environment variables.
 

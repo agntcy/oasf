@@ -20,33 +20,31 @@ Slack, Discord, and others.
 This documentation presents guidelines and expected etiquette to successfully
 contribute to the development of OASF Schemas and the framework itself.
 
----
-
 ## Key OASF Terminology
 
-1. **Field**:
+-  **Field**:
    A field is a unique identifier name for a piece of data contained in OASF.
-   Each field also designates a corresponding data_type.
-2. **Object**:
+   Each field also designates a corresponding `data_type`.
+- **Object**:
    An object is a collection of contextually related fields and other objects.
-   It is also a data_type in OASF.
-3. **Class**:
+   It is also a `data_type` in OASF.
+- **Class**:
    A class is a particular set of attributes (including fields & objects)
    representing metadata associated to an OASF record.
-   It is also a data_type in OASF.
-4. **Class Family**:
+   It is also a `data_type` in OASF.
+- **Class Family**:
    Classes are currently grouped into 3 families:
    skills, domains, and features.
-5. **Attribute**:
+- **Attribute**:
    An attribute is the more generic name for both fields and objects/classes in
    OASF.
    A field is a scalar attribute while an object/class is a complex attribute.
-6. **Category:** A Category organizes classes that represent a particular
+- **Category:** A Category organizes classes that represent a particular
    domain.
 
-## How do I add to the schema?
+## How to Add to the Schema
 
-### Adding/Modifying a `class`
+### Adding or Modifying a `class`
 
 1. Determine where in the taxonomy of the class family you would want to add the
    new `class`.
@@ -62,9 +60,8 @@ contribute to the development of OASF Schemas and the framework itself.
 5. Finally, verify the changes are working as expected in your local
    [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
 
----
 
-### Adding/Modifying an `attribute`
+### Adding or Modifying an `attribute`
 
 1. All the available `attributes` - `fields` & `objects` in OASF are and will
    need to be defined in the attribute dictionary, the
@@ -95,7 +92,7 @@ contribute to the development of OASF Schemas and the framework itself.
      mandate the presence of environment variables holding such sensitive
      information.
 
-#### How to define a `field` in the dictionary?
+#### Defining a `field` in the Dictionary
 
 To add a new field in OASF, you need to define it in the
 [dictionary.json](https://github.com/agntcy/oasf/blob/main/schema/dictionary.json)
@@ -141,7 +138,7 @@ For example:
    1. e.g. `"is_array":
 true`
 
-#### How to define an `object`?
+#### Defining an `object`
 
 1. All the available `objects` need to be defined as individual field entries in
    the dictionary, the
@@ -305,9 +302,7 @@ true`
    1. e.g. `"is_enum":
 true`
 
----
-
-### Deprecating an attribute
+### Deprecating an Attribute
 
 To deprecate an attribute (`field`, `object`) follow the steps below:
 
@@ -355,8 +350,6 @@ To deprecate an attribute (`field`, `object`) follow the steps below:
     }
    ```
 
----
-
 ### Verifying the changes
 
 Contributors should verify the changes before they submit the PR, the best
@@ -380,8 +373,6 @@ Sample error messages:
 Address the errors before submitting the changes, your server run should be
 completely error free.
 
----
-
 ## OASF Extensions
 
 The OASF Schema can be extended by adding an extension that defines additional
@@ -397,7 +388,7 @@ As with categories and classes, extensions have unique IDs within the framework
 as well as their own versioning.
 The following sections provide guidelines to create extensions within OASF.
 
-### Reserve a UID and Name for your extension
+### Reserve a UID and Name for Your Extension
 
 In order to reserve an ID space, and make your extension public, add a unique
 identifier & a unique name for your extension in the OASF Extensions Registry
@@ -409,7 +400,7 @@ For example, a new sample extension would have a row in the table as follows:
 | ------------- | -------- | ------- | --------------------------------- |
 | New Extension | new_ex   | 123     | The development schema extensions |
 
-### Create your Extension's subdirectory
+### Create Your Extension's Subdirectory
 
 To extend the schema, create a new subdirectory in the `extensions` directory,
 and add a new `extension.json` file, which defines the extension's `name` and
