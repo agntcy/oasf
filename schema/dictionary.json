@@ -226,11 +226,6 @@
       "description": "URL of the API base for the LLM model (e.g., 'https://api.openai.com/v1').",
       "type": "string_t"
     },
-    "api_key": {
-      "caption": "API Key",
-      "description": "API key for accessing the LLM model, if required by the provider.",
-      "type": "string_t"
-    },
     "args": {
       "caption": "Arguments",
       "description": "A list of arguments to be passed to a command. See specific usage.",
@@ -357,7 +352,7 @@
     },
     "env_vars": {
       "caption": "Environment Variables",
-      "description": "List of possible environment variables that the agent may require to be set before it can be used.",
+      "description": "List of possible environment variables that might be required to be set. See specific usage.",
       "type": "env_var",
       "is_array": true
     },
@@ -635,7 +630,7 @@
     },
     "required": {
       "caption": "Required",
-      "description": "Indicates that environment variable is a mandatory setting for the agent.",
+      "description": "Indicates whether the item is required or not. See specific usage.",
       "type": "boolean_t"
     },
     "schema_version": {
