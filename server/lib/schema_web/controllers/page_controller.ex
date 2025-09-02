@@ -283,10 +283,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_skills(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:_children, children)
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -325,10 +330,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_domains(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:_children, children)
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -367,10 +377,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_features(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:_children, children)
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
