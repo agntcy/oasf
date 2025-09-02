@@ -90,6 +90,10 @@ contribute to the development of OASF Schemas and the framework itself.
      acronyms (for example, LLM, AI).
    - If the attribute can only be related to a `feature` class, prefix its name
      with the feature's name.
+   - If the attribute is supposed to hold sensitive data such as API keys, use
+     the `env_vars` attribute instead, which enables record publishers to
+     mandate the presence of environment variables holding such sensitive
+     information.
 
 #### How to define a `field` in the dictionary?
 
