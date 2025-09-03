@@ -1,6 +1,6 @@
 {
   "caption": "LLM Prompt Data",
-  "description": "Data for the LLM prompt record extension.",
+  "description": "Data for the LLM prompt record module.",
   "extends": "module_data",
   "name": "llm_prompt_data",
   "attributes": {

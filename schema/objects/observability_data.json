@@ -1,6 +1,6 @@
 {
   "caption": "Observability Data",
-  "description": "Data supported by the agent extension for observability.",
+  "description": "Data supported by the record module for observability.",
   "extends": "module_data",
   "name": "observability_data",
   "attributes": {

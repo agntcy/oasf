@@ -1,6 +1,6 @@
 {
   "caption": "A2A Data",
-  "description": "Data for the A2A record extension.",
+  "description": "Data for the A2A record module.",
   "extends": "module_data",
   "name": "a2a_data",
   "attributes": {

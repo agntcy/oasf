@@ -1,6 +1,6 @@
 {
   "caption": "MCP Data",
-  "description": "Data for the MCP record extension.",
+  "description": "Data for the MCP record module.",
   "extends": "module_data",
   "name": "mcp_data",
   "attributes": {

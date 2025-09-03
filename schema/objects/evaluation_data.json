@@ -1,6 +1,6 @@
 {
   "caption": "Evaluation Data",
-  "description": "Data supported by the agent extension for evaluation.",
+  "description": "Data supported by the record module for evaluation.",
   "extends": "module_data",
   "name": "evaluation_data",
   "attributes": {
