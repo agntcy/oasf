@@ -102,32 +102,16 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <% end %>
 
-<%= if Enum.empty?(@data[:_children]) do %>
-<div></div>
+<% children = @data[:_children] %>
+<%= if Enum.empty?(children) do %>
+  <div></div>
 <% else %>
-<div class="mt-4">
-  <h5>Children objects</h5>
-  <table id="data-table" class="table table-bordered sortable">
-    <thead>
-      <tr class="thead-color">
-        <th class="col-name">Name</th>
-        <th class="col-caption">Caption</th>
-        <th class="col-type">Type</th>
-        <th class="col-description">Description</th>
-      </tr>
-    </thead>
-    <tbody class="searchable">
-      <%= for {attribute_key, attribute} <- @data[:_children] do %>
-      <tr class="<%= field_classes(attribute)%>">
-        <td class="name" data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:attribute_key], attribute) %>"><%= format_attribute_name(attribute_key) %></td>
-        <td><%= raw format_attribute_caption(@conn, attribute_key, attribute) %></td>
-        <td class="extensions"><%= raw format_type(@conn, attribute) %></td>
-        <td><%= raw format_attribute_desc(@conn, attribute_key, attribute) %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+  <div class="referenced-by-section">
+    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#entity-children" aria-expanded="false" aria-controls="entity-children">Children</a>
+    <div class="referenced-by-content extensions collapse" id="entity-children">
+      <%= raw entity_children(@conn, children, "object") %>
+    </div>
+  </div>
 <% end %>
 
 <% links = @data[:_links] %>
@@ -141,6 +125,7 @@ SPDX-License-Identifier: Apache-2.0
     </div>
   </div>
 <% end %>
+
 <%= if constraints != nil and map_size(constraints) > 0 do %>
   <h5 class="mt-3">Constraints</h5>
   <div>

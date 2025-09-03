@@ -562,7 +562,7 @@ button:hover,
 /* Multi-column layout for referenced content */
 .referenced-by-content {
   column-count: auto;
-  column-width: 300px;
+  column-width: auto;
   column-gap: var(--spacing-lg);
   column-fill: balance;
 }

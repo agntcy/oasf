@@ -1474,7 +1474,7 @@ defmodule SchemaWeb.SchemaController do
   def objects(conn, params) do
     objects =
       Enum.map(objects(params), fn {_name, map} ->
-        Map.delete(map, :_links) |> Map.delete(:_children) |> Schema.delete_attributes()
+        Map.delete(map, :_links) |> Schema.delete_attributes()
       end)
 
     send_json_resp(conn, objects)
