@@ -18,13 +18,10 @@ message Feature {
   // Unique identifier of the feature.
   uint32 id = 2;
 
-  // Version of the feature.
-  string version = 3;
-
   // Metadata associated with the feature.
-  map<string, string> annotations = 4;
+  map<string, string> annotations = 3;
 
   // Data attached to the feature.
   // Usually a JSON-embedded object.
-  google.protobuf.Struct data = 5;
+  google.protobuf.Struct data = 4;
 }

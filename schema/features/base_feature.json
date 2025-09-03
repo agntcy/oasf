@@ -12,11 +12,6 @@
       "description": "The id as a unique identifier of the feature.",
       "requirement": "recommended"
     },
-    "version": {
-      "caption": "Version",
-      "description": "The version of the feature. For example: <code>1.0.0-alpha.2</code>.",
-      "requirement": "optional"
-    },
     "annotations": {
       "caption": "Annotations",
       "description": "Additional metadata associated with the feature.",
