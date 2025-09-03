@@ -7,21 +7,21 @@ package types.v1alpha1;
 
 import "google/protobuf/struct.proto";
 
-// Features provide a generic way to attach additional information
+// Modules provide a generic way to attach additional information
 // to the record. For example, application-specific
-// details can be provided using a feature.
-message Feature {
-  // Name of the feature.
+// details can be provided using a module.
+message Module {
+  // Name of the module.
   // Can be used as a fully qualified name.
   string name = 1;
 
-  // Unique identifier of the feature.
+  // Unique identifier of the module.
   uint32 id = 2;
 
-  // Metadata associated with the feature.
+  // Metadata associated with the module.
   map<string, string> annotations = 3;
 
-  // Data attached to the feature.
+  // Data attached to the module.
   // Usually a JSON-embedded object.
   google.protobuf.Struct data = 4;
 }
