@@ -142,7 +142,19 @@ defmodule Schema.Validator do
           validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
         :feature ->
-          validate_class_id_or_name(response, input, nil, &Schema.feature/1)
+          if Schema.Utils.is_oasf_class?(type, input["name"]) do
+            validate_class_id_or_name(response, input, &Schema.find_feature/1, &Schema.feature/1)
+          else
+            response =
+              add_warning(
+                response,
+                "feature_unknown",
+                "Feature \"#{input["name"]}\" is not an OASF extension; skipping validation.",
+                %{attribute_path: "name", attribute: "name", value: input["name"]}
+              )
+
+            {response, nil}
+          end
 
         :object ->
           validate_object_name_and_return_object(response, options)
@@ -463,11 +475,11 @@ defmodule Schema.Validator do
           add_error(
             response,
             "version_invalid_format",
-            "Schema version #{inspect(version)} at \"metadata.version\" has invalid format:" <>
+            "Schema version #{inspect(version)} at \"schema_version\" has invalid format:" <>
               " #{error_message}." <>
               " Version must be in semantic versioning format (see https://semver.org/).",
             %{
-              attribute_path: "metadata.version",
+              attribute_path: "schema_version",
               attribute: "version",
               value: version,
               expected_regex: Schema.Utils.version_regex_source()
@@ -507,13 +519,13 @@ defmodule Schema.Validator do
                       add_error(
                         response,
                         "version_incompatible_initial_development",
-                        "Schema version \"#{version}\" at \"metadata.version\" is an initial" <>
+                        "Schema version \"#{version}\" at \"schema_version\" is an initial" <>
                           " development version and is incompatible with the current schema version" <>
                           " \"#{schema_version}\". Initial development versions do not have" <>
                           " compatibility guarantees (see https://semver.org/)." <>
                           " This can result in incorrect validation messages.",
                         %{
-                          attribute_path: "metadata.version",
+                          attribute_path: "schema_version",
                           attribute: "version",
                           value: version
                         }
@@ -524,14 +536,14 @@ defmodule Schema.Validator do
                       add_error(
                         response,
                         "version_incompatible_prerelease",
-                        "Schema version \"#{version}\" at \"metadata.version\" is a prerelease" <>
+                        "Schema version \"#{version}\" at \"schema_version\" is a prerelease" <>
                           " version and is incompatible with the current schema version" <>
                           " \"#{schema_version}\". Prerelease versions are generally" <>
                           " incompatible with released versions and future prerelease versions" <>
                           " (see https://semver.org/)." <>
                           " This can result in incorrect validation messages.",
                         %{
-                          attribute_path: "metadata.version",
+                          attribute_path: "schema_version",
                           attribute: "version",
                           value: version
                         }
@@ -542,13 +554,13 @@ defmodule Schema.Validator do
                       add_warning(
                         response,
                         "version_earlier",
-                        "Schema version \"#{version}\" at \"metadata.version\" is earlier than" <>
+                        "Schema version \"#{version}\" at \"schema_version\" is earlier than" <>
                           " the current schema version \"#{schema_version}\"." <>
                           " Validating against later schema versions can yield deprecation" <>
                           " warnings and other (minor) validation messages that would not occur" <>
                           " when validating against the same version.",
                         %{
-                          attribute_path: "metadata.version",
+                          attribute_path: "schema_version",
                           attribute: "version",
                           value: version
                         }
@@ -560,12 +572,12 @@ defmodule Schema.Validator do
                   add_error(
                     response,
                     "version_incompatible_later",
-                    "Schema version \"#{version}\" at \"metadata.version\" is incompatible with" <>
+                    "Schema version \"#{version}\" at \"schema_version\" is incompatible with" <>
                       " the current schema version \"#{schema_version}\" because it is a later version." <>
                       " This can result in missing validation messages (false negatives)" <>
                       " and incorrect validation messages.",
                     %{
-                      attribute_path: "metadata.version",
+                      attribute_path: "schema_version",
                       attribute: "version",
                       value: version
                     }
@@ -1518,7 +1530,27 @@ defmodule Schema.Validator do
               validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
             "feature" ->
-              validate_class_id_or_name(response, value, nil, &Schema.feature/1)
+              if Schema.Utils.is_oasf_class?(
+                   String.to_atom(attribute_details[:family]),
+                   value["name"]
+                 ) do
+                validate_class_id_or_name(
+                  response,
+                  value,
+                  &Schema.find_feature/1,
+                  &Schema.feature/1
+                )
+              else
+                response =
+                  add_warning(
+                    response,
+                    "feature_unknown",
+                    "Feature \"#{value["name"]}\" is not an OASF extension; skipping validation.",
+                    %{attribute_path: "name", attribute: "name", value: value["name"]}
+                  )
+
+                {response, nil}
+              end
 
             _ ->
               # This should never happen for published schemas (validator will catch this) but

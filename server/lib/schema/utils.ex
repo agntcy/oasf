@@ -620,4 +620,39 @@ defmodule Schema.Utils do
         false
     end
   end
+
+  @doc """
+  Makes class name as its unique identifier within OASF by adding classes it extends from,
+  excluding base classes.
+  """
+  def class_name_with_hierarchy(name, all_classes) do
+    base_items = ["base_class", "base_skill", "base_domain", "base_feature"]
+    hierarchy = build_hierarchy(name, all_classes, [])
+    filtered = Enum.reject(hierarchy, &(&1 in base_items))
+    Enum.join(filtered ++ [name], "/")
+  end
+
+  defp build_hierarchy(name, class_map, acc) do
+    key = if is_atom(name), do: name, else: String.to_atom(name)
+
+    case Map.get(class_map, key) do
+      %{extends: parent} when parent not in [nil, ""] ->
+        build_hierarchy(parent, class_map, [parent | acc])
+
+      _ ->
+        acc
+    end
+  end
+
+  @spec is_oasf_class?(atom, String.t()) :: boolean
+  def is_oasf_class?(family, name) do
+    class_name = Schema.Utils.descope(name) |> String.to_atom()
+
+    case family do
+      :skill -> Map.has_key?(Schema.all_skills(), class_name)
+      :domain -> Map.has_key?(Schema.all_domains(), class_name)
+      :feature -> Map.has_key?(Schema.all_features(), class_name)
+      _ -> false
+    end
+  end
 end

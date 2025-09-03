@@ -320,6 +320,14 @@ defmodule Schema.Cache do
     end
   end
 
+  @spec find_feature(Schema.Cache.t(), any) :: nil | map
+  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, uid) do
+    case Enum.find(features, fn {_, feature} -> feature[:uid] == uid end) do
+      {_, feature} -> enrich(feature, dictionary[:attributes])
+      nil -> nil
+    end
+  end
+
   @spec objects(__MODULE__.t()) :: map()
   def objects(%__MODULE__{objects: objects}), do: objects
 
@@ -390,7 +398,7 @@ defmodule Schema.Cache do
   defp update_attributes(attributes, dictionary_attributes) do
     attributes
     |> Enum.map(fn {name, attribute} ->
-      # Use referece if exists instead of the name
+      # Use reference if exists instead of the name
       reference =
         if Map.has_key?(attribute, :reference) do
           String.to_atom(attribute[:reference])
@@ -761,7 +769,7 @@ defmodule Schema.Cache do
     if is_nil(data[:attributes][:name]) do
       data
     else
-      class_name = Types.class_name_with_hierarchy(data[:name], all_classes)
+      class_name = Utils.class_name_with_hierarchy(data[:name], all_classes)
 
       enum = %{
         :caption => data[:caption],

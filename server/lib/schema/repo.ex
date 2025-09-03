@@ -307,6 +307,11 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.feature(schema, id) end)
   end
 
+  @spec find_feature(any) :: nil | map
+  def find_feature(uid) do
+    Agent.get(__MODULE__, fn schema -> Cache.find_feature(schema, uid) end)
+  end
+
   @spec objects() :: map()
   def objects() do
     Agent.get(__MODULE__, fn schema -> Cache.objects(schema) end)
