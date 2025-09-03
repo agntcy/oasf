@@ -5,9 +5,14 @@
   "name": "llm_tools_data",
   "attributes": {
     "prompts": {
-      "caption": "List of prompt names referencing the 'runtime/prompts' extension.",
+      "caption": "List of prompt names referencing the 'runtime/prompt' extension.",
       "requirement": "required",
       "reference": "llm_prompt_names"
+    },
+    "models": {
+      "caption": "List of model names referencing the 'runtime/model' extension.",
+      "requirement": "optional",
+      "reference": "llm_model_names"
     },
     "tools": {
       "caption": "List of tools that couldn't be part of an extension.",

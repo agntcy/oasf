@@ -418,6 +418,12 @@
       "description": "Data supported by the agent for LLM model.",
       "type": "llm_model_data"
     },
+    "llm_model_names": {
+      "caption": "List of model names",
+      "description": "List of models referencing model names",
+      "type": "string_t",
+      "is_array": true
+    },
     "llm_models": {
       "caption": "List of LLM Model Data",
       "description": "Collection of LLM models supported by the agent, including their configurations and parameters.",
