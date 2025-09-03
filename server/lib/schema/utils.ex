@@ -103,35 +103,13 @@ defmodule Schema.Utils do
     |> define_datetime_attributes()
   end
 
-  @spec update_classes(map(), map()) :: map()
-  def update_classes(classes, all_classes) do
-    Enum.into(classes, %{}, fn {name, class} ->
-      children =
-        find_children(all_classes, Atom.to_string(name))
-        |> Enum.reject(fn item -> item[:hidden?] == true end)
-        |> Enum.map(& &1[:name])
-        |> Enum.map(&to_string/1)
-
-      class
-      |> Map.put(:_children, children)
-      |> (&{name, &1}).()
-    end)
-  end
-
-  @spec update_objects(map(), map(), map()) :: map()
-  def update_objects(objects, all_objects, dictionary) do
+  @spec update_objects(map(), map()) :: map()
+  def update_objects(objects, dictionary) do
     Enum.into(objects, %{}, fn {name, object} ->
       links = object_links(dictionary, Atom.to_string(name))
 
-      children =
-        find_children(all_objects, Atom.to_string(name))
-        |> Enum.reject(fn item -> item[:hidden?] == true end)
-        |> Enum.map(& &1[:name])
-        |> Enum.map(&to_string/1)
-
       object
       |> Map.put(:_links, links)
-      |> Map.put(:_children, children)
       |> (&{name, &1}).()
     end)
   end

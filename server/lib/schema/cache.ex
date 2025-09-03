@@ -123,25 +123,22 @@ defmodule Schema.Cache do
     # Missing description warnings, datetime attributes, and profiles
     objects =
       objects
-      |> Utils.update_objects(all_objects, dictionary_attributes)
+      |> Utils.update_objects(dictionary_attributes)
       |> update_objects()
       |> final_check(dictionary_attributes)
 
     skills =
       skills
-      |> Utils.update_classes(all_skills)
       |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
     domains =
       domains
-      |> Utils.update_classes(all_domains)
       |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
     features =
       features
-      |> Utils.update_classes(all_features)
       |> update_classes(objects)
       |> final_check(dictionary_attributes)
 

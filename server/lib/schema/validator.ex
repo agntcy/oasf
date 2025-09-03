@@ -722,8 +722,16 @@ defmodule Schema.Validator do
 
     {response, schema_attributes} =
       if is_enum do
+        name = schema_item[:name]
+
+        children =
+          Schema.Utils.find_children(Schema.all_objects(), name)
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+          |> Enum.map(& &1[:name])
+          |> Enum.map(&to_string/1)
+
         matching_child =
-          schema_item[:_children]
+          children
           |> Enum.map(&Schema.entity_ex(:object, &1))
           |> Enum.find(fn child ->
             child_attrs = child[:attributes] || %{}
@@ -783,7 +791,7 @@ defmodule Schema.Validator do
               %{
                 attribute_path: attribute_path,
                 attribute: attribute_name,
-                allowed_object_names: Enum.join(schema_item[:_children], ", ")
+                allowed_object_names: Enum.join(children, ", ")
               }
             ),
             []

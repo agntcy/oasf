@@ -1116,6 +1116,29 @@ defmodule SchemaWeb.PageView do
     end
   end
 
+  @spec entity_children(any(), list(Schema.Utils.link_t()), String.t()) ::
+          <<>> | list()
+  def entity_children(conn, children, type)
+  def entity_children(_, nil, _), do: ""
+  def entity_children(_, [], _), do: ""
+
+  def entity_children(conn, children, type) do
+    entities_html =
+      [
+        case type do
+          "skill" -> entity_children_to_html(conn, children, "skill")
+          "domain" -> entity_children_to_html(conn, children, "domain")
+          "feature" -> entity_children_to_html(conn, children, "feature")
+          "object" -> entity_children_to_html(conn, children, "object")
+          _ -> []
+        end
+      ]
+      |> Enum.reject(&Enum.empty?/1)
+
+    Enum.reject([entities_html], &Enum.empty?/1)
+    |> Enum.intersperse("<hr>")
+  end
+
   @spec object_links(any(), String.t(), list(Schema.Utils.link_t()), nil | :collapse) ::
           <<>> | list()
   def object_links(conn, name, links, list_presentation \\ nil)
@@ -1299,6 +1322,56 @@ defmodule SchemaWeb.PageView do
           ["Referenced by ", Integer.to_string(length(html_list)), noun_text, deprecated_text],
           html_list
         )
+
+      true ->
+        ["<dl class=\"m-0\">", html_list, "</dl>"]
+    end
+  end
+
+  defp entity_children_to_html(conn, children, type) do
+    html_list =
+      reverse_sort_links(children)
+      |> Enum.reduce(
+        [],
+        fn child, acc ->
+          type_path =
+            case type do
+              "skill" ->
+                SchemaWeb.Router.Helpers.static_path(conn, "/skills/" <> child[:name])
+
+              "domain" ->
+                SchemaWeb.Router.Helpers.static_path(conn, "/domains/" <> child[:name])
+
+              "feature" ->
+                SchemaWeb.Router.Helpers.static_path(conn, "/features/" <> child[:name])
+
+              "object" ->
+                SchemaWeb.Router.Helpers.static_path(conn, "/objects/" <> child[:name])
+
+              _ ->
+                "#"
+            end
+
+          [
+            [
+              "<div class=\"",
+              link_css_classes(child),
+              "\"><dt><a href=\"",
+              type_path,
+              "\">",
+              child[:caption],
+              "</a>",
+              link_deprecated(child),
+              "</div>"
+            ]
+            | acc
+          ]
+        end
+      )
+
+    cond do
+      Enum.empty?(html_list) ->
+        []
 
       true ->
         ["<dl class=\"m-0\">", html_list, "</dl>"]

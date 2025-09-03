@@ -8,25 +8,23 @@ SPDX-License-Identifier: Apache-2.0
 <% extension = @data[:extension] %>
 <% references = @data[:references] %>
 <% constraints = @data[:constraints] %>
+<%
+class_type = @data[:family]
+
+path = case class_type do
+  "skill" ->
+    Routes.static_path(@conn, "/main_skills/" <> category)
+  "feature" ->
+    Routes.static_path(@conn, "/main_features/" <> category)
+  "domain" ->
+    Routes.static_path(@conn, "/main_domains/" <> category)
+  _ ->
+    ""
+end
+%>
 
 <div class="row">
   <div class="col-md move-up">
-    <%
-    class_type = @data[:family]
-
-    path = case class_type do
-      "class" ->
-        Routes.static_path(@conn, "/categories/" <> category)
-      "skill" ->
-        Routes.static_path(@conn, "/main_skills/" <> category)
-      "feature" ->
-        Routes.static_path(@conn, "/main_features/" <> category)
-      "domain" ->
-        Routes.static_path(@conn, "/main_domains/" <> category)
-      _ ->
-        ""
-    end
-    %>
     <h3 class="extensions">
       <%= @data[:caption] %>
       <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
@@ -140,6 +138,18 @@ SPDX-License-Identifier: Apache-2.0
   <h5 class="mt-3">Attribute Associations</h5>
   <div class="text-monospace">
     <%= raw associations(associations) %>
+  </div>
+<% end %>
+
+<% children = @data[:_children] %>
+<%= if Enum.empty?(children) do %>
+  <div></div>
+<% else %>
+  <div class="referenced-by-section">
+    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#entity-children" aria-expanded="false" aria-controls="entity-children">Children</a>
+    <div class="referenced-by-content extensions collapse" id="entity-children">
+      <%= raw entity_children(@conn, children, class_type) %>
+    </div>
   </div>
 <% end %>
 
