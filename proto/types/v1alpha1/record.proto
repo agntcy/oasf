@@ -3,13 +3,13 @@
 
 syntax = "proto3";
 
-package types.v1;
+package types.v1alpha1;
 
-import "types/v1/domain.proto";
-import "types/v1/feature.proto";
-import "types/v1/locator.proto";
-import "types/v1/signature.proto";
-import "types/v1/skill.proto";
+import "types/v1alpha1/domain.proto";
+import "types/v1alpha1/feature.proto";
+import "types/v1alpha1/locator.proto";
+import "types/v1alpha1/signature.proto";
+import "types/v1alpha1/skill.proto";
 
 // Record defines a schema for versioned AI agentic content representation.
 // The schema provides a way to describe an agentic record in a structured format.
