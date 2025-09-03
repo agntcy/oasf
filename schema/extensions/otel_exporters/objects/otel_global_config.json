@@ -1,0 +1,83 @@
+{
+  "caption": "OpenTelemetry Global Configuration",
+  "description": "Global configuration settings for OpenTelemetry across all pipelines",
+  "extends": "object",
+  "name": "otel_global_config",
+  "attributes": {
+    "service_name": {
+      "caption": "Service Name",
+      "description": "Name of the service for resource identification",
+      "requirement": "required",
+      "type": "string_t"
+    },
+    "service_version": {
+      "caption": "Service Version",
+      "description": "Version of the service",
+      "requirement": "optional",
+      "type": "string_t"
+    },
+    "environment": {
+      "caption": "Environment",
+      "description": "Deployment environment (dev, staging, prod)",
+      "requirement": "recommended",
+      "type": "string_t"
+    },
+    "disabled": {
+      "caption": "Disabled",
+      "description": "Globally disable OpenTelemetry",
+      "requirement": "optional",
+      "type": "boolean_t"
+    },
+    "propagators": {
+      "caption": "Propagators",
+      "description": "List of context propagators to use",
+      "requirement": "optional",
+      "is_array": true,
+      "enum": {
+        "tracecontext": {
+          "caption": "W3C Trace Context",
+          "description": "W3C Trace Context propagator"
+        },
+        "baggage": {
+          "caption": "W3C Baggage",
+          "description": "W3C Baggage propagator"
+        },
+        "b3": {
+          "caption": "B3",
+          "description": "Zipkin B3 propagator"
+        },
+        "jaeger": {
+          "caption": "Jaeger",
+          "description": "Jaeger propagator"
+        },
+        "xray": {
+          "caption": "X-Ray",
+          "description": "AWS X-Ray propagator"
+        }
+      }
+    },
+    "log_level": {
+      "caption": "Log Level",
+      "description": "Logging level for OpenTelemetry SDK",
+      "requirement": "optional",
+      "enum": {
+        "debug": {
+          "caption": "Debug",
+          "description": "Debug level logging"
+        },
+        "info": {
+          "caption": "Info",
+          "description": "Info level logging"
+        },
+        "warn": {
+          "caption": "Warning",
+          "description": "Warning level logging"
+        },
+        "error": {
+          "caption": "Error",
+          "description": "Error level logging"
+        }
+      }
+    }
+  }
+}
