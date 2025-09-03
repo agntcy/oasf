@@ -1,0 +1,14 @@
+{
+  "uid": 7,
+  "caption": "Kubernetes",
+  "description": "Kubernetes cluster resource management for container orchestration and deployment operations.",
+  "extends": "tools",
+  "name": "kubernetes",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "kubernetes",
+    "capabilities": ["cluster_management", "resource_orchestration", "deployment_operations"],
+    "docker_image": "mcp/kubernetes",
+    "environment_variables": ["KUBECONFIG", "KUBERNETES_SERVICE_ACCOUNT"]
+  }
+}

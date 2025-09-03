@@ -1,0 +1,8 @@
+{
+  "caption": "Computer Vision & Creative AI",
+  "category": "computer_vision_creative",
+  "description": "Image generation, visual processing, and creative content capabilities",
+  "name": "computer_vision_creative",
+  "extends": "ai_analysis",
+  "attributes": {}
+}
