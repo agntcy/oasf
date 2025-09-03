@@ -141,15 +141,15 @@ defmodule Schema.Validator do
         :domain ->
           validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
-        :feature ->
+        :module ->
           if Schema.Utils.is_oasf_class?(type, input["name"]) do
-            validate_class_id_or_name(response, input, &Schema.find_feature/1, &Schema.feature/1)
+            validate_class_id_or_name(response, input, &Schema.find_module/1, &Schema.module/1)
           else
             response =
               add_warning(
                 response,
-                "feature_unknown",
-                "Feature \"#{input["name"]}\" is not an OASF extension; skipping validation.",
+                "module_unknown",
+                "Module \"#{input["name"]}\" is not an OASF module; skipping validation.",
                 %{attribute_path: "name", attribute: "name", value: input["name"]}
               )
 
@@ -1529,7 +1529,7 @@ defmodule Schema.Validator do
             "domain" ->
               validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
-            "feature" ->
+            "module" ->
               if Schema.Utils.is_oasf_class?(
                    String.to_atom(attribute_details[:family]),
                    value["name"]
@@ -1537,15 +1537,15 @@ defmodule Schema.Validator do
                 validate_class_id_or_name(
                   response,
                   value,
-                  &Schema.find_feature/1,
-                  &Schema.feature/1
+                  &Schema.find_module/1,
+                  &Schema.module/1
                 )
               else
                 response =
                   add_warning(
                     response,
-                    "feature_unknown",
-                    "Feature \"#{value["name"]}\" is not an OASF extension; skipping validation.",
+                    "module_unknown",
+                    "Module \"#{value["name"]}\" is not an OASF module; skipping validation.",
                     %{attribute_path: "name", attribute: "name", value: value["name"]}
                   )
 

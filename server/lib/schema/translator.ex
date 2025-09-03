@@ -55,7 +55,7 @@ defmodule Schema.Translator do
               Schema.find_domain(class_uid)
           end
 
-        :feature ->
+        :module ->
           case Map.get(data, "id") do
             nil ->
               case Map.get(data, "name") do
@@ -63,13 +63,13 @@ defmodule Schema.Translator do
                   data
 
                 name ->
-                  Logger.debug("translate feature class: #{name}")
-                  Schema.feature(Schema.Utils.descope(name))
+                  Logger.debug("translate module class: #{name}")
+                  Schema.module(Schema.Utils.descope(name))
               end
 
             class_uid ->
-              Logger.debug("translate feature class: #{class_uid}")
-              Schema.find_feature(class_uid)
+              Logger.debug("translate module class: #{class_uid}")
+              Schema.find_module(class_uid)
           end
 
         :object ->

@@ -113,37 +113,37 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_features :: map()
-  def main_features() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_features(schema) end)
+  @spec main_modules :: map()
+  def main_modules() do
+    Agent.get(__MODULE__, fn schema -> Cache.main_modules(schema) end)
   end
 
-  @spec main_features(extensions_t() | nil) :: map()
-  def main_features(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_features(schema) end)
+  @spec main_modules(extensions_t() | nil) :: map()
+  def main_modules(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.main_modules(schema) end)
   end
 
-  def main_features(extensions) do
+  def main_modules(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.main_features(schema)
+      Cache.main_modules(schema)
       |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
     end)
   end
 
-  @spec main_feature(atom) :: nil | Cache.category_t()
-  def main_feature(id) do
-    main_feature(nil, id)
+  @spec main_module(atom) :: nil | Cache.category_t()
+  def main_module(id) do
+    main_module(nil, id)
   end
 
-  @spec main_feature(extensions_t() | nil, atom) :: nil | Cache.category_t()
-  def main_feature(extensions, id) do
+  @spec main_module(extensions_t() | nil, atom) :: nil | Cache.category_t()
+  def main_module(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
-      case Cache.main_feature(schema, id) do
+      case Cache.main_module(schema, id) do
         nil ->
           nil
 
-        main_feature ->
-          add_classes(extensions, {id, main_feature}, Cache.features(schema))
+        main_module ->
+          add_classes(extensions, {id, main_module}, Cache.modules(schema))
       end
     end)
   end
@@ -210,23 +210,23 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.all_domains(schema) end)
   end
 
-  @spec features() :: map()
-  def features() do
-    Agent.get(__MODULE__, fn schema -> Cache.features(schema) end)
+  @spec modules() :: map()
+  def modules() do
+    Agent.get(__MODULE__, fn schema -> Cache.modules(schema) end)
   end
 
-  @spec features(extensions_t() | nil) :: map()
-  def features(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.features(schema) end)
+  @spec modules(extensions_t() | nil) :: map()
+  def modules(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.modules(schema) end)
   end
 
-  def features(extensions) do
-    Agent.get(__MODULE__, fn schema -> Cache.features(schema) |> filter(extensions) end)
+  def modules(extensions) do
+    Agent.get(__MODULE__, fn schema -> Cache.modules(schema) |> filter(extensions) end)
   end
 
-  @spec all_features() :: map()
-  def all_features() do
-    Agent.get(__MODULE__, fn schema -> Cache.all_features(schema) end)
+  @spec all_modules() :: map()
+  def all_modules() do
+    Agent.get(__MODULE__, fn schema -> Cache.all_modules(schema) end)
   end
 
   @spec all_objects() :: map()
@@ -266,19 +266,19 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec export_features() :: map()
-  def export_features() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_features(schema) end)
+  @spec export_modules() :: map()
+  def export_modules() do
+    Agent.get(__MODULE__, fn schema -> Cache.export_modules(schema) end)
   end
 
-  @spec export_features(extensions_t() | nil) :: map()
-  def export_features(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_features(schema) end)
+  @spec export_modules(extensions_t() | nil) :: map()
+  def export_modules(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.export_modules(schema) end)
   end
 
-  def export_features(extensions) do
+  def export_modules(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_features(schema) |> filter(extensions)
+      Cache.export_modules(schema) |> filter(extensions)
     end)
   end
 
@@ -302,14 +302,14 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.find_domain(schema, uid) end)
   end
 
-  @spec feature(atom) :: nil | Cache.class_t()
-  def feature(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.feature(schema, id) end)
+  @spec module(atom) :: nil | Cache.class_t()
+  def module(id) do
+    Agent.get(__MODULE__, fn schema -> Cache.module(schema, id) end)
   end
 
-  @spec find_feature(any) :: nil | map
-  def find_feature(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_feature(schema, uid) end)
+  @spec find_module(any) :: nil | map
+  def find_module(uid) do
+    Agent.get(__MODULE__, fn schema -> Cache.find_module(schema, uid) end)
   end
 
   @spec objects() :: map()

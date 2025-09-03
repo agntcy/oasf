@@ -6,7 +6,7 @@ defmodule Schema.Utils do
   Defines map helper functions.
   """
   @type link_t() :: %{
-          :group => :skill | :domain | :feature | :object,
+          :group => :skill | :domain | :module | :object,
           :type => String.t(),
           :caption => String.t(),
           optional(:deprecated?) => boolean(),
@@ -93,11 +93,11 @@ defmodule Schema.Utils do
   end
 
   @spec update_dictionary(map, map, map, map, map) :: map
-  def update_dictionary(dictionary, skills, domains, features, objects) do
+  def update_dictionary(dictionary, skills, domains, modules, objects) do
     dictionary
     |> link_classes(:skill, skills)
     |> link_classes(:domain, domains)
-    |> link_classes(:feature, features)
+    |> link_classes(:module, modules)
     |> link_objects(objects)
     |> update_data_types(objects)
     |> define_datetime_attributes()
@@ -216,7 +216,7 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec make_link(:skill | :domain | :feature | :object, atom() | String.t(), map()) :: link_t()
+  @spec make_link(:skill | :domain | :module | :object, atom() | String.t(), map()) :: link_t()
   def make_link(group, type, item) do
     if Map.has_key?(item, :"@deprecated") do
       %{
@@ -626,7 +626,7 @@ defmodule Schema.Utils do
   excluding base classes.
   """
   def class_name_with_hierarchy(name, all_classes) do
-    base_items = ["base_class", "base_skill", "base_domain", "base_feature"]
+    base_items = ["base_skill", "base_domain", "base_module"]
     hierarchy = build_hierarchy(name, all_classes, [])
     filtered = Enum.reject(hierarchy, &(&1 in base_items))
     Enum.join(filtered ++ [name], "/")
@@ -651,7 +651,7 @@ defmodule Schema.Utils do
     case family do
       :skill -> Map.has_key?(Schema.all_skills(), class_name)
       :domain -> Map.has_key?(Schema.all_domains(), class_name)
-      :feature -> Map.has_key?(Schema.all_features(), class_name)
+      :module -> Map.has_key?(Schema.all_modules(), class_name)
       _ -> false
     end
   end

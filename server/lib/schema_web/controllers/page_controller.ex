@@ -47,16 +47,16 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  @spec feature_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def feature_graph(conn, %{"id" => id} = params) do
-    case SchemaWeb.SchemaController.feature_ex(id, params) do
+  @spec module_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def module_graph(conn, %{"id" => id} = params) do
+    case SchemaWeb.SchemaController.module_ex(id, params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_features")
+          |> Map.put(:categories_path, "main_modules")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -217,21 +217,21 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Renders main features or the features in a given main feature.
+  Renders main modules or the modules in a given main module.
   """
-  @spec main_features(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_features(conn, %{"id" => id} = params) do
-    case SchemaController.main_feature_features(params) do
+  @spec main_modules(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_modules(conn, %{"id" => id} = params) do
+    case SchemaController.main_module_modules(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
-        features = sort_by(data[:classes], :uid)
+        modules = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, features)
-          |> Map.put(:class_type, "feature")
-          |> Map.put(:classes_path, "features")
+          Map.put(data, :classes, modules)
+          |> Map.put(:class_type, "module")
+          |> Map.put(:classes_path, "modules")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -241,14 +241,14 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_features(conn, params) do
+  def main_modules(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_features()
+      |> SchemaController.main_modules()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_features")
-      |> Map.put(:classes_path, "features")
+      |> Map.put(:categories_path, "main_modules")
+      |> Map.put(:classes_path, "modules")
 
     render(conn, "index.html",
       extensions: Schema.extensions(),
@@ -366,19 +366,19 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Renders features.
+  Renders modules.
   """
-  @spec features(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def features(conn, %{"id" => id} = params) do
+  @spec modules(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def modules(conn, %{"id" => id} = params) do
     extension = params["extension"]
 
-    case Schema.feature(extension, id) do
+    case Schema.module(extension, id) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
         children =
-          Schema.Utils.find_children(Schema.all_features(), data[:name])
+          Schema.Utils.find_children(Schema.all_modules(), data[:name])
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         data =
@@ -395,14 +395,14 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def features(conn, params) do
+  def modules(conn, params) do
     data = %{
       classes:
-        SchemaController.features(params)
+        SchemaController.modules(params)
         |> sort_by(:uid),
-      title: "Features",
-      description: "The OASF features",
-      classes_path: "features"
+      title: "Modules",
+      description: "The OASF modules",
+      classes_path: "modules"
     }
 
     render(conn, "classes.html",

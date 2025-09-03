@@ -219,50 +219,50 @@ defmodule SchemaWeb.SchemaController do
             }
           ])
         end,
-      FeatureDesc:
+      ModuleDesc:
         swagger_schema do
-          title("Feature Class Descriptor")
-          description("Schema Feature class descriptor.")
+          title("Module Class Descriptor")
+          description("Schema Module class descriptor.")
 
           properties do
-            name(:string, "Feature class name", required: true)
-            family(:string, "Feature class family", required: true)
-            caption(:string, "Feature class caption", required: true)
-            description(:string, "Feature class description", required: true)
-            category(:string, "Feature class category", required: true)
-            category_name(:string, "Feature class category caption", required: true)
+            name(:string, "Module class name", required: true)
+            family(:string, "Module class family", required: true)
+            caption(:string, "Module class caption", required: true)
+            description(:string, "Module class description", required: true)
+            category(:string, "Module class category", required: true)
+            category_name(:string, "Module class category caption", required: true)
 
-            profiles(:array, "Feature class profiles",
+            profiles(:array, "Module class profiles",
               items: %PhoenixSwagger.Schema{type: :string}
             )
 
-            uid(:integer, "Feature class unique identifier", required: true)
+            uid(:integer, "Module class unique identifier", required: true)
           end
 
           example([
             %{
               name: "observability",
-              family: "feature",
+              family: "module",
               description: "Agent extension describing how the agent can be observed",
               category: "observability",
-              extends: "base_feature",
+              extends: "base_module",
               uid: 101,
               caption: "Observability",
               category_name: "Observability"
             }
           ])
         end,
-      FeaturesDesc:
+      ModulesDesc:
         swagger_schema do
-          title("Feature Class Descriptors")
-          description("A collection of Feature Class Descriptors.")
+          title("Module Class Descriptors")
+          description("A collection of Module Class Descriptors.")
           type(:array)
-          items(Schema.ref(:FeatureDesc))
+          items(Schema.ref(:ModuleDesc))
 
           example([
             %{
               name: "manifest",
-              family: "feature",
+              family: "module",
               description: "Agent manifest",
               category: "runtime",
               extends: "runtime",
@@ -272,21 +272,21 @@ defmodule SchemaWeb.SchemaController do
             },
             %{
               name: "observability",
-              family: "feature",
+              family: "module",
               description: "Agent extension describing how the agent can be observed",
               category: "observability",
-              extends: "base_feature",
+              extends: "base_module",
               uid: 101,
               caption: "Observability",
               category_name: "Observability"
             },
             %{
               name: "evaluation",
-              family: "feature",
+              family: "module",
               description:
                 "Assessing actions and outcomes to determine their effectiveness, guiding future decision-making and enhancing personal agency.",
               category: "evaluation",
-              extends: "base_feature",
+              extends: "base_module",
               uid: 201,
               caption: "Evaluation",
               category_name: "Evaluation"
@@ -385,10 +385,10 @@ defmodule SchemaWeb.SchemaController do
             name: "technology/internet_of_things"
           })
         end,
-      Feature:
+      Module:
         swagger_schema do
-          title("Feature class")
-          description("An OASF formatted feature class object.")
+          title("Module class")
+          description("An OASF formatted module class object.")
           type(:object)
 
           properties do
@@ -607,16 +607,16 @@ defmodule SchemaWeb.SchemaController do
 
           additional_properties(false)
         end,
-      FeatureBundle:
+      ModuleBundle:
         swagger_schema do
-          title("Feature Class Bundle")
-          description("A bundle of feature classes.")
+          title("Module Class Bundle")
+          description("A bundle of module classes.")
 
           properties do
             inputs(
               :array,
-              "Array of feature classes.",
-              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Feature"},
+              "Array of module classes.",
+              items: %PhoenixSwagger.Schema{"$ref": "#definitions/Module"},
               required: true
             )
 
@@ -646,10 +646,10 @@ defmodule SchemaWeb.SchemaController do
 
           additional_properties(false)
         end,
-      FeatureBundleValidation:
+      ModuleBundleValidation:
         swagger_schema do
-          title("Feature Class Bundle Validation")
-          description("The errors and and warnings found when validating a feature class bundle.")
+          title("Module Class Bundle Validation")
+          description("The errors and and warnings found when validating a module class bundle.")
 
           properties do
             error(:string, "Overall error message")
@@ -671,7 +671,7 @@ defmodule SchemaWeb.SchemaController do
 
             input_validations(
               :array,
-              "Array of feature class validations",
+              "Array of module class validations",
               items: %PhoenixSwagger.Schema{"$ref": "#/definitions/Validation"},
               required: true
             )
@@ -1026,12 +1026,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get the schema main features.
+  Get the schema main modules.
   """
-  swagger_path :main_features do
-    get("/api/main_features")
-    summary("List feature categories")
-    description("Get all OASF feature classes by category.")
+  swagger_path :main_modules do
+    get("/api/main_modules")
+    summary("List module categories")
+    description("Get all OASF module classes by category.")
     produces("application/json")
     tag("Categories")
 
@@ -1045,27 +1045,27 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Returns the list of main features.
+  Returns the list of main modules.
   """
-  @spec main_features(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_features(conn, params) do
-    send_json_resp(conn, main_features(params))
+  @spec main_modules(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_modules(conn, params) do
+    send_json_resp(conn, main_modules(params))
   end
 
-  @spec main_features(map()) :: map()
-  def main_features(params) do
-    parse_options(extensions(params)) |> Schema.main_features()
+  @spec main_modules(map()) :: map()
+  def main_modules(params) do
+    parse_options(extensions(params)) |> Schema.main_modules()
   end
 
   @doc """
-  Get the features defined in a given main feature.
+  Get the modules defined in a given main module.
   """
-  swagger_path :main_feature do
-    get("/api/main_features/{name}")
-    summary("List features of a feature category")
+  swagger_path :main_module do
+    get("/api/main_modules/{name}")
+    summary("List modules of a module category")
 
     description(
-      "Get OASF features defined in the named feature category. The feature category name may contain a" <>
+      "Get OASF modules defined in the named module category. The module category name may contain a" <>
         " schema extension name. For example, \"dev/policy\"."
     )
 
@@ -1073,7 +1073,7 @@ defmodule SchemaWeb.SchemaController do
     tag("Categories")
 
     parameters do
-      name(:path, :string, "Feature category name", required: true)
+      name(:path, :string, "Module category name", required: true)
 
       extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
@@ -1081,27 +1081,27 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(404, "Feature category <code>name</code> not found")
+    response(404, "Module category <code>name</code> not found")
   end
 
-  @spec main_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_feature(conn, %{"id" => id} = params) do
-    case main_feature_features(params) do
+  @spec main_module(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def main_module(conn, %{"id" => id} = params) do
+    case main_module_modules(params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Feature category #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Module category #{id} not found"})
 
       data ->
         send_json_resp(conn, data)
     end
   end
 
-  @spec main_feature_features(map()) :: map() | nil
-  def main_feature_features(params) do
+  @spec main_module_modules(map()) :: map() | nil
+  def main_module_modules(params) do
     name = params["id"]
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.main_feature(extensions, extension, name)
+    Schema.main_module(extensions, extension, name)
   end
 
   @doc """
@@ -1319,15 +1319,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get a feature by name.
-  get /api/features/:name
+  Get a module by name.
+  get /api/modules/:name
   """
-  swagger_path :feature do
-    get("/api/features/{name}")
-    summary("Feature")
+  swagger_path :module do
+    get("/api/modules/{name}")
+    summary("Module")
 
     description(
-      "Get OASF feature class by name. The feature name may contain a schema extension name." <>
+      "Get OASF module class by name. The module name may contain a schema extension name." <>
         " For example, \"dev/cpu_usage\"."
     )
 
@@ -1335,39 +1335,39 @@ defmodule SchemaWeb.SchemaController do
     tag("Classes and Objects")
 
     parameters do
-      name(:path, :string, "Feature class name", required: true)
+      name(:path, :string, "Module class name", required: true)
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
     response(200, "Success")
-    response(404, "Feature <code>name</code> not found")
+    response(404, "Module <code>name</code> not found")
   end
 
-  @spec feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def feature(conn, %{"id" => id} = params) do
-    feature(conn, id, params)
+  @spec module(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def module(conn, %{"id" => id} = params) do
+    module(conn, id, params)
   end
 
-  defp feature(conn, id, params) do
+  defp module(conn, id, params) do
     extension = extension(params)
 
-    case Schema.feature(extension, id, parse_options(profiles(params))) do
+    case Schema.module(extension, id, parse_options(profiles(params))) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Feature #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Module #{id} not found"})
 
       data ->
-        feature = add_objects(data, params)
-        send_json_resp(conn, feature)
+        module = add_objects(data, params)
+        send_json_resp(conn, module)
     end
   end
 
   @doc """
-  Get the schema feature.
+  Get the schema module.
   """
-  swagger_path :features do
-    get("/api/features")
-    summary("List all features")
-    description("Get OASF feature classes.")
+  swagger_path :modules do
+    get("/api/modules")
+    summary("List all modules")
+    description("Get OASF module classes.")
     produces("application/json")
     tag("Classes and Objects")
 
@@ -1379,32 +1379,32 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success", :FeaturesDesc)
+    response(200, "Success", :ModulesDesc)
   end
 
-  @spec features(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def features(conn, params) do
-    features =
-      Enum.map(features(params), fn {_name, feature} ->
-        Schema.reduce_class(feature)
+  @spec modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def modules(conn, params) do
+    modules =
+      Enum.map(modules(params), fn {_name, module} ->
+        Schema.reduce_class(module)
       end)
 
-    send_json_resp(conn, features)
+    send_json_resp(conn, modules)
   end
 
   @doc """
-  Returns the list of features.
+  Returns the list of modules.
   """
-  @spec features(map) :: map
-  def features(params) do
+  @spec modules(map) :: map
+  def modules(params) do
     extensions = parse_options(extensions(params))
 
     case parse_options(profiles(params)) do
       nil ->
-        Schema.features(extensions)
+        Schema.modules(extensions)
 
       profiles ->
-        Schema.features(extensions, profiles)
+        Schema.modules(extensions, profiles)
     end
   end
 
@@ -1580,12 +1580,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Export the OASF feature classes.
+  Export the OASF module classes.
   """
-  swagger_path :export_features do
-    get("/export/features")
-    summary("Export feature classes")
-    description("Get OASF schema feature classes.")
+  swagger_path :export_modules do
+    get("/export/modules")
+    summary("Export module classes")
+    description("Get OASF schema module classes.")
     produces("application/json")
     tag("Schema Export")
 
@@ -1597,10 +1597,10 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  def export_features(conn, params) do
+  def export_modules(conn, params) do
     profiles = parse_options(profiles(params))
     extensions = parse_options(extensions(params))
-    classes = Schema.export_features(extensions, profiles)
+    classes = Schema.export_modules(extensions, profiles)
     send_json_resp(conn, classes)
   end
 
@@ -1724,15 +1724,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get JSON schema definitions for a given feature class.
-  get /schema/features/:name
+  Get JSON schema definitions for a given module class.
+  get /schema/modules/:name
   """
-  swagger_path :json_feature_class do
-    get("/schema/features/{name}")
-    summary("Feature")
+  swagger_path :json_module_class do
+    get("/schema/modules/{name}")
+    summary("Module")
 
     description(
-      "Get OASF schema feature class by name, using JSON schema Draft-07 format " <>
+      "Get OASF schema module class by name, using JSON schema Draft-07 format " <>
         "(see http://json-schema.org). The class name may contain a schema extension name. "
     )
 
@@ -1740,22 +1740,22 @@ defmodule SchemaWeb.SchemaController do
     tag("JSON Schema")
 
     parameters do
-      name(:path, :string, "Feature class name", required: true)
+      name(:path, :string, "Module class name", required: true)
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
       package_name(:query, :string, "Java package name")
     end
 
     response(200, "Success")
-    response(404, "Feature class <code>name</code> not found")
+    response(404, "Module class <code>name</code> not found")
   end
 
-  @spec json_feature_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_feature_class(conn, %{"id" => id} = params) do
+  @spec json_module_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def json_module_class(conn, %{"id" => id} = params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case feature_ex(id, params) do
+    case module_ex(id, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Feature class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Module class #{id} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
@@ -1763,9 +1763,9 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  def feature_ex(id, params) do
+  def module_ex(id, params) do
     extension = extension(params)
-    Schema.entity_ex(extension, :feature, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :module, id, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1985,14 +1985,14 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Translate feature class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  Translate module class data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
   """
-  swagger_path :translate_feature do
-    post("/api/translate/feature")
-    summary("Translate feature Class")
+  swagger_path :translate_module do
+    post("/api/translate/module")
+    summary("Translate module Class")
 
     description(
-      "The purpose of this API is to translate the provided feature class data using the OASF schema." <>
+      "The purpose of this API is to translate the provided module class data using the OASF schema." <>
         " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
         "  JSON array of objects."
     )
@@ -2035,7 +2035,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class data to be translated",
+      data(:body, PhoenixSwagger.Schema.ref(:Module), "The module class data to be translated",
         required: true
       )
     end
@@ -2043,20 +2043,20 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success")
   end
 
-  @spec translate_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def translate_feature(conn, params) do
+  @spec translate_module(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def translate_module(conn, params) do
     options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
 
     {status, result} =
       case params["_json"] do
         # Translate a single classes
         class when is_map(class) ->
-          {200, Schema.Translator.translate(class, options, :feature)}
+          {200, Schema.Translator.translate(class, options, :module)}
 
         # Translate a list of classes
         list when is_list(list) ->
           {200,
-           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :feature) end)}
+           Enum.map(list, fn class -> Schema.Translator.translate(class, options, :module) end)}
 
         # some other json data
         _ ->
@@ -2257,15 +2257,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate feature class data. Validates a single class.
-  post /api/validate/feature
+  Validate module class data. Validates a single class.
+  post /api/validate/module
   """
-  swagger_path :validate_feature do
-    post("/api/validate/feature")
-    summary("Validate feature Class")
+  swagger_path :validate_module do
+    post("/api/validate/module")
+    summary("Validate module Class")
 
     description(
-      "This API validates the provided feature class data against the OASF schema, returning a response" <>
+      "This API validates the provided module class data against the OASF schema, returning a response" <>
         " containing validation errors and warnings."
     )
 
@@ -2282,7 +2282,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, PhoenixSwagger.Schema.ref(:Feature), "The feature class to be validated",
+      data(:body, PhoenixSwagger.Schema.ref(:Module), "The module class to be validated",
         required: true
       )
     end
@@ -2290,8 +2290,8 @@ defmodule SchemaWeb.SchemaController do
     response(200, "Success", PhoenixSwagger.Schema.ref(:Validation))
   end
 
-  @spec validate_feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate_feature(conn, params) do
+  @spec validate_module(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def validate_module(conn, params) do
     options = [
       warn_on_missing_recommended:
         case conn.query_params[@missing_recommended] do
@@ -2302,7 +2302,7 @@ defmodule SchemaWeb.SchemaController do
 
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
-    {status, result} = validate_actual(params["_json"], options, :feature)
+    {status, result} = validate_actual(params["_json"], options, :module)
 
     send_json_resp(conn, status, result)
   end
@@ -2480,15 +2480,15 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Validate feature class data. Validates a bundle of feature classes.
-  post /api/validate_bundle/feature
+  Validate module class data. Validates a bundle of module classes.
+  post /api/validate_bundle/module
   """
-  swagger_path :validate_bundle_feature do
-    post("/api/validate_bundle/feature")
-    summary("validate feature class bundle")
+  swagger_path :validate_bundle_module do
+    post("/api/validate_bundle/module")
+    summary("validate module class bundle")
 
     description(
-      "This API validates the provided feature class bundle. The class bundle itself is validated, and" <>
+      "This API validates the provided module class bundle. The class bundle itself is validated, and" <>
         " each class in the bundle's classes attribute are validated."
     )
 
@@ -2507,17 +2507,17 @@ defmodule SchemaWeb.SchemaController do
 
       data(
         :body,
-        PhoenixSwagger.Schema.ref(:FeatureBundle),
-        "The feature class bundle to be validated",
+        PhoenixSwagger.Schema.ref(:ModuleBundle),
+        "The module class bundle to be validated",
         required: true
       )
     end
 
-    response(200, "Success", PhoenixSwagger.Schema.ref(:FeatureBundleValidation))
+    response(200, "Success", PhoenixSwagger.Schema.ref(:ModuleBundleValidation))
   end
 
-  @spec validate_bundle_feature(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def validate_bundle_feature(conn, params) do
+  @spec validate_bundle_module(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def validate_bundle_module(conn, params) do
     options = [
       warn_on_missing_recommended:
         case conn.query_params[@missing_recommended] do
@@ -2529,7 +2529,7 @@ defmodule SchemaWeb.SchemaController do
     # We've configured Plug.Parsers / Plug.Parsers.JSON to always nest JSON in the _json key in
     # endpoint.ex.
     {status, result} =
-      validate_bundle_actual(params["_json"], options, :feature)
+      validate_bundle_actual(params["_json"], options, :module)
 
     send_json_resp(conn, status, result)
   end
@@ -2641,16 +2641,16 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Returns randomly generated feature class sample data for the given name.
-  get /sample/features/:name
-  get /sample/features/:extension/:name
+  Returns randomly generated module class sample data for the given name.
+  get /sample/modules/:name
+  get /sample/modules/:extension/:name
   """
-  swagger_path :sample_feature do
-    get("/sample/features/{name}")
-    summary("Feature class sample data")
+  swagger_path :sample_module do
+    get("/sample/modules/{name}")
+    summary("Module class sample data")
 
     description(
-      "This API returns randomly generated sample data for the given feature class name. The class" <>
+      "This API returns randomly generated sample data for the given module class name. The class" <>
         " name may contain a schema extension name. For example, \"dev/cpu_usage\"."
     )
 
@@ -2658,26 +2658,26 @@ defmodule SchemaWeb.SchemaController do
     tag("Sample Data")
 
     parameters do
-      name(:path, :string, "Feature class name", required: true)
+      name(:path, :string, "Module class name", required: true)
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
     response(200, "Success")
-    response(404, "Feature class <code>name</code> not found")
+    response(404, "Module class <code>name</code> not found")
   end
 
-  @spec sample_feature(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_feature(conn, %{"id" => id} = params) do
-    sample_feature(conn, id, params)
+  @spec sample_module(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def sample_module(conn, %{"id" => id} = params) do
+    sample_module(conn, id, params)
   end
 
-  defp sample_feature(conn, id, options) do
+  defp sample_module(conn, id, options) do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.feature(extension, id) do
+    case Schema.module(extension, id) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Feature class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Module class #{id} not found"})
 
       class ->
         class =

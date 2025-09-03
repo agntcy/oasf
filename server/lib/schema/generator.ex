@@ -836,8 +836,8 @@ defmodule Schema.Generator do
         "domain" ->
           {Schema.all_domains(), &Schema.domain/1}
 
-        "feature" ->
-          {Schema.all_features(), &Schema.feature/1}
+        "module" ->
+          {Schema.all_modules(), &Schema.module/1}
 
         _ ->
           Logger.error("No matching class family found for #{field[:class_type]}")

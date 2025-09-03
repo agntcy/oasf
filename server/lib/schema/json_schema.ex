@@ -179,9 +179,9 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_entities(schema, entities) do
-    {skills, domains, features, objects} =
+    {skills, domains, modules, objects} =
       Enum.reduce(entities, {%{}, %{}, %{}, %{}}, fn {name, entity},
-                                                     {skills, domains, features, objects} ->
+                                                     {skills, domains, modules, objects} ->
         if entity[:is_enum] do
           family = entity[:family]
 
@@ -189,7 +189,7 @@ defmodule Schema.JsonSchema do
             case family do
               "skill" -> Schema.all_skills()
               "domain" -> Schema.all_domains()
-              "feature" -> Schema.all_features()
+              "module" -> Schema.all_modules()
               _ -> Schema.all_objects()
             end
 
@@ -199,14 +199,14 @@ defmodule Schema.JsonSchema do
             |> Enum.map(& &1[:name])
             |> Enum.map(&to_string/1)
 
-          Enum.reduce(children, {skills, domains, features, objects}, fn child_name,
+          Enum.reduce(children, {skills, domains, modules, objects}, fn child_name,
                                                                          {skills, domains,
-                                                                          features, objects} ->
+                                                                          modules, objects} ->
             item =
               case family do
                 "skill" -> Schema.entity_ex(:skill, child_name)
                 "domain" -> Schema.entity_ex(:domain, child_name)
-                "feature" -> Schema.entity_ex(:feature, child_name)
+                "module" -> Schema.entity_ex(:module, child_name)
                 _ -> Schema.entity_ex(:object, child_name)
               end
 
@@ -214,10 +214,10 @@ defmodule Schema.JsonSchema do
             value = encode_entity(item, false)
 
             case item[:family] do
-              "skill" -> {Map.put(skills, key, value), domains, features, objects}
-              "domain" -> {skills, Map.put(domains, key, value), features, objects}
-              "feature" -> {skills, domains, Map.put(features, key, value), objects}
-              _ -> {skills, domains, features, Map.put(objects, key, value)}
+              "skill" -> {Map.put(skills, key, value), domains, modules, objects}
+              "domain" -> {skills, Map.put(domains, key, value), modules, objects}
+              "module" -> {skills, domains, Map.put(modules, key, value), objects}
+              _ -> {skills, domains, modules, Map.put(objects, key, value)}
             end
           end)
         else
@@ -225,10 +225,10 @@ defmodule Schema.JsonSchema do
           value = encode_entity(entity, false)
 
           case entity[:family] do
-            "skill" -> {Map.put(skills, key, value), domains, features, objects}
-            "domain" -> {skills, Map.put(domains, key, value), features, objects}
-            "feature" -> {skills, domains, Map.put(features, key, value), objects}
-            _ -> {skills, domains, features, Map.put(objects, key, value)}
+            "skill" -> {Map.put(skills, key, value), domains, modules, objects}
+            "domain" -> {skills, Map.put(domains, key, value), modules, objects}
+            "module" -> {skills, domains, Map.put(modules, key, value), objects}
+            _ -> {skills, domains, modules, Map.put(objects, key, value)}
           end
         end
       end)
@@ -237,7 +237,7 @@ defmodule Schema.JsonSchema do
       %{}
       |> (fn m -> if map_size(skills) > 0, do: Map.put(m, "skills", skills), else: m end).()
       |> (fn m -> if map_size(domains) > 0, do: Map.put(m, "domains", domains), else: m end).()
-      |> (fn m -> if map_size(features) > 0, do: Map.put(m, "features", features), else: m end).()
+      |> (fn m -> if map_size(modules) > 0, do: Map.put(m, "modules", modules), else: m end).()
       |> (fn m -> if map_size(objects) > 0, do: Map.put(m, "objects", objects), else: m end).()
 
     Map.put(schema, "$defs", defs)
@@ -373,7 +373,7 @@ defmodule Schema.JsonSchema do
         case family do
           "skill" -> Schema.all_skills()
           "domain" -> Schema.all_domains()
-          "feature" -> Schema.all_features()
+          "module" -> Schema.all_modules()
           _ -> schema
         end
 
@@ -382,10 +382,10 @@ defmodule Schema.JsonSchema do
         |> Enum.reject(fn item -> item[:hidden?] == true end)
 
       refs =
-        if family == "feature" do
-          feature_names =
+        if family == "module" do
+          module_names =
             Enum.map(children_classes, fn item ->
-              Utils.class_name_with_hierarchy(item[:name], Schema.all_features())
+              Utils.class_name_with_hierarchy(item[:name], Schema.all_modules())
             end)
 
           Enum.map(children_classes, fn item ->
@@ -399,7 +399,7 @@ defmodule Schema.JsonSchema do
                 },
                 "not" => %{
                   "properties" => %{
-                    "name" => %{"enum" => feature_names}
+                    "name" => %{"enum" => module_names}
                   }
                 }
               }
@@ -491,7 +491,7 @@ defmodule Schema.JsonSchema do
       do_flatten_defs(schema, %{
         "skills" => %{},
         "domains" => %{},
-        "features" => %{},
+        "modules" => %{},
         "objects" => %{}
       })
 

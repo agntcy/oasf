@@ -271,7 +271,7 @@ defmodule SchemaWeb.PageView do
       case class_type do
         "skill" -> Schema.all_skills()
         "domain" -> Schema.all_domains()
-        "feature" -> Schema.all_features()
+        "module" -> Schema.all_modules()
       end
 
     source = get_hierarchy_source(field)
@@ -887,7 +887,7 @@ defmodule SchemaWeb.PageView do
       [
         dictionary_links_class_to_html(conn, attribute_name, groups[:skill], "skill"),
         dictionary_links_class_to_html(conn, attribute_name, groups[:domain], "domain"),
-        dictionary_links_class_to_html(conn, attribute_name, groups[:feature], "feature")
+        dictionary_links_class_to_html(conn, attribute_name, groups[:module], "module")
       ]
       |> Enum.reject(&Enum.empty?/1)
 
@@ -926,8 +926,8 @@ defmodule SchemaWeb.PageView do
         "domain" ->
           {SchemaController.domains(conn.params), Schema.all_domains()}
 
-        "feature" ->
-          {SchemaController.features(conn.params), Schema.all_features()}
+        "module" ->
+          {SchemaController.modules(conn.params), Schema.all_modules()}
 
         _ ->
           Logger.error("Unexpected family value: #{inspect(family)}")
@@ -1128,7 +1128,7 @@ defmodule SchemaWeb.PageView do
         case type do
           "skill" -> entity_children_to_html(conn, children, "skill")
           "domain" -> entity_children_to_html(conn, children, "domain")
-          "feature" -> entity_children_to_html(conn, children, "feature")
+          "module" -> entity_children_to_html(conn, children, "module")
           "object" -> entity_children_to_html(conn, children, "object")
           _ -> []
         end
@@ -1152,7 +1152,7 @@ defmodule SchemaWeb.PageView do
       [
         object_links_class_to_html(conn, name, groups[:skill], list_presentation, "skill"),
         object_links_class_to_html(conn, name, groups[:domain], list_presentation, "domain"),
-        object_links_class_to_html(conn, name, groups[:feature], list_presentation, "feature")
+        object_links_class_to_html(conn, name, groups[:module], list_presentation, "module")
       ]
       |> Enum.reject(&Enum.empty?/1)
 
@@ -1342,8 +1342,8 @@ defmodule SchemaWeb.PageView do
               "domain" ->
                 SchemaWeb.Router.Helpers.static_path(conn, "/domains/" <> child[:name])
 
-              "feature" ->
-                SchemaWeb.Router.Helpers.static_path(conn, "/features/" <> child[:name])
+              "module" ->
+                SchemaWeb.Router.Helpers.static_path(conn, "/modules/" <> child[:name])
 
               "object" ->
                 SchemaWeb.Router.Helpers.static_path(conn, "/objects/" <> child[:name])
@@ -1406,9 +1406,9 @@ defmodule SchemaWeb.PageView do
         profile_links_class_to_html(
           conn,
           profile_name,
-          groups[:feature],
+          groups[:module],
           list_presentation,
-          "feature"
+          "module"
         )
       ]
       |> Enum.reject(&Enum.empty?/1)

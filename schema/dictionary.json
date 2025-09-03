@@ -387,7 +387,7 @@
       "description": "List of modules that describe a record and its capabilities more in depth.",
       "type": "class_t",
       "class_type": "base_module",
-      "family": "feature",
+      "family": "module",
       "is_enum": true,
       "is_array": true
     },
