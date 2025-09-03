@@ -1,5 +1,5 @@
 {
-  "caption": "ACP Details",
+  "caption": "ACP Endpoint Details",
   "description": "ACP endpoint description",
   "extends": "object",
   "name": "acp_endpoint",
@@ -20,11 +20,13 @@
       "requirement": "required"
     },
     "agent_id": {
+      "reference": "acp_agent_id",
       "caption": "Agent Identifier",
       "description": "Agent identifier in ACP server. If missing, the first returned agent with matching name and version should be used.",
       "requirement": "optional"
     },
     "authentication": {
+      "reference": "openapi_security_scheme",
       "caption": "Security Scheme",
       "requirement": "optional"
     }

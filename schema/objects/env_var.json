@@ -21,7 +21,7 @@
     },
     "required": {
       "caption": "Required",
-      "description": "Indicates that environment variable is a manadatory setting for the agent.",
+      "description": "Indicates that this environment variable is mandatory to be set.",
       "requirement": "optional"
     }
   }

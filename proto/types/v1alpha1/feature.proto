@@ -1,0 +1,27 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package types.v1alpha1;
+
+import "google/protobuf/struct.proto";
+
+// Features provide a generic way to attach additional information
+// to the record. For example, application-specific
+// details can be provided using a feature.
+message Feature {
+  // Name of the feature.
+  // Can be used as a fully qualified name.
+  string name = 1;
+
+  // Unique identifier of the feature.
+  uint32 id = 2;
+
+  // Metadata associated with the feature.
+  map<string, string> annotations = 3;
+
+  // Data attached to the feature.
+  // Usually a JSON-embedded object.
+  google.protobuf.Struct data = 4;
+}

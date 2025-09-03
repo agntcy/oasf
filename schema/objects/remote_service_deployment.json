@@ -1,7 +1,7 @@
 {
   "caption": "Remote Service Deployment",
   "description": "Describes the network endpoint where the agent is available.",
-  "extends": "deployment_option",
+  "extends": "acp_deployment_option",
   "name": "remote_service_deployment",
   "attributes": {
     "type": {

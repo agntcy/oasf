@@ -33,11 +33,6 @@
       "description": "Data supported by the agent for A2A.",
       "type": "a2a_data"
     },
-    "a2a_protocol_version": {
-      "caption": "Protocol Version",
-      "description": "Version of the A2A protocol used by the agent.",
-      "type": "string_t"
-    },
     "a2a_input_modes": {
       "caption": "Supported Input Modes",
       "description": "Supported input modes supported by the agent for A2A communication.",
@@ -74,6 +69,11 @@
           "caption": "Text/HTML"
         }
       }
+    },
+    "a2a_protocol_version": {
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "type": "string_t"
     },
     "a2a_security_schemes": {
       "caption": "Supported Security Schemes",
@@ -127,21 +127,89 @@
         }
       }
     },
-    "acp": {
+    "acp_agent": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
       "type": "agent_connect_protocol"
     },
-    "agent_deps": {
+    "acp_agent_dependencies": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
-      "type": "agent_dependency",
+      "type": "acp_agent_dependency",
       "is_array": true
     },
-    "agent_id": {
+    "acp_agent_id": {
       "caption": "Agent Identifier",
       "description": "Agent identifier",
       "type": "uuid_t"
+    },
+    "acp_agent_reference": {
+      "caption": "Agent Reference",
+      "description": "Reference to the agent in the agent directory.",
+      "type": "acp_agent_reference"
+    },
+    "acp_callbacks": {
+      "caption": "Callback Support",
+      "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`.",
+      "type": "boolean_t"
+    },
+    "acp_capabilities": {
+      "caption": "ACP Capabilities",
+      "description": "Declares what invocation features the agent is capable of.",
+      "type": "acp_capabilities"
+    },
+    "acp_custom_objects_streaming": {
+      "caption": "Custom Objects Streaming",
+      "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`.",
+      "type": "boolean_t"
+    },
+    "acp_deployment": {
+      "caption": "Agent Workflow Server Deployment Manifest",
+      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
+      "type": "acp_deployment"
+    },
+    "acp_deployment_option": {
+      "caption": "Deployment Option",
+      "description": "Name of the method to instantiate or consume the agent.",
+      "type": "string_t"
+    },
+    "acp_deployment_options": {
+      "caption": "Deployment Options",
+      "description": "List of possible methods to instantiate or consume the agent. Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
+      "type": "acp_deployment_option",
+      "is_enum": true,
+      "is_array": true
+    },
+    "acp_interrupt_support": {
+      "caption": "Interrupt Support",
+      "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`.",
+      "type": "boolean_t"
+    },
+    "acp_interrupt_type": {
+      "caption": "Interrupt Type",
+      "description": "Name of this interrupt type. Needs to be unique in the list of interrupts.",
+      "type": "string_t"
+    },
+    "acp_interrupts": {
+      "caption": "Interrupts",
+      "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
+      "type": "acp_interrupts",
+      "is_array": true
+    },
+    "acp_result_streaming": {
+      "caption": "Result Streaming",
+      "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
+      "type": "boolean_t"
+    },
+    "acp_streaming_modes": {
+      "caption": "Streaming Modes",
+      "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
+      "type": "acp_streaming_modes"
+    },
+    "acp_threads": {
+      "caption": "Threads",
+      "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
+      "type": "boolean_t"
     },
     "algorithm": {
       "caption": "Algorithm",
@@ -158,11 +226,6 @@
       "description": "URL of the API base for the LLM model (e.g., 'https://api.openai.com/v1').",
       "type": "string_t"
     },
-    "api_key": {
-      "caption": "API Key",
-      "description": "API key for accessing the LLM model, if required by the provider.",
-      "type": "string_t"
-    },
     "args": {
       "caption": "Arguments",
       "description": "A list of arguments to be passed to a command. See specific usage.",
@@ -175,26 +238,11 @@
       "type": "string_t",
       "is_array": true
     },
-    "authentication": {
-      "caption": "Authentication",
-      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0' >Security Scheme Object</a>.",
-      "type": "security_scheme"
-    },
     "authors": {
       "caption": "Author",
       "description": "Specifies the authors list of of the data's record. Values inside the list should satisfy the following grammar: <code>author := author-name <author-email></code>.",
       "type": "string_t",
       "is_array": true
-    },
-    "callbacks": {
-      "caption": "Callback Support",
-      "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`.",
-      "type": "boolean_t"
-    },
-    "capabilities": {
-      "caption": "Capabilities",
-      "description": "Declares what invocation features this agent is capable of.",
-      "type": "capabilities"
     },
     "certificate": {
       "caption": "Certificate",
@@ -226,11 +274,6 @@
       },
       "is_array": true
     },
-    "config": {
-      "caption": "Configuration",
-      "description": "This object contains an instance of an OpenAPI schema object.",
-      "type": "json_t"
-    },
     "content_bundle": {
       "caption": "Content Bundle",
       "description": "Base64-encoded signature bundle.",
@@ -251,16 +294,6 @@
       "description": "The time when the object was created. See specific usage.",
       "type": "datetime_t"
     },
-    "custom_objects_streaming": {
-      "caption": "Custom Objects Streaming",
-      "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`.",
-      "type": "boolean_t"
-    },
-    "custom_streaming_update": {
-      "caption": "Custom Streaming Update",
-      "description": "This describes the format of an Update in the streaming. Must be specified if `streaming.custom` capability is true and cannot be specified otherwise. Format follows: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object'>Schema Object</a>.",
-      "type": "json_t"
-    },
     "data_platform_integrations": {
       "caption": "Data Platform Integrations",
       "description": "Data platforms supported by the agent for observability.",
@@ -277,23 +310,6 @@
       "caption": "Default Value",
       "description": "Default value of the attribute.",
       "type": "string_t"
-    },
-    "deployment": {
-      "caption": "Agent Workflow Server Deployment Manifest",
-      "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
-      "type": "deployment"
-    },
-    "deployment_option": {
-      "caption": "Deployment Option",
-      "description": "Name of the method to instantiate or consume the agent.",
-      "type": "string_t"
-    },
-    "deployment_options": {
-      "caption": "Deployment Options",
-      "description": "List of possible methods to instantiate or consume the agent. Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
-      "type": "deployment_option",
-      "is_enum": true,
-      "is_array": true
     },
     "description": {
       "caption": "Description",
@@ -336,7 +352,7 @@
     },
     "env_vars": {
       "caption": "Environment Variables",
-      "description": "List of possible environment variables that the agent may require to be set before it can be used.",
+      "description": "List of possible environment variables that might be required to be set. See specific usage.",
       "type": "env_var",
       "is_array": true
     },
@@ -361,14 +377,14 @@
       "description": "Format used by the agent for exporting observability data.",
       "type": "string_t"
     },
-    "extension_data": {
+    "feature_data": {
       "caption": "Data",
-      "description": "Data associated with the record extension. This is a JSON object that contains the data specific to the extension.",
+      "description": "Data associated with the feature. This is a JSON object that contains the data specific to the feature.",
       "type": "json_t"
     },
-    "extensions": {
-      "caption": "Schema Extensions",
-      "description": "List of extension models that describe this record and its capabilities more in depth.",
+    "features": {
+      "caption": "Features",
+      "description": "List of features that describe a record and its capabilities more in depth.",
       "type": "class_t",
       "class_type": "base_feature",
       "family": "feature",
@@ -411,32 +427,6 @@
       "description": "A location",
       "type": "string_t"
     },
-    "input": {
-      "caption": "Input",
-      "description": "A json input.",
-      "type": "json_t"
-    },
-    "interrupt_payload": {
-      "caption": "Interrupt Payload",
-      "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
-      "type": "json_t"
-    },
-    "interrupt_support": {
-      "caption": "Interrupt Support",
-      "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`.",
-      "type": "boolean_t"
-    },
-    "interrupt_type": {
-      "caption": "Interrupt Type",
-      "description": "Name of this interrupt type. Needs to be unique in the list of interrupts.",
-      "type": "string_t"
-    },
-    "interrupts": {
-      "caption": "Interrupts",
-      "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
-      "type": "interrupts",
-      "is_array": true
-    },
     "llm_model_data": {
       "caption": "Data",
       "description": "Data supported by the agent for LLM model.",
@@ -459,8 +449,13 @@
       "type": "llm_prompt",
       "is_array": true
     },
+    "locator": {
+      "caption": "Locator",
+      "description": "A locator provides an actual artifact locator. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
+      "type": "locator"
+    },
     "locators": {
-      "caption": "Record Locators",
+      "caption": "Locators",
       "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
       "is_array": true
@@ -555,10 +550,27 @@
       "description": "Data schema supported by the agent for observability.",
       "type": "observability_data_schema"
     },
-    "output": {
-      "caption": "Output",
-      "description": "A json output.",
-      "type": "json_t"
+    "openapi_schema_object": {
+      "caption": "OpenAPI Schema Object",
+      "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs.",
+      "type": "json_t",
+      "references": [
+        {
+          "description": "OpenAPI Schema Object",
+          "url": "https://spec.openapis.org/oas/v3.1.1.html#schema-object"
+        }
+      ]
+    },
+    "openapi_security_scheme": {
+      "caption": "OpenAPI Security Scheme",
+      "description": "This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs.",
+      "type": "openapi_security_scheme",
+      "references": [
+        {
+          "description": "OpenAPI Security Scheme Object",
+          "url": "https://spec.openapis.org/oas/v3.1.1.html#security-scheme-object-0"
+        }
+      ]
     },
     "overall_rating": {
       "caption": "Overall Rating",
@@ -610,11 +622,6 @@
       "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
       "type": "record_signature"
     },
-    "ref": {
-      "caption": "Reference",
-      "description": "Reference to the agent in the agent directory. It includes the version and the locator.",
-      "type": "agent_manifest_ref"
-    },
     "referred_evaluations": {
       "caption": "Referred evaluations",
       "description": "Evaluations associated to the Agent.",
@@ -623,28 +630,13 @@
     },
     "required": {
       "caption": "Required",
-      "description": "Indicates that environment variable is a manadatory setting for the agent.",
+      "description": "Indicates whether the item is required or not. See specific usage.",
       "type": "boolean_t"
-    },
-    "result_streaming": {
-      "caption": "Result Streaming",
-      "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
-      "type": "boolean_t"
-    },
-    "resume_payload": {
-      "caption": "Resume Payload",
-      "description": "An instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
-      "type": "json_t"
     },
     "schema_version": {
       "caption": "Schema Version",
       "description": "Version of the OASF schema.",
       "type": "string_t"
-    },
-    "schema_url": {
-      "caption": "Schema URL",
-      "description": "Uniform Resource Locator (URL) of the schema that describes the record. This URL MUST point to a valid schema that can be used to validate the record data model.",
-      "type": "url_t"
     },
     "scope": {
       "caption": "Scope",
@@ -693,21 +685,6 @@
       "family": "skill",
       "is_enum": true,
       "is_array": true
-    },
-    "streaming": {
-      "caption": "Streaming Modes",
-      "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
-      "type": "streaming_modes"
-    },
-    "thread_state": {
-      "caption": "ThreadState",
-      "description": "This describes the format of ThreadState. Cannot be specified if `threads` capability is false. If not specified, when `threads` capability is true, then the API to retrieve ThreadState from a Thread or a Run is not available. This object contains an instance of an OpenAPI schema object, formatted as per the OpenAPI specs: <a target='_blank' href='https://spec.openapis.org/oas/v3.1.1.html#schema-object' >Schema Object</a>.",
-      "type": "json_t"
-    },
-    "threads": {
-      "caption": "Threads",
-      "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
-      "type": "boolean_t"
     },
     "title": {
       "caption": "Title",
@@ -763,7 +740,10 @@
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [false, true]
+        "values": [
+          false,
+          true
+        ]
       },
       "bytestring_t": {
         "caption": "Byte String",
@@ -846,7 +826,10 @@
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [0, 65535]
+        "range": [
+          0,
+          65535
+        ]
       },
       "process_name_t": {
         "caption": "Process Name",
@@ -886,7 +869,10 @@
         "description": "Unit interval is defined as the closed interval, which includes all real numbers greater than or equal to 0 and less than or equal to 1.",
         "type": "float_t",
         "type_name": "Float",
-        "range": [0, 1]
+        "range": [
+          0,
+          1
+        ]
       },
       "uri_t": {
         "caption": "URI String",

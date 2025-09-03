@@ -5,23 +5,22 @@
   "name": "base_feature",
   "attributes": {
     "name": {
-      "description": "The name as a unique identifier of the extension.",
+      "description": "The name as a unique identifier of the feature.",
       "requirement": "required"
     },
-    "version": {
-      "caption": "Version",
-      "description": "The version of the extension. For example: <code>1.0.0-alpha.2</code>.",
-      "requirement": "optional"
+    "id": {
+      "description": "The id as a unique identifier of the feature.",
+      "requirement": "recommended"
     },
     "annotations": {
       "caption": "Annotations",
-      "description": "Additional metadata associated with the extension.",
+      "description": "Additional metadata associated with the feature.",
       "requirement": "optional"
     },
     "data": {
-      "reference": "extension_data",
+      "reference": "feature_data",
       "caption": "Data",
-      "description": "The data associated with the extension.",
+      "description": "The data associated with the feature.",
       "requirement": "required"
     }
   }

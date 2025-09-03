@@ -19,10 +19,9 @@
       "description": "URL of the API base for the LLM model (e.g., 'https://api.openai.com/v1').",
       "requirement": "required"
     },
-    "api_key": {
-      "caption": "API Key",
-      "description": "API key for accessing the LLM model, if required by the provider.",
-      "requirement": "required"
+    "env_vars": {
+      "description": "Environment variables, such as API key for accessing the LLM model, if required by the provider.",
+      "requirement": "optional"
     }
   }
 }

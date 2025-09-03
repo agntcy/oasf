@@ -201,7 +201,7 @@ defmodule SchemaWeb.SchemaController do
               description:
                 "Safeguarding personal information from unauthorized access and ensuring compliance with privacy laws and regulations. Subdomains: Privacy Regulations Compliance, Data Encryption, Data Anonymization, and User Consent Management.",
               category: "trust_and_safety",
-              extends: "trust_and_safety_domain",
+              extends: "trust_and_safety",
               uid: 404,
               caption: "Data Privacy",
               category_name: "Trust and Safety",
@@ -567,7 +567,7 @@ defmodule SchemaWeb.SchemaController do
               },
               %{
                 id: 403,
-                name: "trust_and_safety_domain/fraud_prevention"
+                name: "trust_and_safety/fraud_prevention"
               }
             ]
           })

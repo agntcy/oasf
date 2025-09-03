@@ -1,14 +1,14 @@
 {
   "caption": "MCP Data",
   "description": "Data for the MCP record extension.",
-  "extends": "extension_data",
+  "extends": "feature_data",
   "name": "mcp_data",
   "attributes": {
     "servers": {
+      "reference": "mcp_servers",
       "caption": "MCP Servers",
       "description": "List of MCP servers supported by the agent. Exact properties may vary depending on the client or platform.",
       "requirement": "required",
-      "reference": "mcp_servers",
       "references": [
         {
           "description": "VS Code MCP Server Extension",
