@@ -3,7 +3,7 @@
   "caption": "Observability",
   "description": "Agent extension describing how the agent can be observed",
   "category": "observability",
-  "extends": "base_feature",
+  "extends": "base_module",
   "name": "observability",
   "attributes": {
     "data": {

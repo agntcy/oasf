@@ -1,7 +1,7 @@
 {
   "caption": "Runtime",
   "description": "Runtime feature set",
-  "extends": "base_feature",
+  "extends": "base_module",
   "name": "runtime",
   "category": "runtime",
   "attributes": {}

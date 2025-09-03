@@ -1,7 +1,7 @@
 {
-  "caption": "Feature Data",
-  "description": "Data associated with a feature. This is a JSON object that contains the data specific to the feature.",
-  "name": "feature_data",
+  "caption": "Module Data",
+  "description": "Data associated with a module.",
+  "name": "module_data",
   "extends": "object",
   "attributes": {}
 }

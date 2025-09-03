@@ -1,0 +1,27 @@
+{
+  "caption": "Base Module",
+  "category": "other",
+  "description": "The base module is a generic and concrete module. It also defines a set of attributes available in most module classes. As a generic module that does not belong to any module category, it could be used to log modules that are not otherwise defined by the schema.",
+  "name": "base_module",
+  "attributes": {
+    "name": {
+      "description": "The name as a unique identifier of the module.",
+      "requirement": "required"
+    },
+    "id": {
+      "description": "The id as a unique identifier of the module.",
+      "requirement": "recommended"
+    },
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Additional metadata associated with the module.",
+      "requirement": "optional"
+    },
+    "data": {
+      "reference": "module_data",
+      "caption": "Data",
+      "description": "The data associated with the module.",
+      "requirement": "required"
+    }
+  }
+}

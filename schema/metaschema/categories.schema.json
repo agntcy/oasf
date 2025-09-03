@@ -2,7 +2,7 @@
     "$id": "https://schema.oasf.outshift.com/categories.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Categories",
-    "description": "The OASF categories organize agent skill, domain or feature classes, each aligned with a specific domain or area of focus.",
+    "description": "The OASF categories organize agent skill, domain or module classes, each aligned with a specific domain or area of focus.",
     "type": "object",
     "properties": {
         "annotations": {

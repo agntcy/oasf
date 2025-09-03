@@ -1,0 +1,27 @@
+{
+  "caption": "Modules",
+  "description": "A comprehensive table outlining module sets of application and knowledge areas within the framework.",
+  "name": "main_modules",
+  "attributes": {
+    "observability": {
+      "uid": 1,
+      "caption": "Observability",
+      "description": "Observability module set."
+    },
+    "evaluation": {
+      "uid": 2,
+      "caption": "Evaluation",
+      "description": "Evaluation module set."
+    },
+    "runtime": {
+      "uid": 3,
+      "caption": "Runtime",
+      "description": "Runtime module set."
+    },
+    "identity": {
+      "uid": 4,
+      "caption": "Identity",
+      "description": "Identity module set."
+    }
+  }
+}
