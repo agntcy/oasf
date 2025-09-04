@@ -22,25 +22,24 @@ contribute to the development of OASF Schemas and the framework itself.
 
 ## Key OASF Terminology
 
--  **Field**:
-   A field is a unique identifier name for a piece of data contained in OASF.
-   Each field also designates a corresponding `data_type`.
+- **Field**:
+  A field is a unique identifier name for a piece of data contained in OASF.
+  Each field also designates a corresponding `data_type`.
 - **Object**:
-   An object is a collection of contextually related fields and other objects.
-   It is also a `data_type` in OASF.
+  An object is a collection of contextually related fields and other objects.
+  It is also a `data_type` in OASF.
 - **Class**:
-   A class is a particular set of attributes (including fields & objects)
-   representing metadata associated to an OASF record.
-   It is also a `data_type` in OASF.
+  A class is a particular set of attributes (including fields & objects)
+  representing metadata associated to an OASF record.
+  It is also a `data_type` in OASF.
 - **Class Family**:
-   Classes are currently grouped into 3 families:
-   skills, domains, and features.
+  Classes are currently grouped into 3 families:
+  skills, domains, and features.
 - **Attribute**:
-   An attribute is the more generic name for both fields and objects/classes in
-   OASF.
-   A field is a scalar attribute while an object/class is a complex attribute.
-- **Category:** A Category organizes classes that represent a particular
-   domain.
+  An attribute is the more generic name for both fields and objects/classes in
+  OASF.
+  A field is a scalar attribute while an object/class is a complex attribute.
+- **Category:** A Category organizes classes that represent a particular domain.
 
 ## How to Add to the Schema
 
@@ -56,10 +55,9 @@ contribute to the development of OASF Schemas and the framework itself.
 3. Define the `class` itself.
 4. In case of a `feature` class, make sure to overwrite the `data` attribute
    with a new object containing all the feature-specific attributes →
-   [How to define an `object`](#how-to-define-an-object).
+   [Defining an `object`](#defining-an-object).
 5. Finally, verify the changes are working as expected in your local
    [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
-
 
 ### Adding or Modifying an `attribute`
 
