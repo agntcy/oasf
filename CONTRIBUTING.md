@@ -35,10 +35,11 @@ contribute to the development of OASF Schemas and the framework itself.
 - **Class Family**:
   Classes are currently grouped into 3 families:
   Skills, Domains, and Modules.
+- **Entity**:
+  An entity is a more generic name for both objects and classes.
 - **Attribute**:
-  An attribute is the more generic name for both fields and objects/classes in
-  OASF.
-  A field is a scalar attribute while an object/class is a complex attribute.
+  An attribute is the more generic name for both fields and entities in OASF.
+  A field is a scalar attribute while an entity is a complex attribute.
 - **Category:** A Category organizes classes that represent a particular domain.
 
 ## How to Add to the Schema
