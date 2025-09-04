@@ -18,7 +18,7 @@ workflows reproduce those developed by OCSF.
 
 ## Features
 
-OASF defines a set of standards for AI agent content representation that aims
+OASF defines a set of standards for agentic AI content representation that aims
 to:
 
 - Define common data structure to facilitate content standardization,
@@ -27,21 +27,48 @@ to:
   consumption.
 - Provide extension capabilities to enable third-party features.
 
-## Future Expansion and Contributions
+## Key Concepts
+
+At the core of OASF is the [record object](./schema/objects/record.json), which
+serves as the primary data structure for representing collections of information
+and metadata relevant to agentic AI applications.
+
+OASF records can be annotated with **skills** and **domains** to enable
+effective labeling and searchability across agentic systems.
+Additionally, **modules** provide a flexible mechanism to extend records with
+additional information in a modular and composable way, supporting a wide range
+of agentic use cases.
+
+## Schema Expansion and Contributions
 
 The Open Agentic Schema Framework (OASF) is designed with extensibility in mind
 and is expected to evolve to capture new use cases and capabilities.
 A key area of anticipated expansion includes the definition and management of
-**Skills**, **Domains** and **Features** for AI agentic records.
+**Skills**, **Domains** and **Domains** for AI agentic records.
 
 We welcome contributions from the community to help shape the future of OASF.
 For detailed guidelines on how to contribute, including information on proposing
 new features, reporting bugs, and submitting code, please refer to our
-[contributing guide](CONTRIBUTING.md).
+[contributing guide](CONTRIBUTING.md).
 
-### Open Agentic Schema Framework Server
+OASF can be extended with private schema extensions, allowing you to leverage
+all features of the framework, such as validation.
+See the relevant section in the
+[contributing guide](./CONTRIBUTING.md#oasf-extensions) for instructions on
+adding an extension to the schema.
+An OASF instance with schema extensions can be hosted, as the
+[record object](./schema/objects/record.json) includes a `schema_url` field that
+allows you to specify your own schema server for record validation.
 
-The server/ directory contains the Open Agents Schema Framework (OASF) Schema
+Alternatively, records can be extended by adding arbitrary JSON objects to the
+`modules` list, using module names that do not conflict with existing OASF
+modules.
+However, this approach is the least recommended, as validation will be skipped
+for these modules if the record is validated against the standard OASF schema.
+
+## Open Agentic Schema Framework Server
+
+The `server/` directory contains the Open Agents Schema Framework (OASF) Schema
 Server source code.
 The schema server is an HTTP server that provides a convenient way to browse and
 use the OASF schema.
@@ -53,7 +80,15 @@ schema, at [schema.oasf.outshift.com](https://schema.oasf.outshift.com).
 
 The schema server can also be used locally.
 
-## Prerequisites
+## Development
+
+Use `Taskfile` for all related development operations such as testing,
+validating, deploying, and working with the project.
+
+Check the [example.env](example.env) to see the configuration for the operations
+below.
+
+### Prerequisites
 
 - [Taskfile](https://taskfile.dev/)
 - [Docker](https://www.docker.com/)
@@ -64,14 +99,6 @@ The schema server can also be used locally.
 
 Make sure Docker is installed with Buildx.
 
-## Development
-
-Use `Taskfile` for all related development operations such as testing,
-validating, deploying, and working with the project.
-
-Check the [example.env](example.env) to see the configuration for the operations
-below.
-
 ### Clone the Repository
 
 ```shell
@@ -81,7 +108,7 @@ git clone https://github.com/agntcy/oasf.git
 ### Build Artifacts
 
 This step will fetch all project dependencies and subsequently build all project
-artifacts such as helm charts and docker images.
+artifacts such as helm charts and Docker images.
 
 ```shell
 task deps
