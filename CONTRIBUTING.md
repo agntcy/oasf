@@ -34,7 +34,7 @@ contribute to the development of OASF Schemas and the framework itself.
   It is also a `data_type` in OASF.
 - **Class Family**:
   Classes are currently grouped into 3 families:
-  skills, domains, and features.
+  Skills, Domains, and Modules.
 - **Attribute**:
   An attribute is the more generic name for both fields and objects/classes in
   OASF.
@@ -53,8 +53,8 @@ contribute to the development of OASF Schemas and the framework itself.
    Template available
    [here](https://github.com/agntcy/oasf/blob/main/schema/templates/class_name.json).
 3. Define the `class` itself.
-4. In case of a `feature` class, make sure to overwrite the `data` attribute
-   with a new object containing all the feature-specific attributes →
+4. In case of a `module` class, make sure to overwrite the `data` attribute with
+   a new object containing all the module-specific attributes →
    [Defining an `object`](#defining-an-object).
 5. Finally, verify the changes are working as expected in your local
    [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
@@ -83,8 +83,8 @@ contribute to the development of OASF Schemas and the framework itself.
    - Avoid abbreviations when possible.
      Some exceptions can be made for well-accepted abbreviation like well known
      acronyms (for example, LLM, AI).
-   - If the attribute can only be related to a `feature` class, prefix its name
-     with the feature's name.
+   - If the attribute can only be related to a `module` class, prefix its name
+     with the module's name.
    - If the attribute is supposed to hold sensitive data such as API keys, use
      the `env_vars` attribute instead, which enables record publishers to
      mandate the presence of environment variables holding such sensitive
@@ -418,17 +418,17 @@ The extension's directory structure is the same as the top level schema
 directory, and it may contain the following files and subdirectories, depending
 on what type of extension is desired:
 
-| Name                 | Description                                 |
-| -------------------- | ------------------------------------------- |
-| `main_skills.json`   | Create it to define new skill categories.   |
-| `main_domains.json`  | Create it to define new domain categories.  |
-| `main_features.json` | Create it to define new feature categories. |
-| `dictionary.json`    | Create it to define new attributes.         |
-| `skills`             | Create it to define new skill classes.      |
-| `domains`            | Create it to define new domain classes.     |
-| `features`           | Create it to define new feature classes.    |
-| `objects`            | Create it to define new objects.            |
-| `profiles`           | Create it to define new profiles.           |
+| Name                | Description                                |
+| ------------------- | ------------------------------------------ |
+| `main_skills.json`  | Create it to define new skill categories.  |
+| `main_domains.json` | Create it to define new domain categories. |
+| `main_modules.json` | Create it to define new module categories. |
+| `dictionary.json`   | Create it to define new attributes.        |
+| `skills`            | Create it to define new skill classes.     |
+| `domains`           | Create it to define new domain classes.    |
+| `modules`           | Create it to define new module classes.    |
+| `objects`           | Create it to define new objects.           |
+| `profiles`          | Create it to define new profiles.          |
 
 ## Reporting Issues
 

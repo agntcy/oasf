@@ -44,7 +44,7 @@ of agentic use cases.
 The Open Agentic Schema Framework (OASF) is designed with extensibility in mind
 and is expected to evolve to capture new use cases and capabilities.
 A key area of anticipated expansion includes the definition and management of
-**Skills**, **Domains** and **Domains** for AI agentic records.
+**Skills**, **Domains** and **Modules** for AI agentic records.
 
 We welcome contributions from the community to help shape the future of OASF.
 For detailed guidelines on how to contribute, including information on proposing
