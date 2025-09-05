@@ -56,9 +56,8 @@ all features of the framework, such as validation.
 See the relevant section in the
 [contributing guide](./CONTRIBUTING.md#oasf-extensions) for instructions on
 adding an extension to the schema.
-An OASF instance with schema extensions can be hosted, as the
-[record object](./schema/objects/record.json) includes a `schema_url` field that
-allows you to specify your own schema server for record validation.
+An OASF instance with schema extensions can be hosted, allowing you to use your
+own schema server for record validation.
 
 Alternatively, records can be extended by adding arbitrary JSON objects to the
 `modules` list, using module names that do not conflict with existing OASF
