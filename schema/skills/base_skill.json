@@ -1,7 +1,7 @@
 {
-  "caption": "Base Skill",
-	"category": "other",
-  "description": "Skill classes",
+  "caption": "Skill",
+  "category": "other",
+  "description": "The base skill is a generic skill defining a set of attributes for skill classes.",
   "name": "base_skill",
   "attributes": {
     "name": {

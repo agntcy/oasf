@@ -1,5 +1,5 @@
 {
-  "caption": "Record Signature",
+  "caption": "Signature",
   "description": "Signature provides the signing and verification details about the record.",
   "extends": "object",
   "name": "record_signature",
