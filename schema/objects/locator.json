@@ -1,5 +1,5 @@
 {
-  "caption": "Record Locator",
+  "caption": "Locator",
   "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
   "extends": "object",
   "name": "locator",
