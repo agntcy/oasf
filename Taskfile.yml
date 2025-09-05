@@ -188,16 +188,6 @@ tasks:
 
       - echo "Reloaded schema! Use CTRL + C to exit."
 
-  fmt:
-    desc: Format schema files
-    preconditions:
-      - which jq
-    dir: ./schema
-    cmd: |
-      ## Format dictionary file
-      jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
-      mv sorted.dictionary.json dictionary.json
-
   down:
     desc: Stop services and remove ephemeral kind cluster
     deps:
@@ -231,6 +221,42 @@ tasks:
     cmds:
       - for: { var: HELM_ALL_CHART_PATHS }
         cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} lint'
+
+  fmt:
+    desc: Format schema files
+    preconditions:
+      - which jq
+    dir: ./schema
+    cmd: |
+      ## Format dictionary file
+      jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
+      mv sorted.dictionary.json dictionary.json
+
+  proto:build:
+    desc: Ensure proto-checker binary is built
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which go
+    dir: '{{ .ROOT_DIR }}/test/proto-checker'
+    cmds:
+      - cmd: echo "Building proto-checker..."
+      - cmd: go build -o {{.BIN_DIR}}/proto-checker .
+
+  proto:check:
+    desc: Check if protobuf files are in sync with the json schema
+    preconditions:
+      - which go
+    deps:
+      - proto:build
+    cmd: |
+      {{.BIN_DIR}}/proto-checker ./schema/objects/record.json ./proto/types/v1alpha1/record.proto
+      {{.BIN_DIR}}/proto-checker ./schema/objects/locator.json ./proto/types/v1alpha1/locator.proto
+      {{.BIN_DIR}}/proto-checker ./schema/objects/signature.json ./proto/types/v1alpha1/signature.proto
+      {{.BIN_DIR}}/proto-checker ./schema/skills/base_skill.json ./proto/types/v1alpha1/skill.proto
+      {{.BIN_DIR}}/proto-checker ./schema/domains/base_domain.json ./proto/types/v1alpha1/domain.proto
+      {{.BIN_DIR}}/proto-checker ./schema/modules/base_module.json ./proto/types/v1alpha1/module.proto
 
   ##
   ## Dependencies
