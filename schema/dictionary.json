@@ -447,6 +447,12 @@
       "type": "llm_prompt",
       "is_array": true
     },
+    "llm_tool_names": {
+      "caption": "List of tool names",
+      "description": "List of tools",
+      "type": "string_t",
+      "is_array": true
+    },
     "llm_tools_data": {
       "caption": "Data",
       "description": "Data supported by the agent for LLM tools.",
