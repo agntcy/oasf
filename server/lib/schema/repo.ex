@@ -282,11 +282,6 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec export_base_class() :: map()
-  def export_base_class() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_base_class(schema) end)
-  end
-
   @spec skill(atom) :: nil | Cache.class_t()
   def skill(id) do
     Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end)
@@ -310,6 +305,11 @@ defmodule Schema.Repo do
   @spec feature(atom) :: nil | Cache.class_t()
   def feature(id) do
     Agent.get(__MODULE__, fn schema -> Cache.feature(schema, id) end)
+  end
+
+  @spec find_feature(any) :: nil | map
+  def find_feature(uid) do
+    Agent.get(__MODULE__, fn schema -> Cache.find_feature(schema, uid) end)
   end
 
   @spec objects() :: map()

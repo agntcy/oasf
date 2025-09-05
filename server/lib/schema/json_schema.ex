@@ -183,12 +183,33 @@ defmodule Schema.JsonSchema do
       Enum.reduce(entities, {%{}, %{}, %{}, %{}}, fn {name, entity},
                                                      {skills, domains, features, objects} ->
         if entity[:is_enum] do
-          Enum.reduce(entity[:_children], {skills, domains, features, objects}, fn {child_name,
-                                                                                    item},
-                                                                                   {skills,
-                                                                                    domains,
-                                                                                    features,
-                                                                                    objects} ->
+          family = entity[:family]
+
+          all_entities =
+            case family do
+              "skill" -> Schema.all_skills()
+              "domain" -> Schema.all_domains()
+              "feature" -> Schema.all_features()
+              _ -> Schema.all_objects()
+            end
+
+          children =
+            Utils.find_children(all_entities, Atom.to_string(name))
+            |> Enum.reject(fn item -> item[:hidden?] == true end)
+            |> Enum.map(& &1[:name])
+            |> Enum.map(&to_string/1)
+
+          Enum.reduce(children, {skills, domains, features, objects}, fn child_name,
+                                                                         {skills, domains,
+                                                                          features, objects} ->
+            item =
+              case family do
+                "skill" -> Schema.entity_ex(:skill, child_name)
+                "domain" -> Schema.entity_ex(:domain, child_name)
+                "feature" -> Schema.entity_ex(:feature, child_name)
+                _ -> Schema.entity_ex(:object, child_name)
+              end
+
             key = String.replace(child_name, "/", "_")
             value = encode_entity(item, false)
 
@@ -363,9 +384,33 @@ defmodule Schema.JsonSchema do
         |> Enum.reject(fn item -> item[:hidden?] == true end)
 
       refs =
-        Enum.map(children_classes, fn item ->
-          %{"$ref" => make_class_ref(family, item[:name])}
-        end)
+        if family == "feature" do
+          feature_names =
+            Enum.map(children_classes, fn item ->
+              Utils.class_name_with_hierarchy(item[:name], Schema.all_features())
+            end)
+
+          Enum.map(children_classes, fn item ->
+            %{"$ref" => make_class_ref(family, item[:name])}
+          end) ++
+            [
+              %{
+                "type" => "object",
+                "properties" => %{
+                  "name" => %{"type" => "string"}
+                },
+                "not" => %{
+                  "properties" => %{
+                    "name" => %{"enum" => feature_names}
+                  }
+                }
+              }
+            ]
+        else
+          Enum.map(children_classes, fn item ->
+            %{"$ref" => make_class_ref(family, item[:name])}
+          end)
+        end
 
       Map.put(schema, "oneOf", refs)
     else

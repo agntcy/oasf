@@ -272,14 +272,6 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Redirects from the older /base_class URL to /classes/base_class.
-  """
-  @spec base_class(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def base_class(conn, _params) do
-    redirect(conn, to: "/classes/base_class")
-  end
-
-  @doc """
   Renders skills.
   """
   @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -291,10 +283,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_skills(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:_children, children)
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -333,10 +330,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_domains(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:_children, children)
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -375,10 +377,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_features(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:_children, children)
 
         render(conn, "class.html",
           extensions: Schema.extensions(),
@@ -415,10 +422,15 @@ defmodule SchemaWeb.PageController do
         send_resp(conn, 404, "Not Found: #{id}")
 
       data ->
+        children =
+          Schema.Utils.find_children(Schema.all_objects(), data[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
         data =
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(params["extension"], id))
+          |> Map.put(:_children, children)
 
         render(conn, "object.html",
           extensions: Schema.extensions(),

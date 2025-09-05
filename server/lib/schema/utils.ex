@@ -103,61 +103,13 @@ defmodule Schema.Utils do
     |> define_datetime_attributes()
   end
 
-  @spec update_classes(map(), map()) :: map()
-  def update_classes(classes, all_classes) do
-    Enum.into(classes, %{}, fn {name, class} ->
-      children =
-        find_children(all_classes, Atom.to_string(name))
-        |> Enum.map(fn child ->
-          case Map.get(classes, String.to_atom(child[:name])) do
-            nil ->
-              nil
-
-            child_class ->
-              child_class
-              |> Map.put(:class_name, child_class[:caption])
-              |> Map.put(:type, Atom.to_string(:class_t))
-              |> Map.put(:class_type, child_class[:name])
-          end
-        end)
-        |> Enum.reject(&is_nil/1)
-        |> Enum.into(%{}, fn child ->
-          {child.name, child}
-        end)
-
-      class
-      |> Map.put(:_children, children)
-      |> (&{name, &1}).()
-    end)
-  end
-
-  @spec update_objects(map(), map(), map()) :: map()
-  def update_objects(objects, all_objects, dictionary) do
+  @spec update_objects(map(), map()) :: map()
+  def update_objects(objects, dictionary) do
     Enum.into(objects, %{}, fn {name, object} ->
       links = object_links(dictionary, Atom.to_string(name))
 
-      children =
-        find_children(all_objects, Atom.to_string(name))
-        |> Enum.map(fn child ->
-          case Map.get(objects, String.to_atom(child[:name])) do
-            nil ->
-              nil
-
-            child_class ->
-              child_class
-              |> Map.put(:object_name, child_class[:caption])
-              |> Map.put(:type, Atom.to_string(:object_t))
-              |> Map.put(:object_type, child_class[:name])
-          end
-        end)
-        |> Enum.reject(&is_nil/1)
-        |> Enum.into(%{}, fn child ->
-          {child.name, child}
-        end)
-
       object
       |> Map.put(:_links, links)
-      |> Map.put(:_children, children)
       |> (&{name, &1}).()
     end)
   end
@@ -280,13 +232,7 @@ defmodule Schema.Utils do
 
   defp add_class_links(dictionary, {class_key, class}, family) do
     Map.update!(dictionary, :attributes, fn dictionary_attributes ->
-      type =
-        case class[:name] do
-          nil -> "base_class"
-          _ -> class_key
-        end
-
-      link = make_link(family, type, class)
+      link = make_link(family, class_key, class)
 
       update_attributes(
         class,
@@ -672,6 +618,41 @@ defmodule Schema.Utils do
 
       _ ->
         false
+    end
+  end
+
+  @doc """
+  Makes class name as its unique identifier within OASF by adding classes it extends from,
+  excluding base classes.
+  """
+  def class_name_with_hierarchy(name, all_classes) do
+    base_items = ["base_class", "base_skill", "base_domain", "base_feature"]
+    hierarchy = build_hierarchy(name, all_classes, [])
+    filtered = Enum.reject(hierarchy, &(&1 in base_items))
+    Enum.join(filtered ++ [name], "/")
+  end
+
+  defp build_hierarchy(name, class_map, acc) do
+    key = if is_atom(name), do: name, else: String.to_atom(name)
+
+    case Map.get(class_map, key) do
+      %{extends: parent} when parent not in [nil, ""] ->
+        build_hierarchy(parent, class_map, [parent | acc])
+
+      _ ->
+        acc
+    end
+  end
+
+  @spec is_oasf_class?(atom, String.t()) :: boolean
+  def is_oasf_class?(family, name) do
+    class_name = Schema.Utils.descope(name) |> String.to_atom()
+
+    case family do
+      :skill -> Map.has_key?(Schema.all_skills(), class_name)
+      :domain -> Map.has_key?(Schema.all_domains(), class_name)
+      :feature -> Map.has_key?(Schema.all_features(), class_name)
+      _ -> false
     end
   end
 end

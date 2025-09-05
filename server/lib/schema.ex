@@ -328,6 +328,13 @@ defmodule Schema do
     end
   end
 
+
+  @doc """
+  Finds a feature by the feature uid value.
+  """
+  @spec find_feature(integer()) :: nil | Cache.class_t()
+  def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
+
   @doc """
     Returns all objects.
   """
@@ -470,7 +477,6 @@ defmodule Schema do
     Exports the schema, including data types, objects, and classes.
   """
   @spec export_schema() :: %{
-          base_class: map(),
           skills: map(),
           domains: map(),
           features: map(),
@@ -481,7 +487,6 @@ defmodule Schema do
         }
   def export_schema() do
     %{
-      base_class: Schema.export_base_class(),
       skills: Schema.export_skills(),
       domains: Schema.export_domains(),
       features: Schema.export_features(),
@@ -493,7 +498,6 @@ defmodule Schema do
   end
 
   @spec export_schema(Repo.extensions_t()) :: %{
-          base_class: map(),
           skills: map(),
           domains: map(),
           features: map(),
@@ -504,7 +508,6 @@ defmodule Schema do
         }
   def export_schema(extensions) do
     %{
-      base_class: Schema.export_base_class(),
       skills: Schema.export_skills(extensions),
       domains: Schema.export_domains(extensions),
       features: Schema.export_features(extensions),
@@ -516,7 +519,6 @@ defmodule Schema do
   end
 
   @spec export_schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
-          base_class: map(),
           skills: map(),
           domains: map(),
           features: map(),
@@ -531,7 +533,6 @@ defmodule Schema do
 
   def export_schema(extensions, profiles) do
     %{
-      base_class: Schema.export_base_class(profiles),
       skills: Schema.export_skills(extensions, profiles),
       domains: Schema.export_domains(extensions, profiles),
       features: Schema.export_features(extensions, profiles),
@@ -598,30 +599,6 @@ defmodule Schema do
     Repo.export_features(extensions) |> update_exported_classes(profiles)
   end
 
-  @spec export_base_class() :: map()
-  def export_base_class() do
-    Repo.export_base_class()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.remove_profiles(attributes) |> Enum.into(%{})
-    end)
-  end
-
-  @spec export_base_class(Repo.profiles_t() | nil) :: map()
-  def export_base_class(nil) do
-    export_base_class()
-  end
-
-  def export_base_class(profiles) do
-    size = MapSet.size(profiles)
-
-    Repo.export_base_class()
-    |> reduce_attributes()
-    |> Map.update!(:attributes, fn attributes ->
-      Utils.apply_profiles(attributes, profiles, size) |> Enum.into(%{})
-    end)
-  end
-
   defp update_exported_classes(classes, profiles) do
     apply_profiles(classes, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
@@ -657,7 +634,7 @@ defmodule Schema do
   end
 
   @doc """
-  Returns a randomly generated sample class, based on the spcified profiles.
+  Returns a randomly generated sample class, based on the specified profiles.
   """
   @spec generate_class(Cache.class_t(), Repo.profiles_t() | nil) :: map()
   def generate_class(class, profiles) when is_map(class) do
@@ -677,7 +654,7 @@ defmodule Schema do
   end
 
   @doc """
-  Returns randomly generated sample object data, based on the spcified profiles.
+  Returns randomly generated sample object data, based on the specified profiles.
   """
   @spec generate_object(Cache.object_t(), Repo.profiles_t() | nil) :: map()
   def generate_object(type, profiles) when is_map(type) do

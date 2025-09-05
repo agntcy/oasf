@@ -142,7 +142,19 @@ defmodule Schema.Validator do
           validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
         :feature ->
-          validate_class_id_or_name(response, input, nil, &Schema.feature/1)
+          if Schema.Utils.is_oasf_class?(type, input["name"]) do
+            validate_class_id_or_name(response, input, &Schema.find_feature/1, &Schema.feature/1)
+          else
+            response =
+              add_warning(
+                response,
+                "feature_unknown",
+                "Feature \"#{input["name"]}\" is not an OASF extension; skipping validation.",
+                %{attribute_path: "name", attribute: "name", value: input["name"]}
+              )
+
+            {response, nil}
+          end
 
         :object ->
           validate_object_name_and_return_object(response, options)
@@ -437,7 +449,8 @@ defmodule Schema.Validator do
       class,
       profiles,
       options,
-      dictionary
+      dictionary,
+      class[:is_enum] || false
     )
     |> validate_version(input)
     |> validate_constraints(input, class)
@@ -462,11 +475,11 @@ defmodule Schema.Validator do
           add_error(
             response,
             "version_invalid_format",
-            "Schema version #{inspect(version)} at \"metadata.version\" has invalid format:" <>
+            "Schema version #{inspect(version)} at \"schema_version\" has invalid format:" <>
               " #{error_message}." <>
               " Version must be in semantic versioning format (see https://semver.org/).",
             %{
-              attribute_path: "metadata.version",
+              attribute_path: "schema_version",
               attribute: "version",
               value: version,
               expected_regex: Schema.Utils.version_regex_source()
@@ -506,13 +519,13 @@ defmodule Schema.Validator do
                       add_error(
                         response,
                         "version_incompatible_initial_development",
-                        "Schema version \"#{version}\" at \"metadata.version\" is an initial" <>
+                        "Schema version \"#{version}\" at \"schema_version\" is an initial" <>
                           " development version and is incompatible with the current schema version" <>
                           " \"#{schema_version}\". Initial development versions do not have" <>
                           " compatibility guarantees (see https://semver.org/)." <>
                           " This can result in incorrect validation messages.",
                         %{
-                          attribute_path: "metadata.version",
+                          attribute_path: "schema_version",
                           attribute: "version",
                           value: version
                         }
@@ -523,14 +536,14 @@ defmodule Schema.Validator do
                       add_error(
                         response,
                         "version_incompatible_prerelease",
-                        "Schema version \"#{version}\" at \"metadata.version\" is a prerelease" <>
+                        "Schema version \"#{version}\" at \"schema_version\" is a prerelease" <>
                           " version and is incompatible with the current schema version" <>
                           " \"#{schema_version}\". Prerelease versions are generally" <>
                           " incompatible with released versions and future prerelease versions" <>
                           " (see https://semver.org/)." <>
                           " This can result in incorrect validation messages.",
                         %{
-                          attribute_path: "metadata.version",
+                          attribute_path: "schema_version",
                           attribute: "version",
                           value: version
                         }
@@ -541,13 +554,13 @@ defmodule Schema.Validator do
                       add_warning(
                         response,
                         "version_earlier",
-                        "Schema version \"#{version}\" at \"metadata.version\" is earlier than" <>
+                        "Schema version \"#{version}\" at \"schema_version\" is earlier than" <>
                           " the current schema version \"#{schema_version}\"." <>
                           " Validating against later schema versions can yield deprecation" <>
                           " warnings and other (minor) validation messages that would not occur" <>
                           " when validating against the same version.",
                         %{
-                          attribute_path: "metadata.version",
+                          attribute_path: "schema_version",
                           attribute: "version",
                           value: version
                         }
@@ -559,12 +572,12 @@ defmodule Schema.Validator do
                   add_error(
                     response,
                     "version_incompatible_later",
-                    "Schema version \"#{version}\" at \"metadata.version\" is incompatible with" <>
+                    "Schema version \"#{version}\" at \"schema_version\" is incompatible with" <>
                       " the current schema version \"#{schema_version}\" because it is a later version." <>
                       " This can result in missing validation messages (false negatives)" <>
                       " and incorrect validation messages.",
                     %{
-                      attribute_path: "metadata.version",
+                      attribute_path: "schema_version",
                       attribute: "version",
                       value: version
                     }
@@ -687,7 +700,8 @@ defmodule Schema.Validator do
           map(),
           list(String.t()),
           list(),
-          map()
+          map(),
+          boolean()
         ) :: map()
   defp validate_attributes(
          response,
@@ -696,7 +710,8 @@ defmodule Schema.Validator do
          schema_item,
          profiles,
          options,
-         dictionary
+         dictionary,
+         is_enum
        ) do
     just_one_keys = schema_item[:constraints][:just_one] |> List.wrap()
     present_keys = Enum.filter(just_one_keys, &Map.has_key?(input_item, &1))
@@ -717,7 +732,86 @@ defmodule Schema.Validator do
         schema_item
       end
 
-    schema_attributes = filter_with_profiles(schema_item[:attributes], profiles)
+    {response, schema_attributes} =
+      if is_enum do
+        name = schema_item[:name]
+
+        children =
+          Schema.Utils.find_children(Schema.all_objects(), name)
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+          |> Enum.map(& &1[:name])
+          |> Enum.map(&to_string/1)
+
+        matching_child =
+          children
+          |> Enum.map(&Schema.entity_ex(:object, &1))
+          |> Enum.find(fn child ->
+            child_attrs = child[:attributes] || %{}
+
+            required_keys =
+              child_attrs
+              |> Enum.filter(fn {_k, v} -> v[:requirement] == "required" end)
+              |> Enum.map(fn {k, _v} -> Atom.to_string(k) end)
+
+            # Are all required keys present in input_item?
+            required_present? = Enum.all?(required_keys, &Map.has_key?(input_item, &1))
+            child_attrs_map = Map.new(child_attrs)
+
+            child_attr_keys =
+              child_attrs_map |> Map.keys() |> Enum.map(&Atom.to_string/1) |> MapSet.new()
+
+            input_keys = Map.keys(input_item) |> MapSet.new()
+
+            # Are all keys present in input_item also present in child_attrs?
+            all_keys_present? = MapSet.subset?(input_keys, child_attr_keys)
+
+            # Enum check
+            enums_match? =
+              Enum.all?(child_attrs, fn {attr_name, attr_def} ->
+                if Map.has_key?(attr_def, :enum) and
+                     Map.has_key?(input_item, Atom.to_string(attr_name)) do
+                  input_val = input_item[Atom.to_string(attr_name)]
+
+                  input_val_atom =
+                    if is_atom(input_val),
+                      do: input_val,
+                      else: String.to_atom(to_string(input_val))
+
+                  input_val_str = to_string(input_val)
+
+                  Map.has_key?(attr_def[:enum], input_val_atom) or
+                    Map.has_key?(attr_def[:enum], input_val_str)
+                else
+                  true
+                end
+              end)
+
+            required_present? and all_keys_present? and enums_match?
+          end)
+
+        if matching_child do
+          {response, filter_with_profiles(matching_child[:attributes], profiles)}
+        else
+          attribute_name = schema_item[:name] || "unknown_enum"
+          attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
+
+          {
+            add_error(
+              response,
+              "enum_object_not_matched",
+              "The object provided for attribute \"#{attribute_path}\" does not match any of allowed objects.",
+              %{
+                attribute_path: attribute_path,
+                attribute: attribute_name,
+                allowed_object_names: Enum.join(children, ", ")
+              }
+            ),
+            []
+          }
+        end
+      else
+        {response, filter_with_profiles(schema_item[:attributes], profiles)}
+      end
 
     response
     |> validate_attributes_types(
@@ -866,10 +960,19 @@ defmodule Schema.Validator do
                 input_item[attribute_name],
                 {response, 0},
                 fn value, {response, index} ->
-                  value_str = to_string(value)
-                  value_atom = String.to_atom(value_str)
+                  value_atom =
+                    cond do
+                      is_atom(value) ->
+                        value
 
-                  if Map.has_key?(attribute_details[:enum], value_atom) do
+                      is_binary(value) or is_integer(value) or is_float(value) ->
+                        String.to_atom(to_string(value))
+
+                      true ->
+                        nil
+                    end
+
+                  if value_atom && Map.has_key?(attribute_details[:enum], value_atom) do
                     # The enum array value is good - check sibling and deprecation
                     response =
                       response
@@ -920,10 +1023,20 @@ defmodule Schema.Validator do
             # The enum values are always strings, so rather than use elaborate conversions,
             # we just use Kernel.to_string/1. (The value is type checked elsewhere anyway.)
             value = input_item[attribute_name]
-            value_str = to_string(value)
-            value_atom = String.to_atom(value_str)
 
-            if Map.has_key?(attribute_details[:enum], value_atom) do
+            value_atom =
+              cond do
+                is_atom(value) ->
+                  value
+
+                is_binary(value) or is_integer(value) or is_float(value) ->
+                  String.to_atom(to_string(value))
+
+                true ->
+                  nil
+              end
+
+            if value_atom && Map.has_key?(attribute_details[:enum], value_atom) do
               # The enum value is good - check sibling and deprecation
               response
               |> validate_enum_sibling(
@@ -1417,7 +1530,27 @@ defmodule Schema.Validator do
               validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
             "feature" ->
-              validate_class_id_or_name(response, value, nil, &Schema.feature/1)
+              if Schema.Utils.is_oasf_class?(
+                   String.to_atom(attribute_details[:family]),
+                   value["name"]
+                 ) do
+                validate_class_id_or_name(
+                  response,
+                  value,
+                  &Schema.find_feature/1,
+                  &Schema.feature/1
+                )
+              else
+                response =
+                  add_warning(
+                    response,
+                    "feature_unknown",
+                    "Feature \"#{value["name"]}\" is not an OASF extension; skipping validation.",
+                    %{attribute_path: "name", attribute: "name", value: value["name"]}
+                  )
+
+                {response, nil}
+              end
 
             _ ->
               # This should never happen for published schemas (validator will catch this) but
@@ -1471,7 +1604,8 @@ defmodule Schema.Validator do
           Schema.object(object_type),
           profiles,
           options,
-          dictionary
+          dictionary,
+          attribute_details[:is_enum] || false
         )
 
       _ ->
@@ -1494,7 +1628,8 @@ defmodule Schema.Validator do
           map(),
           list(String.t()),
           list(),
-          map()
+          map(),
+          boolean()
         ) :: map()
   defp validate_map_against_object(
          response,
@@ -1504,7 +1639,8 @@ defmodule Schema.Validator do
          schema_object,
          profiles,
          options,
-         dictionary
+         dictionary,
+         is_enum
        ) do
     response
     |> validate_object_deprecated(attribute_path, attribute_name, schema_object)
@@ -1514,7 +1650,8 @@ defmodule Schema.Validator do
       schema_object,
       profiles,
       options,
-      dictionary
+      dictionary,
+      is_enum
     )
     |> validate_constraints(input_object, schema_object, attribute_path)
   end
@@ -2309,16 +2446,34 @@ defmodule Schema.Validator do
     errors = lenient_reverse(response[:errors])
     warnings = lenient_reverse(response[:warnings])
 
-    Map.merge(response, %{
-      error_count: length(errors),
-      warning_count: length(warnings),
-      errors: errors,
-      warnings: warnings
-    })
+    response =
+      Map.merge(response, %{
+        error_count: length(errors),
+        warning_count: length(warnings),
+        errors: errors,
+        warnings: warnings
+      })
+
+    sanitize_for_json(response)
   end
 
   defp lenient_reverse(nil), do: []
   defp lenient_reverse(list) when is_list(list), do: Enum.reverse(list)
+
+  # Recursively convert tuples in the response to lists (for JSON encoding)
+  defp sanitize_for_json(term) when is_tuple(term) do
+    Tuple.to_list(term)
+  end
+
+  defp sanitize_for_json(term) when is_map(term) do
+    Map.new(term, fn {k, v} -> {k, sanitize_for_json(v)} end)
+  end
+
+  defp sanitize_for_json(term) when is_list(term) do
+    Enum.map(term, &sanitize_for_json/1)
+  end
+
+  defp sanitize_for_json(term), do: term
 
   # Returns approximate OASF type as a string for a value parsed from JSON. This is intended for
   # use when an attribute's type is incorrect. For integer values, this returns smallest type that

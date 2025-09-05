@@ -35,27 +35,4 @@ defmodule Schema.Types do
   def type_name(class, name) do
     class <> ": " <> name
   end
-
-  @doc """
-  Makes class name as its unique identifier within OASF by adding classes it extends from,
-  excluding base classes.
-  """
-  def class_name_with_hierarchy(name, all_classes) do
-    base_items = ["base_class", "base_skill", "base_domain", "base_feature"]
-    hierarchy = build_hierarchy(name, all_classes, [])
-    filtered = Enum.reject(hierarchy, &(&1 in base_items))
-    Enum.join(filtered ++ [name], "/")
-  end
-
-  defp build_hierarchy(name, class_map, acc) do
-    key = if is_atom(name), do: name, else: String.to_atom(name)
-
-    case Map.get(class_map, key) do
-      %{extends: parent} when parent not in [nil, ""] ->
-        build_hierarchy(parent, class_map, [parent | acc])
-
-      _ ->
-        acc
-    end
-  end
 end
