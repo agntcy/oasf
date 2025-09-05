@@ -3,7 +3,7 @@
   "caption": "Evaluation",
   "category": "evaluation",
   "description": "Assessing actions and outcomes to determine their effectiveness, guiding future decision-making and enhancing personal agency.",
-  "extends": "base_feature",
+  "extends": "base_module",
   "name": "evaluation",
   "attributes": {
     "data": {

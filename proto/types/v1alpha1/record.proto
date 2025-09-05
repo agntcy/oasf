@@ -6,8 +6,8 @@ syntax = "proto3";
 package types.v1alpha1;
 
 import "types/v1alpha1/domain.proto";
-import "types/v1alpha1/feature.proto";
 import "types/v1alpha1/locator.proto";
+import "types/v1alpha1/module.proto";
 import "types/v1alpha1/signature.proto";
 import "types/v1alpha1/skill.proto";
 
@@ -57,8 +57,8 @@ message Record {
   repeated Domain domains = 10;
 
   // Additional information attached to the record.
-  // Features are used to generically extend the record's functionality.
-  repeated Feature features = 11;
+  // Modules are used to generically extend the record's functionality.
+  repeated Module modules = 11;
 
   // Security signature of the record.
   Signature signature = 12;

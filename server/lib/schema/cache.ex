@@ -28,10 +28,10 @@ defmodule Schema.Cache do
     :skills,
     :all_skills,
     :main_skills,
-    # feature libs
-    :features,
-    :all_features,
-    :main_features
+    # module libs
+    :modules,
+    :all_modules,
+    :main_modules
   ]
   defstruct ~w[
     version
@@ -46,9 +46,9 @@ defmodule Schema.Cache do
     domains
     all_domains
     main_domains
-    features
-    all_features
-    main_features
+    modules
+    all_modules
+    main_modules
   ]a
 
   @type t() :: %__MODULE__{}
@@ -65,9 +65,9 @@ defmodule Schema.Cache do
   @domains_dir "domains"
   @domain_family "domain"
 
-  @main_features_file "main_features.json"
-  @features_dir "features"
-  @feature_family "feature"
+  @main_modules_file "main_modules.json"
+  @modules_dir "modules"
+  @module_family "module"
 
   @doc """
   Load the schema files and initialize the cache.
@@ -95,18 +95,18 @@ defmodule Schema.Cache do
         version[:version]
       )
 
-    {features, all_features, main_features} =
+    {modules, all_modules, main_modules} =
       read_classes(
-        @main_features_file,
-        @features_dir,
-        @feature_family,
+        @main_modules_file,
+        @modules_dir,
+        @module_family,
         version[:version]
       )
 
     {objects, all_objects} =
       read_objects(version[:version])
 
-    dictionary = Utils.update_dictionary(dictionary, skills, domains, features, objects)
+    dictionary = Utils.update_dictionary(dictionary, skills, domains, modules, objects)
     dictionary_attributes = dictionary[:attributes]
 
     # Read and update profiles
@@ -118,7 +118,7 @@ defmodule Schema.Cache do
     # Check profiles used in classes, adding classes to profile's _links
     profiles = Profiles.sanity_check(:skill, skills, profiles)
     profiles = Profiles.sanity_check(:domain, domains, profiles)
-    profiles = Profiles.sanity_check(:feature, features, profiles)
+    profiles = Profiles.sanity_check(:module, modules, profiles)
 
     # Missing description warnings, datetime attributes, and profiles
     objects =
@@ -137,8 +137,8 @@ defmodule Schema.Cache do
       |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
-    features =
-      features
+    modules =
+      modules
       |> update_classes(objects)
       |> final_check(dictionary_attributes)
 
@@ -147,7 +147,7 @@ defmodule Schema.Cache do
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
     {skills, no_req_set} = fix_entities(skills, no_req_set, "skill")
     {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
-    {features, no_req_set} = fix_entities(features, no_req_set, "feature")
+    {modules, no_req_set} = fix_entities(modules, no_req_set, "module")
     {objects, no_req_set} = fix_entities(objects, no_req_set, "object")
 
     if MapSet.size(no_req_set) > 0 do
@@ -174,10 +174,10 @@ defmodule Schema.Cache do
       domains: domains,
       all_domains: all_domains,
       main_domains: main_domains,
-      # feature libs
-      features: features,
-      all_features: all_features,
-      main_features: main_features
+      # module libs
+      modules: modules,
+      all_modules: all_modules,
+      main_modules: main_modules
     }
   end
 
@@ -224,12 +224,12 @@ defmodule Schema.Cache do
     Map.get(main_domains[:attributes], id)
   end
 
-  @spec main_features(__MODULE__.t()) :: map()
-  def main_features(%__MODULE__{main_features: main_features}), do: main_features
+  @spec main_modules(__MODULE__.t()) :: map()
+  def main_modules(%__MODULE__{main_modules: main_modules}), do: main_modules
 
-  @spec main_feature(__MODULE__.t(), any) :: nil | category_t()
-  def main_feature(%__MODULE__{main_features: main_features}, id) do
-    Map.get(main_features[:attributes], id)
+  @spec main_module(__MODULE__.t(), any) :: nil | category_t()
+  def main_module(%__MODULE__{main_modules: main_modules}, id) do
+    Map.get(main_modules[:attributes], id)
   end
 
   @spec all_objects(__MODULE__.t()) :: map()
@@ -297,33 +297,33 @@ defmodule Schema.Cache do
     end
   end
 
-  @spec features(__MODULE__.t()) :: map()
-  def features(%__MODULE__{features: features}), do: features
+  @spec modules(__MODULE__.t()) :: map()
+  def modules(%__MODULE__{modules: modules}), do: modules
 
-  @spec all_features(__MODULE__.t()) :: map()
-  def all_features(%__MODULE__{all_features: all_features}), do: all_features
+  @spec all_modules(__MODULE__.t()) :: map()
+  def all_modules(%__MODULE__{all_modules: all_modules}), do: all_modules
 
-  @spec export_features(__MODULE__.t()) :: map()
-  def export_features(%__MODULE__{features: features, dictionary: dictionary}) do
-    Enum.into(features, Map.new(), fn {name, feature} ->
-      {name, enrich(feature, dictionary[:attributes])}
+  @spec export_modules(__MODULE__.t()) :: map()
+  def export_modules(%__MODULE__{modules: modules, dictionary: dictionary}) do
+    Enum.into(modules, Map.new(), fn {name, module} ->
+      {name, enrich(module, dictionary[:attributes])}
     end)
   end
 
-  def feature(%__MODULE__{dictionary: dictionary, features: features}, id) do
-    case Map.get(features, id) do
+  def module(%__MODULE__{dictionary: dictionary, modules: modules}, id) do
+    case Map.get(modules, id) do
       nil ->
         nil
 
-      feature ->
-        enrich(feature, dictionary[:attributes])
+      module ->
+        enrich(module, dictionary[:attributes])
     end
   end
 
-  @spec find_feature(Schema.Cache.t(), any) :: nil | map
-  def find_feature(%__MODULE__{dictionary: dictionary, features: features}, uid) do
-    case Enum.find(features, fn {_, feature} -> feature[:uid] == uid end) do
-      {_, feature} -> enrich(feature, dictionary[:attributes])
+  @spec find_module(Schema.Cache.t(), any) :: nil | map
+  def find_module(%__MODULE__{dictionary: dictionary, modules: modules}, uid) do
+    case Enum.find(modules, fn {_, module} -> module[:uid] == uid end) do
+      {_, module} -> enrich(module, dictionary[:attributes])
       nil -> nil
     end
   end
@@ -356,7 +356,7 @@ defmodule Schema.Cache do
           objects: objects,
           skills: skills,
           domains: domains,
-          features: features
+          modules: modules
         },
         type,
         id
@@ -366,7 +366,7 @@ defmodule Schema.Cache do
         :object -> objects
         :skill -> skills
         :domain -> domains
-        :feature -> features
+        :module -> modules
         _ -> %{}
       end
 
@@ -382,7 +382,7 @@ defmodule Schema.Cache do
             objects,
             skills,
             domains,
-            features,
+            modules,
             Map.new(),
             entity[:is_enum] || false
           )
@@ -424,7 +424,7 @@ defmodule Schema.Cache do
          objects,
          skills,
          domains,
-         features,
+         modules,
          ref_entities,
          is_enum
        ) do
@@ -435,7 +435,7 @@ defmodule Schema.Cache do
         objects,
         skills,
         domains,
-        features,
+        modules,
         ref_entities
       )
 
@@ -453,7 +453,7 @@ defmodule Schema.Cache do
          objects,
          skills,
          domains,
-         features,
+         modules,
          ref_entities
        ) do
     Enum.map_reduce(attributes, ref_entities, fn {name, attribute}, acc ->
@@ -484,7 +484,7 @@ defmodule Schema.Cache do
                   case attribute[:family] do
                     "skill" -> skills
                     "domain" -> domains
-                    "feature" -> features
+                    "module" -> modules
                     _ -> %{}
                   end
 
@@ -505,7 +505,7 @@ defmodule Schema.Cache do
                 objects,
                 skills,
                 domains,
-                features,
+                modules,
                 Map.put(acc, entity_name, nil),
                 attribute[:is_enum] || false
               )
@@ -638,7 +638,7 @@ defmodule Schema.Cache do
 
   @spec hidden_class?(atom(), map()) :: boolean()
   defp hidden_class?(class_key, class) do
-    ignored_keys = [:base_feature, :base_skill, :base_domain]
+    ignored_keys = [:base_module, :base_skill, :base_domain]
     class_key not in ignored_keys and !Map.has_key?(class, :uid)
   end
 

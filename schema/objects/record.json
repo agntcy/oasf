@@ -1,6 +1,6 @@
 {
   "caption": "Record",
-  "description": "The data model defines a schema for agentic AI data representation. The schema provides a way to describe the workload's features, constraints, artifact locators, versioning, ownership, or relevant details.",
+  "description": "The data model defines a schema for agentic AI data representation. The schema provides a way to describe the workload's modules, constraints, artifact locators, versioning, ownership, or relevant details.",
   "extends": "object",
   "name": "record",
   "attributes": {
@@ -54,9 +54,9 @@
       "description": "List of source locators where this record can be found or used from.",
       "requirement": "required"
     },
-    "features": {
-      "caption": "Features",
-      "description": "List of features that describe this record and its capabilities more in depth.",
+    "modules": {
+      "caption": "Modules",
+      "description": "List of modules that describe this record and its capabilities more in depth.",
       "requirement": "recommended"
     },
     "signature": {

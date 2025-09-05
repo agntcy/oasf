@@ -14,8 +14,8 @@ class_type = @data[:family]
 path = case class_type do
   "skill" ->
     Routes.static_path(@conn, "/main_skills/" <> category)
-  "feature" ->
-    Routes.static_path(@conn, "/main_features/" <> category)
+  "module" ->
+    Routes.static_path(@conn, "/main_modules/" <> category)
   "domain" ->
     Routes.static_path(@conn, "/main_domains/" <> category)
   _ ->

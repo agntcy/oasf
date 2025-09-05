@@ -131,34 +131,34 @@ defmodule Schema do
     do: get_main_domain(extensions, Utils.to_uid(extension, id))
 
   @doc """
-    Returns features categories.
+    Returns module categories.
   """
-  @spec main_features :: map()
-  def main_features(), do: Repo.main_features()
+  @spec main_modules :: map()
+  def main_modules(), do: Repo.main_modules()
 
   @doc """
-    Returns features categories defined in the given extension set.
+    Returns module categories defined in the given extension set.
   """
-  def main_features(extensions) do
-    Map.update(Repo.main_features(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_feature} ->
-        {name, main_feature(extensions, name)}
+  def main_modules(extensions) do
+    Map.update(Repo.main_modules(extensions), :attributes, %{}, fn attributes ->
+      Enum.into(attributes, %{}, fn {name, _main_module} ->
+        {name, main_module(extensions, name)}
       end)
     end)
   end
 
   @doc """
-    Returns a single feature category with its classes.
+    Returns a single module category with its classes.
   """
-  @spec main_feature(atom | String.t()) :: nil | Cache.category_t()
-  def main_feature(id), do: get_main_feature(Utils.to_uid(id))
+  @spec main_module(atom | String.t()) :: nil | Cache.category_t()
+  def main_module(id), do: get_main_module(Utils.to_uid(id))
 
-  @spec main_feature(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_feature(extensions, id), do: get_main_feature(extensions, Utils.to_uid(id))
+  @spec main_module(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
+  def main_module(extensions, id), do: get_main_module(extensions, Utils.to_uid(id))
 
-  @spec main_feature(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_feature(extensions, extension, id),
-    do: get_main_feature(extensions, Utils.to_uid(extension, id))
+  @spec main_module(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
+  def main_module(extensions, extension, id),
+    do: get_main_module(extensions, Utils.to_uid(extension, id))
 
   @doc """
     Returns the attribute dictionary.
@@ -285,44 +285,44 @@ defmodule Schema do
   def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
 
   @doc """
-    Returns all features.
+    Returns all modules.
   """
-  @spec features() :: map()
-  def features(), do: Repo.features()
+  @spec modules() :: map()
+  def modules(), do: Repo.modules()
 
-  @spec features(Repo.extensions_t()) :: map()
-  def features(extensions), do: Repo.features(extensions)
+  @spec modules(Repo.extensions_t()) :: map()
+  def modules(extensions), do: Repo.modules(extensions)
 
-  @spec features(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def features(extensions, profiles) do
+  @spec modules(Repo.extensions_t(), Repo.profiles_t()) :: map()
+  def modules(extensions, profiles) do
     extensions
-    |> Repo.features()
+    |> Repo.modules()
     |> apply_profiles(profiles, MapSet.size(profiles))
   end
 
-  @spec all_features() :: map()
-  def all_features(), do: Repo.all_features()
+  @spec all_modules() :: map()
+  def all_modules(), do: Repo.all_modules()
 
   @doc """
-    Returns a single feature.
+    Returns a single module.
   """
-  @spec feature(atom() | String.t()) :: nil | Cache.class_t()
-  def feature(id), do: Repo.feature(Utils.to_uid(id))
+  @spec module(atom() | String.t()) :: nil | Cache.class_t()
+  def module(id), do: Repo.module(Utils.to_uid(id))
 
-  @spec feature(nil | String.t(), String.t()) :: nil | map()
-  def feature(extension, id),
-    do: Repo.feature(Utils.to_uid(extension, id))
+  @spec module(nil | String.t(), String.t()) :: nil | map()
+  def module(extension, id),
+    do: Repo.module(Utils.to_uid(extension, id))
 
-  @spec feature(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
-  def feature(extension, id, nil), do: feature(extension, id)
+  @spec module(String.t() | nil, String.t(), Repo.profiles_t() | nil) :: nil | map()
+  def module(extension, id, nil), do: module(extension, id)
 
-  def feature(extension, id, profiles) do
-    case feature(extension, id) do
+  def module(extension, id, profiles) do
+    case module(extension, id) do
       nil ->
         nil
 
-      feature ->
-        Map.update!(feature, :attributes, fn attributes ->
+      module ->
+        Map.update!(module, :attributes, fn attributes ->
           Utils.apply_profiles(attributes, profiles)
         end)
     end
@@ -330,10 +330,10 @@ defmodule Schema do
 
 
   @doc """
-  Finds a feature by the feature uid value.
+  Finds a module by the module uid value.
   """
-  @spec find_feature(integer()) :: nil | Cache.class_t()
-  def find_feature(uid) when is_integer(uid), do: Repo.find_feature(uid)
+  @spec find_module(integer()) :: nil | Cache.class_t()
+  def find_module(uid) when is_integer(uid), do: Repo.find_module(uid)
 
   @doc """
     Returns all objects.
@@ -479,7 +479,7 @@ defmodule Schema do
   @spec export_schema() :: %{
           skills: map(),
           domains: map(),
-          features: map(),
+          modules: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -489,7 +489,7 @@ defmodule Schema do
     %{
       skills: Schema.export_skills(),
       domains: Schema.export_domains(),
-      features: Schema.export_features(),
+      modules: Schema.export_modules(),
       objects: Schema.export_objects(),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(),
@@ -500,7 +500,7 @@ defmodule Schema do
   @spec export_schema(Repo.extensions_t()) :: %{
           skills: map(),
           domains: map(),
-          features: map(),
+          modules: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -510,7 +510,7 @@ defmodule Schema do
     %{
       skills: Schema.export_skills(extensions),
       domains: Schema.export_domains(extensions),
-      features: Schema.export_features(extensions),
+      modules: Schema.export_modules(extensions),
       objects: Schema.export_objects(extensions),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(extensions),
@@ -521,7 +521,7 @@ defmodule Schema do
   @spec export_schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
           skills: map(),
           domains: map(),
-          features: map(),
+          modules: map(),
           objects: map(),
           types: map(),
           dictionary_attributes: map(),
@@ -535,7 +535,7 @@ defmodule Schema do
     %{
       skills: Schema.export_skills(extensions, profiles),
       domains: Schema.export_domains(extensions, profiles),
-      features: Schema.export_features(extensions, profiles),
+      modules: Schema.export_modules(extensions, profiles),
       objects: Schema.export_objects(extensions, profiles),
       types: Schema.export_data_types(),
       dictionary_attributes: export_dictionary_attributes(extensions),
@@ -584,19 +584,19 @@ defmodule Schema do
   end
 
   @doc """
-    Exports the feature classes.
+    Exports the module classes.
   """
-  @spec export_features() :: map()
-  def export_features(), do: Repo.export_features() |> reduce_objects()
+  @spec export_modules() :: map()
+  def export_modules(), do: Repo.export_modules() |> reduce_objects()
 
-  @spec export_features(Repo.extensions_t()) :: map()
-  def export_features(extensions), do: Repo.export_features(extensions) |> reduce_objects()
+  @spec export_modules(Repo.extensions_t()) :: map()
+  def export_modules(extensions), do: Repo.export_modules(extensions) |> reduce_objects()
 
-  @spec export_features(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_features(extensions, nil), do: export_features(extensions)
+  @spec export_modules(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def export_modules(extensions, nil), do: export_modules(extensions)
 
-  def export_features(extensions, profiles) do
-    Repo.export_features(extensions) |> update_exported_classes(profiles)
+  def export_modules(extensions, profiles) do
+    Repo.export_modules(extensions) |> update_exported_classes(profiles)
   end
 
   defp update_exported_classes(classes, profiles) do
@@ -677,12 +677,12 @@ defmodule Schema do
     Repo.main_domain(extensions, id) |> reduce_category()
   end
 
-  defp get_main_feature(id) do
-    Repo.main_feature(id) |> reduce_category()
+  defp get_main_module(id) do
+    Repo.main_module(id) |> reduce_category()
   end
 
-  defp get_main_feature(extensions, id) do
-    Repo.main_feature(extensions, id) |> reduce_category()
+  defp get_main_module(extensions, id) do
+    Repo.main_module(extensions, id) |> reduce_category()
   end
 
   defp reduce_category(nil) do

@@ -1,7 +1,7 @@
 {
   "caption": "LLM Model Data",
-  "description": "Data for the LLM model record extension.",
-  "extends": "feature_data",
+  "description": "Data for the LLM model record module.",
+  "extends": "module_data",
   "name": "llm_model_data",
   "attributes": {
     "models": {

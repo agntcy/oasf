@@ -29,9 +29,9 @@ defmodule SchemaWeb.Router do
     get "/main_domains/:id", PageController, :main_domains
     get "/main_domains/:extension/:id", PageController, :main_domains
 
-    get "/main_features", PageController, :main_features
-    get "/main_features/:id", PageController, :main_features
-    get "/main_features/:extension/:id", PageController, :main_features
+    get "/main_modules", PageController, :main_modules
+    get "/main_modules/:id", PageController, :main_modules
+    get "/main_modules/:extension/:id", PageController, :main_modules
 
     get "/profiles", PageController, :profiles
     get "/profiles/:id", PageController, :profiles
@@ -51,12 +51,12 @@ defmodule SchemaWeb.Router do
     get "/domain/graph/:id", PageController, :domain_graph
     get "/domain/graph/:extension/:id", PageController, :domain_graph
 
-    get "/features", PageController, :features
-    get "/features/:id", PageController, :features
-    get "/features/:extension/:id", PageController, :features
+    get "/modules", PageController, :modules
+    get "/modules/:id", PageController, :modules
+    get "/modules/:extension/:id", PageController, :modules
 
-    get "/feature/graph/:id", PageController, :feature_graph
-    get "/feature/graph/:extension/:id", PageController, :feature_graph
+    get "/module/graph/:id", PageController, :module_graph
+    get "/module/graph/:extension/:id", PageController, :module_graph
 
     get "/dictionary", PageController, :dictionary
 
@@ -88,9 +88,9 @@ defmodule SchemaWeb.Router do
     get "/main_domains/:id", SchemaController, :main_domain
     get "/main_domains/:extension/:id", SchemaController, :main_domain
 
-    get "/main_features", SchemaController, :main_features
-    get "/main_features/:id", SchemaController, :main_feature
-    get "/main_features/:extension/:id", SchemaController, :main_feature
+    get "/main_modules", SchemaController, :main_modules
+    get "/main_modules/:id", SchemaController, :main_module
+    get "/main_modules/:extension/:id", SchemaController, :main_module
 
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile
@@ -103,9 +103,9 @@ defmodule SchemaWeb.Router do
     get "/domains/:id", SchemaController, :domain
     get "/domains/:extension/:id", SchemaController, :domain
 
-    get "/features", SchemaController, :features
-    get "/features/:id", SchemaController, :feature
-    get "/features/:extension/:id", SchemaController, :feature
+    get "/modules", SchemaController, :modules
+    get "/modules/:id", SchemaController, :module
+    get "/modules/:extension/:id", SchemaController, :module
 
     get "/dictionary", SchemaController, :dictionary
 
@@ -123,9 +123,9 @@ defmodule SchemaWeb.Router do
     post "/validate/domain", SchemaController, :validate_domain
     post "/validate_bundle/domain", SchemaController, :validate_bundle_domain
 
-    post "/translate/feature", SchemaController, :translate_feature
-    post "/validate/feature", SchemaController, :validate_feature
-    post "/validate_bundle/feature", SchemaController, :validate_bundle_feature
+    post "/translate/module", SchemaController, :translate_module
+    post "/validate/module", SchemaController, :validate_module
+    post "/validate_bundle/module", SchemaController, :validate_bundle_module
 
     post "/translate/object/:id", SchemaController, :translate_object
     post "/validate/object/:id", SchemaController, :validate_object
@@ -140,8 +140,8 @@ defmodule SchemaWeb.Router do
     get "/domains/:id", SchemaController, :json_domain_class
     get "/domains/:extension/:id", SchemaController, :json_domain_class
 
-    get "/features/:id", SchemaController, :json_feature_class
-    get "/features/:extension/:id", SchemaController, :json_feature_class
+    get "/modules/:id", SchemaController, :json_module_class
+    get "/modules/:extension/:id", SchemaController, :json_module_class
 
     get "/objects/:id", SchemaController, :json_object
     get "/objects/:extension/:id", SchemaController, :json_object
@@ -152,7 +152,7 @@ defmodule SchemaWeb.Router do
 
     get "/skills", SchemaController, :export_skills
     get "/domains", SchemaController, :export_domains
-    get "/features", SchemaController, :export_features
+    get "/modules", SchemaController, :export_modules
     get "/objects", SchemaController, :export_objects
     get "/schema", SchemaController, :export_schema
   end
@@ -166,8 +166,8 @@ defmodule SchemaWeb.Router do
     get "/domains/:id", SchemaController, :sample_domain
     get "/domains/:extension/:id", SchemaController, :sample_domain
 
-    get "/features/:id", SchemaController, :sample_feature
-    get "/features/:extension/:id", SchemaController, :sample_feature
+    get "/modules/:id", SchemaController, :sample_module
+    get "/modules/:extension/:id", SchemaController, :sample_module
 
     get "/objects/:id", SchemaController, :sample_object
     get "/objects/:extension/:id", SchemaController, :sample_object
