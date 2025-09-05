@@ -5,8 +5,8 @@
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-  <meta name="description" content="Open Agents Schema Framework">
-  <title>Open Agents Schema Framework</title>
+  <meta name="description" content="Open Agentic Schema Framework">
+  <title>Open Agentic Schema Framework</title>
 
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap-4.6.2.min.css") %>'/>
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap.select-1.13.18.min.css") %>'/>
