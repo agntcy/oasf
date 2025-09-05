@@ -2,11 +2,12 @@
   "description": "REPLACE me with a concise description of the object.",
   "caption": "REPLACE me with a short, human friendly name for the object.",
   "name": "REPLACE me with a name of the object. It must be unique name. The name is all lower case letters, combine words using underscore.",
+  "extends": "REPLACE me with the name of the object the new object extends.",
   "attributes": {
-    
     "DELETE ME": "Ensure you adjust 'requirement' for all the attributes as desired.",
-    
+
     "attribute_1": {
+      "caption": "REPLACE me with an overridden caption of an attribute, IF NEEDED.",
       "description": "REPLACE me with an overridden description of an attribute, IF NEEDED.",
       "requirement": "required"
     },

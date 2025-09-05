@@ -1,38 +1,94 @@
 # Open Agentic Schema Framework
 
 The Open Agentic Schema Framework (OASF) is a standardized schema system for
-defining and managing AI agent capabilities, interactions, and metadata. It
-provides a structured way to describe agent attributes, capabilities, and
-relationships using attribute-based taxonomies. The framework includes
-development tools, schema validation, and hot-reload capabilities for rapid
-schema development, all managed through a Taskfile-based workflow and
-containerized development environment. OASF serves as the foundation for
-interoperable AI agent systems, enabling consistent definition and discovery of
-agent capabilities across distributed systems.
+defining and managing AI agent capabilities, interactions, and metadata.
+It provides a structured way to describe agent attributes, capabilities, and
+relationships using attribute-based taxonomies.
+The framework includes development tools, schema validation, and hot-reload
+capabilities for rapid schema development, all managed through a Taskfile-based
+workflow and containerized development environment.
+OASF serves as the foundation for interoperable AI agent systems, enabling
+consistent definition and discovery of agent capabilities across distributed
+systems.
 
-OASF is highly inspired from OCSF (Open Cybersecurity Schema Framework) in terms of data modeling philosophy but also in terms of implementation.
+OASF is highly inspired from OCSF (Open Cybersecurity Schema Framework) in terms
+of data modeling philosophy but also in terms of implementation.
 The server is a derivative work of OCSF schema server and the schema update
 workflows reproduce those developed by OCSF.
 
 ## Features
 
-OASF defines a set of standards for AI agent content representation that aims to:
+OASF defines a set of standards for agentic AI content representation that aims
+to:
 
-- Define common data structure to facilitate content standardization, validation, and interoperability
-- Ensure unique agent identification to address content discovery and consumption
-- Provide extension capabilities to enable third-party features
+- Define common data structure to facilitate content standardization,
+  validation, and interoperability.
+- Ensure unique agent identification to address content discovery and
+  consumption.
+- Provide extension capabilities to enable third-party features.
 
-### Open Agentic Schema Framework Server
+## Key Concepts
 
-The server/ directory contains the Open Agents Schema Framework (OASF) Schema Server source code.
-The schema server is an HTTP server that provides a convenient way to browse and use the OASF schema.
-The server provides also schema validation capabilities to be used during development.
+At the core of OASF is the [record object](./schema/objects/record.json), which
+serves as the primary data structure for representing collections of information
+and metadata relevant to agentic AI applications.
 
-You can access the OASF schema server, which is running the latest released schema, at [schema.oasf.outshift.com](https://schema.oasf.outshift.com).
+OASF records can be annotated with **skills** and **domains** to enable
+effective labeling and searchability across agentic systems.
+Additionally, **modules** provide a flexible mechanism to extend records with
+additional information in a modular and composable way, supporting a wide range
+of agentic use cases.
+
+## Schema Expansion and Contributions
+
+The Open Agentic Schema Framework (OASF) is designed with extensibility in mind
+and is expected to evolve to capture new use cases and capabilities.
+A key area of anticipated expansion includes the definition and management of
+**Skills**, **Domains** and **Modules** for AI agentic records.
+
+We welcome contributions from the community to help shape the future of OASF.
+For detailed guidelines on how to contribute, including information on proposing
+new features, reporting bugs, and submitting code, please refer to our
+[contributing guide](CONTRIBUTING.md).
+
+OASF can be extended with private schema extensions, allowing you to leverage
+all features of the framework, such as validation.
+See the relevant section in the
+[contributing guide](./CONTRIBUTING.md#oasf-extensions) for instructions on
+adding an extension to the schema.
+An OASF instance with schema extensions can be hosted, as the
+[record object](./schema/objects/record.json) includes a `schema_url` field that
+allows you to specify your own schema server for record validation.
+
+Alternatively, records can be extended by adding arbitrary JSON objects to the
+`modules` list, using module names that do not conflict with existing OASF
+modules.
+However, this approach is the least recommended, as validation will be skipped
+for these modules if the record is validated against the standard OASF schema.
+
+## Open Agentic Schema Framework Server
+
+The `server/` directory contains the Open Agents Schema Framework (OASF) Schema
+Server source code.
+The schema server is an HTTP server that provides a convenient way to browse and
+use the OASF schema.
+The server provides also schema validation capabilities to be used during
+development.
+
+You can access the OASF schema server, which is running the latest released
+schema, at [schema.oasf.outshift.com](https://schema.oasf.outshift.com).
 
 The schema server can also be used locally.
 
-## Prerequisites
+## Development
+
+Use `Taskfile` for all related development operations such as testing,
+validating, deploying, and working with the project.
+
+Check the [example.env](example.env) to see the configuration for the operations
+below.
+
+### Prerequisites
 
 - [Taskfile](https://taskfile.dev/)
 - [Docker](https://www.docker.com/)
@@ -43,49 +99,47 @@ The schema server can also be used locally.
 
 Make sure Docker is installed with Buildx.
 
-## Development
-
-Use `Taskfile` for all related development operations such as testing, validating, deploying, and working with the project.
-
-Check the [example.env](example.env) to see the configuration for the operations below.
-
-### Clone the repository
+### Clone the Repository
 
 ```shell
 git clone https://github.com/agntcy/oasf.git
 ```
 
-### Build artifacts
+### Build Artifacts
 
-This step will fetch all project dependencies and
-subsequently build all project artifacts such as
-helm charts and docker images.
+This step will fetch all project dependencies and subsequently build all project
+artifacts such as helm charts and Docker images.
 
 ```shell
 task deps
 task build
 ```
 
-### Deploy locally
+### Deploy Locally
 
-This step will create an ephemeral Kind cluster
-and deploy OASF services via Helm chart.
-It also sets up port forwarding
-so that the services can be accessed locally.
+This step will create an ephemeral Kind cluster and deploy OASF services via
+Helm chart.
+It also sets up port forwarding so that the services can be accessed locally.
 
 ```shell
 IMAGE_TAG=latest task build:images
 task up
 ```
 
-To access the schema server, open [`localhost:8080`](http://localhost:8080) in your Web browser.
+To access the schema server, open [`localhost:8080`](http://localhost:8080) in
+your browser.
 
-Note that any changes made to the server backend itself will require running `task up` again.
+**Note:** Any changes made to the server backend itself will require running
+`task up` again.
 
-### Hot reload
+To set your own local OASF server using Elixir tooling, follow
+[these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
 
-In order to run the server in hot-reload mode, you must first deploy
-the services, and run another command to signal that the schema will be actively updated.
+### Hot Reload
+
+In order to run the server in hot-reload mode, you must first deploy the
+services, and run another command to signal that the schema will be actively
+updated.
 
 This can be achieved by starting an interactive reload session via:
 
@@ -93,14 +147,15 @@ This can be achieved by starting an interactive reload session via:
 task reload
 ```
 
-Note that this will only perform hot-reload for schema changes.
+**Note:** This will only perform hot-reload for schema changes.
 Reloading backend changes still requires re-running `task build && task up`.
 
-### Deploy locally with multiple versions
+### Deploy Locally with Multiple Versions
 
-Trying out OASF locally with multiple versions is also possible, with updating the
-`install/charts/oasf/values-test-versions.yaml` file with the required versions and deploying OASF services on the
-ephemeral Kind cluster with those values.
+Trying out OASF locally with multiple versions is also possible, with updating
+the `install/charts/oasf/values-test-versions.yaml` file with the required
+versions and deploying OASF services on the ephemeral Kind cluster with those
+values.
 
 ```
 HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
@@ -108,9 +163,8 @@ HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
 
 ### Cleanup
 
-This step will handle cleanup procedure by
-removing resources from previous steps,
-including ephemeral Kind clusters and Docker containers.
+This step will handle cleanup procedure by removing resources from previous
+steps, including ephemeral Kind clusters and Docker containers.
 
 ```shell
 task down
@@ -122,15 +176,18 @@ task down
 
 See https://github.com/orgs/agntcy/packages?repo_name=oasf
 
-### Protocol buffer definitions
+### Protocol Buffer Definitions
 
-The `proto` directory contains the Protocol Buffer (`.proto`) files defining our data objects and APIs. The full proto
-module, generated language stubs and it's versions are hosted at the Buf Schema Registry:
+The `proto` directory contains the Protocol Buffer (`.proto`) files defining our
+data objects and APIs.
+The full proto module, generated language stubs and it's versions are hosted at
+the Buf Schema Registry:
 [https://buf.build/agntcy/oasf](https://buf.build/agntcy/oasf)
 
-## Copyright notice
+## Copyright Notice
 
-[Copyright Notice and License](./LICENSE.md)
+[Copyright Notice and License](./LICENSE.md)
 
-Distributed under Apache 2.0 License. See LICENSE for more information.
+Distributed under Apache 2.0 License.
+See LICENSE for more information.
 Copyright AGNTCY Contributors (https://github.com/agntcy)
