@@ -17,7 +17,7 @@
     "tools": {
       "caption": "List of tools that couldn't be part of an extension.",
       "requirement": "optional",
-      "reference": "args"
+      "reference": "llm_tool_names"
     },
     "mcp_server_tools": {
       "caption": "List of MCP tools name referencing the 'runtime/mcp' extension.",
