@@ -20,12 +20,14 @@ image:
       schema: 0.3.1
     - server: v0.4.0
       schema: 0.4.0
-    - server: v0.5.2
+    - server: v0.5.3
       schema: 0.5.0
-    - server: v0.6.0
+    - server: v0.6.1
       schema: 0.6.0
+    - server: v0.7.0
+      schema: 0.7.0
     - server: latest
-      schema: 0.7.0-dev
+      schema: 0.8.0-dev
       default: true
   pullPolicy: IfNotPresent
 
