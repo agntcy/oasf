@@ -1,0 +1,27 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package types.v1alpha0;
+
+message Signature {
+  // The signature algorithm used (e.g., "ECDSA_P256_SHA256")
+  string algorithm = 1;
+
+  // Base64-encoded signature
+  string signature = 2;
+
+  // Base64-encoded signing certificate
+  string certificate = 3;
+
+  // Type of the signature content bundle.
+  string content_type = 4;
+
+  // Base64-encoded signature bundle produced by the signer.
+  // It is up to the client to interpret the content of the bundle.
+  string content_bundle = 5;
+
+  // Timestamp when signing occurred
+  string signed_at = 6;
+}

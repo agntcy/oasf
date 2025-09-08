@@ -1,0 +1,61 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package types.v1alpha0;
+
+import "types/v1alpha0/extension.proto";
+import "types/v1alpha0/locator.proto";
+import "types/v1alpha0/signature.proto";
+import "types/v1alpha0/skill.proto";
+
+// Data model defines a schema for versioned AI record content representation.
+// The schema provides a way to describe features, constraints, artifact
+// locators, and other relevant details of a record.
+//
+// Key := {name} - newest release
+// Key := {name}:{version} - newest versioned release
+// Key := {name}@{digest} - exact release
+// Key := {name}:{version}@{digest} - exact versioned release
+//
+// This is an immutable object.
+//
+// Max size: 4 MB (or to fully fit in a single request)
+// https://opencontainers.org/posts/blog/2024-03-13-image-and-distribution-1-1/#manifest-maximum-size
+message Record {
+  // Schema version of the record.
+  string schema_version = 1;
+
+  // Name of the record.
+  string name = 2;
+
+  // Version of the record.
+  string version = 3;
+
+  // Description of the record.
+  string description = 4;
+
+  // List of record’s authors in the form of `author-name <author-email>`.
+  repeated string authors = 5;
+
+  // Creation timestamp of the record in the RFC3339 format.
+  // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
+  string created_at = 6;
+
+  // Additional metadata associated with this record.
+  map<string, string> annotations = 7;
+
+  // List of skills that this record can perform.
+  repeated Skill skills = 8;
+
+  // List of source locators where this record can be found or used from.
+  repeated Locator locators = 9;
+
+  // List of extensions that describe this record and its capabilities
+  // and constraints more in depth.
+  repeated Extension extensions = 10;
+
+  // Signature attached to this record.
+  optional Signature signature = 11;
+}

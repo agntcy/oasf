@@ -8,5 +8,6 @@ This repository contains the protocol definitions and language stubs for the
 ```markdown
 | Schema Version | Proto Version  |
 | -------------- | -------------- |
+| v0.3.1         | types/v1alpha0 |
 | v0.7.0         | types/v1alpha1 |
 ```
