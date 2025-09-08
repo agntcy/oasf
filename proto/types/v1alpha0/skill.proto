@@ -1,0 +1,24 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+ 
+syntax = "proto3";
+ 
+package types.v1alpha0;
+ 
+// A specific skills that a record is capable of performing.
+message Skill {
+  // Additional metadata for this skill.
+  map<string, string> annotations = 1;
+ 
+  // UID of the category.
+  uint64 category_uid = 2;
+ 
+  // UID of the class.
+  uint64 class_uid = 3;
+ 
+  // Optional human-readable name of the category.
+  optional string category_name = 4;
+ 
+  // Optional human-readable name of the class.
+  optional string class_name = 5;
+}
