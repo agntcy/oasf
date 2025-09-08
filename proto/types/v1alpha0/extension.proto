@@ -1,12 +1,12 @@
 // Copyright AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
- 
+
 syntax = "proto3";
- 
+
 package types.v1alpha0;
- 
+
 import "google/protobuf/struct.proto";
- 
+
 // Extensions provide dynamic descriptors for a record data model.
 // For example, arbitrary data and third-party features can be
 // described using extensions.
@@ -17,13 +17,13 @@ import "google/protobuf/struct.proto";
 message Extension {
   // Name of the extension attached to a record.
   string name = 1;
- 
+
   // Version of the extension attached to a record.
   string version = 2;
- 
+
   // Metadata associated with this extension.
   map<string, string> annotations = 3;
- 
+
   // Value of the data.
   optional google.protobuf.Struct data = 4;
 }
