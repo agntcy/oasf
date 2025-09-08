@@ -47,6 +47,23 @@ jobs:
             exit 1
           fi
 
+      - name: Formatting
+        run: |
+          task fmt
+
+      - name: Check code changes
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "There are uncommitted changes after running 'task fmt'. Please commit these changes."
+            exit 1
+          fi
+
+      - name: Linting
+        run: task lint
+
+      - name: Checking consistency between json and proto files
+        run: task proto:check
+
   prepare:
     name: Prepare
     needs:
