@@ -49,9 +49,9 @@ jobs:
           done
           docker images
 
-      - name: Run tests
+      - name: Run e2e tests
         env:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
         run: |
-          task test
+          task test:e2e

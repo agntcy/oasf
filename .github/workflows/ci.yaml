@@ -62,7 +62,7 @@ jobs:
         run: task lint
 
       - name: Checking consistency between json and proto files
-        run: task proto:check
+        run: task test:proto
 
   prepare:
     name: Prepare
