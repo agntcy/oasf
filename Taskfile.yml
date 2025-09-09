@@ -51,7 +51,7 @@ tasks:
       HELM_ALL_CHART_PATHS:
         sh: find . -name Chart.yaml -exec dirname {} \;
     cmds:
-      - for: { var: HELM_ALL_CHART_PATHS }
+      - for: {var: HELM_ALL_CHART_PATHS}
         cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
 
   build:images:
@@ -93,13 +93,13 @@ tasks:
     vars:
       # Kind args
       KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
-      KIND_CREATE_OPTS:  '{{ .KIND_CREATE_OPTS | default "" }}'
-      KIND_CONFIG_PATH:  '/tmp/{{.KIND_CLUSTER_NAME}}'
+      KIND_CREATE_OPTS: '{{ .KIND_CREATE_OPTS | default "" }}'
+      KIND_CONFIG_PATH: '/tmp/{{.KIND_CLUSTER_NAME}}'
       # Deployment args
-      HELM_NAMESPACE:   '{{ .HELM_NAMESPACE | default "default" }}'
-      HELM_CHART_PATH:  '{{ .ROOT_DIR }}/install/charts/oasf'
+      HELM_NAMESPACE: '{{ .HELM_NAMESPACE | default "default" }}'
+      HELM_CHART_PATH: '{{ .ROOT_DIR }}/install/charts/oasf'
       HELM_VALUES_PATH: '{{ .HELM_VALUES_PATH | default (printf "%s/install/charts/oasf/values-test.yaml" .ROOT_DIR) }}'
-      RELEASE_NAME:     'oasf'
+      RELEASE_NAME: 'oasf'
     cmds:
       # Clean up previous deployment
       - task: down
@@ -203,13 +203,39 @@ tasks:
       - '{{ .KIND_BIN }} delete cluster --name {{ .KIND_CLUSTER_NAME }}'
 
   test:
+    desc: Run all test suites
+    cmds:
+      - task: test:e2e
+      - task: test:proto
+
+  test:e2e:
     desc: Run end-to-end test suite
     cmds:
-      - defer: { task: down }
+      - defer: {task: down}
       - task: up
-      # NOTE: For now, we are only interested to know if the
-      # chart can be deployed or not.
-      # TODO: add test cases here
+      - task: test:api
+
+  test:api:
+    desc: Run only API tests
+    preconditions:
+      - which go
+      - which curl
+      - 'curl --fail --silent http://localhost:8080/ > /dev/null'
+    dir: '{{ .ROOT_DIR }}/test/api'
+    cmds:
+      - cmd: go clean -testcache
+      - cmd: echo "Running API test suite..."
+      - cmd: go test ./...
+
+  test:proto:
+    desc: Test if protobuf files are in sync with the JSON schema
+    preconditions:
+      - which go
+    dir: '{{ .ROOT_DIR }}/test/proto'
+    cmds:
+      - cmd: go clean -testcache
+      - cmd: echo "Running proto checker test suite..."
+      - cmd: go test ./...
 
   lint:
     desc: Run all linters
@@ -236,7 +262,7 @@ tasks:
       HELM_ALL_CHART_PATHS:
         sh: find . -name Chart.yaml -exec dirname {} \;
     cmds:
-      - for: { var: HELM_ALL_CHART_PATHS }
+      - for: {var: HELM_ALL_CHART_PATHS}
         cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} lint'
 
   fmt:
@@ -264,32 +290,6 @@ tasks:
       ## Format dictionary file
       jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
       mv sorted.dictionary.json dictionary.json
-
-  proto:build:
-    desc: Ensure proto-checker binary is built
-    internal: true
-    deps:
-      - deps:bin-dir
-    preconditions:
-      - which go
-    dir: '{{ .ROOT_DIR }}/test/proto-checker'
-    cmds:
-      - cmd: echo "Building proto-checker..."
-      - cmd: go build -o {{.BIN_DIR}}/proto-checker .
-
-  proto:check:
-    desc: Check if protobuf files are in sync with the json schema
-    preconditions:
-      - which go
-    deps:
-      - proto:build
-    cmd: |
-      {{.BIN_DIR}}/proto-checker ./schema/objects/record.json ./proto/types/v1alpha1/record.proto
-      {{.BIN_DIR}}/proto-checker ./schema/objects/locator.json ./proto/types/v1alpha1/locator.proto
-      {{.BIN_DIR}}/proto-checker ./schema/objects/signature.json ./proto/types/v1alpha1/signature.proto
-      {{.BIN_DIR}}/proto-checker ./schema/skills/base_skill.json ./proto/types/v1alpha1/skill.proto
-      {{.BIN_DIR}}/proto-checker ./schema/domains/base_domain.json ./proto/types/v1alpha1/domain.proto
-      {{.BIN_DIR}}/proto-checker ./schema/modules/base_module.json ./proto/types/v1alpha1/module.proto
 
   ##
   ## Dependencies
