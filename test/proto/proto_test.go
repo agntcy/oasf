@@ -1,17 +1,18 @@
-package main
+package proto
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
+	"testing"
 
 	"github.com/emicklei/proto"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
 
-// JsonSchema represents the structure of your custom JSON schema
 type JsonSchema struct {
 	Caption     string                   `json:"caption"`
 	Description string                   `json:"description"`
@@ -20,7 +21,6 @@ type JsonSchema struct {
 	Attributes  map[string]JsonAttribute `json:"attributes"`
 }
 
-// JsonAttribute represents an attribute within the JSON schema
 type JsonAttribute struct {
 	Caption     string `json:"caption"`
 	Description string `json:"description"`
@@ -28,15 +28,13 @@ type JsonAttribute struct {
 	Reference   string `json:"reference,omitempty"`
 }
 
-// ProtoField represents a parsed field from a .proto file
 type ProtoField struct {
 	Name        string
-	Type        string // Will include "repeated " prefix if it's a repeated field, or "map<...>"
-	Comment     string // Concatenated comments for the field
+	Type        string
+	Comment     string
 	FieldNumber int
 }
 
-// ProtoMessage represents a parsed message from a .proto file
 type ProtoMessage struct {
 	Name    string
 	Fields  map[string]ProtoField
@@ -48,7 +46,6 @@ func parseJsonSchema(filePath string) (JsonSchema, error) {
 	if err != nil {
 		return JsonSchema{}, fmt.Errorf("failed to read JSON file %s: %w", filePath, err)
 	}
-
 	var schema JsonSchema
 	if err := json.Unmarshal(data, &schema); err != nil {
 		return JsonSchema{}, fmt.Errorf("failed to unmarshal JSON file %s: %w", filePath, err)
@@ -62,10 +59,9 @@ type protoVisitor struct {
 }
 
 func (v *protoVisitor) VisitMessage(m *proto.Message) {
-	if v.ProtoMessage.Name == "" { // Only capture the first (main) message encountered
+	if v.ProtoMessage.Name == "" {
 		v.ProtoMessage.Name = m.Name
 	}
-
 	for _, each := range m.Elements {
 		each.Accept(v)
 	}
@@ -171,46 +167,39 @@ func compareSchemas(jsonSchema JsonSchema, protoMessage ProtoMessage) ([]string,
 	return errors, warnings
 }
 
-func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("Usage: go run main.go <json_file_path> <proto_file_path>")
-		os.Exit(1)
+func TestJsonSchemaAndProtoSync(t *testing.T) {
+	schemaRoot := "../../schema/"
+	protoRoot := "../../proto/types/v1alpha1/"
+	cases := []struct {
+		jsonPath  string
+		protoPath string
+	}{
+		{filepath.Join(schemaRoot, "objects/record.json"), filepath.Join(protoRoot, "record.proto")},
+		{filepath.Join(schemaRoot, "objects/locator.json"), filepath.Join(protoRoot, "locator.proto")},
+		{filepath.Join(schemaRoot, "objects/signature.json"), filepath.Join(protoRoot, "signature.proto")},
+		{filepath.Join(schemaRoot, "skills/base_skill.json"), filepath.Join(protoRoot, "skill.proto")},
+		{filepath.Join(schemaRoot, "domains/base_domain.json"), filepath.Join(protoRoot, "domain.proto")},
+		{filepath.Join(schemaRoot, "modules/base_module.json"), filepath.Join(protoRoot, "module.proto")},
 	}
-
-	jsonFile := os.Args[1]
-	protoFile := os.Args[2]
-
-	jsonSchemaData, err := parseJsonSchema(jsonFile)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
-	}
-
-	protoMessageData, err := parseProtoFile(protoFile)
-	if err != nil {
-		fmt.Printf("Error: %v\n", err)
-		os.Exit(1)
-	}
-
-	errors, warnings := compareSchemas(jsonSchemaData, protoMessageData)
-
-	if len(errors) > 0 {
-		fmt.Println("Schema Synchronization FAILED with ERRORS:")
-		for _, err := range errors {
-			fmt.Printf("- ERROR: %s\n", err)
-		}
-		os.Exit(1)
-	}
-	if len(warnings) > 0 {
-		fmt.Println("\nSchema Synchronization found WARNINGS:")
-		for _, warn := range warnings {
-			fmt.Printf("- WARNING: %s\n", warn)
-		}
-	}
-
-	if len(errors) == 0 && len(warnings) == 0 {
-		fmt.Printf("Schema Synchronization PASSED: %s JSON and Proto files are consistent.\n", jsonSchemaData.Caption)
-	} else if len(errors) == 0 && len(warnings) > 0 {
-		fmt.Println("Schema Synchronization PASSED with WARNINGS.")
+	for _, tc := range cases {
+		t.Run(filepath.Base(tc.jsonPath), func(t *testing.T) {
+			jsonSchemaData, err := parseJsonSchema(tc.jsonPath)
+			if err != nil {
+				t.Fatalf("Error parsing JSON: %v", err)
+			}
+			protoMessageData, err := parseProtoFile(tc.protoPath)
+			if err != nil {
+				t.Fatalf("Error parsing Proto: %v", err)
+			}
+			errors, warnings := compareSchemas(jsonSchemaData, protoMessageData)
+			for _, warn := range warnings {
+				t.Logf("WARNING: %s", warn)
+			}
+			if len(errors) > 0 {
+				for _, err := range errors {
+					t.Errorf("ERROR: %s", err)
+				}
+			}
+		})
 	}
 }
