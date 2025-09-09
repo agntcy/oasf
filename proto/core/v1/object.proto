@@ -1,0 +1,39 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package types.v1alpha0;
+
+import "google/protobuf/struct.proto";
+
+// A specific OASF object in its raw form.
+// Used for wire transmission and storage of OASF objects.
+//
+// The data is represented as a `google.protobuf.Struct` to allow
+// for flexible and dynamic schemas.
+//
+// Golang example:
+//
+//   import (
+//      "google.golang.org/protobuf/types/known/structpb"
+//
+//      corev1 "buf.build/gen/go/agntcy/oasf/protocolbuffers/go/core/v1"
+//      typesv1alpha1 "buf.build/gen/go/agntcy/oasf/protocolbuffers/go/types/v1alpha1"
+//   )
+//
+//   func main() {
+//       // Create a typed Record
+//       record := typesv1alpha1.Record{}
+//
+//       // Convert the Record to a generic struct
+//       recordStruct, _ := structpb.NewStruct(record)
+//
+//       // Create an Object with the struct
+//       object := &corev1.Object{
+//           data: recordStruct,
+//       }
+//   }
+message Object {
+  google.protobuf.Struct data = 1;
+}
