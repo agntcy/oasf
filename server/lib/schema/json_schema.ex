@@ -292,7 +292,7 @@ defmodule Schema.JsonSchema do
         if family == "feature" do
           feature_names =
             Enum.map(children_classes, fn item ->
-              Types.long_class_name(family, item[:name])
+              Types.long_class_name(family, item[:category], item[:name])
             end)
 
           Enum.map(children_classes, fn item ->
