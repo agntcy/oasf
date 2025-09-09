@@ -6,6 +6,10 @@ lint:
   disallow_comment_ignores: true
   use:
     - STANDARD
+  ignore_only:
+    PACKAGE_VERSION_SUFFIX:
+      - types/v1alpha0
+
 breaking:
   use:
     - WIRE_JSON
