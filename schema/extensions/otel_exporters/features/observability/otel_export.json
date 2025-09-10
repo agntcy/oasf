@@ -1,0 +1,41 @@
+{
+  "uid": 200001,
+  "caption": "OpenTelemetry Export",
+  "description": "Agent feature for exporting observability data using OpenTelemetry",
+  "category": "observability",
+  "extends": "observability",
+  "name": "otel_export",
+  "attributes": {
+    "pipelines": {
+      "reference": "otel_pipeline_config",
+      "caption": "Pipelines",
+      "description": "OpenTelemetry pipeline configurations for the agent",
+      "requirement": "required",
+      "is_array": true
+    },
+    "global_config": {
+      "reference": "otel_global_config",
+      "caption": "Global Configuration",
+      "description": "Global OpenTelemetry configuration settings",
+      "requirement": "optional"
+    },
+    "agent_specific_metrics": {
+      "caption": "Agent Specific Metrics",
+      "description": "Additional metrics specific to this agent implementation",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "custom_dimensions": {
+      "caption": "Custom Dimensions",
+      "description": "Custom dimensions to add to all telemetry data",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "export_interval": {
+      "caption": "Export Interval",
+      "description": "Default export interval in seconds",
+      "requirement": "optional",
+      "type": "integer_t"
+    }
+  }
+}
