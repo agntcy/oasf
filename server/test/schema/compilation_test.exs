@@ -12,7 +12,8 @@ defmodule Schema.CompilationTest do
       # Find all test log files and get the most recent one
       {:ok, files} = File.ls(log_dir)
 
-      log_path = files
+      log_path =
+        files
         |> Enum.filter(&String.starts_with?(&1, "test_"))
         |> Enum.filter(&String.ends_with?(&1, ".log"))
         |> Enum.sort(:desc)
@@ -23,16 +24,21 @@ defmodule Schema.CompilationTest do
         end
 
       # Read the log file if it exists
-      log_content = case log_path do
-        nil -> ""
-        path -> case File.read(path) do
-          {:ok, content} -> content
-          {:error, _} -> ""
+      log_content =
+        case log_path do
+          nil ->
+            ""
+
+          path ->
+            case File.read(path) do
+              {:ok, content} -> content
+              {:error, _} -> ""
+            end
         end
-      end
 
       # Check for error messages in the log
-      error_lines = log_content
+      error_lines =
+        log_content
         |> String.split("\n")
         |> Enum.filter(fn line ->
           String.contains?(line, "[error]") and String.trim(line) != ""
@@ -40,7 +46,8 @@ defmodule Schema.CompilationTest do
 
       # If there are any error lines, fail the test with those errors
       if length(error_lines) > 0 do
-        formatted_errors = error_lines
+        formatted_errors =
+          error_lines
           |> Enum.map(fn line ->
             # Extract just the error message part
             case Regex.run(~r/\[error\]\s*(.*)/, line) do
@@ -64,7 +71,9 @@ defmodule Schema.CompilationTest do
           |> Enum.each(fn old_file ->
             File.rm(Path.join(log_dir, old_file))
           end)
-        {:error, _} -> :ok
+
+        {:error, _} ->
+          :ok
       end
     end
   end
