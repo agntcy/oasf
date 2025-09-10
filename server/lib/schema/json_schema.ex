@@ -107,19 +107,19 @@ defmodule Schema.JsonSchema do
   end
 
   defp make_id_ref(name, nil, nil) do
-    Path.join([@schema_base_uri, "objects", name])
+    Path.join([@schema_base_uri, Schema.version(), "objects", name])
   end
 
   defp make_id_ref(name, nil, ext) do
-    Path.join([@schema_base_uri, "objects", ext, name])
+    Path.join([@schema_base_uri, Schema.version(), "objects", ext, name])
   end
 
   defp make_id_ref(name, family, nil) do
-    Path.join([@schema_base_uri, family <> "s", name])
+    Path.join([@schema_base_uri, Schema.version(), family <> "s", name])
   end
 
   defp make_id_ref(name, family, ext) do
-    Path.join([@schema_base_uri, family <> "s", ext, name])
+    Path.join([@schema_base_uri, Schema.version(), family <> "s", ext, name])
   end
 
   defp empty_object(map, properties) do
