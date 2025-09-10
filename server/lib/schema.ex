@@ -328,7 +328,6 @@ defmodule Schema do
     end
   end
 
-
   @doc """
   Finds a module by the module uid value.
   """

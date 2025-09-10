@@ -200,8 +200,8 @@ defmodule Schema.JsonSchema do
             |> Enum.map(&to_string/1)
 
           Enum.reduce(children, {skills, domains, modules, objects}, fn child_name,
-                                                                         {skills, domains,
-                                                                          modules, objects} ->
+                                                                        {skills, domains, modules,
+                                                                         objects} ->
             item =
               case family do
                 "skill" -> Schema.entity_ex(:skill, child_name)

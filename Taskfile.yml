@@ -270,6 +270,7 @@ tasks:
     cmds:
       - task: fmt:proto
       - task: fmt:schema
+      - task: fmt:elixir
 
   fmt:proto:
     desc: Run Proto formatters
@@ -291,6 +292,17 @@ tasks:
       jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
       mv sorted.dictionary.json dictionary.json
 
+  fmt:elixir:
+    desc: Run Elixir formatter on server/
+    dir: ./server
+    cmds:
+      - |
+        if ! command -v mix >/dev/null 2>&1; then
+          echo "mix not found, skipping Elixir formatting."
+          exit 0
+        fi
+        mix format
+
   ##
   ## Dependencies
   ##
@@ -300,6 +312,8 @@ tasks:
       - task: deps:helm
       - task: deps:kubectl
       - task: deps:kind
+      - task: deps:protoc
+      - task: deps:bufbuild
 
   deps:bin-dir:
     desc: Create bin directory
