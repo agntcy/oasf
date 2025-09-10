@@ -9,6 +9,7 @@ on:
       - main
     tags:
       - "v*.*.*"
+      - "helm/v*.*.*"
   pull_request:
 
 permissions:
@@ -54,6 +55,7 @@ jobs:
       targets: ${{ steps.targets.outputs.targets }}
       image_tag: ${{ steps.resolve.outputs.image_tag }}
       release_tag: ${{ steps.resolve.outputs.release_tag }}
+      helm_release_tag: ${{ steps.resolve.outputs.helm_release_tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -72,9 +74,17 @@ jobs:
             image_tag="${{ format('{0}', github.sha) }}"
           fi
 
+          # Original release_tag
+          RAW_RELEASE_TAG="${GITHUB_REF#refs/tags/}"
+
+          # Calculate helm_release_tag using bash parameter expansion
+          # This removes the "helm/" prefix if it exists
+          HELM_RELEASE_TAG="${RAW_RELEASE_TAG#helm/}"
+
           # Export vars
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
-          echo "release_tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$RAW_RELEASE_TAG" >> "$GITHUB_OUTPUT"
+          echo "helm_release_tag=$HELM_RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
       - name: List targets
         id: targets
@@ -107,8 +117,8 @@ jobs:
       artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
 
   release:
-    name: Release
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    name: Server Release
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && !startsWith(github.ref, 'refs/tags/helm/') }}
     needs:
       - prepare
       - build
@@ -120,6 +130,17 @@ jobs:
       release_tag: ${{ needs.prepare.outputs.release_tag }}
       artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
 
+  helm_release:
+    name: Helm Chart Release
+    if: ${{ startsWith(github.ref, 'refs/tags/helm/') }}
+    needs:
+      - prepare
+      - verify
+    uses: ./.github/workflows/reusable-helm-release.yaml
+    with:
+      image_repo: ghcr.io/agntcy
+      release_tag: ${{ needs.prepare.outputs.helm_release_tag }}
+
   success:
     name: Success
     # https://github.com/actions/runner/issues/2566
@@ -130,6 +151,7 @@ jobs:
       - build
       - test
       - release
+      - helm_release
     runs-on: ubuntu-latest
     steps:
       - name: Echo Success

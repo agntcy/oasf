@@ -5,6 +5,7 @@
 # Docker build args
 variable "IMAGE_REPO" {default = "ghcr.io/agntcy"}
 variable "IMAGE_TAG" {default = "latest"}
+variable "ERL_FLAGS" {default = "+JPperf true"}
 
 function "get_tag" {
   params = [tags, name]
@@ -41,4 +42,7 @@ target "oasf-server" {
     schema = "./schema"
   }
   tags = get_tag(target.docker-metadata-action.tags, "${target.oasf-server.name}")
+  args = {
+    ERL_FLAGS = "${ERL_FLAGS}"
+  }
 }

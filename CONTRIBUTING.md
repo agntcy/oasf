@@ -85,7 +85,7 @@ Choose a **unique** field you want to add, `uid` in the example above and popula
     3. Specific description of `uid` in the `agent` object -
         1. `uid` : `Unique Identifier/s of the reported agent."`
 3. `type` → Review OASF data_types and ensure you utilize appropriate types while defining new fields.
-    1. All the available data_types can be accessed [here](https://schema.oasf.agntcy.org/data_types).
+    1. All the available data_types can be accessed [here](https://schema.oasf.outshift.com/data_types).
     2. They are also accessible in your local instance of the oasf server - http://localhost:8000/data_types
 4. `is_array` → This a boolean key:value pair that you would need to add if the field you are defining is an array.
     1. e.g. `"is_array": true`
@@ -155,7 +155,7 @@ An example `locator.json` object file,
         }
         ```
 
-**Note:** If you want to create an object which would act only as a base for other objects, you must prefix the object `name` and the actual `json` filename with an `_`. The resultant object will not be visible in the [OASF Server.](https://schema.oasf.agntcy.org/objects) For example, take a look at the [entity](https://github.com/agntcy/oasf/blob/main/schema/objects/_entity.json) object.
+**Note:** If you want to create an object which would act only as a base for other objects, you must prefix the object `name` and the actual `json` filename with an `_`. The resultant object will not be visible in the [OASF Server.](https://schema.oasf.outshift.com/objects) For example, take a look at the [entity](https://github.com/agntcy/oasf/blob/main/schema/objects/_entity.json) object.
 
 Sample entry in the `dictionary.json`,
 

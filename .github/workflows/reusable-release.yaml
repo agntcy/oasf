@@ -1,7 +1,7 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-name: Release
+name: Server Release
 
 on:
   workflow_call:
@@ -22,11 +22,6 @@ on:
         required: true
         type: string
         description: "Path from where to download image artifacts."
-      helm-version:
-        required: false
-        default: "3.12.1"
-        type: string
-        description: 'Helm version'
 
 jobs:
   images:
@@ -59,7 +54,7 @@ jobs:
           docker images
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: notused
@@ -73,56 +68,10 @@ jobs:
         run: |
           task release -y
 
-  chart:
-    name: Helm chart
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
-      - name: Setup Helm
-        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
-        with:
-          version: ${{ inputs.helm-version }}
-
-      - name: Helm update
-        shell: bash
-        run: helm dependency update install/charts/oasf
-
-      - name: Helm lint
-        shell: bash
-        run: helm lint install/charts/oasf --with-subcharts
-
-      - name: Set chart name
-        id: chart-name
-        shell: bash
-        run: echo "value=${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
-
-      - name: Helm package
-        shell: bash
-        run: |
-          helm package install/charts/oasf --dependency-update --version ${{ inputs.release_tag }}
-
-      - name: Helm push to GHCR OCI registry
-        shell: bash
-        run: |
-          echo "🚧 Pushing ${{ inputs.release_tag }} to GHCR OCI registry"
-          helm push ${{ steps.chart-name.outputs.value }}-${{ inputs.release_tag }}.tgz oci://${{ inputs.image_repo }}/oasf/helm-charts
-
   release:
     name: Release
     needs:
       - images
-      - chart
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}

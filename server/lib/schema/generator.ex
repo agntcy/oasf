@@ -101,8 +101,13 @@ defmodule Schema.Generator do
   end
 
   defp generate_classes(n, {_name, field}) do
-    Enum.map(1..n, fn _ ->
-      get_valid_class(field) |> generate_sample_class(Process.get(:profiles))
+    valid_classes =
+      get_valid_classes(field)
+      |> Enum.shuffle()
+      |> Enum.take(n)
+
+    Enum.map(valid_classes, fn class ->
+      generate_sample_class(class, Process.get(:profiles))
     end)
   end
 
@@ -210,7 +215,8 @@ defmodule Schema.Generator do
               generate_object(field[:requirement], name, attribute, map)
 
             "class_t" ->
-              get_valid_class(field)
+              get_valid_classes(field)
+              |> Enum.random()
               |> generate_sample_class(Process.get(:profiles))
 
             nil ->
@@ -399,6 +405,14 @@ defmodule Schema.Generator do
         generate_objects(n, attribute)
 
       "class_t" ->
+        n =
+          case field[:family] do
+            "skill" -> random(10)
+            "domain" -> random(5)
+            "module" -> random(3)
+            _ -> n
+          end
+
         generate_classes(n, attribute)
 
       type ->
@@ -852,30 +866,30 @@ defmodule Schema.Generator do
     end
   end
 
-  defp get_valid_class(field) do
-    valid_classes =
-      if field[:is_enum] do
-        # Filter to include only children classes that are not hidden
-        Utils.find_children(Schema.all_classes(), field[:class_type])
-        |> Enum.map(&Schema.class(&1.name))
-        |> Enum.filter(&(&1 != nil))
-      else
-        Schema.class(field[:class_type]) |> List.wrap()
+  defp get_valid_classes(field) do
+    {all_classes_fn, class_fn} =
+      case field[:family] do
+        "skill" -> {Schema.all_skills(), &Schema.skill/1}
+        "domain" -> {Schema.all_domains(), &Schema.domain/1}
+        "module" -> {Schema.all_features(), &Schema.feature/1}
+        _ -> {[], fn _ -> nil end}
       end
 
-    case valid_classes do
-      [] ->
-        Logger.error("No matching class found for #{field[:class_type]}")
-
-      _ ->
-        Enum.random(valid_classes)
+    if field[:is_enum] do
+      Utils.find_children(all_classes_fn, field[:class_type])
+      |> Enum.reject(& &1[:hidden?])
+      |> Enum.map(&class_fn.(&1.name))
+      |> Enum.filter(& &1)
+    else
+      class_fn.(field[:class_type]) |> List.wrap()
     end
   end
 
   defp get_valid_object(field) do
     valid_objects =
       if field[:is_enum] do
-        Utils.find_children(Schema.objects(), field[:object_type])
+        Utils.find_children(Schema.all_objects(), field[:object_type])
+        |> Enum.reject(fn item -> item[:hidden?] == true end)
         |> Enum.map(fn descendant ->
           descendant[:name]
           |> String.to_atom()

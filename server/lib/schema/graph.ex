@@ -14,7 +14,7 @@ defmodule Schema.Graph do
     %{
       nodes: build_nodes(class),
       edges: build_edges(class) |> Enum.uniq(),
-      class: Map.delete(class, :attributes) |> Map.delete(:objects) |> Map.delete(:_links)
+      class: Map.delete(class, :attributes) |> Map.delete(:entities) |> Map.delete(:_links)
     }
   end
 
@@ -29,7 +29,7 @@ defmodule Schema.Graph do
   end
 
   defp build_nodes(nodes, class) do
-    Map.get(class, :objects)
+    Map.get(class, :entities)
     |> Enum.reduce(nodes, fn {_name, obj}, acc ->
       node = %{
         id: make_id(obj.name, obj[:extension]),
@@ -58,7 +58,7 @@ defmodule Schema.Graph do
   end
 
   defp build_edges(class) do
-    objects = Map.new(class.objects)
+    objects = Map.new(class.entities)
     build_edges([], class, objects)
   end
 

@@ -91,19 +91,54 @@ defmodule Schema.Utils do
     |> define_datetime_attributes()
   end
 
-  @spec update_objects(map(), map()) :: map()
-  def update_objects(objects, dictionary) do
+  @spec update_classes(map(), map()) :: map()
+  def update_classes(classes, all_classes) do
+    Enum.into(classes, %{}, fn {name, class} ->
+      children =
+        find_children(all_classes, Atom.to_string(name))
+        |> Enum.map(fn child ->
+          case Map.get(classes, String.to_atom(child[:name])) do
+            nil ->
+              nil
+
+            child_class ->
+              child_class
+              |> Map.put(:class_name, child_class[:caption])
+              |> Map.put(:type, Atom.to_string(:class_t))
+              |> Map.put(:class_type, child_class[:name])
+          end
+        end)
+        |> Enum.reject(&is_nil/1)
+        |> Enum.into(%{}, fn child ->
+          {child.name, child}
+        end)
+
+      class
+      |> Map.put(:_children, children)
+      |> (&{name, &1}).()
+    end)
+  end
+
+  @spec update_objects(map(), map(), map()) :: map()
+  def update_objects(objects, all_objects, dictionary) do
     Enum.into(objects, %{}, fn {name, object} ->
       links = object_links(dictionary, Atom.to_string(name))
 
       children =
-        find_children(objects, Atom.to_string(name))
+        find_children(all_objects, Atom.to_string(name))
         |> Enum.map(fn child ->
-          child
-          |> Map.put(:object_name, child[:caption])
-          |> Map.put(:type, Atom.to_string(:object_t))
-          |> Map.put(:object_type, child[:name])
+          case Map.get(objects, String.to_atom(child[:name])) do
+            nil ->
+              nil
+
+            child_class ->
+              child_class
+              |> Map.put(:object_name, child_class[:caption])
+              |> Map.put(:type, Atom.to_string(:object_t))
+              |> Map.put(:object_type, child_class[:name])
+          end
         end)
+        |> Enum.reject(&is_nil/1)
         |> Enum.into(%{}, fn child ->
           {child.name, child}
         end)

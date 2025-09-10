@@ -1,5 +1,5 @@
 {
-    "$id": "https://schema.oasf.agntcy.org/dictionary.schema.json",
+    "$id": "https://schema.oasf.outshift.com/dictionary.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Dictionary",
     "description": "An attribute dictionary of all available attributes and their types. Classes are particular sets of attributes from the dictionary.",
