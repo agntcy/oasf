@@ -713,122 +713,150 @@ defmodule Schema.Validator do
          dictionary,
          is_enum
        ) do
-    just_one_keys = schema_item[:constraints][:just_one] |> List.wrap()
-    present_keys = Enum.filter(just_one_keys, &Map.has_key?(input_item, &1))
+    unless is_map(input_item) do
+      # Not a map: add a type error for the object and skip further attribute validation
+      attribute_name = schema_item[:name] || "object"
+      attribute_path = parent_attribute_path || attribute_name
 
-    schema_item =
-      if length(present_keys) == 1 do
-        present_key = hd(present_keys)
+      add_error_wrong_type(
+        response,
+        attribute_path,
+        attribute_name,
+        input_item,
+        "object"
+      )
+    else
+      just_one_keys = schema_item[:constraints][:just_one] |> List.wrap()
+      present_keys = Enum.filter(just_one_keys, &Map.has_key?(input_item, &1))
 
-        filtered_attributes =
-          Enum.filter(schema_item[:attributes], fn {k, _v} ->
-            attr_name = Atom.to_string(k)
-            # Keep if not in just_one_keys or is the present_key
-            not Enum.member?(just_one_keys, attr_name) or attr_name == present_key
-          end)
+      schema_item =
+        if length(present_keys) == 1 do
+          present_key = hd(present_keys)
 
-        %{schema_item | attributes: filtered_attributes}
-      else
-        schema_item
-      end
+          filtered_attributes =
+            Enum.filter(schema_item[:attributes], fn {k, _v} ->
+              attr_name = Atom.to_string(k)
+              # Keep if not in just_one_keys or is the present_key
+              not Enum.member?(just_one_keys, attr_name) or attr_name == present_key
+            end)
 
-    {response, schema_attributes} =
-      if is_enum do
-        name = schema_item[:name]
+          %{schema_item | attributes: filtered_attributes}
+        else
+          schema_item
+        end
 
-        children =
-          Schema.Utils.find_children(Schema.all_objects(), name)
-          |> Enum.reject(fn item -> item[:hidden?] == true end)
-          |> Enum.map(& &1[:name])
-          |> Enum.map(&to_string/1)
+      {response, schema_attributes} =
+        if is_enum do
+          if not is_map(input_item) do
+            attribute_name = schema_item[:name] || "unknown_enum"
+            attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
 
-        matching_child =
-          children
-          |> Enum.map(&Schema.entity_ex(:object, &1))
-          |> Enum.find(fn child ->
-            child_attrs = child[:attributes] || %{}
+            {
+              add_error(
+                response,
+                "enum_object_not_matched",
+                "The object provided for attribute \"#{attribute_path}\" is not a map/object.",
+                %{
+                  attribute_path: attribute_path,
+                  attribute: attribute_name
+                }
+              ),
+              []
+            }
+          else
+            name = schema_item[:name]
 
-            required_keys =
-              child_attrs
-              |> Enum.filter(fn {_k, v} -> v[:requirement] == "required" end)
-              |> Enum.map(fn {k, _v} -> Atom.to_string(k) end)
+            children =
+              Schema.Utils.find_children(Schema.all_objects(), name)
+              |> Enum.reject(fn item -> item[:hidden?] == true end)
+              |> Enum.map(& &1[:name])
+              |> Enum.map(&to_string/1)
 
-            # Are all required keys present in input_item?
-            required_present? = Enum.all?(required_keys, &Map.has_key?(input_item, &1))
-            child_attrs_map = Map.new(child_attrs)
+            matching_child =
+              children
+              |> Enum.map(&Schema.entity_ex(:object, &1))
+              |> Enum.find(fn child ->
+                child_attrs = child[:attributes] || %{}
 
-            child_attr_keys =
-              child_attrs_map |> Map.keys() |> Enum.map(&Atom.to_string/1) |> MapSet.new()
+                required_keys =
+                  child_attrs
+                  |> Enum.filter(fn {_k, v} -> v[:requirement] == "required" end)
+                  |> Enum.map(fn {k, _v} -> Atom.to_string(k) end)
 
-            input_keys = Map.keys(input_item) |> MapSet.new()
+                required_present? = Enum.all?(required_keys, &Map.has_key?(input_item, &1))
+                child_attrs_map = Map.new(child_attrs)
 
-            # Are all keys present in input_item also present in child_attrs?
-            all_keys_present? = MapSet.subset?(input_keys, child_attr_keys)
+                child_attr_keys =
+                  child_attrs_map |> Map.keys() |> Enum.map(&Atom.to_string/1) |> MapSet.new()
 
-            # Enum check
-            enums_match? =
-              Enum.all?(child_attrs, fn {attr_name, attr_def} ->
-                if Map.has_key?(attr_def, :enum) and
-                     Map.has_key?(input_item, Atom.to_string(attr_name)) do
-                  input_val = input_item[Atom.to_string(attr_name)]
+                input_keys = Map.keys(input_item) |> MapSet.new()
+                all_keys_present? = MapSet.subset?(input_keys, child_attr_keys)
 
-                  input_val_atom =
-                    if is_atom(input_val),
-                      do: input_val,
-                      else: String.to_atom(to_string(input_val))
+                enums_match? =
+                  Enum.all?(child_attrs, fn {attr_name, attr_def} ->
+                    if Map.has_key?(attr_def, :enum) and
+                         Map.has_key?(input_item, Atom.to_string(attr_name)) do
+                      input_val = input_item[Atom.to_string(attr_name)]
 
-                  input_val_str = to_string(input_val)
+                      input_val_atom =
+                        if is_atom(input_val),
+                          do: input_val,
+                          else: String.to_atom(to_string(input_val))
 
-                  Map.has_key?(attr_def[:enum], input_val_atom) or
-                    Map.has_key?(attr_def[:enum], input_val_str)
-                else
-                  true
-                end
+                      input_val_str = to_string(input_val)
+
+                      Map.has_key?(attr_def[:enum], input_val_atom) or
+                        Map.has_key?(attr_def[:enum], input_val_str)
+                    else
+                      true
+                    end
+                  end)
+
+                required_present? and all_keys_present? and enums_match?
               end)
 
-            required_present? and all_keys_present? and enums_match?
-          end)
+            if matching_child do
+              {response, filter_with_profiles(matching_child[:attributes], profiles)}
+            else
+              attribute_name = schema_item[:name] || "unknown_enum"
+              attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
 
-        if matching_child do
-          {response, filter_with_profiles(matching_child[:attributes], profiles)}
-        else
-          attribute_name = schema_item[:name] || "unknown_enum"
-          attribute_path = make_attribute_path(parent_attribute_path, attribute_name)
-
-          {
-            add_error(
-              response,
-              "enum_object_not_matched",
-              "The object provided for attribute \"#{attribute_path}\" does not match any of allowed objects.",
-              %{
-                attribute_path: attribute_path,
-                attribute: attribute_name,
-                allowed_object_names: Enum.join(children, ", ")
+              {
+                add_error(
+                  response,
+                  "enum_object_not_matched",
+                  "The object provided for attribute \"#{attribute_path}\" does not match any of allowed objects.",
+                  %{
+                    attribute_path: attribute_path,
+                    attribute: attribute_name,
+                    allowed_object_names: Enum.join(children, ", ")
+                  }
+                ),
+                []
               }
-            ),
-            []
-          }
+            end
+          end
+        else
+          {response, filter_with_profiles(schema_item[:attributes], profiles)}
         end
-      else
-        {response, filter_with_profiles(schema_item[:attributes], profiles)}
-      end
 
-    response
-    |> validate_attributes_types(
-      input_item,
-      parent_attribute_path,
-      schema_attributes,
-      profiles,
-      options,
-      dictionary
-    )
-    |> validate_attributes_unknown_keys(
-      input_item,
-      parent_attribute_path,
-      schema_item,
-      schema_attributes
-    )
-    |> validate_attributes_enums(input_item, parent_attribute_path, schema_attributes)
+      response
+      |> validate_attributes_types(
+        input_item,
+        parent_attribute_path,
+        schema_attributes,
+        profiles,
+        options,
+        dictionary
+      )
+      |> validate_attributes_unknown_keys(
+        input_item,
+        parent_attribute_path,
+        schema_item,
+        schema_attributes
+      )
+      |> validate_attributes_enums(input_item, parent_attribute_path, schema_attributes)
+    end
   end
 
   # Validate unknown attributes
