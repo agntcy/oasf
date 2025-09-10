@@ -871,7 +871,7 @@ defmodule Schema.Generator do
       case field[:family] do
         "skill" -> {Schema.all_skills(), &Schema.skill/1}
         "domain" -> {Schema.all_domains(), &Schema.domain/1}
-        "module" -> {Schema.all_modules(), &Schema.module/1}
+        "module" -> {Schema.all_features(), &Schema.feature/1}
         _ -> {[], fn _ -> nil end}
       end
 
