@@ -1,5 +1,5 @@
 {
-  "$id": "https://schema.oasf.outshift.com/common-class-object.schema.json",
+  "$id": "common-class-object.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Object",
   "description": "Common metaschema shared between objects and classes.",
