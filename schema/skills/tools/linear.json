@@ -1,0 +1,14 @@
+{
+  "uid": 25,
+  "caption": "Linear",
+  "description": "Project issue tracking management for team collaboration and workflow optimization.",
+  "extends": "tools",
+  "name": "linear",
+  "attributes": {
+    "category": "time_automation",
+    "mcp_server": "linear",
+    "capabilities": ["issue_tracking", "project_management", "team_collaboration"],
+    "docker_image": "mcp/linear",
+    "environment_variables": ["LINEAR_API_KEY", "LINEAR_TEAM_ID"]
+  }
+}

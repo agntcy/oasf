@@ -1,0 +1,8 @@
+{
+  "uid": 1010,
+  "caption": "Data Monitoring",
+  "description": "Real-time data observation and alerting capabilities",
+  "extends": "analytics_intelligence",
+  "name": "data_monitoring",
+  "attributes": {}
+}

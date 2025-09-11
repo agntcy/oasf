@@ -1,0 +1,8 @@
+{
+  "uid": 1008,
+  "caption": "Visual Assets",
+  "description": "Creation and manipulation of visual media and graphical content",
+  "extends": "computer_vision_creative",
+  "name": "visual_assets",
+  "attributes": {}
+}
