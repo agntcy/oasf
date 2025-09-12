@@ -3,18 +3,18 @@
 
 syntax = "proto3";
 
-package types.v1alpha1;
+package agntcy.oasf.types.v1alpha1;
 
-import "types/v1alpha1/domain.proto";
-import "types/v1alpha1/locator.proto";
-import "types/v1alpha1/module.proto";
-import "types/v1alpha1/signature.proto";
-import "types/v1alpha1/skill.proto";
+import "agntcy/oasf/types/v1alpha1/domain.proto";
+import "agntcy/oasf/types/v1alpha1/locator.proto";
+import "agntcy/oasf/types/v1alpha1/module.proto";
+import "agntcy/oasf/types/v1alpha1/signature.proto";
+import "agntcy/oasf/types/v1alpha1/skill.proto";
 
 // Record defines a schema for versioned AI agentic content representation.
 // The schema provides a way to describe an agentic record in a structured format.
 //
-// This is a versioned gRPC-based OASF schema.
+// This is a versioned gRPC-based schema of OASF Record object.
 //
 // Max size: 4 MB (or to fully fit in a single request)
 // It may be required to support larger record size in the future.

@@ -8,8 +8,7 @@ lint:
     - STANDARD
   ignore_only:
     PACKAGE_VERSION_SUFFIX:
-      - types/v1alpha0
-
+      - agntcy/oasf/types/v1alpha0
 breaking:
   use:
     - WIRE_JSON
