@@ -3,17 +3,13 @@
 
 syntax = "proto3";
 
-package types.v1alpha0;
+package agntcy.oasf.types.v1alpha0;
 
 import "google/protobuf/struct.proto";
 
 // Extensions provide dynamic descriptors for a record data model.
 // For example, arbitrary data and third-party features can be
 // described using extensions.
-//
-// Key := {name}/{version}
-//
-// This is an immutable object.
 message Extension {
   // Name of the extension attached to a record.
   string name = 1;

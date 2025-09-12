@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package types.v1alpha1;
+package agntcy.oasf.types.v1alpha1;
 
 // A specific domain under which the record can operate in.
 message Domain {

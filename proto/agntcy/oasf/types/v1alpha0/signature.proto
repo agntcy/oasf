@@ -3,8 +3,9 @@
 
 syntax = "proto3";
 
-package types.v1alpha0;
+package agntcy.oasf.types.v1alpha0;
 
+// Signature provides the signing and verification details about the record.
 message Signature {
   // The signature algorithm used (e.g., "ECDSA_P256_SHA256")
   string algorithm = 1;

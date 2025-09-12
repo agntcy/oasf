@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package types.v1alpha1;
+package agntcy.oasf.types.v1alpha1;
 
 // Signature provides the signing and verification details about the record.
 message Signature {

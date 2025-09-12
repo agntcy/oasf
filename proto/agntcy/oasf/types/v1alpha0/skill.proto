@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package types.v1alpha0;
+package agntcy.oasf.types.v1alpha0;
 
 // A specific skills that a record is capable of performing.
 message Skill {
