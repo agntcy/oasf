@@ -35,6 +35,16 @@ jobs:
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: '1.16'
+          otp-version: '26'
+
+      - name: Fetch Elixir deps
+        run: mix deps.get
+        working-directory: server
+
       - name: Build code
         run: |
           # NOTE: We are only interested in codebase, don't build images here

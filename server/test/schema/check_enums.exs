@@ -50,6 +50,7 @@ defmodule Schema.CheckEnums do
     case Map.get(attributes, key) do
       nil ->
         name = Atom.to_string(name)
+
         if Map.has_key?(enum, :"-1") do
           ["#{name}*" | acc]
         else
@@ -60,6 +61,7 @@ defmodule Schema.CheckEnums do
         if attribute[:requirement] != sibling[:requirement] do
           IO.puts("requirement for #{name} differ from #{key}")
         end
+
         acc
     end
   end

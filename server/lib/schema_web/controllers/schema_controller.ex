@@ -96,7 +96,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "analytical_reasoning",
               uid: 10702,
               caption: "Problem Solving",
-              category_name: "Natural Language Processing",
+              category_name: "Natural Language Processing"
             }
           ])
         end,
@@ -117,7 +117,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "natural_language_generation",
               uid: 10205,
               caption: "Question Generation",
-              category_name: "Natural Language Processing",
+              category_name: "Natural Language Processing"
             },
             %{
               name: "speech_recognition",
@@ -127,7 +127,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "audio_processing",
               uid: 70202,
               caption: "Automatic Speech Recognition",
-              category_name: "Multi-modal",
+              category_name: "Multi-modal"
             },
             %{
               name: "dialogue_generation",
@@ -138,7 +138,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "natural_language_generation",
               uid: 10204,
               caption: "Dialogue Generation",
-              category_name: "Natural Language Processing",
+              category_name: "Natural Language Processing"
             }
           ])
         end,
@@ -172,7 +172,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "technology",
               uid: 106,
               caption: "Information Technology",
-              category_name: "Technology",
+              category_name: "Technology"
             }
           ])
         end,
@@ -193,7 +193,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "industrial_manufacturing",
               uid: 705,
               caption: "Process Engineering",
-              category_name: "Industrial Manufacturing",
+              category_name: "Industrial Manufacturing"
             },
             %{
               name: "data_privacy",
@@ -204,7 +204,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "trust_and_safety",
               uid: 404,
               caption: "Data Privacy",
-              category_name: "Trust and Safety",
+              category_name: "Trust and Safety"
             },
             %{
               name: "robotics",
@@ -215,7 +215,7 @@ defmodule SchemaWeb.SchemaController do
               extends: "industrial_manufacturing",
               uid: 702,
               caption: "Robotics",
-              category_name: "Industrial Manufacturing",
+              category_name: "Industrial Manufacturing"
             }
           ])
         end,
@@ -362,7 +362,8 @@ defmodule SchemaWeb.SchemaController do
 
           example(%{
             id: 10101,
-            name: "natural_language_processing/natural_language_understanding/contextual_comprehension"
+            name:
+              "natural_language_processing/natural_language_understanding/contextual_comprehension"
           })
         end,
       Domain:
@@ -498,7 +499,8 @@ defmodule SchemaWeb.SchemaController do
             inputs: [
               %{
                 id: 10101,
-                name: "natural_language_processing/natural_language_understanding/contextual_comprehension"
+                name:
+                  "natural_language_processing/natural_language_understanding/contextual_comprehension"
               },
               %{
                 id: 10203,
