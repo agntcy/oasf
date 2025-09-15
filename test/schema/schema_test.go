@@ -99,7 +99,7 @@ var _ = Describe("Metaschema validation", func() {
 		for _, target := range directories {
 			dirInfo, err := os.Stat(target.Dir)
 			if err != nil || !dirInfo.IsDir() {
-				PrintWarning("%s directory does not exist\n", target.Dir)
+				AddWarning("%s directory does not exist\n", target.Dir)
 				continue
 			}
 
@@ -248,6 +248,70 @@ var _ = Describe("JSON content checks", func() {
 	})
 })
 
+var _ = Describe("Attribute dictionary consistency", Ordered, func() {
+	It("should have all attributes used in files defined in the dictionary", func() {
+		folders := []string{"objects", "skills", "domains", "modules"}
+		var attributesInFiles map[string][]string
+		var attributesInDict map[string]struct{}
+
+		attributesInFiles = make(map[string][]string)
+		// Collect all attributes from files, mapping attribute (or reference) -> []filePath
+		for _, folder := range folders {
+			dir := filepath.Join(schemaDir, folder)
+			for _, file := range cache.Files {
+				if !strings.HasPrefix(file.Path, dir+string(os.PathSeparator)) || filepath.Ext(file.Path) != ".json" {
+					continue
+				}
+				var js map[string]interface{}
+				err := json.Unmarshal(file.Data, &js)
+				Expect(err).NotTo(HaveOccurred(), "Invalid JSON in file %s", file.Path)
+				if attrs, ok := js["attributes"].(map[string]interface{}); ok {
+					for attrKey, attrVal := range attrs {
+						attrName := attrKey
+						if attrMap, ok := attrVal.(map[string]interface{}); ok {
+							if ref, ok := attrMap["reference"].(string); ok && ref != "" {
+								attrName = ref
+							}
+						}
+						attributesInFiles[attrName] = append(attributesInFiles[attrName], file.Path)
+					}
+				}
+			}
+		}
+
+		// Collect all attributes from dictionary.json
+		dictPath := filepath.Join(schemaDir, "dictionary.json")
+		dictRaw, err := os.ReadFile(dictPath)
+		Expect(err).NotTo(HaveOccurred(), "Failed to read dictionary.json")
+		var dict map[string]interface{}
+		err = json.Unmarshal(dictRaw, &dict)
+		Expect(err).NotTo(HaveOccurred(), "Invalid JSON in dictionary.json")
+		dictAttrs, ok := dict["attributes"].(map[string]interface{})
+		Expect(ok).To(BeTrue(), "'attributes' object not found in dictionary.json")
+
+		attributesInDict = make(map[string]struct{})
+		for attr := range dictAttrs {
+			attributesInDict[attr] = struct{}{}
+		}
+
+		for attr := range attributesInDict {
+			if _, found := attributesInFiles[attr]; !found {
+				AddWarning("Attribute '%s' in dictionary.json is not used in any file", attr)
+			}
+		}
+
+		var errors []string
+		for attr, files := range attributesInFiles {
+			if _, found := attributesInDict[attr]; !found {
+				errors = append(errors, fmt.Sprintf("Attribute '%s' used in files but not found in dictionary.json. Used in: %v", attr, files))
+			}
+		}
+		if len(errors) > 0 {
+			Fail("Errors found:\n" + strings.Join(errors, "\n"))
+		}
+	})
+})
+
 var _ = AfterSuite(func() {
 	if len(warnings) > 0 {
 		const yellow = "\033[33m"
@@ -260,7 +324,7 @@ var _ = AfterSuite(func() {
 	}
 })
 
-func PrintWarning(format string, args ...interface{}) {
+func AddWarning(format string, args ...interface{}) {
 	msg := fmt.Sprintf(format, args...)
 	warnings = append(warnings, msg)
 }
