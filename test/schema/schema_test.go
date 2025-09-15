@@ -118,6 +118,51 @@ var _ = Describe("Metaschema validation", func() {
 	})
 })
 
+var _ = Describe("Entity hierarchy validation", func() {
+	It("should have all 'extends' values refer to a valid name", func() {
+		folders := []string{"objects", "skills", "domains", "modules"}
+		nameSet := make(map[string]struct{})
+		extendsSet := make(map[string]struct{})
+
+		for _, folder := range folders {
+			dir := filepath.Join(schemaDir, folder)
+			for _, file := range cache.Files {
+				if !strings.HasPrefix(file.Path, dir+string(os.PathSeparator)) || filepath.Ext(file.Path) != ".json" {
+					continue
+				}
+				var js map[string]interface{}
+				err := json.Unmarshal(file.Data, &js)
+				Expect(err).NotTo(HaveOccurred(), "Invalid JSON in file %s", file.Path)
+
+				// Collect name
+				if name, ok := js["name"].(string); ok && name != "" {
+					nameSet[name] = struct{}{}
+				}
+
+				// Collect extends (can be string or array of strings)
+				if ext, ok := js["extends"]; ok {
+					switch v := ext.(type) {
+					case string:
+						extendsSet[v] = struct{}{}
+					case []interface{}:
+						for _, item := range v {
+							if s, ok := item.(string); ok {
+								extendsSet[s] = struct{}{}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Check that every extends value is in the name set
+		for ext := range extendsSet {
+			_, found := nameSet[ext]
+			Expect(found).To(BeTrue(), "extends value '%s' does not match any defined name", ext)
+		}
+	})
+})
+
 var _ = AfterSuite(func() {
 	if len(warnings) > 0 {
 		const yellow = "\033[33m"
