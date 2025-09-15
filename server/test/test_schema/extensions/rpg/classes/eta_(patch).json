@@ -1,8 +1,0 @@
-{
-  "extends": "eta",
-  "attributes": {
-    "service": {
-      "requirement": "recommended"
-    }
-  }
-}

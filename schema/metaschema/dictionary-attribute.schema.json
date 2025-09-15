@@ -1,5 +1,5 @@
 {
-    "$id": "https://schema.oasf.agntcy.org/dictionary-attribute.schema.json",
+    "$id": "https://schema.oasf.outshift.com/dictionary-attribute.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Dictionary Attribute",
     "type": "object",
