@@ -13,6 +13,11 @@ import (
 	"golang.org/x/text/language"
 )
 
+const (
+	schemaRoot = "../../schema/objects/"
+	protoRoot  = "../../proto/agntcyapis/oasf/types/v1alpha1/"
+)
+
 type JsonSchema struct {
 	Caption     string                   `json:"caption"`
 	Description string                   `json:"description"`
@@ -168,8 +173,6 @@ func compareSchemas(jsonSchema JsonSchema, protoMessage ProtoMessage) ([]string,
 }
 
 func TestJsonSchemaAndProtoSync(t *testing.T) {
-	schemaRoot := "../../schema/"
-	protoRoot := "../../proto/agntcy/oasf/types/v1alpha1/"
 	cases := []struct {
 		jsonPath  string
 		protoPath string
