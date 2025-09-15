@@ -3,26 +3,16 @@
 
 syntax = "proto3";
 
-package types.v1alpha0;
+package agntcy.oasf.types.v1alpha0;
 
-import "types/v1alpha0/extension.proto";
-import "types/v1alpha0/locator.proto";
-import "types/v1alpha0/signature.proto";
-import "types/v1alpha0/skill.proto";
+import "agntcy/oasf/types/v1alpha0/extension.proto";
+import "agntcy/oasf/types/v1alpha0/locator.proto";
+import "agntcy/oasf/types/v1alpha0/signature.proto";
+import "agntcy/oasf/types/v1alpha0/skill.proto";
 
 // Data model defines a schema for versioned AI record content representation.
 // The schema provides a way to describe features, constraints, artifact
 // locators, and other relevant details of a record.
-//
-// Key := {name} - newest release
-// Key := {name}:{version} - newest versioned release
-// Key := {name}@{digest} - exact release
-// Key := {name}:{version}@{digest} - exact versioned release
-//
-// This is an immutable object.
-//
-// Max size: 4 MB (or to fully fit in a single request)
-// https://opencontainers.org/posts/blog/2024-03-13-image-and-distribution-1-1/#manifest-maximum-size
 message Record {
   // Schema version of the record.
   string schema_version = 1;
