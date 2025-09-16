@@ -24,6 +24,15 @@ type SchemaCache struct {
 	Dirs  []string
 }
 
+type entityTypeData struct {
+	names      map[string][]string
+	categories []string
+	extends    []struct {
+		extValue string
+		filePath string
+	}
+}
+
 var cache SchemaCache
 var warnings []string
 
@@ -44,24 +53,28 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	fmt.Printf("Loaded %d files in %d directories from %s\n", len(files), len(dirs), schemaDir)
 	cache = SchemaCache{Files: files, Dirs: dirs}
-})
 
-var _ = Describe("OASF schema", func() {
-	It("should have all JSON files valid", func() {
-		for _, file := range cache.Files {
-			if filepath.Ext(file.Path) != ".json" {
-				continue
-			}
-			relPath, _ := filepath.Rel(schemaDir, file.Path)
-			var js interface{}
-			err := json.Unmarshal(file.Data, &js)
-			Expect(err).NotTo(HaveOccurred(), "Invalid JSON in file %s", relPath)
+	// JSON validation gating
+	var errors []string
+	for _, file := range cache.Files {
+		if filepath.Ext(file.Path) != ".json" {
+			continue
 		}
-	})
+		relPath, _ := filepath.Rel(schemaDir, file.Path)
+		var js interface{}
+		if err := json.Unmarshal(file.Data, &js); err != nil {
+			errors = append(errors, fmt.Sprintf("Invalid JSON in file %s: %s", relPath, err))
+		}
+	}
+	if len(errors) > 0 {
+		Fail("JSON validation failed:\n" + strings.Join(errors, "\n"))
+	}
 })
 
 var _ = Describe("Metaschema validation", func() {
 	It("should validate all files against their metaschema", func() {
+		var errors []string
+
 		metaschemaDir := filepath.Join(schemaDir, "metaschema")
 		files := []struct {
 			File   string
@@ -80,8 +93,9 @@ var _ = Describe("Metaschema validation", func() {
 			}
 			Expect(found).NotTo(BeNil(), "File %s not found in cache", target.File)
 
-			err := ValidateDataAgainstSchema(found.Data, target.Schema, target.File)
-			Expect(err).NotTo(HaveOccurred())
+			if err := ValidateDataAgainstSchema(found.Data, target.Schema, target.File); err != nil {
+				errors = append(errors, fmt.Sprintf("File %s failed validation: %s", target.File, err))
+			}
 		}
 
 		directories := []struct {
@@ -111,21 +125,17 @@ var _ = Describe("Metaschema validation", func() {
 			}
 
 			for _, file := range filesInDir {
-				err := ValidateDataAgainstSchema(file.Data, target.Schema, file.Path)
-				Expect(err).NotTo(HaveOccurred())
+				if err := ValidateDataAgainstSchema(file.Data, target.Schema, file.Path); err != nil {
+					errors = append(errors, fmt.Sprintf("File %s failed validation: %s", file.Path, err))
+				}
 			}
+		}
+
+		if len(errors) > 0 {
+			Fail("Errors found:\n" + strings.Join(errors, "\n"))
 		}
 	})
 })
-
-type entityTypeData struct {
-	names      map[string]string
-	categories []string
-	extends    []struct {
-		extValue string
-		filePath string
-	}
-}
 
 var _ = Describe("JSON content checks", func() {
 	targets := []struct {
@@ -137,20 +147,20 @@ var _ = Describe("JSON content checks", func() {
 		{Dir: filepath.Join(schemaDir, "modules"), CategoryFile: filepath.Join(schemaDir, "main_modules.json")},
 		{Dir: filepath.Join(schemaDir, "objects"), CategoryFile: ""},
 	}
-	catData := make(map[string]*entityTypeData)
+	var typeData map[string]*entityTypeData
 
 	BeforeEach(func() {
+		typeData = make(map[string]*entityTypeData)
 		for _, folder := range targets {
 			dir := folder.Dir
 			data := &entityTypeData{
-				names:      make(map[string]string),
+				names:      make(map[string][]string),
 				categories: []string{"other"},
 				extends: []struct {
 					extValue string
 					filePath string
 				}{},
 			}
-			// Load allowed categories if CategoryFile is set
 			if folder.CategoryFile != "" {
 				raw, err := os.ReadFile(folder.CategoryFile)
 				Expect(err).NotTo(HaveOccurred(), "Failed to read category file %s", folder.CategoryFile)
@@ -171,12 +181,10 @@ var _ = Describe("JSON content checks", func() {
 				err := json.Unmarshal(file.Data, &js)
 				Expect(err).NotTo(HaveOccurred(), "Invalid JSON in file %s", file.Path)
 
-				// Collect name
 				if name, ok := js["name"].(string); ok && name != "" {
-					data.names[name] = file.Path
+					data.names[name] = append(data.names[name], file.Path)
 				}
 
-				// Collect extends
 				if ext, ok := js["extends"]; ok {
 					switch v := ext.(type) {
 					case string:
@@ -196,33 +204,41 @@ var _ = Describe("JSON content checks", func() {
 					}
 				}
 			}
-			catData[folder.Dir] = data
+			typeData[folder.Dir] = data
 		}
 	})
 
 	It("should have unique names within each entity type", func() {
-		for folder, data := range catData {
-			seen := make(map[string]string)
-			for name, filePath := range data.names {
-				if prevFile, exists := seen[name]; exists {
-					Fail(fmt.Sprintf("Duplicate name '%s' found in %s: %s and %s", name, folder, prevFile, filePath))
+		var errors []string
+		for folder, data := range typeData {
+			for name, filePaths := range data.names {
+				if len(filePaths) > 1 {
+					errors = append(errors, fmt.Sprintf("Duplicate name '%s' found in %s: %v", name, folder, filePaths))
 				}
-				seen[name] = filePath
 			}
+		}
+		if len(errors) > 0 {
+			Fail("Errors found:\n" + strings.Join(errors, "\n"))
 		}
 	})
 
 	It("should have all 'extends' values refer to a valid name within the same entity type", func() {
-		for folder, data := range catData {
+		var errors []string
+		for folder, data := range typeData {
 			for _, ext := range data.extends {
-				_, found := data.names[ext.extValue]
-				Expect(found).To(BeTrue(), "extends value '%s' in file %s does not match any defined name in %s", ext.extValue, ext.filePath, folder)
+				if _, found := data.names[ext.extValue]; !found {
+					errors = append(errors, fmt.Sprintf("extends value '%s' in file %s does not match any defined name in %s", ext.extValue, ext.filePath, folder))
+				}
 			}
+		}
+		if len(errors) > 0 {
+			Fail("Errors found:\n" + strings.Join(errors, "\n"))
 		}
 	})
 
 	It("should have 'category' values within allowed categories if a category file is present", func() {
-		for folder, data := range catData {
+		var errors []string
+		for folder, data := range typeData {
 			if len(data.categories) == 0 {
 				continue
 			}
@@ -239,23 +255,28 @@ var _ = Describe("JSON content checks", func() {
 				Expect(err).NotTo(HaveOccurred(), "Invalid JSON in file %s", file.Path)
 				if catVal, ok := js["category"]; ok {
 					catStr, ok := catVal.(string)
-					Expect(ok).To(BeTrue(), "'category' field in %s is not a string", file.Path)
-					_, found := allowed[catStr]
-					Expect(found).To(BeTrue(), "'category' value '%s' in file %s is not allowed by %s", catStr, file.Path, folder)
+					if !ok {
+						errors = append(errors, fmt.Sprintf("'category' field in %s is not a string", file.Path))
+					}
+					if _, found := allowed[catStr]; !found {
+						errors = append(errors, fmt.Sprintf("'category' value '%s' in file %s is not allowed by %s", catStr, file.Path, folder))
+					}
 				}
 			}
+		}
+		if len(errors) > 0 {
+			Fail("Errors found:\n" + strings.Join(errors, "\n"))
 		}
 	})
 })
 
-var _ = Describe("Attribute dictionary consistency", Ordered, func() {
+var _ = Describe("Attribute dictionary consistency", func() {
 	It("should have all attributes used in files defined in the dictionary", func() {
 		folders := []string{"objects", "skills", "domains", "modules"}
 		var attributesInFiles map[string][]string
 		var attributesInDict map[string]struct{}
 
 		attributesInFiles = make(map[string][]string)
-		// Collect all attributes from files, mapping attribute (or reference) -> []filePath
 		for _, folder := range folders {
 			dir := filepath.Join(schemaDir, folder)
 			for _, file := range cache.Files {
@@ -279,7 +300,6 @@ var _ = Describe("Attribute dictionary consistency", Ordered, func() {
 			}
 		}
 
-		// Collect all attributes from dictionary.json
 		dictPath := filepath.Join(schemaDir, "dictionary.json")
 		dictRaw, err := os.ReadFile(dictPath)
 		Expect(err).NotTo(HaveOccurred(), "Failed to read dictionary.json")
