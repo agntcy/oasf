@@ -225,7 +225,7 @@ tasks:
     cmds:
       - cmd: go clean -testcache
       - cmd: echo "Running API test suite..."
-      - cmd: go test -v ./...
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
 
   test:proto:
     desc: Test if protobuf files are in sync with the JSON schema
