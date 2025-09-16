@@ -1,0 +1,44 @@
+{
+  "caption": "OpenTelemetry Retry Configuration",
+  "description": "Configuration for retry behavior when exports fail",
+  "extends": "object",
+  "name": "otel_retry_config",
+  "attributes": {
+    "enabled": {
+      "caption": "Enabled",
+      "description": "Whether retry is enabled",
+      "requirement": "required",
+      "type": "boolean_t"
+    },
+    "initial_interval": {
+      "caption": "Initial Interval",
+      "description": "Initial retry interval in seconds",
+      "requirement": "required",
+      "type": "integer_t"
+    },
+    "max_interval": {
+      "caption": "Max Interval",
+      "description": "Maximum retry interval in seconds",
+      "requirement": "required",
+      "type": "integer_t"
+    },
+    "max_elapsed_time": {
+      "caption": "Max Elapsed Time",
+      "description": "Maximum total time to spend retrying in seconds",
+      "requirement": "required",
+      "type": "integer_t"
+    },
+    "multiplier": {
+      "caption": "Multiplier",
+      "description": "Exponential backoff multiplier",
+      "requirement": "optional",
+      "type": "float_t"
+    },
+    "max_attempts": {
+      "caption": "Max Attempts",
+      "description": "Maximum number of retry attempts",
+      "requirement": "optional",
+      "type": "integer_t"
+    }
+  }
+}
