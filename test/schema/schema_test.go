@@ -333,7 +333,7 @@ var _ = Describe("Attribute dictionary consistency", func() {
 })
 
 var _ = AfterSuite(func() {
-	if len(warnings) > 0 {
+	if len(warnings) > 0 && os.Getenv("GITHUB_ACTIONS") != "true" {
 		const yellow = "\033[33m"
 		const reset = "\033[0m"
 		fmt.Printf("%s\n", yellow)
@@ -347,6 +347,10 @@ var _ = AfterSuite(func() {
 func AddWarning(format string, args ...interface{}) {
 	msg := fmt.Sprintf(format, args...)
 	warnings = append(warnings, msg)
+	// Also print as a GitHub Actions warning annotation if running in CI
+	if os.Getenv("GITHUB_ACTIONS") == "true" {
+		fmt.Printf("::warning::%s\n", msg)
+	}
 }
 
 func ValidateDataAgainstSchema(data []byte, schemaPath, filePath string) error {
