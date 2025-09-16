@@ -1,4 +1,4 @@
-package proto
+package proto_test
 
 import (
 	"encoding/json"
@@ -6,9 +6,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"testing"
 
 	"github.com/emicklei/proto"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -167,13 +168,16 @@ func compareSchemas(jsonSchema JsonSchema, protoMessage ProtoMessage) ([]string,
 	return errors, warnings
 }
 
-func TestJsonSchemaAndProtoSync(t *testing.T) {
+var _ = Describe("JsonSchema and Proto synchronization", func() {
 	schemaRoot := "../../schema/"
 	protoRoot := "../../proto/agntcy/oasf/types/v1alpha1/"
-	cases := []struct {
+
+	type testCase struct {
 		jsonPath  string
 		protoPath string
-	}{
+	}
+
+	cases := []testCase{
 		{filepath.Join(schemaRoot, "objects/record.json"), filepath.Join(protoRoot, "record.proto")},
 		{filepath.Join(schemaRoot, "objects/locator.json"), filepath.Join(protoRoot, "locator.proto")},
 		{filepath.Join(schemaRoot, "objects/signature.json"), filepath.Join(protoRoot, "signature.proto")},
@@ -181,25 +185,21 @@ func TestJsonSchemaAndProtoSync(t *testing.T) {
 		{filepath.Join(schemaRoot, "domains/base_domain.json"), filepath.Join(protoRoot, "domain.proto")},
 		{filepath.Join(schemaRoot, "modules/base_module.json"), filepath.Join(protoRoot, "module.proto")},
 	}
+
 	for _, tc := range cases {
-		t.Run(filepath.Base(tc.jsonPath), func(t *testing.T) {
+		tc := tc // capture range variable
+		It(fmt.Sprintf("should sync JSON schema %s and Proto %s", filepath.Base(tc.jsonPath), filepath.Base(tc.protoPath)), func() {
 			jsonSchemaData, err := parseJsonSchema(tc.jsonPath)
-			if err != nil {
-				t.Fatalf("Error parsing JSON: %v", err)
-			}
+			Expect(err).NotTo(HaveOccurred(), "Error parsing JSON: %v", err)
+
 			protoMessageData, err := parseProtoFile(tc.protoPath)
-			if err != nil {
-				t.Fatalf("Error parsing Proto: %v", err)
-			}
+			Expect(err).NotTo(HaveOccurred(), "Error parsing Proto: %v", err)
+
 			errors, warnings := compareSchemas(jsonSchemaData, protoMessageData)
 			for _, warn := range warnings {
-				t.Logf("WARNING: %s", warn)
+				GinkgoWriter.Printf("WARNING: %s\n", warn)
 			}
-			if len(errors) > 0 {
-				for _, err := range errors {
-					t.Errorf("ERROR: %s", err)
-				}
-			}
+			Expect(errors).To(BeEmpty(), "Errors: %v", errors)
 		})
 	}
-}
+})

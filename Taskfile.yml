@@ -235,7 +235,7 @@ tasks:
     cmds:
       - cmd: go clean -testcache
       - cmd: echo "Running proto checker test suite..."
-      - cmd: go test -v ./...
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
 
   test:schema:
     desc: Validate OASF schema
