@@ -1,5 +1,5 @@
 {
-    "$id": "https://schema.oasf.outshift.com/enum.schema.json",
+    "$id": "enum.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Enumeration",
     "description": "An enumeration of options for an attribute.",

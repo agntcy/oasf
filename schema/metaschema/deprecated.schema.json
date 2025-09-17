@@ -1,5 +1,5 @@
 {
-    "$id": "https://schema.oasf.outshift.com/deprecated.schema.json",
+    "$id": "deprecated.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Deprecated",
     "type": "object",

@@ -1,4 +1,4 @@
-package api
+package api_test
 
 import (
 	"bytes"
@@ -8,9 +8,10 @@ import (
 	"os"
 	"reflect"
 	"sort"
-	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -69,183 +70,145 @@ var testCases = []objectTestCase{
 	},
 }
 
-func TestObjectAPIResponses(t *testing.T) {
-	for _, tc := range testCases {
-		t.Run(tc.apiEndpoint, func(t *testing.T) {
-			expectedBytes, err := os.ReadFile(tc.jsonPath)
-			if err != nil {
-				t.Fatalf("Failed to read expected JSON file: %v", err)
-			}
-			var expected map[string]interface{}
-			if err := json.Unmarshal(expectedBytes, &expected); err != nil {
-				t.Fatalf("Failed to unmarshal expected JSON: %v", err)
-			}
+var _ = Describe("API", func() {
+	Describe("Object API Responses", func() {
+		for _, tc := range testCases {
+			tc := tc
+			It("should match API response with expected JSON for "+tc.apiEndpoint, func() {
+				expectedBytes, err := os.ReadFile(tc.jsonPath)
+				Expect(err).NotTo(HaveOccurred(), "Failed to read expected JSON file")
 
-			resp, err := http.Get(tc.apiEndpoint)
-			if err != nil {
-				t.Fatalf("Failed to GET API: %v", err)
-			}
-			defer resp.Body.Close()
-			if resp.StatusCode != http.StatusOK {
-				t.Fatalf("Unexpected status code: got %d, want %d", resp.StatusCode, http.StatusOK)
-			}
-			respBytes, err := io.ReadAll(resp.Body)
-			if err != nil {
-				t.Fatalf("Failed to read response body: %v", err)
-			}
-			var actual map[string]interface{}
-			if err := json.Unmarshal(respBytes, &actual); err != nil {
-				t.Fatalf("Failed to unmarshal response JSON: %v", err)
-			}
+				var expected map[string]interface{}
+				Expect(json.Unmarshal(expectedBytes, &expected)).To(Succeed(), "Failed to unmarshal expected JSON")
 
-			// Compare selected fields
-			for _, field := range []string{"caption", "extends", "name", "description"} {
-				expVal, expOk := expected[field]
-				actVal, actOk := actual[field]
-				if (!expOk && !actOk) || (expVal == nil && actVal == nil) {
-					// Both missing or both nil: OK
-					continue
-				}
-				if !expOk || !actOk || expVal != actVal {
-					t.Errorf("Field %q mismatch: expected %v, got %v", field, expVal, actVal)
-				}
-			}
+				resp, err := http.Get(tc.apiEndpoint)
+				Expect(err).NotTo(HaveOccurred(), "Failed to GET API")
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK), "Unexpected status code")
 
-			// Compare attribute names
-			getAttrNames := func(obj map[string]interface{}) []string {
-				attrs, ok := obj["attributes"]
-				if !ok {
-					return nil
-				}
-				names := []string{}
-				switch v := attrs.(type) {
-				case map[string]interface{}:
-					for k := range v {
-						names = append(names, k)
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred(), "Failed to read response body")
+
+				var actual map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &actual)).To(Succeed(), "Failed to unmarshal response JSON")
+
+				for _, field := range []string{"caption", "extends", "name", "description"} {
+					expVal, expOk := expected[field]
+					actVal, actOk := actual[field]
+					if (!expOk && !actOk) || (expVal == nil && actVal == nil) {
+						continue
 					}
-				case []interface{}:
-					for _, attr := range v {
-						if m, ok := attr.(map[string]interface{}); ok {
-							for k := range m {
-								names = append(names, k)
+					Expect(expOk && actOk && expVal == actVal).To(BeTrue(),
+						"Field %q mismatch: expected %v, got %v", field, expVal, actVal)
+				}
+
+				getAttrNames := func(obj map[string]interface{}) []string {
+					attrs, ok := obj["attributes"]
+					if !ok {
+						return nil
+					}
+					names := []string{}
+					switch v := attrs.(type) {
+					case map[string]interface{}:
+						for k := range v {
+							names = append(names, k)
+						}
+					case []interface{}:
+						for _, attr := range v {
+							if m, ok := attr.(map[string]interface{}); ok {
+								for k := range m {
+									names = append(names, k)
+								}
 							}
 						}
 					}
+					sort.Strings(names)
+					return names
 				}
-				sort.Strings(names)
-				return names
-			}
 
-			expAttrNames := getAttrNames(expected)
-			actAttrNames := getAttrNames(actual)
-			if !reflect.DeepEqual(expAttrNames, actAttrNames) {
-				t.Errorf("Attribute names mismatch:\nexpected: %v\ngot:      %v", expAttrNames, actAttrNames)
-			}
-		})
-	}
-}
+				expAttrNames := getAttrNames(expected)
+				actAttrNames := getAttrNames(actual)
+				Expect(reflect.DeepEqual(expAttrNames, actAttrNames)).To(BeTrue(),
+					"Attribute names mismatch:\nexpected: %v\ngot:      %v", expAttrNames, actAttrNames)
+			})
+		}
+	})
 
-func TestSampleObjectValidation(t *testing.T) {
-	expectedValidate := map[string]interface{}{
-		"errors":        []interface{}{},
-		"warnings":      []interface{}{},
-		"error_count":   float64(0),
-		"warning_count": float64(0),
-	}
-	for _, tc := range testCases {
-		t.Run(tc.validationEndpoint, func(t *testing.T) {
-			// GET sample
-			sampleResp, err := http.Get(tc.sampleEndpoint)
-			if err != nil {
-				t.Fatalf("Failed to GET sample: %v", err)
-			}
-			defer sampleResp.Body.Close()
-			if sampleResp.StatusCode != http.StatusOK {
-				t.Fatalf("Unexpected status code for sample: got %d, want %d", sampleResp.StatusCode, http.StatusOK)
-			}
-			sampleBytes, err := io.ReadAll(sampleResp.Body)
-			if err != nil {
-				t.Fatalf("Failed to read sample body: %v", err)
-			}
-			var sampleObj interface{}
-			if err := json.Unmarshal(sampleBytes, &sampleObj); err != nil {
-				t.Fatalf("Sample is not valid JSON: %v", err)
-			}
+	Describe("Sample Object Validation", func() {
+		expectedValidate := map[string]interface{}{
+			"errors":        []interface{}{},
+			"warnings":      []interface{}{},
+			"error_count":   float64(0),
+			"warning_count": float64(0),
+		}
+		for _, tc := range testCases {
+			tc := tc
+			It("should validate sample object for "+tc.validationEndpoint, func() {
+				sampleResp, err := http.Get(tc.sampleEndpoint)
+				Expect(err).NotTo(HaveOccurred(), "Failed to GET sample")
+				defer sampleResp.Body.Close()
+				Expect(sampleResp.StatusCode).To(Equal(http.StatusOK), "Unexpected status code for sample")
 
-			// POST to validate endpoint
-			req, err := http.NewRequest("POST", tc.validationEndpoint, bytes.NewReader(sampleBytes))
-			if err != nil {
-				t.Fatalf("Failed to create POST request: %v", err)
-			}
-			req.Header.Set("Content-Type", "application/json")
-			resp2, err := http.DefaultClient.Do(req)
-			if err != nil {
-				t.Fatalf("Failed to POST to validate endpoint: %v", err)
-			}
-			defer resp2.Body.Close()
-			if resp2.StatusCode != http.StatusOK {
-				t.Fatalf("Unexpected status code for validate endpoint: got %d, want %d", resp2.StatusCode, http.StatusOK)
-			}
-			validateBytes, err := io.ReadAll(resp2.Body)
-			if err != nil {
-				t.Fatalf("Failed to read validate response body: %v", err)
-			}
-			var validateResp map[string]interface{}
-			if err := json.Unmarshal(validateBytes, &validateResp); err != nil {
-				t.Fatalf("Validate response is not valid JSON: %v", err)
-			}
-			if !reflect.DeepEqual(validateResp, expectedValidate) {
-				diff := cmp.Diff(expectedValidate, validateResp)
-				t.Errorf("Validate response does not match expected.\nDiff:\n%s\n", diff)
-			}
-		})
-	}
-}
+				sampleBytes, err := io.ReadAll(sampleResp.Body)
+				Expect(err).NotTo(HaveOccurred(), "Failed to read sample body")
 
-func TestSampleObjectAgainstSchema(t *testing.T) {
-	for _, tc := range testCases {
-		t.Run(tc.schemaEndpoint, func(t *testing.T) {
-			// Download schema
-			resp, err := http.Get(tc.schemaEndpoint)
-			if err != nil {
-				t.Fatalf("Failed to GET schema: %v", err)
-			}
-			defer resp.Body.Close()
-			if resp.StatusCode != http.StatusOK {
-				t.Fatalf("Unexpected status code for schema: got %d, want %d", resp.StatusCode, http.StatusOK)
-			}
-			schemaBytes, err := io.ReadAll(resp.Body)
-			if err != nil {
-				t.Fatalf("Failed to read schema body: %v", err)
-			}
+				var sampleObj interface{}
+				Expect(json.Unmarshal(sampleBytes, &sampleObj)).To(Succeed(), "Sample is not valid JSON")
 
-			// Download sample
-			resp2, err := http.Get(tc.sampleEndpoint)
-			if err != nil {
-				t.Fatalf("Failed to GET sample: %v", err)
-			}
-			defer resp2.Body.Close()
-			if resp2.StatusCode != http.StatusOK {
-				t.Fatalf("Unexpected status code for sample: got %d, want %d", resp2.StatusCode, http.StatusOK)
-			}
-			sampleBytes, err := io.ReadAll(resp2.Body)
-			if err != nil {
-				t.Fatalf("Failed to read sample body: %v", err)
-			}
+				req, err := http.NewRequest("POST", tc.validationEndpoint, bytes.NewReader(sampleBytes))
+				Expect(err).NotTo(HaveOccurred(), "Failed to create POST request")
+				req.Header.Set("Content-Type", "application/json")
+				resp2, err := http.DefaultClient.Do(req)
+				Expect(err).NotTo(HaveOccurred(), "Failed to POST to validate endpoint")
+				defer resp2.Body.Close()
+				Expect(resp2.StatusCode).To(Equal(http.StatusOK), "Unexpected status code for validate endpoint")
 
-			// Validate sample against schema
-			schemaLoader := gojsonschema.NewBytesLoader(schemaBytes)
-			documentLoader := gojsonschema.NewBytesLoader(sampleBytes)
-			result, err := gojsonschema.Validate(schemaLoader, documentLoader)
-			if err != nil {
-				t.Fatalf("Failed to validate sample against schema: %v", err)
-			}
-			if !result.Valid() {
-				for _, desc := range result.Errors() {
-					t.Errorf("- %s\n", desc)
+				validateBytes, err := io.ReadAll(resp2.Body)
+				Expect(err).NotTo(HaveOccurred(), "Failed to read validate response body")
+
+				var validateResp map[string]interface{}
+				Expect(json.Unmarshal(validateBytes, &validateResp)).To(Succeed(), "Validate response is not valid JSON")
+
+				if !reflect.DeepEqual(validateResp, expectedValidate) {
+					diff := cmp.Diff(expectedValidate, validateResp)
+					GinkgoWriter.Printf("Validate response does not match expected.\nDiff:\n%s\n", diff)
 				}
-				t.Fatalf("Sample does not validate against schema")
-			}
-		})
-	}
-}
+				Expect(validateResp).To(Equal(expectedValidate))
+			})
+		}
+	})
+
+	Describe("Sample Object Against Schema", func() {
+		for _, tc := range testCases {
+			tc := tc
+			It("should validate sample object against schema for "+tc.schemaEndpoint, func() {
+				resp, err := http.Get(tc.schemaEndpoint)
+				Expect(err).NotTo(HaveOccurred(), "Failed to GET schema")
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK), "Unexpected status code for schema")
+
+				schemaBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred(), "Failed to read schema body")
+
+				resp2, err := http.Get(tc.sampleEndpoint)
+				Expect(err).NotTo(HaveOccurred(), "Failed to GET sample")
+				defer resp2.Body.Close()
+				Expect(resp2.StatusCode).To(Equal(http.StatusOK), "Unexpected status code for sample")
+
+				sampleBytes, err := io.ReadAll(resp2.Body)
+				Expect(err).NotTo(HaveOccurred(), "Failed to read sample body")
+
+				schemaLoader := gojsonschema.NewBytesLoader(schemaBytes)
+				documentLoader := gojsonschema.NewBytesLoader(sampleBytes)
+				result, err := gojsonschema.Validate(schemaLoader, documentLoader)
+				Expect(err).NotTo(HaveOccurred(), "Failed to validate sample against schema")
+				if !result.Valid() {
+					for _, desc := range result.Errors() {
+						GinkgoWriter.Printf("- %s\n", desc)
+					}
+				}
+				Expect(result.Valid()).To(BeTrue(), "Sample does not validate against schema")
+			})
+		}
+	})
+})

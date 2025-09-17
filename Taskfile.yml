@@ -225,7 +225,7 @@ tasks:
     cmds:
       - cmd: go clean -testcache
       - cmd: echo "Running API test suite..."
-      - cmd: go test ./...
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
 
   test:proto:
     desc: Test if protobuf files are in sync with the JSON schema
@@ -235,7 +235,17 @@ tasks:
     cmds:
       - cmd: go clean -testcache
       - cmd: echo "Running proto checker test suite..."
-      - cmd: go test ./...
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
+
+  test:schema:
+    desc: Validate OASF schema
+    preconditions:
+      - which go
+    dir: '{{ .ROOT_DIR }}/test/schema'
+    cmds:
+      - cmd: go clean -testcache
+      - cmd: echo "Running OASF schema test suite..."
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
 
   lint:
     desc: Run all linters
