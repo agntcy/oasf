@@ -12,12 +12,12 @@
     "signed_at": {
       "caption": "Signed At",
       "description": "Signature creation timestamp. Value MUST conform to <a target='_blank' href='https://www.rfc-editor.org/rfc/rfc3339.html'>RFC-3339</a>. For example:<br><code>2024-09-10T23:20:50.520Z</code>,<br><code>2024-09-10 23:20:50.520789Z</code>.",
-      "requirement": "required"
+      "requirement": "optional"
     },
     "algorithm": {
       "caption": "Algorithm",
       "description": "The signature algorithm used (e.g., \"ECDSA_P256_SHA256\")",
-      "requirement": "required"
+      "requirement": "optional"
     },
     "signature": {
       "caption": "Signature",
@@ -27,17 +27,17 @@
     "certificate": {
       "caption": "Certificate",
       "description": "Base64-encoded signing certificate.",
-      "requirement": "required"
+      "requirement": "optional"
     },
     "content_type": {
       "caption": "Content Type",
       "description": "Type of the signature content bundle.",
-      "requirement": "required"
+      "requirement": "optional"
     },
     "content_bundle": {
       "caption": "Content Bundle",
       "description": "Base64-encoded signature bundle produced by the signer. It is up to the client to interpret the content of the bundle.",
-      "requirement": "required"
+      "requirement": "optional"
     }
   }
 }
