@@ -18,14 +18,14 @@ image:
   versions:
     - server: v0.3.2
       schema: 0.3.1
-    - server: v0.4.0
+    - server: v0.4.2
       schema: 0.4.0
     - server: v0.5.2
       schema: 0.5.0
-    - server: v0.6.0
+    - server: v0.6.1
       schema: 0.6.0
-    - server: latest
-      schema: 0.7.0-dev
+    - server: 0.7.1
+      schema: 0.7.0
       default: true
   pullPolicy: IfNotPresent
 

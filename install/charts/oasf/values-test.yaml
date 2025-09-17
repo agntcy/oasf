@@ -6,8 +6,8 @@ localDeploy: true
 image:
   repository: ghcr.io/agntcy/oasf-server
   versions:
-    - server: latest
-      schema: 0.7.0-dev
+    - server: 0.7.1
+      schema: 0.7.0
       default: true
   pullPolicy: IfNotPresent
 
