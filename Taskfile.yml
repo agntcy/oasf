@@ -207,6 +207,7 @@ tasks:
     cmds:
       - task: test:e2e
       - task: test:proto
+      - task: test:schema
 
   test:e2e:
     desc: Run end-to-end test suite
