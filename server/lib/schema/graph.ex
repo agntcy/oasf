@@ -93,14 +93,42 @@ defmodule Schema.Graph do
             acc
           end
 
+        "class_t" ->
+          # For a recursive definition, we need to add the edge, creating the looping edge
+          # and then we don't want to continue searching this path.
+          recursive? = edges_member?(acc, obj)
+
+          edge =
+            %{
+              source: Atom.to_string(obj[:_source]),
+              group: obj[:group],
+              requirement: obj[:requirement] || "optional",
+              from: make_id(class.name, class[:extension]),
+              to: obj.class_type,
+              label: Atom.to_string(name)
+            }
+            |> add_profile(obj[:profile])
+
+          acc = [edge | acc]
+
+          # For recursive definitions, we've already added the edge creating the loop in the graph.
+          # There's no need to recurse further (avoid infinite loops).
+          if not recursive? do
+            o = objects[String.to_atom(obj.class_type)]
+            build_edges(acc, o, objects)
+          else
+            acc
+          end
+
         _ ->
           acc
       end
     end)
   end
 
-  defp edges_member?(edges, obj) do
-    Enum.any?(edges, fn edge -> obj.object_type == edge.to end)
+  defp edges_member?(edges, entity) do
+    type = entity[:object_type] || entity[:class_type]
+    Enum.any?(edges, fn edge -> type == edge.to end)
   end
 
   defp add_profile(edge, nil) do
