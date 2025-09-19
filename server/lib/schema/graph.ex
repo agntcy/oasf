@@ -24,7 +24,7 @@ defmodule Schema.Graph do
     node =
       Map.new()
       |> Map.put(:color, "#F5F5C8")
-      |> Map.put(:id, make_id(class.name, class[:extension]))
+      |> Map.put(:id, make_id(class.name, nil, class[:extension]))
       |> Map.put(:label, class.caption)
 
     build_nodes([node], class)
@@ -41,7 +41,7 @@ defmodule Schema.Graph do
         end
 
       node = %{
-        id: make_id(obj.name, obj[:extension]),
+        id: make_id(obj.name, obj[:family], obj[:extension]),
         label: obj.caption,
         color: color
       }
@@ -55,12 +55,15 @@ defmodule Schema.Graph do
 
       if obj[:is_enum] do
         children =
-          Utils.find_children(Schema.all_objects(), obj[:name])
+          get_collection_by_family(obj)
+          |> then(fn {collection, parent_name} ->
+            Utils.find_children(collection, parent_name)
+          end)
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         Enum.reduce(children, acc, fn child, acc2 ->
           child_node = %{
-            id: make_id(child.name, child[:extension]),
+            id: make_id(child.name, obj[:family], child[:extension]),
             label: child.caption,
             color: color
           }
@@ -77,12 +80,20 @@ defmodule Schema.Graph do
     end)
   end
 
-  defp make_id(name, nil) do
+  defp make_id(name, nil, nil) do
     name
   end
 
-  defp make_id(name, ext) do
+  defp make_id(name, nil, ext) do
     Path.join(ext, name)
+  end
+
+  defp make_id(name, family, nil) do
+    Path.join(family, name)
+  end
+
+  defp make_id(name, family, ext) do
+    Path.join([ext, family, name])
   end
 
   defp nodes_member?(nodes, node) do
@@ -107,7 +118,7 @@ defmodule Schema.Graph do
                 source: Atom.to_string(obj[:_source]),
                 group: obj[:group],
                 requirement: obj[:requirement] || "optional",
-                from: make_id(class.name, class[:extension]),
+                from: make_id(class.name, nil, class[:extension]),
                 to: obj.object_type || obj.class_type,
                 label: Atom.to_string(name)
               }
@@ -130,8 +141,8 @@ defmodule Schema.Graph do
                 source: Atom.to_string(obj[:_source]),
                 group: obj[:group],
                 requirement: obj[:requirement] || "optional",
-                from: make_id(class.name, class[:extension]),
-                to: obj.class_type || obj.object_type,
+                from: make_id(class.name, class[:family], class[:extension]),
+                to: make_id(obj.class_type || obj.object_type, obj[:family], obj[:extension]),
                 label: Atom.to_string(name)
               }
               |> add_profile(obj[:profile])
@@ -150,14 +161,16 @@ defmodule Schema.Graph do
         end
 
       if obj[:is_enum] do
+        {collection, name} = get_collection_by_family(obj)
+
         children =
-          Utils.find_children(Schema.all_objects(), obj[:object_type])
+          Utils.find_children(collection, name)
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         Enum.reduce(children, acc, fn child, acc2 ->
           edge = %{
-            from: make_id(obj.object_type, obj[:extension]),
-            to: make_id(child.name, child[:extension]),
+            from: make_id(name, obj[:family], obj[:extension]),
+            to: make_id(child.name, obj[:family], child[:extension]),
             label: "enum",
             color: "#D6A5FF"
           }
@@ -181,5 +194,14 @@ defmodule Schema.Graph do
 
   defp add_profile(edge, profile) do
     Map.put(edge, :profile, profile)
+  end
+
+  defp get_collection_by_family(entity) do
+    case entity[:family] do
+      "skill" -> {Schema.all_skills(), entity[:name] || entity[:class_type]}
+      "domain" -> {Schema.all_domains(), entity[:name] || entity[:class_type]}
+      "module" -> {Schema.all_modules(), entity[:name] || entity[:class_type]}
+      _ -> {Schema.all_objects(), entity[:name] || entity[:object_type]}
+    end
   end
 end
