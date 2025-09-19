@@ -31,12 +31,19 @@ defmodule Schema.Graph do
   defp build_nodes(nodes, class) do
     Map.get(class, :entities)
     |> Enum.reduce(nodes, fn {_name, obj}, acc ->
+      color =
+        if obj[:family] do
+          "#C8F5D0"
+        else
+          "#e3e9fb"
+        end
+
       node = %{
         id: make_id(obj.name, obj[:extension]),
-        label: obj.caption
+        label: obj.caption,
+        color: color
       }
 
-      # Don't add class/object that is already added (present infinite loop)
       if not nodes_member?(nodes, node) do
         [node | acc]
       else
