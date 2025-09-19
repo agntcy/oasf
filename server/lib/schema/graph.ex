@@ -6,6 +6,8 @@ defmodule Schema.Graph do
   This module generates graph data to display class diagram.
   """
 
+  alias Schema.Utils
+
   @doc """
   Builds graph data for the given class.
   """
@@ -44,8 +46,31 @@ defmodule Schema.Graph do
         color: color
       }
 
-      if not nodes_member?(nodes, node) do
-        [node | acc]
+      acc =
+        if not nodes_member?(nodes, node) do
+          [node | acc]
+        else
+          acc
+        end
+
+      if obj[:is_enum] do
+        children =
+          Utils.find_children(Schema.all_objects(), obj[:name])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
+
+        Enum.reduce(children, acc, fn child, acc2 ->
+          child_node = %{
+            id: make_id(child.name, child[:extension]),
+            label: child.caption,
+            color: color
+          }
+
+          if not nodes_member?(nodes ++ acc, child_node) do
+            [child_node | acc2]
+          else
+            acc2
+          end
+        end)
       else
         acc
       end
@@ -72,63 +97,75 @@ defmodule Schema.Graph do
   defp build_edges(edges, class, objects) do
     Map.get(class, :attributes)
     |> Enum.reduce(edges, fn {name, obj}, acc ->
-      case obj.type do
-        "object_t" ->
-          # For a recursive definition, we need to add the edge, creating the looping edge
-          # and then we don't want to continue searching this path.
-          recursive? = edges_member?(acc, obj)
+      acc =
+        case obj.type do
+          "object_t" ->
+            recursive? = edges_member?(acc, obj)
 
-          edge =
-            %{
-              source: Atom.to_string(obj[:_source]),
-              group: obj[:group],
-              requirement: obj[:requirement] || "optional",
-              from: make_id(class.name, class[:extension]),
-              to: obj.object_type,
-              label: Atom.to_string(name)
-            }
-            |> add_profile(obj[:profile])
+            edge =
+              %{
+                source: Atom.to_string(obj[:_source]),
+                group: obj[:group],
+                requirement: obj[:requirement] || "optional",
+                from: make_id(class.name, class[:extension]),
+                to: obj.object_type || obj.class_type,
+                label: Atom.to_string(name)
+              }
+              |> add_profile(obj[:profile])
 
-          acc = [edge | acc]
+            acc = [edge | acc]
 
-          # For recursive definitions, we've already added the edge creating the loop in the graph.
-          # There's no need to recurse further (avoid infinite loops).
-          if not recursive? do
-            o = objects[String.to_atom(obj.object_type)]
-            build_edges(acc, o, objects)
-          else
+            if not recursive? do
+              o = objects[String.to_atom(obj.object_type || obj.class_type)]
+              build_edges(acc, o, objects)
+            else
+              acc
+            end
+
+          "class_t" ->
+            recursive? = edges_member?(acc, obj)
+
+            edge =
+              %{
+                source: Atom.to_string(obj[:_source]),
+                group: obj[:group],
+                requirement: obj[:requirement] || "optional",
+                from: make_id(class.name, class[:extension]),
+                to: obj.class_type || obj.object_type,
+                label: Atom.to_string(name)
+              }
+              |> add_profile(obj[:profile])
+
+            acc = [edge | acc]
+
+            if not recursive? do
+              o = objects[String.to_atom(obj.class_type || obj.object_type)]
+              build_edges(acc, o, objects)
+            else
+              acc
+            end
+
+          _ ->
             acc
-          end
+        end
 
-        "class_t" ->
-          # For a recursive definition, we need to add the edge, creating the looping edge
-          # and then we don't want to continue searching this path.
-          recursive? = edges_member?(acc, obj)
+      if obj[:is_enum] do
+        children =
+          Utils.find_children(Schema.all_objects(), obj[:object_type])
+          |> Enum.reject(fn item -> item[:hidden?] == true end)
 
-          edge =
-            %{
-              source: Atom.to_string(obj[:_source]),
-              group: obj[:group],
-              requirement: obj[:requirement] || "optional",
-              from: make_id(class.name, class[:extension]),
-              to: obj.class_type,
-              label: Atom.to_string(name)
-            }
-            |> add_profile(obj[:profile])
+        Enum.reduce(children, acc, fn child, acc2 ->
+          edge = %{
+            from: make_id(obj.object_type, obj[:extension]),
+            to: make_id(child.name, child[:extension]),
+            label: "enum",
+            color: "#D6A5FF"
+          }
 
-          acc = [edge | acc]
-
-          # For recursive definitions, we've already added the edge creating the loop in the graph.
-          # There's no need to recurse further (avoid infinite loops).
-          if not recursive? do
-            o = objects[String.to_atom(obj.class_type)]
-            build_edges(acc, o, objects)
-          else
-            acc
-          end
-
-        _ ->
-          acc
+          [edge | acc2]
+        end)
+      else
+        acc
       end
     end)
   end

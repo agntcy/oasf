@@ -655,4 +655,13 @@ defmodule Schema.Utils do
       _ -> false
     end
   end
+
+  def get_collection_by_family(family) do
+    case family do
+      "skill" -> Schema.all_skills()
+      "domain" -> Schema.all_domains()
+      "module" -> Schema.all_modules()
+      _ -> Schema.all_objects()
+    end
+  end
 end
