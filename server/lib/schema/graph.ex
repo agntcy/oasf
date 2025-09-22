@@ -59,7 +59,6 @@ defmodule Schema.Graph do
           |> then(fn {collection, parent_name} ->
             Utils.find_children(collection, parent_name)
           end)
-          |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         Enum.reduce(children, acc, fn child, acc2 ->
           child_node = %{
@@ -163,20 +162,34 @@ defmodule Schema.Graph do
       if obj[:is_enum] do
         {collection, name} = get_collection_by_family(obj)
 
-        children =
-          Utils.find_children(collection, name)
-          |> Enum.reject(fn item -> item[:hidden?] == true end)
+        # Recursive function to add edges for all descendants
+        add_descendant_edges = fn add_descendant_edges,
+                                  parent_name,
+                                  parent_family,
+                                  parent_extension,
+                                  acc_in ->
+          children = Utils.find_direct_children(collection, parent_name)
 
-        Enum.reduce(children, acc, fn child, acc2 ->
-          edge = %{
-            from: make_id(name, obj[:family], obj[:extension]),
-            to: make_id(child.name, obj[:family], child[:extension]),
-            label: "enum",
-            color: "#D6A5FF"
-          }
+          Enum.reduce(children, acc_in, fn child, acc2 ->
+            edge = %{
+              from: make_id(parent_name, parent_family, parent_extension),
+              to: make_id(child.name, parent_family, child[:extension]),
+              label: obj[:family] || "enum",
+              color: "#D6A5FF"
+            }
 
-          [edge | acc2]
-        end)
+            # Recursively add edges for child's children
+            add_descendant_edges.(
+              add_descendant_edges,
+              child.name,
+              parent_family,
+              child[:extension],
+              [edge | acc2]
+            )
+          end)
+        end
+
+        add_descendant_edges.(add_descendant_edges, name, obj[:family], obj[:extension], acc)
       else
         acc
       end
