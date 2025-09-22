@@ -248,6 +248,15 @@ tasks:
       - cmd: echo "Running OASF schema test suite..."
       - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
 
+  test:server:
+    desc: Test server code
+    preconditions:
+      - which mix
+    dir: '{{ .ROOT_DIR }}/server'
+    cmds:
+      - cmd: echo "Running OASF server test suite..."
+      - cmd: mix test
+
   lint:
     desc: Run all linters
     cmds:
