@@ -430,7 +430,7 @@ defmodule SchemaWeb.PageController do
           data
           |> sort_attributes_by_key()
           |> Map.put(:key, Schema.Utils.to_uid(params["extension"], id))
-          |> Map.put(:_children, children)
+          |> Map.put(:options, children)
 
         render(conn, "object.html",
           extensions: Schema.extensions(),

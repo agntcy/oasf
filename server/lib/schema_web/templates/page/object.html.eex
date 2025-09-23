@@ -102,14 +102,14 @@ SPDX-License-Identifier: Apache-2.0
 </div>
 <% end %>
 
-<% children = @data[:_children] %>
-<%= if Enum.empty?(children) do %>
+<% options = @data[:options] %>
+<%= if Enum.empty?(options) do %>
   <div></div>
 <% else %>
   <div class="referenced-by-section">
-    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#entity-children" aria-expanded="false" aria-controls="entity-children">Children</a>
+    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#entity-children" aria-expanded="false" aria-controls="entity-children">Options</a>
     <div class="referenced-by-content extensions collapse" id="entity-children">
-      <%= raw entity_children(@conn, children, "object") %>
+      <%= raw entity_children(@conn, options, "object") %>
     </div>
   </div>
 <% end %>
