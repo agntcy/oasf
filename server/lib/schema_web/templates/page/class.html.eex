@@ -26,17 +26,15 @@ end
 <div class="row">
   <div class="col-md move-up">
     <h3 class="extensions">
-      <%= @data[:caption] %>
-      <span class="text-secondary">[<a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:uid] %></a>]<%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
-        <%= class_type %> class
+      <a href="<%= class_graph_path(@conn, @data)  %>"><%= @data[:caption] %></a>
+      <span class="text-secondary">[<%= @data[:uid] %>]<%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
       </span>
       <%= raw profile_badges(@conn, @data, @profiles) %>
     </h3>
 
     <%= if category_name != nil do %>
       <h4 class="extensions">
-        <a href="<%= path %>"><%= category_name %></a>
-        <%= class_type %> category
+        in <a href="<%= path %>"><%= category_name %></a> <%= class_type %> category
       </h4>
     <% end %>
     <div class="text-secondary">
