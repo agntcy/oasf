@@ -141,14 +141,14 @@ end
   </div>
 <% end %>
 
-<% children = @data[:_children] %>
-<%= if Enum.empty?(children) do %>
+<% subclasses = @data[:subclasses] %>
+<%= if Enum.empty?(subclasses) do %>
   <div></div>
 <% else %>
   <div class="referenced-by-section">
-    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#entity-children" aria-expanded="false" aria-controls="entity-children">Children</a>
+    <a class="referenced-by-toggle" data-toggle="collapse" data-target="#entity-children" aria-expanded="false" aria-controls="entity-children">Subclasses</a>
     <div class="referenced-by-content extensions collapse" id="entity-children">
-      <%= raw entity_children(@conn, children, class_type) %>
+      <%= raw entity_children(@conn, subclasses, class_type) %>
     </div>
   </div>
 <% end %>
