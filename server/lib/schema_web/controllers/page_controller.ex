@@ -277,8 +277,9 @@ defmodule SchemaWeb.PageController do
   @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()
   def skills(conn, %{"id" => id} = params) do
     extension = params["extension"]
+    profiles = parse_profiles_from_params(params)
 
-    case Schema.skill(extension, id) do
+    case Schema.skill(extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -324,8 +325,9 @@ defmodule SchemaWeb.PageController do
   @spec domains(Plug.Conn.t(), any) :: Plug.Conn.t()
   def domains(conn, %{"id" => id} = params) do
     extension = params["extension"]
+    profiles = parse_profiles_from_params(params)
 
-    case Schema.domain(extension, id) do
+    case Schema.domain(extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -371,8 +373,9 @@ defmodule SchemaWeb.PageController do
   @spec modules(Plug.Conn.t(), any) :: Plug.Conn.t()
   def modules(conn, %{"id" => id} = params) do
     extension = params["extension"]
+    profiles = parse_profiles_from_params(params)
 
-    case Schema.module(extension, id) do
+    case Schema.module(extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -448,6 +451,22 @@ defmodule SchemaWeb.PageController do
       profiles: SchemaController.get_profiles(params),
       data: data
     )
+  end
+
+  defp parse_profiles_from_params(params) do
+    case params["profiles"] do
+      nil ->
+        nil
+
+      "" ->
+        MapSet.new()
+
+      profiles_string ->
+        profiles_string
+        |> String.split(",")
+        |> Enum.map(&String.trim/1)
+        |> MapSet.new()
+    end
   end
 
   defp sort_classes(categories) do

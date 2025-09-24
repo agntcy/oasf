@@ -678,8 +678,141 @@
   font-size: 0.6rem;
 }
 
+/* Content Layout Improvements */
+.description-content {
+  line-height: 1.7;
+  font-size: 0.875rem;
+  max-width: none; /* Remove any width restrictions */
+}
+
+/* Horizontal Controls Bar */
+.row.align-items-center.mb-3 {
+  padding-top: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg) !important;
+  justify-content: space-between;
+}
+
+.row.align-items-center.mb-3 .col-auto:first-child {
+  margin-right: auto;
+}
+
+.row.align-items-center.mb-3 .col-auto:not(:first-child) {
+  margin-left: var(--spacing-md);
+}
+
+.row.align-items-center.mb-3 .col-auto:last-child {
+  margin-left: var(--spacing-md);
+}
+
+/* Button group styling in horizontal layout */
+.row .btn-group .btn {
+  font-size: 0.875rem;
+  padding: var(--spacing-xs) var(--spacing-sm);
+}
+
+/* Form controls in horizontal layout */
+.row .form-control {
+  min-width: 200px;
+}
+
+.row .selectpicker {
+  min-width: 180px;
+}
+
+/* Show deprecated container in horizontal layout */
+.row .show-deprecated-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  white-space: nowrap;
+}
+
+/* Mobile Responsive Layout */
+@media (max-width: 768px) {
+  .row.align-items-center.mb-3 {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: var(--spacing-sm);
+  }
+
+  .row.align-items-center.mb-3 .col-auto {
+    margin-right: 0;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .row.align-items-center.mb-3 .col-auto:last-child {
+    margin-bottom: 0;
+  }
+
+  .row .btn-group {
+    display: flex;
+    justify-content: center;
+  }
+
+  .row .form-control,
+  .row .selectpicker {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .row .show-deprecated-container {
+    justify-content: center;
+  }
+}
+
+/* Large Desktop Layout */
+@media (min-width: 1200px) {
+  .description-content {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+}
+
 /* Graph defaults */
 #network {
   width: 100%;
   height: 100vh;
+}
+
+/* Bootstrap Selectpicker Dropdown Positioning Fix */
+.bootstrap-select .dropdown-menu {
+  max-width: 300px;
+  overflow-x: auto;
+}
+
+/* Force dropdown to open to the left when near right edge */
+.fixed-right .bootstrap-select .dropdown-menu {
+  right: 0;
+  left: auto;
+  transform: translateX(0);
+}
+
+/* Ensure dropdown doesn't extend beyond viewport */
+.bootstrap-select.dropup .dropdown-menu,
+.bootstrap-select .dropdown-menu {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+/* Fix for selectpicker when positioned on the right side */
+.col-md-auto.fixed-right .bootstrap-select .dropdown-menu {
+  right: 0 !important;
+  left: auto !important;
+  min-width: 250px;
+  max-width: 300px;
+}
+
+/* Fix for selectpicker in horizontal controls bar (object/class pages) */
+.row.align-items-center .col-auto:last-child .bootstrap-select .dropdown-menu {
+  right: 0 !important;
+  left: auto !important;
+  min-width: 250px;
+  max-width: 300px;
+}
+
+/* General fix for any selectpicker near the right edge */
+.bootstrap-select:last-child .dropdown-menu,
+.col-auto:last-child .bootstrap-select .dropdown-menu {
+  right: 0 !important;
+  left: auto !important;
 }

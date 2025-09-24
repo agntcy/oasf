@@ -918,16 +918,19 @@ defmodule SchemaWeb.PageView do
   @spec dictionary_links_class_to_html(any, String.t(), list(Schema.Utils.link_t()), String.t()) ::
           <<>> | list()
   defp dictionary_links_class_to_html(conn, attribute_name, linked_classes, family) do
+    # Strip profiles parameter to get classes with proper source attribution
+    params_without_profiles = Map.delete(conn.params, "profiles")
+
     {classes, all_classes} =
       case family do
         "skill" ->
-          {SchemaController.skills(conn.params), Schema.all_skills()}
+          {SchemaController.skills(params_without_profiles), Schema.all_skills()}
 
         "domain" ->
-          {SchemaController.domains(conn.params), Schema.all_domains()}
+          {SchemaController.domains(params_without_profiles), Schema.all_domains()}
 
         "module" ->
-          {SchemaController.modules(conn.params), Schema.all_modules()}
+          {SchemaController.modules(params_without_profiles), Schema.all_modules()}
 
         _ ->
           Logger.error("Unexpected family value: #{inspect(family)}")

@@ -26,13 +26,20 @@
       if (document.readyState === 'interactive')
       {
         let selected_extensions = get_selected_extensions();
+        let selected_profiles = get_selected_profiles();
+
         $.each(selected_extensions, function(key, value) {
           $("#" + key).prop('checked', value);
         });
 
-        // update the links with the selected extensions
-        const params = select_extensions(selected_extensions);
+        // update the links with the selected extensions and profiles
+        const params = build_url_params(selected_extensions, selected_profiles);
         $(".sidebar-section a").each(function() {
+          this.href = this.href + params;
+        });
+
+        // Also update main navigation links
+        $(".top-navbar-nav a.nav-link").each(function() {
           this.href = this.href + params;
         });
 
@@ -53,11 +60,11 @@
         });
         set_selected_extensions(selected_extensions);
 
-        const params = select_extensions(selected_extensions);
+        // Get current profiles and build complete URL
+        const selected_profiles = get_selected_profiles();
+        const params = build_url_params(selected_extensions, selected_profiles);
+
         window.location.search = params;
-        $(".sidebar-section a").each(function() {
-          this.href = this.href + params;
-        });
       });
 
       // init the attributes dropdown filters
@@ -184,6 +191,24 @@
         </div>
       </div>
       <% end %>
+
+      <!-- Display Options Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">
+          <i class="fas fa-cog"></i> Options
+          <hr class="divider"/>
+        </div>
+        <div class="sidebar-section-content">
+          <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+              <label>
+                <input type="checkbox" id="show-deprecated-global" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+                Show deprecated items
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </nav>
 
