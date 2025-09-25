@@ -173,24 +173,38 @@ var _ = Describe("JsonSchema and Proto synchronization", func() {
 	protoRoot := "../../proto/agntcy/oasf/types/v1alpha2/"
 
 	type testCase struct {
-		jsonPath  string
-		protoPath string
+		entityType string
+		fileName   string
+		protoPath  string
 	}
 
 	cases := []testCase{
-		{filepath.Join(schemaRoot, "objects/record.json"), filepath.Join(protoRoot, "record.proto")},
-		{filepath.Join(schemaRoot, "objects/locator.json"), filepath.Join(protoRoot, "locator.proto")},
-		{filepath.Join(schemaRoot, "objects/signature.json"), filepath.Join(protoRoot, "signature.proto")},
-		{filepath.Join(schemaRoot, "skills/base_skill.json"), filepath.Join(protoRoot, "skill.proto")},
-		{filepath.Join(schemaRoot, "domains/base_domain.json"), filepath.Join(protoRoot, "domain.proto")},
-		{filepath.Join(schemaRoot, "modules/base_module.json"), filepath.Join(protoRoot, "module.proto")},
+		{"objects", "record.json", filepath.Join(protoRoot, "record.proto")},
+		{"objects", "locator.json", filepath.Join(protoRoot, "locator.proto")},
+		{"objects", "signature.json", filepath.Join(protoRoot, "signature.proto")},
+		{"skills", "base_skill.json", filepath.Join(protoRoot, "skill.proto")},
+		{"domains", "base_domain.json", filepath.Join(protoRoot, "domain.proto")},
+		{"modules", "base_module.json", filepath.Join(protoRoot, "module.proto")},
 	}
 
 	for _, tc := range cases {
-		tc := tc // capture range variable
-		It(fmt.Sprintf("should sync JSON schema %s and Proto %s", filepath.Base(tc.jsonPath), filepath.Base(tc.protoPath)), func() {
-			jsonSchemaData, err := parseJsonSchema(tc.jsonPath)
+		jsonPath := filepath.Join(schemaRoot, tc.entityType, tc.fileName)
+		It(fmt.Sprintf("should sync JSON schema %s and Proto %s", filepath.Base(jsonPath), filepath.Base(tc.protoPath)), func() {
+			jsonSchemaData, err := parseJsonSchema(jsonPath)
 			Expect(err).NotTo(HaveOccurred(), "Error parsing JSON: %v", err)
+
+			// Handle extends
+			if jsonSchemaData.Extends != "" {
+				extendsPath := filepath.Join(schemaRoot, tc.entityType, jsonSchemaData.Extends+".json")
+				extendedSchema, err := parseJsonSchema(extendsPath)
+				Expect(err).NotTo(HaveOccurred(), "Error parsing extended JSON: %v", err)
+				// Merge attributes: extended first, then main (main overrides)
+				for k, v := range extendedSchema.Attributes {
+					if _, exists := jsonSchemaData.Attributes[k]; !exists {
+						jsonSchemaData.Attributes[k] = v
+					}
+				}
+			}
 
 			protoMessageData, err := parseProtoFile(tc.protoPath)
 			Expect(err).NotTo(HaveOccurred(), "Error parsing Proto: %v", err)
