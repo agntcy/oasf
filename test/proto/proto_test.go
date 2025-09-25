@@ -170,7 +170,7 @@ func compareSchemas(jsonSchema JsonSchema, protoMessage ProtoMessage) ([]string,
 
 var _ = Describe("JsonSchema and Proto synchronization", func() {
 	schemaRoot := "../../schema/"
-	protoRoot := "../../proto/agntcy/oasf/types/v1alpha1/"
+	protoRoot := "../../proto/agntcy/oasf/types/v1alpha2/"
 
 	type testCase struct {
 		jsonPath  string

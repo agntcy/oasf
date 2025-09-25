@@ -1,0 +1,39 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v1alpha2;
+
+// Signature provides the signing and verification details about the record.
+message Signature {
+  // Metadata associated with the signature.
+  map<string, string> annotations = 1;
+
+  // Signing timestamp of the record in the RFC3339 format.
+  // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
+  string signed_at = 2;
+
+  // The signature algorithm used (e.g., "ECDSA_P256_SHA256").
+  string algorithm = 3;
+
+  // Base64-encoded signature.
+  string signature = 4;
+
+  // Base64-encoded signing certificate.
+  string certificate = 5;
+
+  // Type of the signature content bundle.
+  string content_type = 6;
+
+  // Base64-encoded signature bundle produced by the signer.
+  // It is up to the client to interpret the content of the bundle.
+  string content_bundle = 7;
+
+  // Schema version of the record.
+  string schema_version = 8;
+
+  // Used to link the signature to a record.
+  // Field number is explicitly reserved for extendability.
+  optional string parent_cid = 99;
+}
