@@ -18,7 +18,8 @@ import (
 const baseURL = "http://localhost:8080"
 
 type objectTestCase struct {
-	jsonPath           string
+	entityType         string
+	fileName           string
 	apiEndpoint        string
 	schemaEndpoint     string
 	sampleEndpoint     string
@@ -27,42 +28,40 @@ type objectTestCase struct {
 
 var testCases = []objectTestCase{
 	{
-		jsonPath:           "../../schema/objects/record.json",
+		entityType:         "objects",
+		fileName:           "record.json",
 		apiEndpoint:        baseURL + "/api/objects/record",
 		schemaEndpoint:     baseURL + "/schema/objects/record",
 		sampleEndpoint:     baseURL + "/sample/objects/record",
 		validationEndpoint: baseURL + "/api/validate/object/record",
 	},
 	{
-		jsonPath:           "../../schema/objects/locator.json",
+		entityType:         "objects",
+		fileName:           "locator.json",
 		apiEndpoint:        baseURL + "/api/objects/locator",
 		schemaEndpoint:     baseURL + "/schema/objects/locator",
 		sampleEndpoint:     baseURL + "/sample/objects/locator",
 		validationEndpoint: baseURL + "/api/validate/object/locator",
 	},
 	{
-		jsonPath:           "../../schema/objects/signature.json",
-		apiEndpoint:        baseURL + "/api/objects/record_signature",
-		schemaEndpoint:     baseURL + "/schema/objects/record_signature",
-		sampleEndpoint:     baseURL + "/sample/objects/record_signature",
-		validationEndpoint: baseURL + "/api/validate/object/record_signature",
-	},
-	{
-		jsonPath:           "../../schema/skills/base_skill.json",
+		entityType:         "skills",
+		fileName:           "base_skill.json",
 		apiEndpoint:        baseURL + "/api/skills/base_skill",
 		schemaEndpoint:     baseURL + "/schema/skills/base_skill",
 		sampleEndpoint:     baseURL + "/sample/skills/base_skill",
 		validationEndpoint: baseURL + "/api/validate/skill",
 	},
 	{
-		jsonPath:           "../../schema/domains/base_domain.json",
+		entityType:         "domains",
+		fileName:           "base_domain.json",
 		apiEndpoint:        baseURL + "/api/domains/base_domain",
 		schemaEndpoint:     baseURL + "/schema/domains/base_domain",
 		sampleEndpoint:     baseURL + "/sample/domains/base_domain",
 		validationEndpoint: baseURL + "/api/validate/domain",
 	},
 	{
-		jsonPath:           "../../schema/modules/base_module.json",
+		entityType:         "modules",
+		fileName:           "base_module.json",
 		apiEndpoint:        baseURL + "/api/modules/base_module",
 		schemaEndpoint:     baseURL + "/schema/modules/base_module",
 		sampleEndpoint:     baseURL + "/sample/modules/base_module",
@@ -75,11 +74,32 @@ var _ = Describe("API", func() {
 		for _, tc := range testCases {
 			tc := tc
 			It("should match API response with expected JSON for "+tc.apiEndpoint, func() {
-				expectedBytes, err := os.ReadFile(tc.jsonPath)
+				jsonPath := "../../schema/" + tc.entityType + "/" + tc.fileName
+				expectedBytes, err := os.ReadFile(jsonPath)
 				Expect(err).NotTo(HaveOccurred(), "Failed to read expected JSON file")
 
 				var expected map[string]interface{}
 				Expect(json.Unmarshal(expectedBytes, &expected)).To(Succeed(), "Failed to unmarshal expected JSON")
+
+				// Handle extends
+				if ext, ok := expected["extends"].(string); ok && ext != "" {
+					extendsPath := "../../schema/" + tc.entityType + "/" + ext + ".json"
+					extendsBytes, err := os.ReadFile(extendsPath)
+					Expect(err).NotTo(HaveOccurred(), "Failed to read extended JSON file")
+					var parent map[string]interface{}
+					Expect(json.Unmarshal(extendsBytes, &parent)).To(Succeed(), "Failed to unmarshal extended JSON")
+					// Merge attributes: parent first, then child (child overrides)
+					parentAttrs, _ := parent["attributes"].(map[string]interface{})
+					childAttrs, _ := expected["attributes"].(map[string]interface{})
+					mergedAttrs := map[string]interface{}{}
+					for k, v := range parentAttrs {
+						mergedAttrs[k] = v
+					}
+					for k, v := range childAttrs {
+						mergedAttrs[k] = v
+					}
+					expected["attributes"] = mergedAttrs
+				}
 
 				resp, err := http.Get(tc.apiEndpoint)
 				Expect(err).NotTo(HaveOccurred(), "Failed to GET API")
