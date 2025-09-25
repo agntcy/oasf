@@ -1,0 +1,14 @@
+{
+  "uid": 12,
+  "caption": "Memory",
+  "description": "Persistent information storage system for data retention and knowledge management.",
+  "extends": "tools",
+  "name": "memory",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "memory",
+    "capabilities": ["data_persistence", "information_storage", "knowledge_management"],
+    "docker_image": "mcp/memory",
+    "environment_variables": ["MEMORY_BACKEND", "MEMORY_CAPACITY"]
+  }
+}

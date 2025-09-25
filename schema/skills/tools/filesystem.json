@@ -1,0 +1,14 @@
+{
+  "uid": 10,
+  "caption": "Filesystem",
+  "description": "Local file system operations for file management and directory navigation.",
+  "extends": "tools",
+  "name": "filesystem",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "filesystem",
+    "capabilities": ["file_operations", "directory_management", "path_navigation"],
+    "docker_image": "mcp/filesystem",
+    "environment_variables": ["FILESYSTEM_ROOT", "FILESYSTEM_PERMISSIONS"]
+  }
+}

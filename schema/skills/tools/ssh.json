@@ -1,0 +1,14 @@
+{
+  "uid": 9,
+  "caption": "SSH",
+  "description": "Secure shell remote connections for server management and remote command execution.",
+  "extends": "tools",
+  "name": "ssh",
+  "attributes": {
+    "category": "development_system",
+    "mcp_server": "ssh",
+    "capabilities": ["remote_connections", "server_management", "command_execution"],
+    "docker_image": "mcp/ssh",
+    "environment_variables": ["SSH_PRIVATE_KEY", "SSH_HOST"]
+  }
+}
