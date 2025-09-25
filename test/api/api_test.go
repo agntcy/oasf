@@ -42,10 +42,10 @@ var testCases = []objectTestCase{
 	},
 	{
 		jsonPath:           "../../schema/objects/signature.json",
-		apiEndpoint:        baseURL + "/api/objects/record_signature",
-		schemaEndpoint:     baseURL + "/schema/objects/record_signature",
-		sampleEndpoint:     baseURL + "/sample/objects/record_signature",
-		validationEndpoint: baseURL + "/api/validate/object/record_signature",
+		apiEndpoint:        baseURL + "/api/objects/signature",
+		schemaEndpoint:     baseURL + "/schema/objects/signature",
+		sampleEndpoint:     baseURL + "/sample/objects/signature",
+		validationEndpoint: baseURL + "/api/validate/object/signature",
 	},
 	{
 		jsonPath:           "../../schema/skills/base_skill.json",

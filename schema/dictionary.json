@@ -582,15 +582,15 @@
       "description": "Overall scores of the Agent across all evaluation.",
       "type": "overall_scores"
     },
+    "parent_cid": {
+      "caption": "Parent CID",
+      "description": "The CID of the parent record if this record is a derivative or linked to another record.",
+      "type": "uuid_t"
+    },
     "path": {
       "caption": "Path",
       "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
-    },
-    "previous_record_cid": {
-      "caption": "Previous Record CID",
-      "description": "Content Identifier (CID) of an Record's parent record.",
-      "type": "uuid_t"
     },
     "priority": {
       "caption": "Priority",
@@ -616,11 +616,6 @@
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
-    },
-    "record_signature": {
-      "caption": "Signature",
-      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
-      "type": "record_signature"
     },
     "referred_evaluations": {
       "caption": "Referred evaluations",

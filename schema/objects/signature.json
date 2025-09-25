@@ -1,8 +1,8 @@
 {
   "caption": "Signature",
   "description": "Signature provides the signing and verification details about the record.",
-  "extends": "object",
-  "name": "record_signature",
+  "extends": "linkable",
+  "name": "signature",
   "attributes": {
     "annotations": {
       "caption": "Annotations",

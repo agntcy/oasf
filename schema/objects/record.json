@@ -1,7 +1,7 @@
 {
   "caption": "Record",
-  "description": "The data model defines a schema for agentic AI data representation. The schema provides a way to describe the workload's modules, constraints, artifact locators, versioning, ownership, or relevant details.",
-  "extends": "object",
+  "description": "The record data model defines a schema for agentic AI data representation. The schema provides a way to describe the workload's modules, constraints, artifact locators, versioning, ownership, or relevant details.",
+  "extends": "linkable",
   "name": "record",
   "attributes": {
     "name": {
@@ -12,11 +12,6 @@
     "version": {
       "caption": "Version",
       "description": "The version of the record. Values MAY conform to a specific versioning schema.",
-      "requirement": "required"
-    },
-    "schema_version": {
-      "caption": "Schema Version",
-      "description": "Version of the OASF schema.",
       "requirement": "required"
     },
     "description": {
@@ -58,17 +53,6 @@
       "caption": "Modules",
       "description": "List of modules that describe this record and its capabilities more in depth.",
       "requirement": "recommended"
-    },
-    "signature": {
-      "reference": "record_signature",
-      "caption": "Signature",
-      "description": "A digital signature of the record data model. This is used to verify the authenticity and integrity of the record.",
-      "requirement": "recommended"
-    },
-    "previous_record_cid": {
-      "caption": "Previous Record CID",
-      "description": "Content Identifier (CID) of the data of the record with the previous version.",
-      "requirement": "optional"
     }
   }
 }
