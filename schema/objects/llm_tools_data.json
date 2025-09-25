@@ -1,26 +1,26 @@
 {
   "caption": "LLM Tools Data",
   "description": "Data describing a specific behavior or capability of an agent in a runtime environment.",
-  "extends": "extension_data",
+  "extends": "module_data",
   "name": "llm_tools_data",
   "attributes": {
     "prompts": {
-      "caption": "List of prompt names referencing the 'runtime/prompt' extension.",
+      "caption": "List of prompt names referencing the 'runtime/prompt' module.",
       "requirement": "required",
       "reference": "llm_prompt_names"
     },
     "models": {
-      "caption": "List of model names referencing the 'runtime/model' extension.",
+      "caption": "List of model names referencing the 'runtime/model' module.",
       "requirement": "optional",
       "reference": "llm_model_names"
     },
     "tools": {
-      "caption": "List of tools that couldn't be part of an extension.",
+      "caption": "List of tools that couldn't be part of an module.",
       "requirement": "optional",
       "reference": "llm_tool_names"
     },
     "mcp_server_tools": {
-      "caption": "List of MCP tools name referencing the 'runtime/mcp' extension.",
+      "caption": "List of MCP tools name referencing the 'runtime/mcp' module.",
       "requirement": "optional",
       "reference": "mcp_server_tool_names"
     }
