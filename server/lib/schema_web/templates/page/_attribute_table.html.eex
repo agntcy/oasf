@@ -1,0 +1,22 @@
+<table id="data-table" class="table table-bordered sortable">
+  <thead>
+    <tr class="thead-color">
+      <th class="col-name">Name</th>
+      <th class="col-caption">Caption</th>
+      <th class="col-requirement">Requirement</th>
+      <th class="col-type">Type</th>
+      <th class="col-description">Description</th>
+    </tr>
+  </thead>
+  <tbody class="searchable">
+    <%= for {attribute_key, attribute} <- @data[:attributes] do %>
+    <tr class="<%= field_classes(attribute)%>">
+      <td class="name" data-toggle="tooltip" title="<%= format_object_attribute_source(@data[:attribute_key], attribute) %>"><%= format_attribute_name(attribute_key) %></td>
+      <td><%= raw format_attribute_caption(@conn, attribute_key, attribute) %></td>
+      <td><%= raw format_requirement(@data[:constraints], attribute_key, attribute) %></td>
+      <td class="extensions"><%= raw format_type(@conn, attribute) %></td>
+      <td><%= raw format_attribute_desc(@conn, attribute_key, attribute) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

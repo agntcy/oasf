@@ -7,7 +7,10 @@ SPDX-License-Identifier: Apache-2.0
   <div class="col-md move-up">
     <h3>Objects</h3>
     <div class="text-secondary description-content">
-      The OASF objects. An object is a complex data type, which is a collection of other attributes. Some objects represent entities or artifacts, but not all.
+      The OASF objects. An object is a complex data type, which is a collection of other attributes.
+    </div>
+    <div class="text-secondary description-content">
+      Record represents an agentic entity, while linkable objects are used to attach additional information to records.
     </div>
   </div>
   <div class="col-md-auto fixed-right mt-2">
@@ -21,29 +24,28 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 
-<div class="mt-4">
-  <table class="table table-bordered sortable">
-    <thead>
-      <tr class="thead-color">
-        <th class="col-name">Name</th>
-        <th class="col-caption">Caption</th>
-        <th class="col-references">Referenced By</th>
-        <th class="col-description">Description</th>
-      </tr>
-    </thead>
-    <tbody class="searchable">
-      <%= for {object_key, object} <- @data do %>
-        <% object_key_str = Atom.to_string(object_key) %>
-        <% object_path = Routes.static_path(@conn, "/objects/" <> object_key_str) %>
-        <tr class=<%= show_deprecated_css_classes(object, "oasf-class") %>" <%= raw format_profiles(object[:profiles])%>>
-          <td class="name"><a href="<%= object_path %>"><%= object_key_str %></a></td>
-          <td class="extensions"><%= raw format_attribute_caption(@conn, object_key_str, object) %></td>
-          <td class="extensions"><%= raw object_links(@conn, object[:name], object[:_links], :collapse) %></td>
-          <td><%= raw description(object) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<%!-- Partition objects into groups --%>
+<%
+  group_record = Enum.filter(@data, fn {_k, obj} -> obj[:name] == "record" end)
+  record_tuple = List.first(group_record)
+  record_object = record_tuple && elem(record_tuple, 1)
+  group_linkable = Enum.filter(@data, fn {_k, obj} -> obj[:extends] == "linkable" and obj[:name] != "record" end)
+  group_other = Enum.reject(@data, fn {_k, obj} -> obj[:name] == "record" or (obj[:extends] == "linkable" and obj[:name] != "record") end)
+%>
+
+<div class="object-section mt-4">
+  <h4><a href='<%= Routes.static_path(@conn, "/objects/record") %>'>Record Object</a></h4>
+  <%= render SchemaWeb.PageView, "_attribute_table.html", conn: @conn, data: record_object %>
+</div>
+
+<div class="object-section mt-4">
+  <h4>Linkable Objects</h4>
+  <%= render SchemaWeb.PageView, "_object_table.html", conn: @conn, objects: group_linkable %>
+</div>
+
+<div class="object-section mt-4">
+  <h4>Other Objects</h4>
+  <%= render SchemaWeb.PageView, "_object_table.html", conn: @conn, objects: group_other %>
 </div>
 
 <script>

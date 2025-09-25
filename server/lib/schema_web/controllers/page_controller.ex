@@ -444,7 +444,13 @@ defmodule SchemaWeb.PageController do
   end
 
   def objects(conn, params) do
-    data = SchemaController.objects(params) |> sort_by_descoped_key()
+    data =
+      SchemaController.objects(params)
+      |> sort_by_descoped_key()
+      |> Enum.map(fn
+        {:record, _} -> {:record, SchemaController.object(%{"id" => "record"})}
+        other -> other
+      end)
 
     render(conn, "objects.html",
       extensions: Schema.extensions(),
