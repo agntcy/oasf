@@ -24,7 +24,46 @@ function select_extensions(selected) {
   return "";
 }
 
+function build_url_params(extensions, profiles) {
+  let params = [];
+
+  // Add extensions parameter
+  if (extensions) {
+    const extensionParams = [];
+    Object.entries(extensions).forEach(function ([name, value]) {
+      if (value) {
+        extensionParams.push(name);
+      }
+    });
+    if (extensionParams.length > 0) {
+      params.push("extensions=" + extensionParams.join(","));
+    }
+  }
+
+  // Add profiles parameter
+  if (profiles && profiles.length > 0) {
+    params.push("profiles=" + profiles.join(","));
+  }
+
+  return params.length > 0 ? "?" + params.join("&") : "";
+}
+
 function get_selected_extensions() {
+  // First check URL parameters, then fall back to localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  const extensionsParam = urlParams.get("extensions");
+
+  if (extensionsParam !== null) {
+    const extensions = {};
+    if (extensionsParam !== "") {
+      const extensionList = extensionsParam.split(",").map((e) => e.trim());
+      extensionList.forEach((extension) => {
+        extensions[extension] = true;
+      });
+    }
+    return extensions;
+  }
+
   return JSON.parse(localStorage.getItem("schema_extensions")) || {};
 }
 
@@ -248,6 +287,15 @@ function init_schema_buttons() {
       get_selected_profiles().toString();
     window.open(url, "_blank");
   });
+
+  $("#btn-validate").on("click", function (event) {
+    const entityType = $(this).data("entity-type");
+    let url = "/doc/index.html#/Validation";
+    if (entityType) {
+      url += `/SchemaWeb.SchemaController.validate_${entityType}`;
+    }
+    window.open(url, "_blank");
+  });
 }
 
 const showDeprecatedStorageKey = "show-deprecated";
@@ -255,27 +303,48 @@ const showDeprecatedStorageKey = "show-deprecated";
 function init_show_deprecated() {
   $(document).ready(function () {
     let checked = window.localStorage.getItem(showDeprecatedStorageKey);
-    if (checked == null || checked == "false") {
-      // Handling this case is needed in case where the prior state was checked _and_ local storage was
-      // cleared _and_ the user agent (browser) comes back to this page with the back button. The browser
-      // (at least Firefox) would keep the checkbox checked since that was the state of the UI.
-      document.getElementById("show-deprecated").checked = false;
-      // Initialize deprecated elements as hidden without animation
-      const deprecatedElements = document.querySelectorAll(".deprecated");
-      deprecatedElements.forEach((element) => {
-        element.classList.add("deprecated-hidden");
-      });
-    } else if (checked == "true") {
-      document.getElementById("show-deprecated").checked = true;
-      // Initialize deprecated elements as visible without animation
-      const deprecatedElements = document.querySelectorAll(".deprecated");
-      deprecatedElements.forEach((element) => {
-        element.classList.add("deprecated-visible");
-      });
+    const showDeprecatedCheckbox = document.getElementById(
+      "show-deprecated-global",
+    );
+
+    if (showDeprecatedCheckbox) {
+      if (checked == null || checked == "false") {
+        // Handling this case is needed in case where the prior state was checked _and_ local storage was
+        // cleared _and_ the user agent (browser) comes back to this page with the back button. The browser
+        // (at least Firefox) would keep the checkbox checked since that was the state of the UI.
+        showDeprecatedCheckbox.checked = false;
+        // Initialize deprecated elements as hidden without animation
+        const deprecatedElements = document.querySelectorAll(".deprecated");
+        deprecatedElements.forEach((element) => {
+          element.classList.add("deprecated-hidden");
+          // Ensure Bootstrap collapse state is also hidden
+          element.classList.remove("show");
+        });
+      } else if (checked == "true") {
+        showDeprecatedCheckbox.checked = true;
+        // Initialize deprecated elements as visible without animation
+        const deprecatedElements = document.querySelectorAll(".deprecated");
+        deprecatedElements.forEach((element) => {
+          element.classList.add("deprecated-visible");
+          // Ensure Bootstrap collapse state is also shown
+          element.classList.add("show");
+        });
+      }
     }
 
     // Update container state
     updateShowDeprecatedState(checked == "true");
+
+    // Refresh the attribute display to show/hide deprecated rows based on stored state
+    const data = window.localStorage.getItem(selectedAttributesStorageKey);
+    let selected;
+    if (data == null) {
+      selected = selectedAttributesDefaultValues;
+    } else {
+      if (data.length > 0) selected = data.split(",");
+      else selected = [];
+    }
+    display_attributes(array_to_set(selected));
   });
 }
 

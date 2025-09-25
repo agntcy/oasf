@@ -8,6 +8,11 @@ defmodule Schema.Graph do
 
   alias Schema.Utils
 
+  @node_color "#F5F5C8"
+  @class_color "#C8F5D0"
+  @object_color "#e3e9fb"
+  @enum_color "#D6A5FF"
+
   @doc """
   Builds graph data for the given class.
   """
@@ -23,60 +28,85 @@ defmodule Schema.Graph do
   defp build_nodes(class) do
     node =
       Map.new()
-      |> Map.put(:color, "#F5F5C8")
-      |> Map.put(:id, make_id(class.name, nil, class[:extension]))
+      |> Map.put(:color, @node_color)
+      |> Map.put(:id, make_id(class.name, class[:family], class[:extension]))
       |> Map.put(:label, class.caption)
 
     build_nodes([node], class)
   end
 
   defp build_nodes(nodes, class) do
-    Map.get(class, :entities)
-    |> Enum.reduce(nodes, fn {_name, obj}, acc ->
-      color =
-        if obj[:family] do
-          "#C8F5D0"
-        else
-          "#e3e9fb"
-        end
+    nodes =
+      Map.get(class, :entities)
+      |> Enum.reduce(nodes, fn {_name, obj}, acc ->
+        color =
+          if obj[:family] do
+            @class_color
+          else
+            @object_color
+          end
 
-      node = %{
-        id: make_id(obj.name, obj[:family], obj[:extension]),
-        label: obj.caption,
-        color: color
-      }
+        node = %{
+          id: make_id(obj.name, obj[:family], obj[:extension]),
+          label: obj.caption,
+          color: color
+        }
 
-      acc =
-        if not nodes_member?(nodes, node) do
-          [node | acc]
+        acc =
+          if not nodes_member?(nodes, node) do
+            [node | acc]
+          else
+            acc
+          end
+
+        if obj[:is_enum] do
+          children =
+            get_collection_by_family(obj)
+            |> then(fn {collection, parent_name} ->
+              Utils.find_children(collection, parent_name)
+            end)
+
+          Enum.reduce(children, acc, fn child, acc2 ->
+            child_node = %{
+              id: make_id(child.name, obj[:family], child[:extension]),
+              label: child.caption,
+              color: color
+            }
+
+            if not nodes_member?(nodes ++ acc, child_node) do
+              [child_node | acc2]
+            else
+              acc2
+            end
+          end)
         else
           acc
         end
+      end)
 
-      if obj[:is_enum] do
-        children =
-          get_collection_by_family(obj)
-          |> then(fn {collection, parent_name} ->
-            Utils.find_children(collection, parent_name)
-          end)
+    nodes =
+      if class[:family] do
+        {collection, parent_name} = get_collection_by_family(class)
+        children = Utils.find_children(collection, parent_name)
 
-        Enum.reduce(children, acc, fn child, acc2 ->
+        Enum.reduce(children, nodes, fn child, acc2 ->
           child_node = %{
-            id: make_id(child.name, obj[:family], child[:extension]),
+            id: make_id(child.name, class[:family], child[:extension]),
             label: child.caption,
-            color: color
+            color: @class_color
           }
 
-          if not nodes_member?(nodes ++ acc, child_node) do
+          if not nodes_member?(nodes ++ acc2, child_node) do
             [child_node | acc2]
           else
             acc2
           end
         end)
       else
-        acc
+        nodes
       end
-    end)
+
+    nodes
   end
 
   defp make_id(name, nil, nil) do
@@ -105,62 +135,100 @@ defmodule Schema.Graph do
   end
 
   defp build_edges(edges, class, objects) do
-    Map.get(class, :attributes)
-    |> Enum.reduce(edges, fn {name, obj}, acc ->
-      acc =
-        case obj.type do
-          "object_t" ->
-            recursive? = edges_member?(acc, obj)
+    edges =
+      Map.get(class, :attributes)
+      |> Enum.reduce(edges, fn {name, obj}, acc ->
+        acc =
+          case obj.type do
+            "object_t" ->
+              recursive? = edges_member?(acc, obj)
 
-            edge =
-              %{
-                source: Atom.to_string(obj[:_source]),
-                group: obj[:group],
-                requirement: obj[:requirement] || "optional",
-                from: make_id(class.name, nil, class[:extension]),
-                to: obj.object_type || obj.class_type,
-                label: Atom.to_string(name)
-              }
-              |> add_profile(obj[:profile])
+              edge =
+                %{
+                  source: Atom.to_string(obj[:_source]),
+                  group: obj[:group],
+                  requirement: obj[:requirement] || "optional",
+                  from: make_id(class.name, class[:family], class[:extension]),
+                  to: obj.object_type || obj.class_type,
+                  label: Atom.to_string(name)
+                }
+                |> add_profile(obj[:profile])
 
-            acc = [edge | acc]
+              acc = [edge | acc]
 
-            if not recursive? do
-              o = objects[String.to_atom(obj.object_type || obj.class_type)]
-              build_edges(acc, o, objects)
-            else
+              if not recursive? do
+                o = objects[String.to_atom(obj.object_type || obj.class_type)]
+                build_edges(acc, o, objects)
+              else
+                acc
+              end
+
+            "class_t" ->
+              recursive? = edges_member?(acc, obj)
+
+              edge =
+                %{
+                  source: Atom.to_string(obj[:_source]),
+                  group: obj[:group],
+                  requirement: obj[:requirement] || "optional",
+                  from: make_id(class.name, class[:family], class[:extension]),
+                  to: make_id(obj.class_type || obj.object_type, obj[:family], obj[:extension]),
+                  label: Atom.to_string(name)
+                }
+                |> add_profile(obj[:profile])
+
+              acc = [edge | acc]
+
+              if not recursive? do
+                o = objects[String.to_atom(obj.class_type || obj.object_type)]
+                build_edges(acc, o, objects)
+              else
+                acc
+              end
+
+            _ ->
               acc
-            end
+          end
 
-          "class_t" ->
-            recursive? = edges_member?(acc, obj)
+        if obj[:is_enum] do
+          {collection, name} = get_collection_by_family(obj)
 
-            edge =
-              %{
-                source: Atom.to_string(obj[:_source]),
-                group: obj[:group],
-                requirement: obj[:requirement] || "optional",
-                from: make_id(class.name, class[:family], class[:extension]),
-                to: make_id(obj.class_type || obj.object_type, obj[:family], obj[:extension]),
-                label: Atom.to_string(name)
+          # Recursive function to add edges for all descendants
+          add_descendant_edges = fn add_descendant_edges,
+                                    parent_name,
+                                    parent_family,
+                                    parent_extension,
+                                    acc_in ->
+            children = Utils.find_direct_children(collection, parent_name)
+
+            Enum.reduce(children, acc_in, fn child, acc2 ->
+              edge = %{
+                from: make_id(parent_name, parent_family, parent_extension),
+                to: make_id(child.name, parent_family, child[:extension]),
+                label: obj[:family] || "enum",
+                color: @enum_color
               }
-              |> add_profile(obj[:profile])
 
-            acc = [edge | acc]
+              # Recursively add edges for child's children
+              add_descendant_edges.(
+                add_descendant_edges,
+                child.name,
+                parent_family,
+                child[:extension],
+                [edge | acc2]
+              )
+            end)
+          end
 
-            if not recursive? do
-              o = objects[String.to_atom(obj.class_type || obj.object_type)]
-              build_edges(acc, o, objects)
-            else
-              acc
-            end
-
-          _ ->
-            acc
+          add_descendant_edges.(add_descendant_edges, name, obj[:family], obj[:extension], acc)
+        else
+          acc
         end
+      end)
 
-      if obj[:is_enum] do
-        {collection, name} = get_collection_by_family(obj)
+    edges =
+      if class[:family] do
+        {collection, name} = get_collection_by_family(class)
 
         # Recursive function to add edges for all descendants
         add_descendant_edges = fn add_descendant_edges,
@@ -174,8 +242,8 @@ defmodule Schema.Graph do
             edge = %{
               from: make_id(parent_name, parent_family, parent_extension),
               to: make_id(child.name, parent_family, child[:extension]),
-              label: obj[:family] || "enum",
-              color: "#D6A5FF"
+              label: class[:family] || "enum",
+              color: @enum_color
             }
 
             # Recursively add edges for child's children
@@ -189,11 +257,18 @@ defmodule Schema.Graph do
           end)
         end
 
-        add_descendant_edges.(add_descendant_edges, name, obj[:family], obj[:extension], acc)
+        add_descendant_edges.(
+          add_descendant_edges,
+          name,
+          class[:family],
+          class[:extension],
+          edges
+        )
       else
-        acc
+        edges
       end
-    end)
+
+    edges
   end
 
   defp edges_member?(edges, entity) do

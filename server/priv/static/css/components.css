@@ -133,7 +133,8 @@ button:hover,
 /* Schema Action Buttons */
 #btn-json-schema,
 #btn-schema,
-#btn-sample-data {
+#btn-sample-data,
+#btn-validate {
   background: var(--primary-color);
   color: var(--text-inverse);
   border-radius: var(--radius-md);
@@ -154,7 +155,8 @@ button:hover,
 
 #btn-json-schema:hover,
 #btn-schema:hover,
-#btn-sample-data:hover {
+#btn-sample-data:hover,
+#btn-validate:hover {
   background: var(--accent-color);
   border-color: var(--accent-color);
   color: var(--text-inverse);
@@ -163,18 +165,16 @@ button:hover,
   box-shadow: var(--shadow-md);
 }
 
-#btn-json-schema:focus,
-#btn-schema:focus,
-#btn-sample-data:focus {
+#btn-json-schema:focus, #btn-schema:focus, #btn-sample-data:focus, #btn-validate:focus {
+
   outline: none;
   box-shadow:
     var(--shadow-md),
     0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
 }
 
-#btn-json-schema:active,
-#btn-schema:active,
-#btn-sample-data:active {
+#btn-json-schema:active, #btn-schema:active, #btn-sample-data:active, #btn-validate:active {
+
   transform: translateY(0);
   box-shadow: var(--shadow-sm);
 }
@@ -201,106 +201,11 @@ button:hover,
   margin-right: var(--spacing-xs);
 }
 
-/* Theme Toggle Switch */
-.theme-toggle-switch {
-  position: relative;
-  display: block;
-  width: var(--toggle-width);
-  height: var(--toggle-height);
-  cursor: pointer;
-  margin: 0 auto;
-}
-
-/* Theme Toggle Container for Navigation */
-.navbar-theme-toggle-container {
-  display: flex;
-  align-items: center;
-  margin-left: auto;
-  margin-right: var(--spacing-md);
-}
-
-/* Mobile Adjustments */
-@media (max-width: 768px) {
-  .navbar-theme-toggle-container {
-    margin-right: var(--spacing-sm);
-  }
-}
-
-.theme-toggle-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.theme-toggle-slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--border-color);
-  border-radius: 24px;
-  transition: var(--transition-normal);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 4px;
-  box-shadow: var(--shadow-sm);
-}
-
-.theme-toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: calc(var(--toggle-slider-size) - 1px);
-  width: var(--toggle-slider-size);
-  left: 3px;
-  bottom: 3px;
-  background: var(--surface-color);
-  border-radius: 50%;
-  transition: var(--transition-normal);
-  box-shadow: var(--shadow-md);
-}
-
-.theme-toggle-switch input:checked + .theme-toggle-slider {
-  background: var(--primary-color);
-}
-
-.theme-toggle-switch input:checked + .theme-toggle-slider:before {
-  transform: translateX(
-    calc(var(--toggle-width) - var(--toggle-slider-size) - 5px)
-  );
-}
-
-.theme-toggle-switch:hover .theme-toggle-slider {
-  background: var(--accent-color);
-}
-
-.theme-toggle-switch input:checked:hover + .theme-toggle-slider {
-  background: var(--accent-dark);
-}
-
-.theme-icon-light,
-.theme-icon-dark {
-  font-size: var(--toggle-icon-size);
-  color: var(--text-inverse);
-  z-index: 1;
-  transition: var(--transition-fast);
-}
-
-.theme-icon-light {
-  opacity: 1;
-}
-
-.theme-icon-dark {
-  opacity: 0.5;
-}
-
-.theme-toggle-switch input:checked ~ .theme-toggle-slider .theme-icon-light {
-  opacity: 0.5;
-}
-
-.theme-toggle-switch input:checked ~ .theme-toggle-slider .theme-icon-dark {
-  opacity: 1;
+#btn-validate::before {
+  content: '\f058';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  margin-right: var(--spacing-xs);
 }
 
 /* Show Deprecated Button */
