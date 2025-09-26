@@ -74,30 +74,7 @@ end
 </div>
 
 <div class="mt-4">
-  <table id="data-table" class="table table-bordered sortable">
-    <thead >
-    <tr class="thead-color">
-      <th class="col-name">Name</th>
-      <th class="col-caption">Caption</th>
-      <th class="col-group">Group</th>
-      <th class="col-requirement">Requirement</th>
-      <th class="col-type">Type</th>
-      <th class="col-description">Description</th>
-    </tr>
-    </thead>
-    <tbody class="searchable">
-      <%= for {attribute_key, attribute} <- @data[:attributes] do %>
-        <tr class="<%= field_classes(attribute) %>">
-          <td class="name" data-toggle="tooltip" title="<%= format_class_attribute_source(@data[:attribute_key], attribute, @data[:family]) %>"><%= format_attribute_name(attribute_key) %></td>
-          <td><%= raw format_attribute_caption(@conn, attribute_key, attribute) %></td>
-          <td class="capitalize"><%= attribute[:group] %></td>
-          <td><%= raw format_requirement(constraints, attribute_key, attribute) %></td>
-          <td class="extensions"><%= raw format_type(@conn, attribute) %></td>
-          <td><%= raw format_attribute_desc(@conn, attribute_key, attribute) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <%= render SchemaWeb.PageView, "_attribute_table.html", conn: @conn, data: @data %>
 </div>
 
 <%= if constraints != nil and map_size(constraints) > 0 do %>

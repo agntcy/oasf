@@ -19,7 +19,7 @@ defmodule SchemaWeb.Router do
   scope "/", SchemaWeb do
     pipe_through :browser
 
-    get "/", PageController, :main_skills
+    get "/", PageController, :objects
 
     get "/main_skills", PageController, :main_skills
     get "/main_skills/:id", PageController, :main_skills

@@ -1,0 +1,18 @@
+{
+  "caption": "Linkable Object",
+  "description": "Object for direct use and storage with the ability to be linked to other records.",
+  "name": "linkable",
+  "extends": "object",
+  "attributes": {
+    "schema_version": {
+      "caption": "Schema Version",
+      "description": "Version of the OASF schema.",
+      "requirement": "required"
+    },
+    "parent_cid": {
+      "caption": "Parent CID",
+      "description": "The CID of the parent record if this record is a derivative or linked to another record.",
+      "requirement": "optional"
+    }
+  }
+}

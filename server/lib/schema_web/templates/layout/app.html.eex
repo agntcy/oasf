@@ -88,9 +88,6 @@
           $('#modules_id a.nav-link').addClass("active");
           $('#classes_id a.nav-link').addClass("active");
           break;
-        case '/objects/record':
-          $('#record_id a.nav-link').addClass("active");
-          break;
         case '/dictionary':
           $('#dictionary_id a.nav-link').addClass("active");
           break;
@@ -214,6 +211,9 @@
 
   <div class="collapse navbar-collapse" id="navbarCollapse">
     <ul class="top-navbar-nav navbar-nav ml-auto">
+      <li id="objects_id"  class="nav-item">
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects") %>'>Objects</a>
+      </li>
       <li id="classes_id" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button">Classes</a>
         <div class="dropdown-content">
@@ -231,14 +231,8 @@
       <li id="modules_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_modules") %>'>Modules</a>
       </li>
-      <li id="record_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects/record") %>'>Record</a>
-      </li>
       <li id="dictionary_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/dictionary") %>'>Dictionary</a>
-      </li>
-      <li id="objects_id"  class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects") %>'>Objects</a>
       </li>
       <li id="data_types_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/data_types") %>'>Data Types</a>

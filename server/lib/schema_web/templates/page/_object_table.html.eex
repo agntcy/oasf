@@ -1,0 +1,22 @@
+<table class="table table-bordered sortable">
+  <thead>
+    <tr class="thead-color">
+      <th class="col-name">Name</th>
+      <th class="col-caption">Caption</th>
+      <th class="col-references">Referenced By</th>
+      <th class="col-description">Description</th>
+    </tr>
+  </thead>
+  <tbody class="searchable">
+    <%= for {object_key, object} <- @objects do %>
+      <% object_key_str = Atom.to_string(object_key) %>
+      <% object_path = Routes.static_path(@conn, "/objects/" <> object_key_str) %>
+      <tr class=<%= show_deprecated_css_classes(object, "oasf-class") %>" <%= raw format_profiles(object[:profiles])%>>
+        <td class="name"><a href="<%= object_path %>"><%= object_key_str %></a></td>
+        <td class="extensions"><%= raw format_attribute_caption(@conn, object_key_str, object) %></td>
+        <td class="extensions"><%= raw object_links(@conn, object[:name], object[:_links], :collapse) %></td>
+        <td><%= raw description(object) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
