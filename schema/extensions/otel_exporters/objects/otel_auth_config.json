@@ -1,0 +1,111 @@
+{
+  "caption": "OpenTelemetry Authentication Configuration",
+  "description": "Authentication configuration for OpenTelemetry exporters",
+  "extends": "object",
+  "name": "otel_auth_config",
+  "attributes": {
+    "auth_type": {
+      "caption": "Authentication Type",
+      "description": "Type of authentication to use",
+      "requirement": "required",
+      "enum": {
+        "none": {
+          "caption": "None",
+          "description": "No authentication"
+        },
+        "api_key": {
+          "caption": "API Key",
+          "description": "API key authentication"
+        },
+        "bearer_token": {
+          "caption": "Bearer Token",
+          "description": "Bearer token authentication"
+        },
+        "basic": {
+          "caption": "Basic Auth",
+          "description": "Basic authentication with username/password"
+        },
+        "oauth2": {
+          "caption": "OAuth2",
+          "description": "OAuth2 authentication"
+        },
+        "mtls": {
+          "caption": "Mutual TLS",
+          "description": "Mutual TLS authentication"
+        }
+      }
+    },
+    "api_key": {
+      "caption": "API Key",
+      "description": "API key for authentication",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "api_key_header": {
+      "caption": "API Key Header",
+      "description": "Header name for API key (default: x-api-key)",
+      "requirement": "optional",
+      "type": "string_t"
+    },
+    "bearer_token": {
+      "caption": "Bearer Token",
+      "description": "Bearer token for authentication",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "username": {
+      "caption": "Username",
+      "description": "Username for basic authentication",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "password": {
+      "caption": "Password",
+      "description": "Password for basic authentication",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "oauth2_client_id": {
+      "caption": "OAuth2 Client ID",
+      "description": "OAuth2 client identifier",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "oauth2_client_secret": {
+      "caption": "OAuth2 Client Secret",
+      "description": "OAuth2 client secret",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "oauth2_token_url": {
+      "caption": "OAuth2 Token URL",
+      "description": "OAuth2 token endpoint URL",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "oauth2_scope": {
+      "caption": "OAuth2 Scope",
+      "description": "OAuth2 access scope",
+      "requirement": "optional",
+      "type": "string_t"
+    },
+    "oauth2_audience": {
+      "caption": "OAuth2 Audience",
+      "description": "OAuth2 audience claim",
+      "requirement": "optional",
+      "type": "string_t"
+    },
+    "client_cert": {
+      "caption": "Client Certificate",
+      "description": "Path to client certificate for mTLS",
+      "requirement": "conditional",
+      "type": "string_t"
+    },
+    "client_key": {
+      "caption": "Client Key",
+      "description": "Path to client private key for mTLS",
+      "requirement": "conditional",
+      "type": "string_t"
+    }
+  }
+}
