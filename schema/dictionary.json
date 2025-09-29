@@ -211,11 +211,6 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
-    "algorithm": {
-      "caption": "Algorithm",
-      "description": "The algorithm used. See specific usage.",
-      "type": "string_t"
-    },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
@@ -244,11 +239,6 @@
       "type": "string_t",
       "is_array": true
     },
-    "certificate": {
-      "caption": "Certificate",
-      "description": "Base64-encoded signing certificate.",
-      "type": "bytestring_t"
-    },
     "command": {
       "caption": "Command",
       "description": "A command to be ran. See specific usage.",
@@ -273,16 +263,6 @@
         }
       },
       "is_array": true
-    },
-    "content_bundle": {
-      "caption": "Content Bundle",
-      "description": "Base64-encoded signature bundle.",
-      "type": "bytestring_t"
-    },
-    "content_type": {
-      "caption": "Content Type",
-      "description": "Type of the content. See specific usage.",
-      "type": "string_t"
     },
     "cost_score": {
       "caption": "Cost Score",
@@ -604,11 +584,6 @@
       "description": "Overall score.",
       "type": "float_t"
     },
-    "record_signature": {
-      "caption": "Signature",
-      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
-      "type": "record_signature"
-    },
     "referred_evaluations": {
       "caption": "Referred evaluations",
       "description": "Evaluations associated to the Agent.",
@@ -640,16 +615,6 @@
       "caption": "Security Score",
       "description": "Security score.",
       "type": "float_t"
-    },
-    "signature": {
-      "caption": "Signature",
-      "description": "Base64-encoded signature.",
-      "type": "bytestring_t"
-    },
-    "signed_at": {
-      "caption": "Signed Time",
-      "description": "Timestamp when signing occurred. See specific usage.",
-      "type": "datetime_t"
     },
     "size": {
       "caption": "Size",
