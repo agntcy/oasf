@@ -649,6 +649,15 @@ defmodule Schema.Utils do
     end
   end
 
+  @spec class_name_with_extension(map) :: String.t()
+  def class_name_with_extension(item) do
+    if item[:extension] do
+      "#{item[:extension]}/#{item[:name]}"
+    else
+      item[:name]
+    end
+  end
+
   @spec is_oasf_class?(atom, String.t()) :: boolean
   def is_oasf_class?(family, name) do
     class_name = Schema.Utils.descope(name) |> String.to_atom()
