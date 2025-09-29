@@ -11,11 +11,6 @@
     "id": {
       "description": "The id as a unique identifier of the class.",
       "requirement": "recommended"
-    },
-    "annotations": {
-      "caption": "Annotations",
-      "description": "Additional metadata associated with the class.",
-      "requirement": "optional"
     }
   },
   "constraints": {
