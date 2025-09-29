@@ -321,14 +321,6 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
     },
-    "domain": {
-      "caption": "Domain",
-      "description": "A domain that the agent can operate in.",
-      "type": "class_t",
-      "class_type": "base_domain",
-      "family": "domain",
-      "is_enum": true
-    },
     "domains": {
       "caption": "Domains",
       "description": "Domains that the agent can operate in.",
@@ -455,11 +447,6 @@
       "caption": "MCP Data",
       "description": "Data supported by the agent for MCP.",
       "type": "mcp_data"
-    },
-    "mcp_server": {
-      "caption": "MCP Server",
-      "description": "Describes the configuration for an MCP server.",
-      "type": "mcp_server"
     },
     "mcp_server_capabilities": {
       "caption": "MCP Server Capabilities",
@@ -669,14 +656,6 @@
       "description": "The size of data, in bytes.",
       "type": "long_t"
     },
-    "skill": {
-      "caption": "Skill",
-      "description": "A skill that applies to an agent.",
-      "type": "class_t",
-      "class_type": "base_skill",
-      "family": "skill",
-      "is_enum": true
-    },
     "skills": {
       "caption": "Skills",
       "description": "Skills that apply to an agent.",
@@ -700,11 +679,6 @@
       "caption": "Unit of Measurement",
       "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
       "type": "string_t"
-    },
-    "unmapped": {
-      "caption": "Unmapped Data",
-      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
-      "type": "object"
     },
     "uri": {
       "caption": "URI",
