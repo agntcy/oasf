@@ -211,11 +211,6 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
-    "algorithm": {
-      "caption": "Algorithm",
-      "description": "The algorithm used. See specific usage.",
-      "type": "string_t"
-    },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
@@ -244,11 +239,6 @@
       "type": "string_t",
       "is_array": true
     },
-    "certificate": {
-      "caption": "Certificate",
-      "description": "Base64-encoded signing certificate.",
-      "type": "bytestring_t"
-    },
     "command": {
       "caption": "Command",
       "description": "A command to be ran. See specific usage.",
@@ -273,16 +263,6 @@
         }
       },
       "is_array": true
-    },
-    "content_bundle": {
-      "caption": "Content Bundle",
-      "description": "Base64-encoded signature bundle.",
-      "type": "bytestring_t"
-    },
-    "content_type": {
-      "caption": "Content Type",
-      "description": "Type of the content. See specific usage.",
-      "type": "string_t"
     },
     "cost_score": {
       "caption": "Cost Score",
@@ -321,14 +301,6 @@
       "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
       "type": "file_hash_t"
     },
-    "domain": {
-      "caption": "Domain",
-      "description": "A domain that the agent can operate in.",
-      "type": "class_t",
-      "class_type": "base_domain",
-      "family": "domain",
-      "is_enum": true
-    },
     "domains": {
       "caption": "Domains",
       "description": "Domains that the agent can operate in.",
@@ -355,22 +327,6 @@
       "description": "List of possible environment variables that might be required to be set. See specific usage.",
       "type": "env_var",
       "is_array": true
-    },
-    "evaluation_data": {
-      "caption": "Data",
-      "description": "Data supported by the agent for evaluation.",
-      "type": "evaluation_data"
-    },
-    "evaluation_datasets": {
-      "caption": "Datasets",
-      "description": "Datasets array.",
-      "type": "evaluation_dataset",
-      "is_array": true
-    },
-    "evaluation_report": {
-      "caption": "Evaluation report",
-      "description": "The report of an evaluation.",
-      "type": "evaluation_report"
     },
     "export_format": {
       "caption": "Export Format",
@@ -456,11 +412,6 @@
       "description": "Data supported by the agent for MCP.",
       "type": "mcp_data"
     },
-    "mcp_server": {
-      "caption": "MCP Server",
-      "description": "Describes the configuration for an MCP server.",
-      "type": "mcp_server"
-    },
     "mcp_server_capabilities": {
       "caption": "MCP Server Capabilities",
       "description": "Describes the capabilities supported by an MCP server.",
@@ -497,18 +448,6 @@
       "caption": "MCP Servers",
       "description": "Describes the list of MCP servers.",
       "type": "mcp_server",
-      "is_array": true
-    },
-    "metadata": {
-      "caption": "Metadata",
-      "description": "Metadata.",
-      "type": "key_value_object",
-      "is_array": true
-    },
-    "metrics": {
-      "caption": "Metrics",
-      "description": "Defines the key metrics used to evaluate system performance, cost, and other critical factors.",
-      "type": "metric",
       "is_array": true
     },
     "mime_type": {
@@ -572,16 +511,6 @@
         }
       ]
     },
-    "overall_rating": {
-      "caption": "Overall Rating",
-      "description": "Overall rating.",
-      "type": "float_t"
-    },
-    "overall_scores": {
-      "caption": "Overall Scores",
-      "description": "Overall scores of the Agent across all evaluation.",
-      "type": "overall_scores"
-    },
     "path": {
       "caption": "Path",
       "description": "The path that pertains to the class or object. See specific usage.",
@@ -607,26 +536,10 @@
       "description": "Name of the provider of a service, tool, object, etc. See specific usage.",
       "type": "string_t"
     },
-    "publisher": {
-      "caption": "Publisher",
-      "description": "Publisher.",
-      "type": "publisher"
-    },
     "quality_score": {
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
-    },
-    "record_signature": {
-      "caption": "Signature",
-      "description": "A digitital signature is used to verify the authenticity and integrity of the data. See specific usage.",
-      "type": "record_signature"
-    },
-    "referred_evaluations": {
-      "caption": "Referred evaluations",
-      "description": "Evaluations associated to the Agent.",
-      "type": "referred_evaluation",
-      "is_array": true
     },
     "required": {
       "caption": "Required",
@@ -654,28 +567,10 @@
       "description": "Security score.",
       "type": "float_t"
     },
-    "signature": {
-      "caption": "Signature",
-      "description": "Base64-encoded signature.",
-      "type": "bytestring_t"
-    },
-    "signed_at": {
-      "caption": "Signed Time",
-      "description": "Timestamp when signing occurred. See specific usage.",
-      "type": "datetime_t"
-    },
     "size": {
       "caption": "Size",
       "description": "The size of data, in bytes.",
       "type": "long_t"
-    },
-    "skill": {
-      "caption": "Skill",
-      "description": "A skill that applies to an agent.",
-      "type": "class_t",
-      "class_type": "base_skill",
-      "family": "skill",
-      "is_enum": true
     },
     "skills": {
       "caption": "Skills",
@@ -700,11 +595,6 @@
       "caption": "Unit of Measurement",
       "description": "The unit in which the metric is measured (for example, 'seconds', 'bytes', or 'percentage').",
       "type": "string_t"
-    },
-    "unmapped": {
-      "caption": "Unmapped Data",
-      "description": "The attributes that are not mapped to the class schema. The names and values of those attributes are specific to the source.",
-      "type": "object"
     },
     "uri": {
       "caption": "URI",

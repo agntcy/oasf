@@ -59,12 +59,6 @@
       "description": "List of modules that describe this record and its capabilities more in depth.",
       "requirement": "recommended"
     },
-    "signature": {
-      "reference": "record_signature",
-      "caption": "Signature",
-      "description": "A digital signature of the record data model. This is used to verify the authenticity and integrity of the record.",
-      "requirement": "recommended"
-    },
     "previous_record_cid": {
       "caption": "Previous Record CID",
       "description": "Content Identifier (CID) of the data of the record with the previous version.",
