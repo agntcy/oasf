@@ -1,0 +1,8 @@
+{
+  "uid": 1009,
+  "caption": "Log Analytics",
+  "description": "Analysis of system logs and event data for insights and troubleshooting",
+  "extends": "analytics_intelligence",
+  "name": "log_analytics",
+  "attributes": {}
+}

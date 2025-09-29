@@ -1,0 +1,8 @@
+{
+  "caption": "Analytics & Intelligence",
+  "category": "analytics_intelligence",
+  "description": "System analysis, monitoring, and intelligent insights capabilities",
+  "name": "analytics_intelligence",
+  "extends": "ai_analysis",
+  "attributes": {}
+}

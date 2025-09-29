@@ -1,0 +1,8 @@
+{
+  "uid": 1001,
+  "caption": "Machine Learning",
+  "description": "Core ML model operations and training capabilities for agent integration",
+  "extends": "machine_learning_inference",
+  "name": "machine_learning",
+  "attributes": {}
+}

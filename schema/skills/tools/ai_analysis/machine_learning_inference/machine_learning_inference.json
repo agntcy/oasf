@@ -1,0 +1,8 @@
+{
+  "caption": "Machine Learning & Inference",
+  "category": "machine_learning_inference",
+  "description": "Core ML model operations, training, and real-time inference capabilities",
+  "name": "machine_learning_inference",
+  "extends": "ai_analysis",
+  "attributes": {}
+}

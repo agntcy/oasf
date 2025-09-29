@@ -1,0 +1,8 @@
+{
+  "uid": 1002,
+  "caption": "Foundation Models",
+  "description": "Access to large foundation models (LLMs, multimodal models) for advanced AI capabilities",
+  "extends": "machine_learning_inference",
+  "name": "foundation_models",
+  "attributes": {}
+}
