@@ -634,7 +634,16 @@ defmodule Schema.Utils do
     base_items = ["base_skill", "base_domain", "base_module"]
     hierarchy = build_hierarchy(name, all_classes, [])
     filtered = Enum.reject(hierarchy, &(&1 in base_items))
-    Enum.join(filtered ++ [name], "/")
+    name_str = if is_atom(name), do: Atom.to_string(name), else: name
+
+    processed_name =
+      if String.contains?(name_str, "/") do
+        String.replace(name_str, "/", "_")
+      else
+        name_str
+      end
+
+    Enum.join(filtered ++ [processed_name], "/")
   end
 
   defp build_hierarchy(name, class_map, acc) do
