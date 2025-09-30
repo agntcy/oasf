@@ -951,8 +951,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema main domains.
   """
-  swagger_path :main_domains do
-    get("/api/main_domains")
+  swagger_path :domain_categories do
+    get("/api/domain_categories")
     summary("List domain categories")
     description("Get all OASF domain classes by category.")
     produces("application/json")
@@ -970,21 +970,21 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Returns the list of main domains.
   """
-  @spec main_domains(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domains(conn, params) do
-    send_json_resp(conn, main_domains(params))
+  @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def domain_categories(conn, params) do
+    send_json_resp(conn, domain_categories(params))
   end
 
-  @spec main_domains(map()) :: map()
-  def main_domains(params) do
-    parse_options(extensions(params)) |> Schema.main_domains()
+  @spec domain_categories(map()) :: map()
+  def domain_categories(params) do
+    parse_options(extensions(params)) |> Schema.domain_categories()
   end
 
   @doc """
   Get the domains defined in a given main domain.
   """
   swagger_path :main_domain do
-    get("/api/main_domains/{name}")
+    get("/api/domain_categories/{name}")
     summary("List domains of a domain category")
 
     description(
@@ -1009,7 +1009,7 @@ defmodule SchemaWeb.SchemaController do
 
   @spec main_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
   def main_domain(conn, %{"id" => id} = params) do
-    case main_domain_domains(params) do
+    case main_dodomain_categories(params) do
       nil ->
         send_json_resp(conn, 404, %{error: "Domain category #{id} not found"})
 
@@ -1018,8 +1018,8 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  @spec main_domain_domains(map()) :: map() | nil
-  def main_domain_domains(params) do
+  @spec main_dodomain_categories(map()) :: map() | nil
+  def main_dodomain_categories(params) do
     name = params["id"]
     extension = extension(params)
     extensions = parse_options(extensions(params))

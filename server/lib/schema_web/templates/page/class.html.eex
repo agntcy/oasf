@@ -17,7 +17,7 @@ path = case class_type do
   "module" ->
     Routes.static_path(@conn, "/main_modules/" <> category)
   "domain" ->
-    Routes.static_path(@conn, "/main_domains/" <> category)
+    Routes.static_path(@conn, "/domain_categories/" <> category)
   _ ->
     ""
 end

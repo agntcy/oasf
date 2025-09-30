@@ -80,7 +80,7 @@
           $('#skills_id a.nav-link').addClass("active");
           $('#classes_id a.nav-link').addClass("active");
           break;
-        case '/main_domains':
+        case '/domain_categories':
           $('#domains_id a.nav-link').addClass("active");
           $('#classes_id a.nav-link').addClass("active");
           break;
@@ -218,7 +218,7 @@
         <a class="nav-link dropdown-toggle" href="#" role="button">Classes</a>
         <div class="dropdown-content">
           <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/skill_categories") %>'>Skills</a>
-          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/domain_categories") %>'>Domains</a>
           <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_modules") %>'>Modules</a>
         </div>
       </li>
@@ -226,7 +226,7 @@
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/skill_categories") %>'>Skills</a>
       </li>
       <li id="domains_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/domain_categories") %>'>Domains</a>
       </li>
       <li id="modules_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_modules") %>'>Modules</a>

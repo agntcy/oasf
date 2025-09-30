@@ -1,7 +1,7 @@
 {
   "caption": "Domains",
   "description": "A comprehensive table outlining distinct fields of application and knowledge areas within the framework.",
-  "name": "main_domains",
+  "name": "domain_categories",
   "attributes": {
     "technology": {
       "uid": 1,

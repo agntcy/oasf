@@ -37,7 +37,7 @@ defmodule SchemaWeb.PageController do
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_domains")
+          |> Map.put(:categories_path, "domain_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -178,9 +178,9 @@ defmodule SchemaWeb.PageController do
   @doc """
   Renders main domains or the domains in a given main domain.
   """
-  @spec main_domains(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domains(conn, %{"id" => id} = params) do
-    case SchemaController.main_domain_domains(params) do
+  @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def domain_categories(conn, %{"id" => id} = params) do
+    case SchemaController.main_dodomain_categories(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -200,13 +200,13 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_domains(conn, params) do
+  def domain_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_domains()
+      |> SchemaController.domain_categories()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_domains")
+      |> Map.put(:categories_path, "domain_categories")
       |> Map.put(:classes_path, "domains")
 
     render(conn, "index.html",

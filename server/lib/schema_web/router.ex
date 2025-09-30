@@ -25,9 +25,9 @@ defmodule SchemaWeb.Router do
     get "/skill_categories/:id", PageController, :skill_categories
     get "/skill_categories/:extension/:id", PageController, :skill_categories
 
-    get "/main_domains", PageController, :main_domains
-    get "/main_domains/:id", PageController, :main_domains
-    get "/main_domains/:extension/:id", PageController, :main_domains
+    get "/domain_categories", PageController, :domain_categories
+    get "/domain_categories/:id", PageController, :domain_categories
+    get "/domain_categories/:extension/:id", PageController, :domain_categories
 
     get "/main_modules", PageController, :main_modules
     get "/main_modules/:id", PageController, :main_modules
@@ -84,9 +84,9 @@ defmodule SchemaWeb.Router do
     get "/skill_categories/:id", SchemaController, :main_skill
     get "/skill_categories/:extension/:id", SchemaController, :main_skill
 
-    get "/main_domains", SchemaController, :main_domains
-    get "/main_domains/:id", SchemaController, :main_domain
-    get "/main_domains/:extension/:id", SchemaController, :main_domain
+    get "/domain_categories", SchemaController, :domain_categories
+    get "/domain_categories/:id", SchemaController, :main_domain
+    get "/domain_categories/:extension/:id", SchemaController, :main_domain
 
     get "/main_modules", SchemaController, :main_modules
     get "/main_modules/:id", SchemaController, :main_module
