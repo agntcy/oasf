@@ -54,11 +54,20 @@ defmodule Schema.Utils do
 
   @spec descope(atom() | String.t()) :: String.t()
   def descope(name) when is_binary(name) do
-    Path.basename(name)
+    descoped = Path.basename(name)
+    extensions = Map.keys(Schema.extensions())
+
+    case Enum.find(extensions, fn ext -> String.starts_with?(descoped, ext <> "_") end) do
+      nil ->
+        descoped
+
+      ext ->
+        String.replace_prefix(descoped, ext <> "_", ext <> "/")
+    end
   end
 
   def descope(name) when is_atom(name) do
-    Path.basename(Atom.to_string(name))
+    descope(Atom.to_string(name))
   end
 
   @spec descope_to_uid(atom() | String.t()) :: atom()
