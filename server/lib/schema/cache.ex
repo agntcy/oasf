@@ -27,7 +27,7 @@ defmodule Schema.Cache do
     # skill libs
     :skills,
     :all_skills,
-    :main_skills,
+    :skill_categories,
     # module libs
     :modules,
     :all_modules,
@@ -42,7 +42,7 @@ defmodule Schema.Cache do
     all_objects
     skills
     all_skills
-    main_skills
+    skill_categories
     domains
     all_domains
     main_domains
@@ -57,7 +57,7 @@ defmodule Schema.Cache do
   @type category_t() :: map()
   @type dictionary_t() :: map()
 
-  @main_skills_file "main_skills.json"
+  @skill_categories_file "skill_categories.json"
   @skills_dir "skills"
   @skill_family "skill"
 
@@ -84,8 +84,8 @@ defmodule Schema.Cache do
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
-    {skills, all_skills, main_skills} =
-      read_classes(@main_skills_file, @skills_dir, @skill_family, version[:version])
+    {skills, all_skills, skill_categories} =
+      read_classes(@skill_categories_file, @skills_dir, @skill_family, version[:version])
 
     {domains, all_domains, main_domains} =
       read_classes(
@@ -169,7 +169,7 @@ defmodule Schema.Cache do
       # skill libs
       skills: skills,
       all_skills: all_skills,
-      main_skills: main_skills,
+      skill_categories: skill_categories,
       # domain libs
       domains: domains,
       all_domains: all_domains,
@@ -208,12 +208,12 @@ defmodule Schema.Cache do
   @spec dictionary(__MODULE__.t()) :: dictionary_t()
   def dictionary(%__MODULE__{dictionary: dictionary}), do: dictionary
 
-  @spec main_skills(__MODULE__.t()) :: map()
-  def main_skills(%__MODULE__{main_skills: main_skills}), do: main_skills
+  @spec skill_categories(__MODULE__.t()) :: map()
+  def skill_categories(%__MODULE__{skill_categories: skill_categories}), do: skill_categories
 
   @spec main_skill(__MODULE__.t(), any) :: nil | category_t()
-  def main_skill(%__MODULE__{main_skills: main_skills}, id) do
-    Map.get(main_skills[:attributes], id)
+  def main_skill(%__MODULE__{skill_categories: skill_categories}, id) do
+    Map.get(skill_categories[:attributes], id)
   end
 
   @spec main_domains(__MODULE__.t()) :: map()

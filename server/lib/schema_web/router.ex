@@ -19,11 +19,11 @@ defmodule SchemaWeb.Router do
   scope "/", SchemaWeb do
     pipe_through :browser
 
-    get "/", PageController, :main_skills
+    get "/", PageController, :skill_categories
 
-    get "/main_skills", PageController, :main_skills
-    get "/main_skills/:id", PageController, :main_skills
-    get "/main_skills/:extension/:id", PageController, :main_skills
+    get "/skill_categories", PageController, :skill_categories
+    get "/skill_categories/:id", PageController, :skill_categories
+    get "/skill_categories/:extension/:id", PageController, :skill_categories
 
     get "/main_domains", PageController, :main_domains
     get "/main_domains/:id", PageController, :main_domains
@@ -80,9 +80,9 @@ defmodule SchemaWeb.Router do
     get "/profiles", SchemaController, :profiles
     get "/extensions", SchemaController, :extensions
 
-    get "/main_skills", SchemaController, :main_skills
-    get "/main_skills/:id", SchemaController, :main_skill
-    get "/main_skills/:extension/:id", SchemaController, :main_skill
+    get "/skill_categories", SchemaController, :skill_categories
+    get "/skill_categories/:id", SchemaController, :main_skill
+    get "/skill_categories/:extension/:id", SchemaController, :main_skill
 
     get "/main_domains", SchemaController, :main_domains
     get "/main_domains/:id", SchemaController, :main_domain

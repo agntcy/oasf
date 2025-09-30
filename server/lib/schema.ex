@@ -73,14 +73,14 @@ defmodule Schema do
   @doc """
     Returns skill categories.
   """
-  @spec main_skills :: map()
-  def main_skills(), do: Repo.main_skills()
+  @spec skill_categories :: map()
+  def skill_categories(), do: Repo.skill_categories()
 
   @doc """
     Returns skill categories defined in the given extension set.
   """
-  def main_skills(extensions) do
-    Map.update(Repo.main_skills(extensions), :attributes, %{}, fn attributes ->
+  def skill_categories(extensions) do
+    Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
       Enum.into(attributes, %{}, fn {name, _main_skill} ->
         {name, main_skill(extensions, name)}
       end)

@@ -18,7 +18,7 @@ defmodule SchemaWeb.PageController do
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_skills")
+          |> Map.put(:categories_path, "skill_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -137,8 +137,8 @@ defmodule SchemaWeb.PageController do
   @doc """
   Renders main skills or the skills in a given main skill.
   """
-  @spec main_skills(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_skills(conn, %{"id" => id} = params) do
+  @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def skill_categories(conn, %{"id" => id} = params) do
     case SchemaController.main_skill_skills(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
@@ -159,13 +159,13 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_skills(conn, params) do
+  def skill_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_skills()
+      |> SchemaController.skill_categories()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_skills")
+      |> Map.put(:categories_path, "skill_categories")
       |> Map.put(:classes_path, "skills")
 
     render(conn, "index.html",

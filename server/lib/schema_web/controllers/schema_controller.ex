@@ -872,8 +872,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema main skills.
   """
-  swagger_path :main_skills do
-    get("/api/main_skills")
+  swagger_path :skill_categories do
+    get("/api/skill_categories")
     summary("List skill categories")
     description("Get all OASF skill classes by category.")
     produces("application/json")
@@ -891,21 +891,21 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Returns the list of main skills.
   """
-  @spec main_skills(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_skills(conn, params) do
-    send_json_resp(conn, main_skills(params))
+  @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def skill_categories(conn, params) do
+    send_json_resp(conn, skill_categories(params))
   end
 
-  @spec main_skills(map()) :: map()
-  def main_skills(params) do
-    parse_options(extensions(params)) |> Schema.main_skills()
+  @spec skill_categories(map()) :: map()
+  def skill_categories(params) do
+    parse_options(extensions(params)) |> Schema.skill_categories()
   end
 
   @doc """
   Get the skills defined in a given main skill.
   """
   swagger_path :main_skill do
-    get("/api/main_skills/{name}")
+    get("/api/skill_categories/{name}")
     summary("List skills of a skill category")
 
     description(

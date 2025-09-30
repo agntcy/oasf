@@ -43,19 +43,19 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.profiles(schema) |> filter(extensions) end)
   end
 
-  @spec main_skills :: map()
-  def main_skills() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
+  @spec skill_categories :: map()
+  def skill_categories() do
+    Agent.get(__MODULE__, fn schema -> Cache.skill_categories(schema) end)
   end
 
-  @spec main_skills(extensions_t() | nil) :: map()
-  def main_skills(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
+  @spec skill_categories(extensions_t() | nil) :: map()
+  def skill_categories(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.skill_categories(schema) end)
   end
 
-  def main_skills(extensions) do
+  def skill_categories(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.main_skills(schema)
+      Cache.skill_categories(schema)
       |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
     end)
   end
