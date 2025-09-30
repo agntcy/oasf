@@ -853,8 +853,16 @@ defmodule Schema.Generator do
     if field[:is_enum] do
       Utils.find_children(all_classes_fn, field[:class_type])
       |> Enum.reject(& &1[:hidden?])
-      |> Enum.map(&class_fn.(&1.name))
-      |> Enum.filter(& &1)
+      |> Enum.map(fn child ->
+        Enum.find_value(all_classes_fn, fn {key, value} ->
+          if value == child, do: key, else: nil
+        end)
+        |> case do
+          nil -> nil
+          key -> class_fn.(key)
+        end
+      end)
+      |> Enum.reject(&is_nil/1)
     else
       class_fn.(field[:class_type]) |> List.wrap()
     end
@@ -864,12 +872,17 @@ defmodule Schema.Generator do
     valid_objects =
       if field[:is_enum] do
         Utils.find_children(Schema.all_objects(), field[:object_type])
-        |> Enum.reject(fn item -> item[:hidden?] == true end)
+        |> Enum.reject(& &1[:hidden?])
         |> Enum.map(fn descendant ->
-          descendant[:name]
-          |> String.to_atom()
-          |> Schema.object()
+          Enum.find_value(Schema.all_objects(), fn {key, value} ->
+            if value == descendant, do: key, else: nil
+          end)
+          |> case do
+            nil -> nil
+            key -> Schema.object(key)
+          end
         end)
+        |> Enum.reject(&is_nil/1)
       else
         field[:object_type]
         |> String.to_atom()
