@@ -3,25 +3,15 @@
   "description": "A comprehensive table outlining module sets of application and knowledge areas within the framework.",
   "name": "module_categories",
   "attributes": {
-    "observability": {
+    "core": {
       "uid": 1,
-      "caption": "Observability",
-      "description": "Observability module set."
-    },
-    "evaluation": {
-      "uid": 2,
-      "caption": "Evaluation",
-      "description": "Evaluation module set."
+      "caption": "Core",
+      "description": "Core AGNTCY modules."
     },
     "runtime": {
-      "uid": 3,
+      "uid": 2,
       "caption": "Runtime",
       "description": "Runtime module set."
-    },
-    "identity": {
-      "uid": 4,
-      "caption": "Identity",
-      "description": "Identity module set."
     }
   }
 }

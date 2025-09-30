@@ -2,8 +2,7 @@
   "uid": 1,
   "caption": "Observability",
   "description": "A module describing how the agent can be observed.",
-  "category": "observability",
-  "extends": "base_module",
+  "extends": "core",
   "name": "observability",
   "attributes": {
     "data": {
