@@ -1030,8 +1030,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema main modules.
   """
-  swagger_path :main_modules do
-    get("/api/main_modules")
+  swagger_path :module_categories do
+    get("/api/module_categories")
     summary("List module categories")
     description("Get all OASF module classes by category.")
     produces("application/json")
@@ -1049,21 +1049,21 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Returns the list of main modules.
   """
-  @spec main_modules(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_modules(conn, params) do
-    send_json_resp(conn, main_modules(params))
+  @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def module_categories(conn, params) do
+    send_json_resp(conn, module_categories(params))
   end
 
-  @spec main_modules(map()) :: map()
-  def main_modules(params) do
-    parse_options(extensions(params)) |> Schema.main_modules()
+  @spec module_categories(map()) :: map()
+  def module_categories(params) do
+    parse_options(extensions(params)) |> Schema.module_categories()
   end
 
   @doc """
   Get the modules defined in a given main module.
   """
   swagger_path :main_module do
-    get("/api/main_modules/{name}")
+    get("/api/module_categories/{name}")
     summary("List modules of a module category")
 
     description(

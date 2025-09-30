@@ -133,14 +133,14 @@ defmodule Schema do
   @doc """
     Returns module categories.
   """
-  @spec main_modules :: map()
-  def main_modules(), do: Repo.main_modules()
+  @spec module_categories :: map()
+  def module_categories(), do: Repo.module_categories()
 
   @doc """
     Returns module categories defined in the given extension set.
   """
-  def main_modules(extensions) do
-    Map.update(Repo.main_modules(extensions), :attributes, %{}, fn attributes ->
+  def module_categories(extensions) do
+    Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
       Enum.into(attributes, %{}, fn {name, _main_module} ->
         {name, main_module(extensions, name)}
       end)

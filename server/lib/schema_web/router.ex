@@ -29,9 +29,9 @@ defmodule SchemaWeb.Router do
     get "/domain_categories/:id", PageController, :domain_categories
     get "/domain_categories/:extension/:id", PageController, :domain_categories
 
-    get "/main_modules", PageController, :main_modules
-    get "/main_modules/:id", PageController, :main_modules
-    get "/main_modules/:extension/:id", PageController, :main_modules
+    get "/module_categories", PageController, :module_categories
+    get "/module_categories/:id", PageController, :module_categories
+    get "/module_categories/:extension/:id", PageController, :module_categories
 
     get "/profiles", PageController, :profiles
     get "/profiles/:id", PageController, :profiles
@@ -88,9 +88,9 @@ defmodule SchemaWeb.Router do
     get "/domain_categories/:id", SchemaController, :main_domain
     get "/domain_categories/:extension/:id", SchemaController, :main_domain
 
-    get "/main_modules", SchemaController, :main_modules
-    get "/main_modules/:id", SchemaController, :main_module
-    get "/main_modules/:extension/:id", SchemaController, :main_module
+    get "/module_categories", SchemaController, :module_categories
+    get "/module_categories/:id", SchemaController, :main_module
+    get "/module_categories/:extension/:id", SchemaController, :main_module
 
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile

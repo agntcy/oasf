@@ -1,7 +1,7 @@
 {
   "caption": "Modules",
   "description": "A comprehensive table outlining module sets of application and knowledge areas within the framework.",
-  "name": "main_modules",
+  "name": "module_categories",
   "attributes": {
     "observability": {
       "uid": 1,

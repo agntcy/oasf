@@ -31,7 +31,7 @@ defmodule Schema.Cache do
     # module libs
     :modules,
     :all_modules,
-    :main_modules
+    :module_categories
   ]
   defstruct ~w[
     version
@@ -48,7 +48,7 @@ defmodule Schema.Cache do
     domain_categories
     modules
     all_modules
-    main_modules
+    module_categories
   ]a
 
   @type t() :: %__MODULE__{}
@@ -65,7 +65,7 @@ defmodule Schema.Cache do
   @domains_dir "domains"
   @domain_family "domain"
 
-  @main_modules_file "main_modules.json"
+  @module_categories_file "module_categories.json"
   @modules_dir "modules"
   @module_family "module"
 
@@ -95,9 +95,9 @@ defmodule Schema.Cache do
         version[:version]
       )
 
-    {modules, all_modules, main_modules} =
+    {modules, all_modules, module_categories} =
       read_classes(
-        @main_modules_file,
+        @module_categories_file,
         @modules_dir,
         @module_family,
         version[:version]
@@ -177,7 +177,7 @@ defmodule Schema.Cache do
       # module libs
       modules: modules,
       all_modules: all_modules,
-      main_modules: main_modules
+      module_categories: module_categories
     }
   end
 
@@ -224,12 +224,12 @@ defmodule Schema.Cache do
     Map.get(domain_categories[:attributes], id)
   end
 
-  @spec main_modules(__MODULE__.t()) :: map()
-  def main_modules(%__MODULE__{main_modules: main_modules}), do: main_modules
+  @spec module_categories(__MODULE__.t()) :: map()
+  def module_categories(%__MODULE__{module_categories: module_categories}), do: module_categories
 
   @spec main_module(__MODULE__.t(), any) :: nil | category_t()
-  def main_module(%__MODULE__{main_modules: main_modules}, id) do
-    Map.get(main_modules[:attributes], id)
+  def main_module(%__MODULE__{module_categories: module_categories}, id) do
+    Map.get(module_categories[:attributes], id)
   end
 
   @spec all_objects(__MODULE__.t()) :: map()

@@ -425,7 +425,7 @@ on what type of extension is desired:
 | ------------------- | ------------------------------------------ |
 | `skill_categories.json`  | Create it to define new skill categories.  |
 | `domain_categories.json` | Create it to define new domain categories. |
-| `main_modules.json` | Create it to define new module categories. |
+| `module_categories.json` | Create it to define new module categories. |
 | `dictionary.json`   | Create it to define new attributes.        |
 | `skills`            | Create it to define new skill classes.     |
 | `domains`           | Create it to define new domain classes.    |

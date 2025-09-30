@@ -56,7 +56,7 @@ defmodule SchemaWeb.PageController do
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_modules")
+          |> Map.put(:categories_path, "module_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -219,8 +219,8 @@ defmodule SchemaWeb.PageController do
   @doc """
   Renders main modules or the modules in a given main module.
   """
-  @spec main_modules(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_modules(conn, %{"id" => id} = params) do
+  @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def module_categories(conn, %{"id" => id} = params) do
     case SchemaController.main_module_modules(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
@@ -241,13 +241,13 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_modules(conn, params) do
+  def module_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_modules()
+      |> SchemaController.module_categories()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_modules")
+      |> Map.put(:categories_path, "module_categories")
       |> Map.put(:classes_path, "modules")
 
     render(conn, "index.html",

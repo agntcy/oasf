@@ -113,19 +113,19 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_modules :: map()
-  def main_modules() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_modules(schema) end)
+  @spec module_categories :: map()
+  def module_categories() do
+    Agent.get(__MODULE__, fn schema -> Cache.module_categories(schema) end)
   end
 
-  @spec main_modules(extensions_t() | nil) :: map()
-  def main_modules(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_modules(schema) end)
+  @spec module_categories(extensions_t() | nil) :: map()
+  def module_categories(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.module_categories(schema) end)
   end
 
-  def main_modules(extensions) do
+  def module_categories(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.main_modules(schema)
+      Cache.module_categories(schema)
       |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
     end)
   end
