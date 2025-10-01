@@ -789,7 +789,7 @@ defmodule Schema.Cache do
       class
       |> put_in(
         [:attributes, :schema_version, :description],
-        "The schema version: <code>v#{version}"
+        "The schema version: <code>#{version}"
       )
     end
   end

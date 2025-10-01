@@ -33,7 +33,7 @@ defmodule SchemaWeb.LayoutView do
           "<option value='",
           current,
           "' selected=true disabled=true>",
-          "v#{current}",
+          "#{current}",
           "</option>"
         ]
 
@@ -47,7 +47,7 @@ defmodule SchemaWeb.LayoutView do
             else
               "'>"
             end,
-            "v#{version}",
+            "#{version}",
             "</option>"
           ]
         end)
