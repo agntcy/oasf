@@ -54,11 +54,20 @@ defmodule Schema.Utils do
 
   @spec descope(atom() | String.t()) :: String.t()
   def descope(name) when is_binary(name) do
-    Path.basename(name)
+    descoped = Path.basename(name)
+    extensions = Map.keys(Schema.extensions())
+
+    case Enum.find(extensions, fn ext -> String.starts_with?(descoped, ext <> "_") end) do
+      nil ->
+        descoped
+
+      ext ->
+        String.replace_prefix(descoped, ext <> "_", ext <> "/")
+    end
   end
 
   def descope(name) when is_atom(name) do
-    Path.basename(Atom.to_string(name))
+    descope(Atom.to_string(name))
   end
 
   @spec descope_to_uid(atom() | String.t()) :: atom()
@@ -634,7 +643,16 @@ defmodule Schema.Utils do
     base_items = ["base_skill", "base_domain", "base_module"]
     hierarchy = build_hierarchy(name, all_classes, [])
     filtered = Enum.reject(hierarchy, &(&1 in base_items))
-    Enum.join(filtered ++ [name], "/")
+    name_str = if is_atom(name), do: Atom.to_string(name), else: name
+
+    processed_name =
+      if String.contains?(name_str, "/") do
+        String.replace(name_str, "/", "_")
+      else
+        name_str
+      end
+
+    Enum.join(filtered ++ [processed_name], "/")
   end
 
   defp build_hierarchy(name, class_map, acc) do
@@ -646,6 +664,15 @@ defmodule Schema.Utils do
 
       _ ->
         acc
+    end
+  end
+
+  @spec class_name_with_extension(map) :: String.t()
+  def class_name_with_extension(item) do
+    if item[:extension] do
+      "#{item[:extension]}/#{item[:name]}"
+    else
+      item[:name]
     end
   end
 

@@ -769,7 +769,7 @@ defmodule Schema.Cache do
     if is_nil(data[:attributes][:name]) do
       data
     else
-      class_name = Utils.class_name_with_hierarchy(data[:name], all_classes)
+      class_name = Utils.class_name_with_hierarchy(name, all_classes)
 
       enum = %{
         :caption => data[:caption],

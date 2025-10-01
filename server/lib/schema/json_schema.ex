@@ -195,19 +195,29 @@ defmodule Schema.JsonSchema do
 
           children =
             Utils.find_children(all_entities, Atom.to_string(name))
-            |> Enum.reject(fn item -> item[:hidden?] == true end)
-            |> Enum.map(& &1[:name])
-            |> Enum.map(&to_string/1)
+            |> Enum.reject(& &1[:hidden?])
+            |> Enum.map(fn child ->
+              Enum.find_value(all_entities, fn {key, value} ->
+                if value == child, do: to_string(key), else: nil
+              end)
+            end)
+            |> Enum.reject(&is_nil/1)
 
           Enum.reduce(children, {skills, domains, modules, objects}, fn child_name,
                                                                         {skills, domains, modules,
                                                                          objects} ->
+            {ext, name} =
+              case String.split(child_name, "/") do
+                [ext, name] -> {ext, name}
+                [name] -> {nil, name}
+              end
+
             item =
               case family do
-                "skill" -> Schema.entity_ex(:skill, child_name)
-                "domain" -> Schema.entity_ex(:domain, child_name)
-                "module" -> Schema.entity_ex(:module, child_name)
-                _ -> Schema.entity_ex(:object, child_name)
+                "skill" -> Schema.entity_ex(ext, :skill, name)
+                "domain" -> Schema.entity_ex(ext, :domain, name)
+                "module" -> Schema.entity_ex(ext, :module, name)
+                _ -> Schema.entity_ex(ext, :object, name)
               end
 
             key = String.replace(child_name, "/", "_")
@@ -385,11 +395,14 @@ defmodule Schema.JsonSchema do
         if family == "module" do
           module_names =
             Enum.map(children_classes, fn item ->
-              Utils.class_name_with_hierarchy(item[:name], Schema.all_modules())
+              Utils.class_name_with_hierarchy(
+                Utils.class_name_with_extension(item),
+                Schema.all_modules()
+              )
             end)
 
           Enum.map(children_classes, fn item ->
-            %{"$ref" => make_class_ref(family, item[:name])}
+            %{"$ref" => make_class_ref(family, Utils.class_name_with_extension(item))}
           end) ++
             [
               %{
