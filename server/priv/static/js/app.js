@@ -544,3 +544,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = document.querySelectorAll(".view-toggle-btn");
+  if (buttons.length === 2) {
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        buttons.forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+  }
+});

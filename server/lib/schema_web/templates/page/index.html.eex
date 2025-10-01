@@ -12,6 +12,12 @@ SPDX-License-Identifier: Apache-2.0
   </div>
   <div class="navbar-nav col-md-auto fixed-right mt-2">
     <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
+    <div class="mt-3">
+      <div class="btn-group d-flex" role="group" aria-label="View actions">
+        <button type="button" class="btn btn-sm btn-outline-primary view-toggle-btn" data-view="card">Card view</button>
+        <button type="button" class="btn btn-sm btn-outline-primary view-toggle-btn active" data-view="taxonomy">Taxonomy view</button>
+      </div>
+    </div>
   </div>
 </div>
 
