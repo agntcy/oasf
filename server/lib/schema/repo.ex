@@ -43,19 +43,19 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.profiles(schema) |> filter(extensions) end)
   end
 
-  @spec main_skills :: map()
-  def main_skills() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
+  @spec skill_categories :: map()
+  def skill_categories() do
+    Agent.get(__MODULE__, fn schema -> Cache.skill_categories(schema) end)
   end
 
-  @spec main_skills(extensions_t() | nil) :: map()
-  def main_skills(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_skills(schema) end)
+  @spec skill_categories(extensions_t() | nil) :: map()
+  def skill_categories(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.skill_categories(schema) end)
   end
 
-  def main_skills(extensions) do
+  def skill_categories(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.main_skills(schema)
+      Cache.skill_categories(schema)
       |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
     end)
   end
@@ -78,19 +78,19 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_domains :: map()
-  def main_domains() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_domains(schema) end)
+  @spec domain_categories :: map()
+  def domain_categories() do
+    Agent.get(__MODULE__, fn schema -> Cache.domain_categories(schema) end)
   end
 
-  @spec main_domains(extensions_t() | nil) :: map()
-  def main_domains(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_domains(schema) end)
+  @spec domain_categories(extensions_t() | nil) :: map()
+  def domain_categories(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.domain_categories(schema) end)
   end
 
-  def main_domains(extensions) do
+  def domain_categories(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.main_domains(schema)
+      Cache.domain_categories(schema)
       |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
     end)
   end
@@ -113,19 +113,19 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_modules :: map()
-  def main_modules() do
-    Agent.get(__MODULE__, fn schema -> Cache.main_modules(schema) end)
+  @spec module_categories :: map()
+  def module_categories() do
+    Agent.get(__MODULE__, fn schema -> Cache.module_categories(schema) end)
   end
 
-  @spec main_modules(extensions_t() | nil) :: map()
-  def main_modules(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.main_modules(schema) end)
+  @spec module_categories(extensions_t() | nil) :: map()
+  def module_categories(nil) do
+    Agent.get(__MODULE__, fn schema -> Cache.module_categories(schema) end)
   end
 
-  def main_modules(extensions) do
+  def module_categories(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.main_modules(schema)
+      Cache.module_categories(schema)
       |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
     end)
   end

@@ -19,19 +19,19 @@ defmodule SchemaWeb.Router do
   scope "/", SchemaWeb do
     pipe_through :browser
 
-    get "/", PageController, :main_skills
+    get "/", PageController, :skill_categories
 
-    get "/main_skills", PageController, :main_skills
-    get "/main_skills/:id", PageController, :main_skills
-    get "/main_skills/:extension/:id", PageController, :main_skills
+    get "/skill_categories", PageController, :skill_categories
+    get "/skill_categories/:id", PageController, :skill_categories
+    get "/skill_categories/:extension/:id", PageController, :skill_categories
 
-    get "/main_domains", PageController, :main_domains
-    get "/main_domains/:id", PageController, :main_domains
-    get "/main_domains/:extension/:id", PageController, :main_domains
+    get "/domain_categories", PageController, :domain_categories
+    get "/domain_categories/:id", PageController, :domain_categories
+    get "/domain_categories/:extension/:id", PageController, :domain_categories
 
-    get "/main_modules", PageController, :main_modules
-    get "/main_modules/:id", PageController, :main_modules
-    get "/main_modules/:extension/:id", PageController, :main_modules
+    get "/module_categories", PageController, :module_categories
+    get "/module_categories/:id", PageController, :module_categories
+    get "/module_categories/:extension/:id", PageController, :module_categories
 
     get "/profiles", PageController, :profiles
     get "/profiles/:id", PageController, :profiles
@@ -80,17 +80,17 @@ defmodule SchemaWeb.Router do
     get "/profiles", SchemaController, :profiles
     get "/extensions", SchemaController, :extensions
 
-    get "/main_skills", SchemaController, :main_skills
-    get "/main_skills/:id", SchemaController, :main_skill
-    get "/main_skills/:extension/:id", SchemaController, :main_skill
+    get "/skill_categories", SchemaController, :skill_categories
+    get "/skill_categories/:id", SchemaController, :main_skill
+    get "/skill_categories/:extension/:id", SchemaController, :main_skill
 
-    get "/main_domains", SchemaController, :main_domains
-    get "/main_domains/:id", SchemaController, :main_domain
-    get "/main_domains/:extension/:id", SchemaController, :main_domain
+    get "/domain_categories", SchemaController, :domain_categories
+    get "/domain_categories/:id", SchemaController, :main_domain
+    get "/domain_categories/:extension/:id", SchemaController, :main_domain
 
-    get "/main_modules", SchemaController, :main_modules
-    get "/main_modules/:id", SchemaController, :main_module
-    get "/main_modules/:extension/:id", SchemaController, :main_module
+    get "/module_categories", SchemaController, :module_categories
+    get "/module_categories/:id", SchemaController, :main_module
+    get "/module_categories/:extension/:id", SchemaController, :main_module
 
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile
@@ -190,7 +190,7 @@ defmodule SchemaWeb.Router do
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        version: "0.4.0"
+        version: "0.5.0"
       }
     }
   end

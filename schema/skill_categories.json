@@ -1,7 +1,7 @@
 {
   "caption": "Skills",
   "description": "A structured view of distinct abilities, defining the capabilities within the Open Agentic Schema Framework.",
-  "name": "main_skills",
+  "name": "skill_categories",
   "attributes": {
     "natural_language_processing": {
       "uid": 1,

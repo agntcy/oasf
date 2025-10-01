@@ -18,7 +18,7 @@ defmodule SchemaWeb.PageController do
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_skills")
+          |> Map.put(:categories_path, "skill_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -37,7 +37,7 @@ defmodule SchemaWeb.PageController do
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_domains")
+          |> Map.put(:categories_path, "domain_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -56,7 +56,7 @@ defmodule SchemaWeb.PageController do
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "main_modules")
+          |> Map.put(:categories_path, "module_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -137,8 +137,8 @@ defmodule SchemaWeb.PageController do
   @doc """
   Renders main skills or the skills in a given main skill.
   """
-  @spec main_skills(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_skills(conn, %{"id" => id} = params) do
+  @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def skill_categories(conn, %{"id" => id} = params) do
     case SchemaController.main_skill_skills(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
@@ -159,13 +159,13 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_skills(conn, params) do
+  def skill_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_skills()
+      |> SchemaController.skill_categories()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_skills")
+      |> Map.put(:categories_path, "skill_categories")
       |> Map.put(:classes_path, "skills")
 
     render(conn, "index.html",
@@ -178,9 +178,9 @@ defmodule SchemaWeb.PageController do
   @doc """
   Renders main domains or the domains in a given main domain.
   """
-  @spec main_domains(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domains(conn, %{"id" => id} = params) do
-    case SchemaController.main_domain_domains(params) do
+  @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def domain_categories(conn, %{"id" => id} = params) do
+    case SchemaController.main_dodomain_categories(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -200,13 +200,13 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_domains(conn, params) do
+  def domain_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_domains()
+      |> SchemaController.domain_categories()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_domains")
+      |> Map.put(:categories_path, "domain_categories")
       |> Map.put(:classes_path, "domains")
 
     render(conn, "index.html",
@@ -219,8 +219,8 @@ defmodule SchemaWeb.PageController do
   @doc """
   Renders main modules or the modules in a given main module.
   """
-  @spec main_modules(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_modules(conn, %{"id" => id} = params) do
+  @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def module_categories(conn, %{"id" => id} = params) do
     case SchemaController.main_module_modules(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
@@ -241,13 +241,13 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def main_modules(conn, params) do
+  def module_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.main_modules()
+      |> SchemaController.module_categories()
       |> sort_attributes(:uid)
       |> sort_classes()
-      |> Map.put(:categories_path, "main_modules")
+      |> Map.put(:categories_path, "module_categories")
       |> Map.put(:classes_path, "modules")
 
     render(conn, "index.html",

@@ -23,15 +23,15 @@ defmodule Schema.Cache do
     # domain libs
     :domains,
     :all_domains,
-    :main_domains,
+    :domain_categories,
     # skill libs
     :skills,
     :all_skills,
-    :main_skills,
+    :skill_categories,
     # module libs
     :modules,
     :all_modules,
-    :main_modules
+    :module_categories
   ]
   defstruct ~w[
     version
@@ -42,13 +42,13 @@ defmodule Schema.Cache do
     all_objects
     skills
     all_skills
-    main_skills
+    skill_categories
     domains
     all_domains
-    main_domains
+    domain_categories
     modules
     all_modules
-    main_modules
+    module_categories
   ]a
 
   @type t() :: %__MODULE__{}
@@ -57,15 +57,15 @@ defmodule Schema.Cache do
   @type category_t() :: map()
   @type dictionary_t() :: map()
 
-  @main_skills_file "main_skills.json"
+  @skill_categories_file "skill_categories.json"
   @skills_dir "skills"
   @skill_family "skill"
 
-  @main_domains_file "main_domains.json"
+  @domain_categories_file "domain_categories.json"
   @domains_dir "domains"
   @domain_family "domain"
 
-  @main_modules_file "main_modules.json"
+  @module_categories_file "module_categories.json"
   @modules_dir "modules"
   @module_family "module"
 
@@ -84,20 +84,20 @@ defmodule Schema.Cache do
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
-    {skills, all_skills, main_skills} =
-      read_classes(@main_skills_file, @skills_dir, @skill_family, version[:version])
+    {skills, all_skills, skill_categories} =
+      read_classes(@skill_categories_file, @skills_dir, @skill_family, version[:version])
 
-    {domains, all_domains, main_domains} =
+    {domains, all_domains, domain_categories} =
       read_classes(
-        @main_domains_file,
+        @domain_categories_file,
         @domains_dir,
         @domain_family,
         version[:version]
       )
 
-    {modules, all_modules, main_modules} =
+    {modules, all_modules, module_categories} =
       read_classes(
-        @main_modules_file,
+        @module_categories_file,
         @modules_dir,
         @module_family,
         version[:version]
@@ -169,15 +169,15 @@ defmodule Schema.Cache do
       # skill libs
       skills: skills,
       all_skills: all_skills,
-      main_skills: main_skills,
+      skill_categories: skill_categories,
       # domain libs
       domains: domains,
       all_domains: all_domains,
-      main_domains: main_domains,
+      domain_categories: domain_categories,
       # module libs
       modules: modules,
       all_modules: all_modules,
-      main_modules: main_modules
+      module_categories: module_categories
     }
   end
 
@@ -208,28 +208,28 @@ defmodule Schema.Cache do
   @spec dictionary(__MODULE__.t()) :: dictionary_t()
   def dictionary(%__MODULE__{dictionary: dictionary}), do: dictionary
 
-  @spec main_skills(__MODULE__.t()) :: map()
-  def main_skills(%__MODULE__{main_skills: main_skills}), do: main_skills
+  @spec skill_categories(__MODULE__.t()) :: map()
+  def skill_categories(%__MODULE__{skill_categories: skill_categories}), do: skill_categories
 
   @spec main_skill(__MODULE__.t(), any) :: nil | category_t()
-  def main_skill(%__MODULE__{main_skills: main_skills}, id) do
-    Map.get(main_skills[:attributes], id)
+  def main_skill(%__MODULE__{skill_categories: skill_categories}, id) do
+    Map.get(skill_categories[:attributes], id)
   end
 
-  @spec main_domains(__MODULE__.t()) :: map()
-  def main_domains(%__MODULE__{main_domains: main_domains}), do: main_domains
+  @spec domain_categories(__MODULE__.t()) :: map()
+  def domain_categories(%__MODULE__{domain_categories: domain_categories}), do: domain_categories
 
   @spec main_domain(__MODULE__.t(), any) :: nil | category_t()
-  def main_domain(%__MODULE__{main_domains: main_domains}, id) do
-    Map.get(main_domains[:attributes], id)
+  def main_domain(%__MODULE__{domain_categories: domain_categories}, id) do
+    Map.get(domain_categories[:attributes], id)
   end
 
-  @spec main_modules(__MODULE__.t()) :: map()
-  def main_modules(%__MODULE__{main_modules: main_modules}), do: main_modules
+  @spec module_categories(__MODULE__.t()) :: map()
+  def module_categories(%__MODULE__{module_categories: module_categories}), do: module_categories
 
   @spec main_module(__MODULE__.t(), any) :: nil | category_t()
-  def main_module(%__MODULE__{main_modules: main_modules}, id) do
-    Map.get(main_modules[:attributes], id)
+  def main_module(%__MODULE__{module_categories: module_categories}, id) do
+    Map.get(module_categories[:attributes], id)
   end
 
   @spec all_objects(__MODULE__.t()) :: map()

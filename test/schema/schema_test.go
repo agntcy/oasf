@@ -142,9 +142,9 @@ var _ = Describe("JSON content checks", func() {
 		Dir          string
 		CategoryFile string
 	}{
-		{Dir: filepath.Join(schemaDir, "skills"), CategoryFile: filepath.Join(schemaDir, "main_skills.json")},
-		{Dir: filepath.Join(schemaDir, "domains"), CategoryFile: filepath.Join(schemaDir, "main_domains.json")},
-		{Dir: filepath.Join(schemaDir, "modules"), CategoryFile: filepath.Join(schemaDir, "main_modules.json")},
+		{Dir: filepath.Join(schemaDir, "skills"), CategoryFile: filepath.Join(schemaDir, "skill_categories.json")},
+		{Dir: filepath.Join(schemaDir, "domains"), CategoryFile: filepath.Join(schemaDir, "domain_categories.json")},
+		{Dir: filepath.Join(schemaDir, "modules"), CategoryFile: filepath.Join(schemaDir, "module_categories.json")},
 		{Dir: filepath.Join(schemaDir, "objects"), CategoryFile: ""},
 	}
 	var typeData map[string]*entityTypeData

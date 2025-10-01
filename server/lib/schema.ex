@@ -73,14 +73,14 @@ defmodule Schema do
   @doc """
     Returns skill categories.
   """
-  @spec main_skills :: map()
-  def main_skills(), do: Repo.main_skills()
+  @spec skill_categories :: map()
+  def skill_categories(), do: Repo.skill_categories()
 
   @doc """
     Returns skill categories defined in the given extension set.
   """
-  def main_skills(extensions) do
-    Map.update(Repo.main_skills(extensions), :attributes, %{}, fn attributes ->
+  def skill_categories(extensions) do
+    Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
       Enum.into(attributes, %{}, fn {name, _main_skill} ->
         {name, main_skill(extensions, name)}
       end)
@@ -103,14 +103,14 @@ defmodule Schema do
   @doc """
     Returns the main domains.
   """
-  @spec main_domains :: map()
-  def main_domains(), do: Repo.main_domains()
+  @spec domain_categories :: map()
+  def domain_categories(), do: Repo.domain_categories()
 
   @doc """
     Returns domain categories defined in the given extension set.
   """
-  def main_domains(extensions) do
-    Map.update(Repo.main_domains(extensions), :attributes, %{}, fn attributes ->
+  def domain_categories(extensions) do
+    Map.update(Repo.domain_categories(extensions), :attributes, %{}, fn attributes ->
       Enum.into(attributes, %{}, fn {name, _main_domain} ->
         {name, main_domain(extensions, name)}
       end)
@@ -133,14 +133,14 @@ defmodule Schema do
   @doc """
     Returns module categories.
   """
-  @spec main_modules :: map()
-  def main_modules(), do: Repo.main_modules()
+  @spec module_categories :: map()
+  def module_categories(), do: Repo.module_categories()
 
   @doc """
     Returns module categories defined in the given extension set.
   """
-  def main_modules(extensions) do
-    Map.update(Repo.main_modules(extensions), :attributes, %{}, fn attributes ->
+  def module_categories(extensions) do
+    Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
       Enum.into(attributes, %{}, fn {name, _main_module} ->
         {name, main_module(extensions, name)}
       end)

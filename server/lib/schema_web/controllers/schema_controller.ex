@@ -872,8 +872,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema main skills.
   """
-  swagger_path :main_skills do
-    get("/api/main_skills")
+  swagger_path :skill_categories do
+    get("/api/skill_categories")
     summary("List skill categories")
     description("Get all OASF skill classes by category.")
     produces("application/json")
@@ -891,21 +891,21 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Returns the list of main skills.
   """
-  @spec main_skills(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_skills(conn, params) do
-    send_json_resp(conn, main_skills(params))
+  @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def skill_categories(conn, params) do
+    send_json_resp(conn, skill_categories(params))
   end
 
-  @spec main_skills(map()) :: map()
-  def main_skills(params) do
-    parse_options(extensions(params)) |> Schema.main_skills()
+  @spec skill_categories(map()) :: map()
+  def skill_categories(params) do
+    parse_options(extensions(params)) |> Schema.skill_categories()
   end
 
   @doc """
   Get the skills defined in a given main skill.
   """
   swagger_path :main_skill do
-    get("/api/main_skills/{name}")
+    get("/api/skill_categories/{name}")
     summary("List skills of a skill category")
 
     description(
@@ -951,8 +951,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema main domains.
   """
-  swagger_path :main_domains do
-    get("/api/main_domains")
+  swagger_path :domain_categories do
+    get("/api/domain_categories")
     summary("List domain categories")
     description("Get all OASF domain classes by category.")
     produces("application/json")
@@ -970,21 +970,21 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Returns the list of main domains.
   """
-  @spec main_domains(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domains(conn, params) do
-    send_json_resp(conn, main_domains(params))
+  @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def domain_categories(conn, params) do
+    send_json_resp(conn, domain_categories(params))
   end
 
-  @spec main_domains(map()) :: map()
-  def main_domains(params) do
-    parse_options(extensions(params)) |> Schema.main_domains()
+  @spec domain_categories(map()) :: map()
+  def domain_categories(params) do
+    parse_options(extensions(params)) |> Schema.domain_categories()
   end
 
   @doc """
   Get the domains defined in a given main domain.
   """
   swagger_path :main_domain do
-    get("/api/main_domains/{name}")
+    get("/api/domain_categories/{name}")
     summary("List domains of a domain category")
 
     description(
@@ -1009,7 +1009,7 @@ defmodule SchemaWeb.SchemaController do
 
   @spec main_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
   def main_domain(conn, %{"id" => id} = params) do
-    case main_domain_domains(params) do
+    case main_dodomain_categories(params) do
       nil ->
         send_json_resp(conn, 404, %{error: "Domain category #{id} not found"})
 
@@ -1018,8 +1018,8 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  @spec main_domain_domains(map()) :: map() | nil
-  def main_domain_domains(params) do
+  @spec main_dodomain_categories(map()) :: map() | nil
+  def main_dodomain_categories(params) do
     name = params["id"]
     extension = extension(params)
     extensions = parse_options(extensions(params))
@@ -1030,8 +1030,8 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the schema main modules.
   """
-  swagger_path :main_modules do
-    get("/api/main_modules")
+  swagger_path :module_categories do
+    get("/api/module_categories")
     summary("List module categories")
     description("Get all OASF module classes by category.")
     produces("application/json")
@@ -1049,21 +1049,21 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Returns the list of main modules.
   """
-  @spec main_modules(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_modules(conn, params) do
-    send_json_resp(conn, main_modules(params))
+  @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def module_categories(conn, params) do
+    send_json_resp(conn, module_categories(params))
   end
 
-  @spec main_modules(map()) :: map()
-  def main_modules(params) do
-    parse_options(extensions(params)) |> Schema.main_modules()
+  @spec module_categories(map()) :: map()
+  def module_categories(params) do
+    parse_options(extensions(params)) |> Schema.module_categories()
   end
 
   @doc """
   Get the modules defined in a given main module.
   """
   swagger_path :main_module do
-    get("/api/main_modules/{name}")
+    get("/api/module_categories/{name}")
     summary("List modules of a module category")
 
     description(
