@@ -1,0 +1,8 @@
+{
+  "caption": "Core",
+  "description": "Core AGNTCY modules.",
+  "extends": "base_module",
+  "name": "core",
+  "category": "core",
+  "attributes": {}
+}

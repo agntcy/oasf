@@ -208,6 +208,18 @@ button:hover,
   margin-right: var(--spacing-xs);
 }
 
+.view-toggle-btn.active {
+  background: var(--primary-color);
+  color: var(--text-inverse);
+  border-color: var(--primary-color);
+}
+
+.view-toggle-btn:focus,
+.view-toggle-btn.active:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Show Deprecated Button */
 .show-deprecated-container {
   display: flex;

@@ -11,5 +11,9 @@
       "description": "Data supported by the agent for runtime manifest.",
       "requirement": "required"
     }
+  },
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
   }
 }

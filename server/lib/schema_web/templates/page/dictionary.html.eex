@@ -14,8 +14,8 @@ SPDX-License-Identifier: Apache-2.0
     <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
     <div class="mt-3">
       <div class="btn-group d-flex" role="group" aria-label="Dictionary actions">
-        <button type="button" title="Expand all references" class="btn btn-sm btn-outline-primary" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
-        <button type="button" title="Collapse all references" class="btn btn-sm btn-outline-primary" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
+        <button type="button" title="Expand all references" class="btn btn-sm btn-outline-primary view-toggle-btn" onclick="$('.multi-collapse').collapse('show');">Expand All</button>
+        <button type="button" title="Collapse all references" class="btn btn-sm btn-outline-primary view-toggle-btn active" onclick="$('.multi-collapse').collapse('hide');">Collapse All</button>
       </div>
     </div>
   </div>
