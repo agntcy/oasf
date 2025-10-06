@@ -1,12 +1,12 @@
 {
   "uid": 1,
-  "caption": "Manifest",
+  "caption": "ACP Manifest",
   "description": "Agent manifest",
-  "extends": "runtime",
-  "name": "manifest",
+  "extends": "integration",
+  "name": "acp_manifest",
   "attributes": {
     "data": {
-      "reference": "manifest_data",
+      "reference": "acp_manifest_data",
       "caption": "Data",
       "description": "Data supported by the agent for runtime manifest.",
       "requirement": "required"
