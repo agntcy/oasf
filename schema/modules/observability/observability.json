@@ -1,8 +1,0 @@
-{
-  "caption": "Observability",
-  "description": "Modules for observing and monitoring the agent's behavior and performance.",
-  "extends": "base_module",
-  "name": "observability",
-  "category": "observability",
-  "attributes": {}
-}

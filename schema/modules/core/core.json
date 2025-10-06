@@ -1,0 +1,8 @@
+{
+  "caption": "Core Modules",
+  "description": "Modules that provide essential functionalities and services.",
+  "extends": "base_module",
+  "name": "core",
+  "category": "core",
+  "attributes": {}
+}

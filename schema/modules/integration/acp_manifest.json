@@ -1,9 +1,9 @@
 {
   "uid": 1,
   "caption": "ACP Manifest",
-  "description": "Agent manifest",
+  "description": "Agent Connect Protocol manifest",
   "extends": "integration",
-  "name": "acp_manifest",
+  "name": "acp",
   "attributes": {
     "data": {
       "reference": "acp_manifest_data",
