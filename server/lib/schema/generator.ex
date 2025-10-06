@@ -853,6 +853,7 @@ defmodule Schema.Generator do
     if field[:is_enum] do
       Utils.find_children(all_classes_fn, field[:class_type])
       |> Enum.reject(& &1[:hidden?])
+      |> Enum.reject(& &1[:deprecated?])
       |> Enum.map(fn child ->
         Enum.find_value(all_classes_fn, fn {key, value} ->
           if value == child, do: key, else: nil
@@ -864,7 +865,9 @@ defmodule Schema.Generator do
       end)
       |> Enum.reject(&is_nil/1)
     else
-      class_fn.(field[:class_type]) |> List.wrap()
+      class_fn.(field[:class_type])
+      |> List.wrap()
+      |> Enum.reject(& &1[:deprecated?])
     end
   end
 
