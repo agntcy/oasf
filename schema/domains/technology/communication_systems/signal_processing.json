@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Signal Processing",
+  "description": "Analysis, modification, and synthesis of signals such as sound, images, and sensor data.",
+  "extends": "communication_systems",
+  "name": "signal_processing",
+  "attributes": {}
+}
+

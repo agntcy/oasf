@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Workflow Automation",
+  "description": "Automation of business processes through the use of software to reduce manual work and improve efficiency.",
+  "extends": "process_automation",
+  "name": "workflow_automation",
+  "attributes": {}
+}
+

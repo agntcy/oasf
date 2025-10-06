@@ -1,0 +1,9 @@
+{
+  "uid": 5,
+  "caption": "Network Security",
+  "description": "Protection of network infrastructure and data from unauthorized access and attacks.",
+  "extends": "networking",
+  "name": "network_security",
+  "attributes": {}
+}
+

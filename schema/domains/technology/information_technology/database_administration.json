@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Database Administration",
+  "description": "Management and maintenance of database systems and data storage.",
+  "extends": "information_technology",
+  "name": "database_administration",
+  "attributes": {}
+}
+

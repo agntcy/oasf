@@ -1,0 +1,9 @@
+{
+  "uid": 9,
+  "caption": "Blockchain",
+  "description": "Distributed ledger technology that maintains a continuously growing list of records secured using cryptography.",
+  "extends": "technology",
+  "name": "blockchain",
+  "attributes": {}
+}
+

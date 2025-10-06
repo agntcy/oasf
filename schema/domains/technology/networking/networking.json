@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Networking",
+  "description": "Design, management, and security of computer networks.",
+  "extends": "technology",
+  "name": "networking",
+  "attributes": {}
+}
+

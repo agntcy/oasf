@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Robotic Process Automation (RPA)",
+  "description": "Technology that uses software robots to automate repetitive, rule-based tasks typically performed by humans.",
+  "extends": "process_automation",
+  "name": "rpa",
+  "attributes": {}
+}
+

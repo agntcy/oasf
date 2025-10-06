@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Network Management",
+  "description": "Tasks like monitoring, configuring, and optimizing networks.",
+  "extends": "networking",
+  "name": "network_management",
+  "attributes": {}
+}

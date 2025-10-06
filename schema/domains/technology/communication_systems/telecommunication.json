@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Telecommunication",
+  "description": "Transmission of information over long distances using electronic and digital technologies.",
+  "extends": "communication_systems",
+  "name": "telecommunication",
+  "attributes": {}
+}
+

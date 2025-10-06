@@ -1,0 +1,9 @@
+{
+  "uid": 6,
+  "caption": "Incident Management",
+  "description": "Processes and tools for detecting, responding to, and resolving security incidents and IT service disruptions.",
+  "extends": "security",
+  "name": "incident_management",
+  "attributes": {}
+}
+

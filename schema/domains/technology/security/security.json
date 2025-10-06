@@ -1,0 +1,9 @@
+{
+  "uid": 7,
+  "caption": "Security",
+  "description": "Protecting systems, data, and networks from cyber threats and vulnerabilities.",
+  "extends": "technology",
+  "name": "security",
+  "attributes": {}
+}
+

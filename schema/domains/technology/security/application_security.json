@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Application Security",
+  "description": "Security measures and practices to protect applications from threats and vulnerabilities.",
+  "extends": "security",
+  "name": "application_security",
+  "attributes": {}
+}
+

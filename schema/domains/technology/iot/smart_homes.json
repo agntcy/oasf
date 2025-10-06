@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "Smart Homes",
+  "description": "Residential environments with IoT devices for automation, monitoring, and control.",
+  "extends": "internet_of_things",
+  "name": "smart_homes",
+  "attributes": {}
+}
+

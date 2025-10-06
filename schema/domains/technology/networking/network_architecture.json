@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "Network Architecture",
+  "description": "Design and structure of computer networks including topology, protocols, and components.",
+  "extends": "networking",
+  "name": "network_architecture",
+  "attributes": {}
+}
+

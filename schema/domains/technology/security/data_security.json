@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Data Security",
+  "description": "Protection of digital data from unauthorized access, corruption, or theft throughout its lifecycle.",
+  "extends": "security",
+  "name": "data_security",
+  "attributes": {}
+}
+

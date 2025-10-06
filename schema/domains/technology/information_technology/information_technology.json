@@ -1,0 +1,9 @@
+{
+  "uid": 6,
+  "caption": "Information Technology",
+  "description": "All aspects of managing and supporting technology systems and infrastructure.",
+  "extends": "technology",
+  "name": "information_technology",
+  "attributes": {}
+}
+

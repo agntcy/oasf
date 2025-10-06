@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Wireless Communication",
+  "description": "Communication technologies that use electromagnetic waves to transmit data without physical connections.",
+  "extends": "communication_systems",
+  "name": "wireless_communication",
+  "attributes": {}
+}
+

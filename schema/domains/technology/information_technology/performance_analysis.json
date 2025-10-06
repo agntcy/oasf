@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Performance Analysis",
+  "description": "Analysis and optimization of system performance to ensure efficient operation.",
+  "extends": "information_technology",
+  "name": "performance_analysis",
+  "attributes": {}
+}
+

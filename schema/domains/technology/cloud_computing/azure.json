@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Microsoft Azure",
+  "description": "Cloud computing service created by Microsoft for building, testing, deploying, and managing applications.",
+  "extends": "cloud_computing",
+  "name": "azure",
+  "attributes": {}
+}
+

@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Cryptocurrency",
+  "description": "Digital or virtual currency secured by cryptography, typically operating on blockchain technology.",
+  "extends": "blockchain",
+  "name": "cryptocurrency",
+  "attributes": {}
+}
+

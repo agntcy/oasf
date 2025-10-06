@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "Data Science",
+  "description": "Extracting insights and knowledge from structured and unstructured data using scientific methods, processes, and algorithms.",
+  "extends": "technology",
+  "name": "data_science",
+  "attributes": {}
+}
+

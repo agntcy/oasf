@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "IoT Security",
+  "description": "Protection of IoT devices, networks, and data from cyber threats and vulnerabilities.",
+  "extends": "internet_of_things",
+  "name": "iot_security",
+  "attributes": {}
+}
+

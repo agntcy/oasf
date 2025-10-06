@@ -1,8 +1,0 @@
-{
-  "uid": 1,
-  "caption": "Internet of Things (IoT)",
-  "description": "Connecting everyday objects to the internet for data exchange and automation. Subdomains: IoT Devices, IoT Security, IoT Networks, Smart Homes, and Industrial IoT.",
-  "extends": "technology",
-  "name": "internet_of_things",
-  "attributes": {}
-}

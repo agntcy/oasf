@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "IoT Devices",
+  "description": "Physical devices embedded with sensors, software, and connectivity to collect and exchange data.",
+  "extends": "internet_of_things",
+  "name": "iot_devices",
+  "attributes": {}
+}
+

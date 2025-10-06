@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "APIs and Integration",
+  "description": "Application Programming Interfaces and integration technologies that enable different software systems to communicate and work together.",
+  "extends": "software_engineering",
+  "name": "apis_integration",
+  "attributes": {}
+}
+

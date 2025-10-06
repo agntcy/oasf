@@ -1,0 +1,9 @@
+{
+  "uid": 5,
+  "caption": "MLOps",
+  "description": "Set of practices that combines machine learning and DevOps to standardize and streamline the machine learning lifecycle.",
+  "extends": "software_engineering",
+  "name": "mlops",
+  "attributes": {}
+}
+
