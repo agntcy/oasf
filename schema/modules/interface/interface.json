@@ -1,0 +1,8 @@
+{
+  "caption": "User Interface",
+  "description": "Module describing how the agent can interact with users through various interfaces.",
+  "extends": "base_module",
+  "name": "interface",
+  "category": "interface",
+  "attributes": {}
+}

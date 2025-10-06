@@ -1,0 +1,8 @@
+{
+  "caption": "Documentation & Support",
+  "description": "Modules for providing documentation and support resources to users.",
+  "extends": "base_module",
+  "name": "docs_support",
+  "category": "docs_support",
+  "attributes": {}
+}

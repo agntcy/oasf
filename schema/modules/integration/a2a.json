@@ -2,7 +2,7 @@
   "uid": 3,
   "caption": "A2A",
   "description": "Describes A2A card details for communication and usage with A2A protocol.",
-  "extends": "runtime",
+  "extends": "integration",
   "name": "a2a",
   "attributes": {
     "data": {

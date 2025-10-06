@@ -3,15 +3,25 @@
   "description": "A comprehensive table outlining module sets of application and knowledge areas within the framework.",
   "name": "module_categories",
   "attributes": {
-    "core": {
+    "integration": {
       "uid": 1,
-      "caption": "Core",
-      "description": "Core AGNTCY modules."
+      "caption": "Integration",
+      "description": "Module set for integrating with external systems and services."
     },
-    "runtime": {
+    "observability": {
       "uid": 2,
-      "caption": "Runtime",
-      "description": "Runtime module set."
+      "caption": "Observability",
+      "description": "Module set for monitoring, logging, and tracing system performance and behavior."
+    },
+    "interface": {
+      "uid": 3,
+      "caption": "Interface",
+      "description": "Module set for user interfaces and interaction mechanisms."
+    },
+    "docs_support": {
+      "uid": 4,
+      "caption": "Documentation & Support",
+      "description": "Module set for creating and managing documentation and support resources."
     }
   }
 }
