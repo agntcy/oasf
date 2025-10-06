@@ -67,6 +67,16 @@ modules.
 However, this approach is the least recommended, as validation will be skipped
 for these modules if the record is validated against the standard OASF schema.
 
+### Schema Versioning and Immutability
+
+Once a schema version is released, no changes to that version of the schema are
+expected, except for non-breaking fixes such as documentation updates or minor
+bug corrections. Any deletions, additions, or structural changes made after a
+schema version is released will be part of the next schema version. This
+immutability policy ensures backward compatibility and stability for systems
+that depend on specific schema versions, while allowing the framework to evolve
+and improve over time through new version releases.
+
 ## Useful Links
 
 A convenient way to browse and use the OASF schema is through the
