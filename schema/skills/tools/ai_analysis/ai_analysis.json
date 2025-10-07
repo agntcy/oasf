@@ -1,0 +1,8 @@
+{
+  "caption": "AI Analysis",
+  "category": "ai_analysis",
+  "description": "Machine learning, AI inference, and intelligent analysis capabilities for MCP servers",
+  "name": "ai_analysis",
+  "extends": "tools",
+  "attributes": {}
+}

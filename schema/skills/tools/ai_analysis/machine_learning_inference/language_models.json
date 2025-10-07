@@ -1,0 +1,8 @@
+{
+  "uid": 1004,
+  "caption": "Language Models",
+  "description": "Text generation and natural language processing model capabilities",
+  "extends": "machine_learning_inference",
+  "name": "language_models",
+  "attributes": {}
+}
