@@ -544,3 +544,36 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = document.querySelectorAll(".view-toggle-btn");
+  if (buttons.length === 2) {
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        buttons.forEach((b) => b.classList.remove("active"));
+        this.classList.add("active");
+      });
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const buttons = document.querySelectorAll(".view-toggle-btn");
+  const cardView = document.getElementById("card-view");
+  const taxonomyView = document.getElementById("taxonomy-view");
+  if (buttons.length === 2 && cardView && taxonomyView) {
+    buttons.forEach(btn => {
+      btn.addEventListener("click", function () {
+        buttons.forEach(b => b.classList.remove("active"));
+        this.classList.add("active");
+        if (this.dataset.view === "card") {
+          cardView.style.display = "";
+          taxonomyView.style.display = "none";
+        } else {
+          cardView.style.display = "none";
+          taxonomyView.style.display = "";
+        }
+      });
+    });
+  }
+});

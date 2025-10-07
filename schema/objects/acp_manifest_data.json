@@ -2,7 +2,7 @@
   "caption": "Manifest Data",
   "description": "Agent manifest data",
   "extends": "module_data",
-  "name": "manifest_data",
+  "name": "acp_manifest_data",
   "attributes": {
     "acp": {
       "reference": "acp_agent",

@@ -212,7 +212,7 @@ true`
 5. `description` → Add a concise description to define the object.
 
 6. `extends` → Ensure the value is `object` or an existing object, e.g.
-   `extension_data` (All objects in OASF must extend a base definition of
+   `module_data` (All objects in OASF must extend a base definition of
    `object` or another existing object.)
 
 7. `name` → Add a **unique** name of the object.

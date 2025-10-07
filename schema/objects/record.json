@@ -52,7 +52,7 @@
     "locators": {
       "caption": "Locators",
       "description": "List of source locators where this record can be found or used from.",
-      "requirement": "required"
+      "requirement": "optional"
     },
     "modules": {
       "caption": "Modules",

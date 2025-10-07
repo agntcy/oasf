@@ -1,0 +1,8 @@
+{
+  "caption": "Integration",
+  "description": "Modules for integrating with external systems and services.",
+  "extends": "base_module",
+  "name": "integration",
+  "category": "integration",
+  "attributes": {}
+}

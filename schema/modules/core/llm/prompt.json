@@ -1,8 +1,8 @@
 {
-  "uid": 4,
+  "uid": 2,
   "caption": "LLM Prompt",
   "description": "Describes common LLM interaction prompts to use the agent.",
-  "extends": "runtime",
+  "extends": "llm",
   "name": "prompt",
   "attributes": {
     "data": {

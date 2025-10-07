@@ -3,25 +3,15 @@
   "description": "A comprehensive table outlining module sets of application and knowledge areas within the framework.",
   "name": "module_categories",
   "attributes": {
-    "observability": {
+    "core": {
       "uid": 1,
-      "caption": "Observability",
-      "description": "Observability module set."
+      "caption": "Core",
+      "description": "Module set for core functionalities and features."
     },
-    "evaluation": {
+    "integration": {
       "uid": 2,
-      "caption": "Evaluation",
-      "description": "Evaluation module set."
-    },
-    "runtime": {
-      "uid": 3,
-      "caption": "Runtime",
-      "description": "Runtime module set."
-    },
-    "identity": {
-      "uid": 4,
-      "caption": "Identity",
-      "description": "Identity module set."
+      "caption": "Integration",
+      "description": "Module set for integrating with external systems and services."
     }
   }
 }

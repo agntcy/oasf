@@ -196,6 +196,11 @@
       "type": "acp_interrupts",
       "is_array": true
     },
+    "acp_manifest_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for runtime manifest.",
+      "type": "acp_manifest_data"
+    },
     "acp_result_streaming": {
       "caption": "Result Streaming",
       "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
@@ -401,11 +406,6 @@
       "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as helm charts, docker images, binaries, and so on.",
       "type": "locator",
       "is_array": true
-    },
-    "manifest_data": {
-      "caption": "Data",
-      "description": "Data supported by the agent for runtime manifest.",
-      "type": "manifest_data"
     },
     "mcp_data": {
       "caption": "MCP Data",
