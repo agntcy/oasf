@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Data Engineering",
+  "description": "Design and construction of systems for collecting, storing, and processing data at scale.",
+  "extends": "data_science",
+  "name": "data_engineering",
+  "attributes": {}
+}
+

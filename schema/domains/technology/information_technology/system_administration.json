@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "System Administration",
+  "description": "Management and maintenance of computer systems and servers.",
+  "extends": "information_technology",
+  "name": "system_administration",
+  "attributes": {}
+}
+

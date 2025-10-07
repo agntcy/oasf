@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Software Engineering",
+  "description": "Designing, developing, and maintaining software applications and systems.",
+  "extends": "technology",
+  "name": "software_engineering",
+  "attributes": {}
+}

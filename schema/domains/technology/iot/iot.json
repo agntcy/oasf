@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Internet of Things (IoT)",
+  "description": "Connecting everyday objects to the internet for data exchange and automation.",
+  "extends": "technology",
+  "name": "internet_of_things",
+  "attributes": {}
+}
+

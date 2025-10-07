@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Software Development",
+  "description": "Process of designing, creating, testing, and maintaining software applications and systems.",
+  "extends": "software_engineering",
+  "name": "software_development",
+  "attributes": {}
+}
+

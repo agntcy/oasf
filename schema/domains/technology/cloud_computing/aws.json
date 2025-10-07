@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Amazon Web Services (AWS)",
+  "description": "Comprehensive cloud computing platform offered by Amazon.",
+  "extends": "cloud_computing",
+  "name": "aws",
+  "attributes": {}
+}
+

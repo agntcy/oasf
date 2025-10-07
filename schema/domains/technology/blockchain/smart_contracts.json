@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Smart Contracts",
+  "description": "Self-executing contracts with terms directly written into code, running on blockchain networks.",
+  "extends": "blockchain",
+  "name": "smart_contracts",
+  "attributes": {}
+}
+

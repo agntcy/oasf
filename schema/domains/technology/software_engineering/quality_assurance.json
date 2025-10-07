@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Quality Assurance",
+  "description": "Processes and practices to ensure software quality through testing, code review, and quality standards.",
+  "extends": "software_engineering",
+  "name": "quality_assurance",
+  "attributes": {}
+}
+

@@ -1,8 +1,0 @@
-{
-  "uid": 6,
-  "caption": "Information Technology",
-  "description": "All aspects of managing and supporting technology systems and infrastructure. Subdomains: Network Monitoring, Network Monitoring, Incident Management, Network Performance Analysis, Traffic Management, Network Configuration, Network Optimization, and Network Troubleshooting.",
-  "extends": "technology",
-  "name": "information_technology",
-  "attributes": {}
-}

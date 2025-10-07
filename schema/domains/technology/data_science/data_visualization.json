@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Data Visualization",
+  "description": "Graphical representation of information and data using visual elements like charts, graphs, and maps.",
+  "extends": "data_science",
+  "name": "data_visualization",
+  "attributes": {}
+}
+

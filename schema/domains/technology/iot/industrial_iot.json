@@ -1,0 +1,9 @@
+{
+  "uid": 5,
+  "caption": "Industrial IoT",
+  "description": "IoT applications in industrial settings for automation, monitoring, and optimization.",
+  "extends": "internet_of_things",
+  "name": "industrial_iot",
+  "attributes": {}
+}
+

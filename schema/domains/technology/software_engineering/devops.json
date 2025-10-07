@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "DevOps",
+  "description": "Practices that combine software development and IT operations to shorten development cycles and improve deployment reliability.",
+  "extends": "software_engineering",
+  "name": "devops",
+  "attributes": {}
+}
+

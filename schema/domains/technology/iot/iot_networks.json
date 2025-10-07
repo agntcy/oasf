@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "IoT Networks",
+  "description": "Communication protocols and network infrastructure for connecting IoT devices.",
+  "extends": "internet_of_things",
+  "name": "iot_networks",
+  "attributes": {}
+}
+

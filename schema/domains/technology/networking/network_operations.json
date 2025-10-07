@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Network Operations",
+  "description": "Ensures the smooth operation and performance of network infrastructure.",
+  "extends": "networking",
+  "name": "network_operations",
+  "attributes": {}
+}
+

@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Big Data",
+  "description": "Large and complex datasets that require advanced tools and techniques for processing and analysis.",
+  "extends": "data_science",
+  "name": "big_data",
+  "attributes": {}
+}
+

@@ -1,0 +1,9 @@
+{
+  "uid": 5,
+  "caption": "Cloud Computing",
+  "description": "Delivery of computing services including servers, storage, databases, networking, software, and analytics over the internet.",
+  "extends": "technology",
+  "name": "cloud_computing",
+  "attributes": {}
+}
+

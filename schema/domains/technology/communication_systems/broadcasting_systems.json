@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "Broadcasting Systems",
+  "description": "Systems for distributing audio and video content to large audiences via radio, television, or internet.",
+  "extends": "communication_systems",
+  "name": "broadcasting_systems",
+  "attributes": {}
+}
+

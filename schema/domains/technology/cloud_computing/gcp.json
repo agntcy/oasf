@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Google Cloud Platform (GCP)",
+  "description": "Suite of cloud computing services offered by Google.",
+  "extends": "cloud_computing",
+  "name": "gcp",
+  "attributes": {}
+}
+

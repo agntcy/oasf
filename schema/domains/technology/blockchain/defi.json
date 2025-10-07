@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Decentralized Finance (DeFi)",
+  "description": "Financial services built on blockchain networks that operate without traditional intermediaries.",
+  "extends": "blockchain",
+  "name": "defi",
+  "attributes": {}
+}
+

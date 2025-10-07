@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "Cyber Network Security",
+  "description": "Cybersecurity protection of network infrastructure and data from unauthorized access, misuse, or attacks.",
+  "extends": "security",
+  "name": "cyber_network_security",
+  "attributes": {}
+}
+

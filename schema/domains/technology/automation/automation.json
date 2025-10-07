@@ -1,0 +1,9 @@
+{
+  "uid": 10,
+  "caption": "Automation",
+  "description": "Use of technology to perform processes or procedures with minimal human intervention.",
+  "extends": "technology",
+  "name": "process_automation",
+  "attributes": {}
+}
+

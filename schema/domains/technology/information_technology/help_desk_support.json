@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "Help Desk Support",
+  "description": "Technical support and assistance for end users and IT systems.",
+  "extends": "information_technology",
+  "name": "help_desk_support",
+  "attributes": {}
+}
+

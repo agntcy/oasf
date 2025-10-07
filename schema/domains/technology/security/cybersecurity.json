@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Cybersecurity",
+  "description": "Protection of computer systems, networks, and data from digital attacks and unauthorized access.",
+  "extends": "security",
+  "name": "cybersecurity",
+  "attributes": {}
+}
+

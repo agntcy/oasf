@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Network Protocols",
+  "description": "Rules and standards that govern communication between devices in a network.",
+  "extends": "networking",
+  "name": "network_protocols",
+  "attributes": {}
+}
+
