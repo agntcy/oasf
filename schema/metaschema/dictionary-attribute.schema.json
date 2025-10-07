@@ -65,6 +65,10 @@
     },
     "references": {
       "$ref": "references.schema.json"
+    },
+    "value_type": {
+      "type": "string",
+      "description": "The dictionary type for the value in an attribute of typed_map_t."
     }
   },
   "additionalProperties": false
