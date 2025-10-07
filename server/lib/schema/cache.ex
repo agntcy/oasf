@@ -572,6 +572,7 @@ defmodule Schema.Cache do
             class
             |> Map.take([:name, :caption, :extends, :extension])
             |> Map.put(:hidden?, hidden_class?(class_key, class))
+            |> Map.put(:deprecated?, deprecated_class?(class))
 
           {class_key, class}
         end
@@ -640,6 +641,10 @@ defmodule Schema.Cache do
   defp hidden_class?(class_key, class) do
     ignored_keys = [:base_module, :base_skill, :base_domain]
     class_key not in ignored_keys and !Map.has_key?(class, :uid)
+  end
+
+  defp deprecated_class?(class) do
+    Map.has_key?(class, :"@deprecated")
   end
 
   # Add class_uid, class_name, and schema_version to the class.
