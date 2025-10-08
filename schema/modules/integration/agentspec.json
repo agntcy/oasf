@@ -1,0 +1,15 @@
+{
+  "uid": 4,
+  "caption": "Agent Spec",
+  "description": "Describes Open Agent Spec details to inform about the agent structure.",
+  "extends": "integration",
+  "name": "agentspec",
+  "attributes": {
+    "data": {
+      "reference": "agentspec_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for Agent Spec.",
+      "requirement": "required"
+    }
+  }
+}
