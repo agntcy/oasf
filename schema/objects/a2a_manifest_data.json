@@ -1,0 +1,20 @@
+{
+  "caption": "A2A Manifest Data",
+  "description": "Describes A2A card and deployment details to deploy an A2A Agent.",
+  "extends": "module_data",
+  "name": "a2a_manifest_data",
+  "attributes": {
+    "a2a": {
+      "reference": "a2a_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for A2A card.",
+      "requirement": "required"
+    },
+    "deployment": {
+      "reference": "a2a_deployment",
+      "caption": "Data",
+      "description": "Describe the details needed to deploy an A2A Agent.",
+      "requirement": "required"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "caption": "A2A Deployement",
+  "description": "Describe the details needed to deploy an A2A Agent.",
+  "extends": "object",
+  "name": "a2a_deployment",
+  "attributes": {
+    "deployment_options": {
+      "reference": "a2a_deployment_options",
+      "caption": "Deployment Options",
+      "description": "List of possible methods to instantiate the A2A agent. Any of the available option could be used.",
+      "requirement": "required"
+    }
+  }
+}

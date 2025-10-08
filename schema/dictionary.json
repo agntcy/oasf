@@ -3,6 +3,48 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
+    "a2a_manifest_data": {
+      "caption": "A2A Manifest",
+      "description": "Agent2Agent Protocol manifest.",
+      "type": "a2a_manifest_data"
+    },
+    "a2a_deployment": {
+      "caption": "A2A Deployement",
+      "description": "Describe the details needed to deploy an A2A Agent.",
+      "type": "a2a_deployment"
+    },
+    "a2a_deployment_option": {
+      "caption": "A2A Deployment Option",
+      "description": "Describes a deployment option for an A2A agent.",
+      "type": "string_t"
+    },
+    "a2a_deployment_options": {
+      "caption": "A2A Deployment Options",
+      "description": "List of possible methods to deploy the agent.",
+      "type": "a2a_deployment_option",
+      "is_array": true
+    },
+    "agent_config": {
+      "caption": "Config Locator",
+      "description": "Location of the Agent Spec config. E.g. path to config, github repo url etc.",
+      "type": "string_t"
+    },
+    "runtime_framework": {
+      "caption": "Runtime Framework",
+      "description": "Name for the runtime framework to use to run the Agent Spec config. The framework must be compatible with Agent Spec and A2A. Valid options: langgraph, wayflow.",
+      "type": "string_t"
+    },
+    "runtime_dep": {
+      "caption": "Runtime Dependency",
+      "description": "A locator for a non-serializable object this agent depends on (e.g. tool implementation).",
+      "type": "string_t"
+    },
+    "runtime_deps": {
+      "caption": "Runtime Dependencies",
+      "description": "List of locators for the non-serializable objects this agent depends on (e.g. tool implementations).",
+      "type": "runtime_dep",
+      "is_array": true
+    },
     "a2a_capabilities": {
       "caption": "Capabilities",
       "description": "List of capabilities supported by the agent for A2A communication.",
