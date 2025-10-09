@@ -3,6 +3,8 @@
 
 defmodule SchemaWeb.PageView do
   alias SchemaWeb.SchemaController
+  alias Schema.Types
+
   use SchemaWeb, :view
 
   require Logger
@@ -573,6 +575,28 @@ defmodule SchemaWeb.PageView do
             class_caption ->
               format_path(class_caption, class_path)
           end
+
+        "typed_map_t" ->
+          value_type = Map.get(field, :value_type)
+
+          value_type_name =
+            case Schema.object(value_type) do
+              nil ->
+                Types.encode_type(value_type) |> String.capitalize()
+
+              obj ->
+                obj_path = SchemaWeb.Router.Helpers.static_path(conn, "/objects/#{value_type}")
+
+                case Map.get(obj, :caption) do
+                  nil ->
+                    "<a href='#{obj_path}'>#{format_type(conn, obj)}</a>"
+
+                  obj_name ->
+                    format_path(obj_name, obj_path)
+                end
+            end
+
+          "String → #{value_type_name} Map"
 
         _type ->
           Map.get(field, :type_name) || Map.get(field, :name) || ""
