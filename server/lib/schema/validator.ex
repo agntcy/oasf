@@ -136,28 +136,34 @@ defmodule Schema.Validator do
     {response, class} =
       case type do
         :skill ->
-          validate_class_id_or_name(response, input, &Schema.find_skill/1, &Schema.skill/1)
+          validate_class_id_or_name(response, input, "", &Schema.find_skill/1, &Schema.skill/1)
 
         :domain ->
-          validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
+          validate_class_id_or_name(response, input, "", &Schema.find_domain/1, &Schema.domain/1)
 
         :module ->
           if Schema.Utils.is_oasf_class?(type, input["name"]) do
-            validate_class_id_or_name(response, input, &Schema.find_module/1, &Schema.module/1)
+            validate_class_id_or_name(
+              response,
+              input,
+              "",
+              &Schema.find_module/1,
+              &Schema.module/1
+            )
           else
             response =
               add_warning(
                 response,
                 "module_unknown",
                 "Module \"#{input["name"]}\" is not an OASF module; skipping validation.",
-                %{attribute_path: "name", attribute: "name", value: input["name"]}
+                %{attribute_path: "", attribute: "name", value: input["name"]}
               )
 
             {response, nil}
           end
 
         :object ->
-          validate_object_name_and_return_object(response, options)
+          validate_object_name_and_return_object(response, options, "")
 
         _ ->
           # Unknown type; return error
@@ -189,11 +195,11 @@ defmodule Schema.Validator do
     finalize_response(response)
   end
 
-  defp validate_class_id_or_name(response, input, find_by_id, find_by_name) do
+  defp validate_class_id_or_name(response, input, attribute_path, find_by_id, find_by_name) do
     # Validate ID if present
     {id_response, class_by_id} =
       if Map.has_key?(input, "id") do
-        validate_class_id_and_return_class(find_by_id, response, input)
+        validate_class_id_and_return_class(find_by_id, response, input, attribute_path)
       else
         {response, nil}
       end
@@ -201,7 +207,7 @@ defmodule Schema.Validator do
     # Validate name if present (using updated response to accumulate errors)
     {final_response, class_by_name} =
       if Map.has_key?(input, "name") do
-        validate_class_name_and_return_class(find_by_name, id_response, input)
+        validate_class_name_and_return_class(find_by_name, id_response, input, attribute_path)
       else
         {id_response, nil}
       end
@@ -210,7 +216,7 @@ defmodule Schema.Validator do
     cond do
       # Both missing
       !Map.has_key?(input, "id") && !Map.has_key?(input, "name") ->
-        {add_error_required_attribute_missing(final_response, "id or name", "id or name"), nil}
+        {add_error_required_attribute_missing(final_response, attribute_path, "id or name"), nil}
 
       # ID present but invalid OR name present but invalid
       (Map.has_key?(input, "id") && is_nil(class_by_id)) ||
@@ -238,14 +244,20 @@ defmodule Schema.Validator do
              final_response,
              "id_name_mismatch",
              error_msg,
-             %{attribute_path: "id/name", attribute: "id/name"}
+             %{attribute_path: attribute_path, attribute: "id or name"}
            ), nil}
         end
     end
   end
 
-  @spec validate_class_id_and_return_class((any -> any), map(), map()) :: {map(), nil | map()}
-  defp validate_class_id_and_return_class(find_class_function, response, input) do
+  @spec validate_class_id_and_return_class((any -> any), map(), map(), String.t()) ::
+          {map(), nil | map()}
+  defp validate_class_id_and_return_class(
+         find_class_function,
+         response,
+         input,
+         attribute_path
+       ) do
     if Map.has_key?(input, "id") do
       class_uid = input["id"]
 
@@ -258,7 +270,7 @@ defmodule Schema.Validator do
                   response,
                   "id_unknown",
                   "Unknown \"id\" value; no class is defined for #{class_uid}.",
-                  %{attribute_path: "id", attribute: "id", value: class_uid}
+                  %{attribute_path: attribute_path, attribute: "id", value: class_uid}
                 ),
                 nil
               }
@@ -270,22 +282,23 @@ defmodule Schema.Validator do
         true ->
           {
             # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "id", "id", class_uid, "integer_t"),
+            add_error_wrong_type(response, attribute_path, "id", class_uid, "integer_t"),
             nil
           }
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "id", "id"), nil}
+      {add_error_required_attribute_missing(response, attribute_path, "id"), nil}
     end
   end
 
-  @spec validate_class_name_and_return_class((any -> any), map(), map()) ::
+  @spec validate_class_name_and_return_class((any -> any), map(), map(), String.t()) ::
           {map(), nil | map()}
   defp validate_class_name_and_return_class(
          find_class_function,
          response,
-         input
+         input,
+         attribute_path
        ) do
     if Map.has_key?(input, "name") do
       class_name = Schema.Utils.descope(input["name"])
@@ -299,7 +312,7 @@ defmodule Schema.Validator do
                   response,
                   "name_unknown",
                   "Unknown \"name\" value; no class is defined for #{class_name}.",
-                  %{attribute_path: "name", attribute: "name", value: class_name}
+                  %{attribute_path: attribute_path, attribute: "name", value: class_name}
                 ),
                 nil
               }
@@ -311,18 +324,18 @@ defmodule Schema.Validator do
         true ->
           {
             # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "name", "name", class_name, "string_t"),
+            add_error_wrong_type(response, attribute_path, "name", class_name, "string_t"),
             nil
           }
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "name", "name"), nil}
+      {add_error_required_attribute_missing(response, attribute_path, "name"), nil}
     end
   end
 
-  @spec validate_object_name_and_return_object(map(), list()) :: {map(), nil | map()}
-  defp validate_object_name_and_return_object(response, options) do
+  @spec validate_object_name_and_return_object(map(), list(), String.t()) :: {map(), nil | map()}
+  defp validate_object_name_and_return_object(response, options, attribute_path) do
     if Keyword.has_key?(options, :name) do
       object_name = Keyword.get(options, :name)
 
@@ -335,7 +348,7 @@ defmodule Schema.Validator do
                   response,
                   "name_unknown",
                   "Unknown \"name\" value; no object is defined for #{object_name}.",
-                  %{attribute_path: "name", attribute: "name", value: object_name}
+                  %{attribute_path: attribute_path, attribute: "name", value: object_name}
                 ),
                 nil
               }
@@ -1552,10 +1565,22 @@ defmodule Schema.Validator do
         {response, class} =
           case attribute_details[:family] do
             "skill" ->
-              validate_class_id_or_name(response, value, &Schema.find_skill/1, &Schema.skill/1)
+              validate_class_id_or_name(
+                response,
+                value,
+                attribute_path,
+                &Schema.find_skill/1,
+                &Schema.skill/1
+              )
 
             "domain" ->
-              validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
+              validate_class_id_or_name(
+                response,
+                value,
+                attribute_path,
+                &Schema.find_domain/1,
+                &Schema.domain/1
+              )
 
             "module" ->
               if Schema.Utils.is_oasf_class?(
@@ -1565,6 +1590,7 @@ defmodule Schema.Validator do
                 validate_class_id_or_name(
                   response,
                   value,
+                  attribute_path,
                   &Schema.find_module/1,
                   &Schema.module/1
                 )
