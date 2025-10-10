@@ -293,13 +293,17 @@ defmodule Schema.Generator do
     end
   end
 
-  defp generate_field(name, %{type: "string_map_t"} = _field, map) do
-    random_string_map =
+  defp generate_field(name, %{type: "typed_map_t"} = field, map) do
+    value_type = field[:value_type] || "string_t"
+
+    random_typed_map =
       Enum.reduce(1..random(@max_array_size), %{}, fn _, acc ->
-        Map.put_new(acc, word(), word())
+        key = generate_data(:key, "string_t", %{})
+        value = generate_data(:value, value_type, %{})
+        Map.put_new(acc, key, value)
       end)
 
-    Map.put_new(map, name, random_string_map)
+    Map.put_new(map, name, random_typed_map)
   end
 
   defp generate_field(name, field, map) do
@@ -533,7 +537,20 @@ defmodule Schema.Generator do
 
   defp generate_data(:type, _type, _field), do: word()
   defp generate_data(:name, _type, _field), do: String.capitalize(word())
-  defp generate_data(_name, _, _), do: word()
+
+  defp generate_data(_name, type, _field) do
+    # Check if the type exists as an object in the cache
+    case Schema.object(type) do
+      nil ->
+        # Type not found in objects, generate a word as fallback
+        word()
+
+      object ->
+        # Type found as object, generate a sample object
+        profiles = Process.get(:profiles)
+        generate_sample_object(object, profiles)
+    end
+  end
 
   def name() do
     Agent.get(__MODULE__, fn %Generator{names: {len, names}} -> random_word(len, names) end)

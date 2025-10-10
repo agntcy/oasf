@@ -35,4 +35,33 @@ defmodule Schema.Types do
   def type_name(class, name) do
     class <> ": " <> name
   end
+
+  @doc """
+  Encodes the given type to a JSON schema type.
+  """
+  @spec encode_type(String.t()) :: String.t()
+  def encode_type(type) do
+    case type do
+      "string_t" -> "string"
+      "integer_t" -> "integer"
+      "long_t" -> "integer"
+      "float_t" -> "number"
+      "boolean_t" -> "boolean"
+      "timestamp_t" -> "integer"
+      "datetime_t" -> "string"
+      "uuid_t" -> "string"
+      "email_t" -> "string"
+      "url_t" -> "string"
+      "ip_t" -> "string"
+      "mac_t" -> "string"
+      "port_t" -> "integer"
+      "file_name_t" -> "string"
+      "path_t" -> "string"
+      "mime_t" -> "string"
+      "subnet_t" -> "string"
+      "file_hash_t" -> "string"
+      "unit_interval_t" -> "number"
+      _ -> "object"
+    end
+  end
 end

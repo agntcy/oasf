@@ -1804,6 +1804,27 @@ defmodule Schema.Validator do
       :json_t ->
         response
 
+      :typed_map_t ->
+        if is_map(value) do
+          response
+          |> validate_typed_map(
+            value,
+            attribute_path,
+            attribute_name,
+            attribute_details,
+            dictionary
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            expected_type,
+            expected_type_extra
+          )
+        end
+
       :long_t ->
         if is_long_t(value) do
           response
@@ -1855,25 +1876,6 @@ defmodule Schema.Validator do
             attribute_name,
             attribute_type_key,
             dictionary_types
-          )
-        else
-          add_error_wrong_type(
-            response,
-            attribute_path,
-            attribute_name,
-            value,
-            expected_type,
-            expected_type_extra
-          )
-        end
-
-      :string_map_t ->
-        if is_map(value) do
-          response
-          |> validate_string_map(
-            value,
-            attribute_path,
-            attribute_name
           )
         else
           add_error_wrong_type(
@@ -2267,44 +2269,94 @@ defmodule Schema.Validator do
     end
   end
 
-  # Validate a map with string keys and string values.
-  @spec validate_string_map(
+  # Validate a map with string key and configurable value types.
+  @spec validate_typed_map(
           map(),
           map(),
           String.t(),
-          String.t()
+          String.t(),
+          map(),
+          map()
         ) :: map()
-  defp validate_string_map(
+  defp validate_typed_map(
          response,
          json_object,
          attribute_path,
-         attribute_name
+         attribute_name,
+         attribute_details,
+         dictionary
        ) do
-    cond do
-      Enum.any?(json_object, fn {key, value} ->
-        !is_binary(key) or !is_binary(value)
-      end) ->
-        invalid_pairs =
-          Enum.filter(json_object, fn {key, value} ->
-            !is_binary(key) or !is_binary(value)
-          end)
-          |> Enum.map(fn {key, value} ->
-            %{key: key, value: value}
-          end)
+    value_type = Map.get(attribute_details, :value_type, "string_t")
 
-        add_error(
+    Enum.reduce(json_object, response, fn {key, value}, acc_response ->
+      if is_binary(key) do
+        validate_typed_value(
+          value,
+          value_type,
+          dictionary,
+          acc_response,
+          attribute_path,
+          attribute_name,
+          key
+        )
+      else
+        add_error_wrong_type(
           response,
-          "non_string_key_or_value",
-          "Attribute \"#{attribute_path}\" contains non-string keys or values.",
-          %{
-            attribute_path: attribute_path,
-            attribute: attribute_name,
-            invalid_pairs: invalid_pairs
-          }
+          attribute_path,
+          attribute_name,
+          value,
+          "string",
+          ""
+        )
+      end
+    end)
+  end
+
+  defp validate_typed_value(
+         value,
+         type_string,
+         dictionary,
+         response,
+         attribute_path,
+         attribute_name,
+         key
+       ) do
+    case Schema.object(type_string) do
+      nil ->
+        attribute_details = %{type: type_string}
+
+        validate_value_against_dictionary_type(
+          response,
+          value,
+          "#{attribute_path}.#{key}",
+          attribute_name,
+          attribute_details,
+          dictionary
         )
 
-      true ->
-        response
+      object ->
+        if is_map(value) do
+          validate_map_against_object(
+            response,
+            value,
+            "#{attribute_path}.#{key}",
+            attribute_name,
+            object,
+            [],
+            [],
+            dictionary,
+            false
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            "#{type_string} (object)",
+            ""
+          )
+        end
     end
   end
 
