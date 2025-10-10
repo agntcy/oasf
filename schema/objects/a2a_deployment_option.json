@@ -1,7 +1,0 @@
-{
-  "caption": "A2A Deployment Option",
-  "description": "Describes a deployment option for an A2A agent.",
-  "extends": "object",
-  "name": "a2a_deployment_option",
-  "attributes": {}
-}

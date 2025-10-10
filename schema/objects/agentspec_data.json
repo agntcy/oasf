@@ -1,0 +1,26 @@
+{
+  "caption": "Agent Spec Data",
+  "description": "Data for the Open Agent Spec record module.",
+  "extends": "module_data",
+  "name": "agentspec_data",
+  "attributes": {
+    "config": {
+      "reference": "agentspec_config",
+      "caption": "Config Locator",
+      "description": "Location of the Agent Spec config. E.g. path to config, github repo url etc.",
+      "requirement": "required"
+    },
+    "runtime_framework": {
+      "reference": "agentspec_runtime_framework",
+      "caption": "Runtime Framework",
+      "description": "Name for the runtime framework to use to run the Agent Spec config.",
+      "requirement": "required"
+    },
+    "runtime_deps": {
+      "reference": "agentspec_runtime_deps",
+      "caption": "Runtime Dependencies",
+      "description": "List of locators for the non-serializable objects the Agent Spec config depends on (e.g. tool implementations).",
+      "requirement": "optional"
+    }
+  }
+}
