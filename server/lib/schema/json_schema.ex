@@ -7,6 +7,7 @@ defmodule Schema.JsonSchema do
   """
 
   alias Schema.Utils
+  alias Schema.Types
 
   @schema_base_uri "https://schema.oasf.outshift.com/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
@@ -286,10 +287,27 @@ defmodule Schema.JsonSchema do
     {Map.new(properties), required, just_one, at_least_one}
   end
 
-  defp encode_attribute(_name, "string_map_t", attr) do
-    new_schema(attr)
-    |> Map.put("type", "object")
-    |> Map.put("additionalProperties", %{"type" => "string"})
+  defp encode_attribute(_name, "typed_map_t", attr) do
+    value_type = Map.get(attr, :value_type, "string_t")
+
+    # Check if value_type is an OASF object
+    case Schema.object(value_type) do
+      nil ->
+        # Not an object, use primitive type
+        new_schema(attr)
+        |> Map.put("type", "object")
+        |> Map.put("additionalProperties", %{"type" => Types.encode_type(value_type)})
+
+      object ->
+        # It's an object, use $ref and include the object definition
+        object_key = String.replace(value_type, "/", "_")
+        object_schema = encode_entity(object, false)
+
+        new_schema(attr)
+        |> Map.put("type", "object")
+        |> Map.put("additionalProperties", %{"$ref" => make_object_ref(value_type)})
+        |> Map.put("$defs", %{"objects" => %{object_key => object_schema}})
+    end
   end
 
   defp encode_attribute(_name, "integer_t", attr) do
@@ -331,7 +349,7 @@ defmodule Schema.JsonSchema do
 
         schema =
           schema
-          |> Map.put("type", encode_type(base_type))
+          |> Map.put("type", Types.encode_type(base_type))
 
         # add range from the type if available
         case data[:range] do
@@ -343,17 +361,6 @@ defmodule Schema.JsonSchema do
           _ ->
             schema
         end
-    end
-  end
-
-  defp encode_type(type) do
-    case type do
-      "string_t" -> "string"
-      "integer_t" -> "integer"
-      "long_t" -> "integer"
-      "float_t" -> "number"
-      "boolean_t" -> "boolean"
-      _ -> type
     end
   end
 

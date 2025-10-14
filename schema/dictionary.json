@@ -219,7 +219,8 @@
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
-      "type": "string_map_t"
+      "type": "typed_map_t",
+      "value_type": "string_t"
     },
     "api_base": {
       "caption": "API Base URL",
@@ -357,7 +358,8 @@
     "headers": {
       "caption": "Headers",
       "description": "Request headers (e.g. for authentication). See specific usage.",
-      "type": "string_map_t"
+      "type": "typed_map_t",
+      "value_type": "string_t"
     },
     "id": {
       "caption": "ID",
@@ -733,10 +735,6 @@
         "type": "string_t",
         "type_name": "String"
       },
-      "string_map_t": {
-        "caption": "String Map",
-        "description": "A map of string to string."
-      },
       "string_t": {
         "caption": "String",
         "description": "UTF-8 encoded byte sequence."
@@ -753,6 +751,10 @@
         "description": "The timestamp format is the number of milliseconds since the Epoch 01/01/1970 00:00:00 UTC. For example:<br><code>1618524549901</code>.",
         "type": "long_t",
         "type_name": "Long"
+      },
+      "typed_map_t": {
+        "caption": "Typed Map",
+        "description": "A map with string keys and configurable value types. Supports value_type property to specify the data type for values."
       },
       "unit_interval_t": {
         "caption": "Unit Interval",
