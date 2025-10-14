@@ -6,10 +6,17 @@
   "type": "object",
   "anyOf": [
     {
-      "required": ["description", "caption", "name", "attributes"]
+      "required": [
+        "description",
+        "caption",
+        "name",
+        "attributes"
+      ]
     },
     {
-      "required": ["extends"]
+      "required": [
+        "extends"
+      ]
     }
   ],
   "properties": {
@@ -39,18 +46,24 @@
       "properties": {
         "at_least_one": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "just_one": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       },
       "additionalProperties": false
     },
     "profiles": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "The list of profiles."
     },
     "references": {

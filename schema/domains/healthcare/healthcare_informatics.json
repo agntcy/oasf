@@ -1,8 +1,8 @@
 {
-    "uid": 3,
-    "caption": "Healthcare Informatics",
-    "description": "The management and analysis of healthcare data to improve patient care and operational efficiency. Subdomains: Electronic Health Records, Health Data Analytics, Clinical Informatics, and Health IT Systems.",
-    "extends": "healthcare",
-    "name": "healthcare_informatics",
-    "attributes": {}
-  }
+  "uid": 3,
+  "caption": "Healthcare Informatics",
+  "description": "The management and analysis of healthcare data to improve patient care and operational efficiency. Subdomains: Electronic Health Records, Health Data Analytics, Clinical Informatics, and Health IT Systems.",
+  "extends": "healthcare",
+  "name": "healthcare_informatics",
+  "attributes": {}
+}

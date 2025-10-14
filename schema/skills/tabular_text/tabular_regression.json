@@ -1,8 +1,8 @@
 {
-    "uid": 2,
-    "caption": "Tabular Regression",
-    "description": "Predicting numerical values based on tabular attributes and features.",
-    "extends": "tabular_text",
-    "name": "tabular_regression",
-    "attributes": {}
+  "uid": 2,
+  "caption": "Tabular Regression",
+  "description": "Predicting numerical values based on tabular attributes and features.",
+  "extends": "tabular_text",
+  "name": "tabular_regression",
+  "attributes": {}
 }
