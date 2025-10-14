@@ -7,7 +7,6 @@
   "uid": "REPLACE me with an INTEGER, it must be unique within the category.",
   "attributes": {
     "DELETE ME": "Ensure you adjust 'requirement' for all the attributes as desired.",
-
     "attribute_1": {
       "caption": "REPLACE me with an overridden caption of an attribute, IF NEEDED.",
       "description": "REPLACE me with an overridden description of an attribute, IF NEEDED.",

@@ -307,10 +307,17 @@ tasks:
     preconditions:
       - which jq
     dir: ./schema
-    cmd: |
-      ## Format dictionary file
-      jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
-      mv sorted.dictionary.json dictionary.json
+    cmds:
+      - cmd: echo "Formatting all JSON files with jq..."
+      - cmd: |
+          find . -name "*.json" -type f | while read file; do
+            echo "Formatting $file..."
+            jq --indent 2 . "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+          done
+      - cmd: echo "Formatting dictionary file with custom jq rules..."
+      - cmd: |
+          jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
+          mv sorted.dictionary.json dictionary.json
 
   fmt:elixir:
     desc: Run Elixir formatter on server/

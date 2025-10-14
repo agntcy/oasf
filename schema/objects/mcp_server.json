@@ -102,6 +102,9 @@
     }
   },
   "constraints": {
-    "at_least_one": ["url", "command"]
+    "at_least_one": [
+      "url",
+      "command"
+    ]
   }
 }

@@ -1,8 +1,8 @@
 {
-    "uid": 4,
-    "caption": "Patient Management Systems",
-    "description": "Software solutions that help healthcare providers manage patient information and clinical processes. Subdomains: Appointment Scheduling, Patient Portals, Billing and Coding, and Health Record Management.",
-    "extends": "healthcare",
-    "name": "patient_management_systems",
-    "attributes": {}
-  }
+  "uid": 4,
+  "caption": "Patient Management Systems",
+  "description": "Software solutions that help healthcare providers manage patient information and clinical processes. Subdomains: Appointment Scheduling, Patient Portals, Billing and Coding, and Health Record Management.",
+  "extends": "healthcare",
+  "name": "patient_management_systems",
+  "attributes": {}
+}

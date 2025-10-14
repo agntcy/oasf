@@ -1,8 +1,8 @@
 {
-    "uid": 1,
-    "caption": "Tabular Classification",
-    "description": "Classifying data based on attributes using classical machine learning approaches.",
-    "extends": "tabular_text",
-    "name": "tabular_classification",
-    "attributes": {}
+  "uid": 1,
+  "caption": "Tabular Classification",
+  "description": "Classifying data based on attributes using classical machine learning approaches.",
+  "extends": "tabular_text",
+  "name": "tabular_classification",
+  "attributes": {}
 }
