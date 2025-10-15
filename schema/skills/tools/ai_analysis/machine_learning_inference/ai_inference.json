@@ -1,0 +1,8 @@
+{
+  "uid": 1003,
+  "caption": "AI Inference",
+  "description": "Real-time AI model inference and prediction capabilities",
+  "extends": "machine_learning_inference",
+  "name": "ai_inference",
+  "attributes": {}
+}
