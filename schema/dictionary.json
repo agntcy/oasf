@@ -219,7 +219,7 @@
     "agentspec_config": {
       "caption": "Config Locator",
       "description": "Describes the location of the Agent Spec configuration.",
-      "type": "json_t"
+      "type": "locator"
     },
     "agentspec_data": {
       "caption": "Agent Spec Data",
@@ -232,21 +232,27 @@
         }
       ]
     },
-    "agentspec_runtime_dependency": {
-      "caption": "Runtime Dependency",
-      "description": "Describes a non-serializable object the Agent Spec config depends on (e.g. tool implementation).",
-      "type": "json_t"
-    },
     "agentspec_runtime_deps": {
       "caption": "Runtime Dependencies",
       "description": "List of locators for the non-serializable objects the Agent Spec config depends on (e.g. tool implementations).",
-      "type": "agentspec_runtime_dependency",
+      "type": "json_t",
       "is_array": true
     },
     "agentspec_runtime_framework": {
       "caption": "Runtime Framework",
       "description": "Name for the runtime framework to use to run the Agent Spec config.",
-      "type": "json_t"
+      "type": "string_t",
+      "enum": {
+        "autogen": {
+          "caption": "AutoGen"
+        },
+        "langgraph": {
+          "caption": "LangGraph"
+        },
+        "wayflow": {
+          "caption": "WayFlow"
+        }
+      }
     },
     "annotations": {
       "caption": "Annotations",
