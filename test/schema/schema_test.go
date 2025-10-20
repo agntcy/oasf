@@ -271,6 +271,109 @@ var _ = Describe("JSON content checks", func() {
 })
 
 var _ = Describe("Attribute dictionary consistency", func() {
+	// Separate describe for skill inheritance cycle detection using Union-Find.
+	// This complements other integrity checks by providing an undirected cycle guard.
+	var _ = Describe("Skill inheritance cycles", func() {
+		It("should not have cycles in skills inheritance (union-find approximation)", func() {
+			skillsDir := filepath.Join(schemaDir, "skills")
+			// Collect (name, extends) pairs.
+			type edge struct{ A, B, File string }
+			var edges []edge
+			names := map[string]string{} // name -> file path
+
+			for _, file := range cache.Files {
+				if !strings.HasPrefix(file.Path, skillsDir+string(os.PathSeparator)) || filepath.Ext(file.Path) != ".json" {
+					continue
+				}
+				var js map[string]interface{}
+				if err := json.Unmarshal(file.Data, &js); err != nil {
+					continue
+				}
+				name, _ := js["name"].(string)
+				if name == "" {
+					continue
+				}
+				names[name] = file.Path
+				extVal, ok := js["extends"]
+				if !ok {
+					continue
+				}
+				switch v := extVal.(type) {
+				case string:
+					if v == "" {
+						break
+					}
+					edges = append(edges, edge{A: name, B: v, File: file.Path})
+				case []interface{}:
+					for _, item := range v {
+						if s, ok := item.(string); ok && s != "" {
+							edges = append(edges, edge{A: name, B: s, File: file.Path})
+						}
+					}
+				}
+			}
+
+			if len(edges) == 0 {
+				return
+			} // nothing to validate
+
+			// Union-Find (Disjoint Set) structure.
+			parent := map[string]string{}
+			rank := map[string]int{}
+			var find func(string) string
+			find = func(x string) string {
+				px, ok := parent[x]
+				if !ok {
+					parent[x] = x
+					rank[x] = 0
+					return x
+				}
+				if px != x {
+					parent[x] = find(px)
+				}
+				return parent[x]
+			}
+			union := func(a, b string) bool { // returns true if merged; false if cycle detected
+				ra := find(a)
+				rb := find(b)
+				if ra == rb {
+					return false
+				}
+				if rank[ra] < rank[rb] {
+					parent[ra] = rb
+				} else if rank[ra] > rank[rb] {
+					parent[rb] = ra
+				} else {
+					parent[rb] = ra
+					rank[ra]++
+				}
+				return true
+			}
+
+			var cycles []string
+			for _, e := range edges {
+				// Skip edges to base_skill; treat as roots not part of cycle detection.
+				if e.B == "base_skill" {
+					continue
+				}
+				// Self-extension (excluding base_skill) counts as cycle immediately.
+				if e.A == e.B {
+					rel, _ := filepath.Rel(schemaDir, e.File)
+					cycles = append(cycles, fmt.Sprintf("Self-cycle: %s extends itself (%s)", e.A, rel))
+					continue
+				}
+				if !union(e.A, e.B) {
+					// Report cycle edge with file context (child file path).
+					rel, _ := filepath.Rel(schemaDir, e.File)
+					cycles = append(cycles, fmt.Sprintf("Cycle edge detected: %s -- %s (from file %s)", e.A, e.B, rel))
+				}
+			}
+
+			if len(cycles) > 0 {
+				Fail("Skill inheritance cycle(s) detected via union-find:\n" + strings.Join(cycles, "\n"))
+			}
+		})
+	})
 	It("should have all attributes used in files defined in the dictionary", func() {
 		folders := []string{"objects", "skills", "domains", "modules"}
 		var attributesInFiles map[string][]string
