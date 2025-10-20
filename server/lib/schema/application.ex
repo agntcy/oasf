@@ -21,25 +21,17 @@ defmodule Schema.Application do
         ext -> String.split(ext, ",")
       end
 
-    # List all child processes to be supervised. Skip heavy generators in test env
-    base_children = [
+    # List all child processes to be supervised
+    children = [
       {Schemas, schema_versions},
       {Schema.JsonReader, [schema_dir, extensions]},
-      Schema.Repo
+      Schema.Repo,
+      Schema.Generator,
+
+      # Start the endpoint when the application starts
+      SchemaWeb.Endpoint,
+      {Phoenix.PubSub, [name: Schema.PubSub, adapter: Phoenix.PubSub.PG2]}
     ]
-
-    gen_children =
-      case Mix.env() do
-        :test -> []
-        _ -> [Schema.Generator]
-      end
-
-    children =
-      base_children ++ gen_children ++ [
-        # Start the endpoint when the application starts
-        SchemaWeb.Endpoint,
-        {Phoenix.PubSub, [name: Schema.PubSub, adapter: Phoenix.PubSub.PG2]}
-      ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
