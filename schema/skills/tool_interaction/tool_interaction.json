@@ -1,0 +1,8 @@
+{
+  "uid": 14,
+  "caption": "Tool Interaction",
+  "description": "Root skill category set for effective usage and integration of external tools and APIs.",
+  "extends": "tool_interaction",
+  "name": "tool_interaction",
+  "attributes": {}
+}

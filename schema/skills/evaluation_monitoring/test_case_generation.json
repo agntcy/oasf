@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Test Case Generation",
+  "description": "Creating targeted test inputs or scenarios to probe system behavior and edge cases.",
+  "extends": "evaluation_monitoring",
+  "name": "test_case_generation",
+  "attributes": {}
+}

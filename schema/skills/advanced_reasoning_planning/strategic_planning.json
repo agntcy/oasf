@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Strategic Planning",
+  "description": "Formulating high-level multi-phase strategies aligned with long-term objectives.",
+  "extends": "advanced_reasoning_planning",
+  "name": "strategic_planning",
+  "attributes": {}
+}

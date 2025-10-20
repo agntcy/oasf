@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Compliance Assessment",
+  "description": "Evaluating processes or outputs against defined standards (e.g., GDPR, HIPAA) and identifying gaps.",
+  "extends": "governance_compliance",
+  "name": "compliance_assessment",
+  "attributes": {}
+}

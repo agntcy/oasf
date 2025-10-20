@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Anomaly Detection",
+  "description": "Identifying unusual patterns, drifts, or deviations in data or model outputs.",
+  "extends": "evaluation_monitoring",
+  "name": "anomaly_detection",
+  "attributes": {}
+}

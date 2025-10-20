@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Model Versioning",
+  "description": "Tracking, promoting, and documenting different iterations of models and their artifacts.",
+  "extends": "devops_mlops",
+  "name": "model_versioning",
+  "attributes": {}
+}

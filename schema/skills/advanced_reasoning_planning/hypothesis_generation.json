@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Hypothesis Generation",
+  "description": "Proposing plausible explanations or solution pathways for incomplete or uncertain scenarios.",
+  "extends": "advanced_reasoning_planning",
+  "name": "hypothesis_generation",
+  "attributes": {}
+}

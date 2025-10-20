@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Data Engineering",
+  "description": "Root skill category set for transforming, validating, and structuring data assets.",
+  "extends": "data_engineering",
+  "name": "data_engineering",
+  "attributes": {}
+}

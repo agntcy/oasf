@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Privacy Risk Assessment",
+  "description": "Evaluating data handling or user flows to surface potential privacy risks and recommend mitigations.",
+  "extends": "security_privacy",
+  "name": "privacy_risk_assessment",
+  "attributes": {}
+}

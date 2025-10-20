@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Infrastructure Provisioning",
+  "description": "Defining or explaining steps to allocate and configure compute, storage, and networking resources.",
+  "extends": "devops_mlops",
+  "name": "infrastructure_provisioning",
+  "attributes": {}
+}

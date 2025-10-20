@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Feature Engineering",
+  "description": "Constructing informative transformed variables to improve downstream model performance.",
+  "extends": "data_engineering",
+  "name": "feature_engineering",
+  "attributes": {}
+}
