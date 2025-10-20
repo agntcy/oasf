@@ -1,8 +1,7 @@
 {
-  "uid": 8,
   "caption": "Security & Privacy",
-  "description": "Root skill category set for security and privacy related analytical and mitigation tasks.",
-  "extends": "security_privacy",
+  "category": "security_privacy",
+  "extends": "base_skill",
   "name": "security_privacy",
   "attributes": {}
 }

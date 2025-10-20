@@ -1,8 +1,7 @@
 {
-  "uid": 10,
   "caption": "Agent Orchestration",
-  "description": "Root skill category set for coordinating and managing multi-agent workflows.",
-  "extends": "agent_orchestration",
+  "category": "agent_orchestration",
+  "extends": "base_skill",
   "name": "agent_orchestration",
   "attributes": {}
 }

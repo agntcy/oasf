@@ -1,8 +1,7 @@
 {
-  "uid": 11,
   "caption": "Evaluation & Monitoring",
-  "description": "Root skill category set for assessing, testing, and tracking ongoing performance and quality.",
-  "extends": "evaluation_monitoring",
+  "category": "evaluation_monitoring",
+  "extends": "base_skill",
   "name": "evaluation_monitoring",
   "attributes": {}
 }

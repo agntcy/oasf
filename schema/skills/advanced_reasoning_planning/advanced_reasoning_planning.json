@@ -1,8 +1,7 @@
 {
-  "uid": 15,
   "caption": "Advanced Reasoning & Planning",
-  "description": "Root skill category set for strategic, multi-step, and hypothesis-driven reasoning tasks.",
-  "extends": "advanced_reasoning_planning",
+  "category": "advanced_reasoning_planning",
+  "extends": "base_skill",
   "name": "advanced_reasoning_planning",
   "attributes": {}
 }

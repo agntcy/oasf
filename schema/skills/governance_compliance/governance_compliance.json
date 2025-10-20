@@ -1,8 +1,7 @@
 {
-  "uid": 13,
   "caption": "Governance & Compliance",
-  "description": "Root skill category set for regulatory alignment, auditing, and responsible operations.",
-  "extends": "governance_compliance",
+  "category": "governance_compliance",
+  "extends": "base_skill",
   "name": "governance_compliance",
   "attributes": {}
 }

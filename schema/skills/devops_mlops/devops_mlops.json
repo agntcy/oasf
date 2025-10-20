@@ -1,8 +1,7 @@
 {
-  "uid": 12,
   "caption": "DevOps / MLOps",
-  "description": "Root skill category set for operationalizing systems and ML models.",
-  "extends": "devops_mlops",
+  "category": "devops_mlops",
+  "extends": "base_skill",
   "name": "devops_mlops",
   "attributes": {}
 }
