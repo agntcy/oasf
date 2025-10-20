@@ -8,8 +8,8 @@ on:
     branches:
       - main
     tags:
-      - "v*.*.*"
-      - "helm/v*.*.*"
+      - 'v*.*.*'
+      - 'helm/v*.*.*'
   pull_request:
 
 permissions:
@@ -64,6 +64,7 @@ jobs:
       - name: Check code changes
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
+            git diff
             echo "There are uncommitted changes after running 'task fmt'. Please commit these changes."
             exit 1
           fi
