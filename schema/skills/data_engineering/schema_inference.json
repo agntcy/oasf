@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Schema Inference",
+  "description": "Deriving structural metadata (fields, types, relationships) from raw or semi-structured data.",
+  "extends": "data_engineering",
+  "name": "schema_inference",
+  "attributes": {}
+}

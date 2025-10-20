@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Tool Use Planning",
+  "description": "Selecting and ordering tool invocations to accomplish a specified goal efficiently.",
+  "extends": "tool_interaction",
+  "name": "tool_use_planning",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Deployment Orchestration",
+  "description": "Coordinating multi-stage application or model deployments, rollbacks, and version transitions.",
+  "extends": "devops_mlops",
+  "name": "deployment_orchestration",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Multi-Agent Planning",
+  "description": "Coordinating plans across multiple agents, resolving dependencies and optimizing sequencing.",
+  "extends": "agent_orchestration",
+  "name": "multi_agent_planning",
+  "attributes": {}
+}

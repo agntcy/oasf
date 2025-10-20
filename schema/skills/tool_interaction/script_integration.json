@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Script Integration",
+  "description": "Linking custom scripts or functions with external tools to extend capabilities.",
+  "extends": "tool_interaction",
+  "name": "script_integration",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Performance Monitoring",
+  "description": "Tracking latency, throughput, resource utilization, and service reliability over time.",
+  "extends": "evaluation_monitoring",
+  "name": "performance_monitoring",
+  "attributes": {}
+}

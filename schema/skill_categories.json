@@ -38,5 +38,46 @@
       "caption": "Multi-modal",
       "description": "Multi-modal tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities."
     }
+    ,
+    "security_privacy": {
+      "uid": 8,
+      "caption": "Security & Privacy",
+      "description": "Skills focused on identifying, assessing, and mitigating security vulnerabilities, threats, sensitive data exposure, and privacy risks."
+    },
+    "data_engineering": {
+      "uid": 9,
+      "caption": "Data Engineering",
+      "description": "Skills for preparing, transforming, validating, and structuring data assets including cleaning, schema inference, and feature engineering."
+    },
+    "agent_orchestration": {
+      "uid": 10,
+      "caption": "Agent Orchestration",
+      "description": "Skills enabling coordination across multiple agents: planning, task decomposition, delegation, and collaboration protocols."
+    },
+    "evaluation_monitoring": {
+      "uid": 11,
+      "caption": "Evaluation & Monitoring",
+      "description": "Skills for assessing performance, generating tests, executing benchmarks, detecting anomalies, and tracking output quality over time."
+    },
+    "devops_mlops": {
+      "uid": 12,
+      "caption": "DevOps / MLOps",
+      "description": "Skills for provisioning infrastructure, managing deployments, CI/CD workflows, model/version lifecycle, and operational observability."
+    },
+    "governance_compliance": {
+      "uid": 13,
+      "caption": "Governance & Compliance",
+      "description": "Skills addressing regulatory alignment, policy mapping, auditing, risk classification, and ensuring responsible operations."
+    },
+    "tool_interaction": {
+      "uid": 14,
+      "caption": "Tool Interaction",
+      "description": "Skills for understanding APIs, integrating tools, orchestrating workflows, and using external systems effectively."
+    },
+    "advanced_reasoning_planning": {
+      "uid": 15,
+      "caption": "Advanced Reasoning & Planning",
+      "description": "Skills for multi-step strategic reasoning, long-horizon planning, hypothesis formation, and structured thought processes."
+    }
   }
 }

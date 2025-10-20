@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Role Assignment",
+  "description": "Allocating responsibilities to agents based on capabilities and task requirements.",
+  "extends": "agent_orchestration",
+  "name": "role_assignment",
+  "attributes": {}
+}
