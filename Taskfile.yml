@@ -255,7 +255,8 @@ tasks:
     dir: '{{ .ROOT_DIR }}/server'
     cmds:
       - cmd: echo "Running OASF server test suite..."
-      - cmd: mix test
+      # Run tests with a single case at a time to reduce peak memory; swagger compilation disabled in test env
+      - cmd: MIX_ENV=test mix test --max-cases 1 --color
 
   lint:
     desc: Run all linters

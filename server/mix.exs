@@ -20,7 +20,9 @@ defmodule Schema.MixProject do
       version: "#{@version}-#{build}",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: Mix.compilers() ++ [:phoenix_swagger],
+  # Avoid running the swagger compiler in test to reduce memory and skip
+  # generating priv/static/swagger.json (not needed when Endpoint server: false)
+  compilers: Mix.compilers() ++ (Mix.env() == :test && [] || [:phoenix_swagger]),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
