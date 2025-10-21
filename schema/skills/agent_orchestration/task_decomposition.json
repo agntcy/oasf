@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Task Decomposition",
+  "description": "Breaking complex objectives into structured, atomic subtasks.",
+  "extends": "agent_orchestration",
+  "name": "task_decomposition",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Long-Horizon Reasoning",
+  "description": "Maintaining coherent reasoning chains over extended sequences of steps or time.",
+  "extends": "advanced_reasoning_planning",
+  "name": "long_horizon_reasoning",
+  "attributes": {}
+}

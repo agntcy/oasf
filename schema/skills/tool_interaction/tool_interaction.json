@@ -1,0 +1,7 @@
+{
+  "caption": "Tool Interaction",
+  "category": "tool_interaction",
+  "extends": "base_skill",
+  "name": "tool_interaction",
+  "attributes": {}
+}

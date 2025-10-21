@@ -1,0 +1,7 @@
+{
+  "caption": "Security & Privacy",
+  "category": "security_privacy",
+  "extends": "base_skill",
+  "name": "security_privacy",
+  "attributes": {}
+}

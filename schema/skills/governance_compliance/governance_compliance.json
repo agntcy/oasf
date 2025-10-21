@@ -1,0 +1,7 @@
+{
+  "caption": "Governance & Compliance",
+  "category": "governance_compliance",
+  "extends": "base_skill",
+  "name": "governance_compliance",
+  "attributes": {}
+}

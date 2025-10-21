@@ -1,0 +1,7 @@
+{
+  "caption": "Advanced Reasoning & Planning",
+  "category": "advanced_reasoning_planning",
+  "extends": "base_skill",
+  "name": "advanced_reasoning_planning",
+  "attributes": {}
+}

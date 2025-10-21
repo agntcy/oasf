@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Chain-of-Thought Structuring",
+  "description": "Organizing intermediate reasoning steps into clear, justifiable sequences.",
+  "extends": "advanced_reasoning_planning",
+  "name": "chain_of_thought_structuring",
+  "attributes": {}
+}

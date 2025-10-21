@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Benchmark Execution",
+  "description": "Running standardized benchmarks or evaluation suites and summarizing results.",
+  "extends": "evaluation_monitoring",
+  "name": "benchmark_execution",
+  "attributes": {}
+}

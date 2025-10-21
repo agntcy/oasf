@@ -1,0 +1,7 @@
+{
+  "caption": "Evaluation & Monitoring",
+  "category": "evaluation_monitoring",
+  "extends": "base_skill",
+  "name": "evaluation_monitoring",
+  "attributes": {}
+}

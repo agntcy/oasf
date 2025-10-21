@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Data Cleaning",
+  "description": "Detecting and correcting errors, inconsistencies, and missing values to improve dataset quality.",
+  "extends": "data_engineering",
+  "name": "data_cleaning",
+  "attributes": {}
+}

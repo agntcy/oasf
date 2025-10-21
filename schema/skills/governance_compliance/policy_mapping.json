@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Policy Mapping",
+  "description": "Translating organizational or regulatory policies into structured, enforceable rules or checklists.",
+  "extends": "governance_compliance",
+  "name": "policy_mapping",
+  "attributes": {}
+}

@@ -1,0 +1,7 @@
+{
+  "caption": "Agent Orchestration",
+  "category": "agent_orchestration",
+  "extends": "base_skill",
+  "name": "agent_orchestration",
+  "attributes": {}
+}

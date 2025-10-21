@@ -1,0 +1,7 @@
+{
+  "caption": "DevOps / MLOps",
+  "category": "devops_mlops",
+  "extends": "base_skill",
+  "name": "devops_mlops",
+  "attributes": {}
+}

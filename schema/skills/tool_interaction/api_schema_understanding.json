@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "API Schema Understanding",
+  "description": "Interpreting and explaining API specifications, endpoints, parameters, and expected payloads.",
+  "extends": "tool_interaction",
+  "name": "api_schema_understanding",
+  "attributes": {}
+}

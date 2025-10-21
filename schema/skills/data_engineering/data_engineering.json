@@ -1,0 +1,7 @@
+{
+  "caption": "Data Engineering",
+  "category": "data_engineering",
+  "extends": "base_skill",
+  "name": "data_engineering",
+  "attributes": {}
+}

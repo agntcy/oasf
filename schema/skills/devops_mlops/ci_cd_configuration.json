@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "CI/CD Configuration",
+  "description": "Designing or modifying continuous integration and delivery workflows and pipelines.",
+  "extends": "devops_mlops",
+  "name": "ci_cd_configuration",
+  "attributes": {}
+}

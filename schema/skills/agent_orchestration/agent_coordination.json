@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Agent Coordination",
+  "description": "Managing real-time collaboration and state synchronization among agents.",
+  "extends": "agent_orchestration",
+  "name": "agent_coordination",
+  "attributes": {}
+}
