@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Claims Processing",
+  "description": "Claims management, loss adjustment, claims automation, and settlement processes",
+  "extends": "insurance",
+  "name": "claims_processing",
+  "attributes": {}
+}

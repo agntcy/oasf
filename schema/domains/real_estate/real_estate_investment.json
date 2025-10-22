@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Real Estate Investment",
+  "description": "Property investment strategies, portfolio management, and real estate finance.",
+  "extends": "real_estate",
+  "name": "real_estate_investment",
+  "attributes": {}
+}

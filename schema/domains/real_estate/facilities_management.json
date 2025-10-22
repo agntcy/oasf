@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Facilities Management",
+  "description": "Building operations, maintenance, and facility services.",
+  "extends": "real_estate",
+  "name": "facilities_management",
+  "attributes": {}
+}

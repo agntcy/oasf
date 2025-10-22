@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Power Generation",
+  "description": "Electricity generation from various sources including nuclear, thermal, and renewable.",
+  "extends": "energy",
+  "name": "power_generation",
+  "attributes": {}
+}

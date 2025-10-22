@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Public Policy",
+  "description": "Policy development, legislative processes, policy analysis, and public affairs",
+  "extends": "government_and_public_sector",
+  "name": "public_policy",
+  "attributes": {}
+}

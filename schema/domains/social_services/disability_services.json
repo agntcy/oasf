@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Disability Services",
+  "description": "Disability support, accessibility services, assistive technology, and disability advocacy",
+  "extends": "social_services",
+  "name": "disability_services",
+  "attributes": {}
+}

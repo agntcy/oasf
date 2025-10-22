@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Online Retail",
+  "description": "E-commerce platforms, online storefronts, digital marketplaces, and web retail",
+  "extends": "retail_and_ecommerce",
+  "name": "online_retail",
+  "attributes": {}
+}

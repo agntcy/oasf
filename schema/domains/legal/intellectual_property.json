@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Intellectual Property",
+  "description": "Protection and management of patents, trademarks, copyrights, and trade secrets.",
+  "extends": "legal",
+  "name": "intellectual_property",
+  "attributes": {}
+}

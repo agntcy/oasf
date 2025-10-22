@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Contract Law",
+  "description": "Legal principles governing agreements and contracts between parties.",
+  "extends": "legal",
+  "name": "contract_law",
+  "attributes": {}
+}

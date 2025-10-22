@@ -1,0 +1,8 @@
+{
+  "caption": "Sports and Fitness",
+  "description": "Domain covering sports management, fitness programs, athletic training, sports analytics, and wellness",
+  "extends": "base_domain",
+  "name": "sports_and_fitness",
+  "category": "sports_and_fitness",
+  "attributes": {}
+}

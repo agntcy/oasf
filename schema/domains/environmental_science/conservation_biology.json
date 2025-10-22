@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Conservation Biology",
+  "description": "Species conservation, habitat protection, biodiversity, and wildlife management",
+  "extends": "environmental_science",
+  "name": "conservation_biology",
+  "attributes": {}
+}

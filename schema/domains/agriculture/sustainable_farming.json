@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Sustainable Farming",
+  "description": "Environmentally responsible agricultural practices and organic farming methods.",
+  "extends": "agriculture",
+  "name": "sustainable_farming",
+  "attributes": {}
+}

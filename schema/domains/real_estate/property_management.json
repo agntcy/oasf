@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Property Management",
+  "description": "Management of residential and commercial properties including maintenance and tenant relations.",
+  "extends": "real_estate",
+  "name": "property_management",
+  "attributes": {}
+}

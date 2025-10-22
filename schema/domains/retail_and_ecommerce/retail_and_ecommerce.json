@@ -1,0 +1,8 @@
+{
+  "caption": "Retail and E-Commerce",
+  "description": "Domain covering online retail, inventory management, customer experience, fulfillment, and retail operations",
+  "extends": "base_domain",
+  "name": "retail_and_ecommerce",
+  "category": "retail_and_ecommerce",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Travel Services",
+  "description": "Travel booking, itinerary planning, travel agencies, and booking platforms",
+  "extends": "hospitality_and_tourism",
+  "name": "travel_services",
+  "attributes": {}
+}

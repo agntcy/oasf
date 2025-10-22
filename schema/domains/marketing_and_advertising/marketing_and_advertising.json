@@ -1,0 +1,8 @@
+{
+  "caption": "Marketing and Advertising",
+  "description": "Domain covering digital marketing, advertising campaigns, brand management, market research, and marketing automation",
+  "extends": "base_domain",
+  "name": "marketing_and_advertising",
+  "category": "marketing_and_advertising",
+  "attributes": {}
+}

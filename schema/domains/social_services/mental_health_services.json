@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Mental Health Services",
+  "description": "Mental health support, counseling, crisis intervention, and psychological services",
+  "extends": "social_services",
+  "name": "mental_health_services",
+  "attributes": {}
+}

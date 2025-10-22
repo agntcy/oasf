@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Underwriting",
+  "description": "Risk assessment, policy pricing, underwriting automation, and risk evaluation",
+  "extends": "insurance",
+  "name": "underwriting",
+  "attributes": {}
+}

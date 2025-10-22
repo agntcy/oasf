@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Network Infrastructure",
+  "description": "Telecom network design, fiber optics, network equipment, and infrastructure management",
+  "extends": "telecommunications",
+  "name": "network_infrastructure",
+  "attributes": {}
+}

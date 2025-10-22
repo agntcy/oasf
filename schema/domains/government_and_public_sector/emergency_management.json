@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Emergency Management",
+  "description": "Disaster response, emergency planning, crisis management, and public safety coordination",
+  "extends": "government_and_public_sector",
+  "name": "emergency_management",
+  "attributes": {}
+}

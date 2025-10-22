@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Sports Medicine",
+  "description": "Injury prevention, sports rehabilitation, athletic healthcare, and performance medicine",
+  "extends": "sports_and_fitness",
+  "name": "sports_medicine",
+  "attributes": {}
+}

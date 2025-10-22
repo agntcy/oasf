@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Sports Analytics",
+  "description": "Performance metrics, game analysis, player statistics, and sports data science",
+  "extends": "sports_and_fitness",
+  "name": "sports_analytics",
+  "attributes": {}
+}

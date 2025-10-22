@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Policy Management",
+  "description": "Policy administration, renewals, endorsements, and policy lifecycle management",
+  "extends": "insurance",
+  "name": "policy_management",
+  "attributes": {}
+}

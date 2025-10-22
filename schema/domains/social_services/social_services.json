@@ -1,0 +1,8 @@
+{
+  "caption": "Social Services",
+  "description": "Domain covering social work, community services, welfare programs, case management, and social assistance",
+  "extends": "base_domain",
+  "name": "social_services",
+  "category": "social_services",
+  "attributes": {}
+}

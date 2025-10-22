@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Corporate Governance",
+  "description": "Systems, principles, and processes for directing and controlling corporations.",
+  "extends": "legal",
+  "name": "corporate_governance",
+  "attributes": {}
+}

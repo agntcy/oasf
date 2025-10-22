@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Digital Marketing",
+  "description": "SEO, SEM, content marketing, social media marketing, and online campaigns",
+  "extends": "marketing_and_advertising",
+  "name": "digital_marketing",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Brand Management",
+  "description": "Brand strategy, brand identity, brand positioning, and reputation management",
+  "extends": "marketing_and_advertising",
+  "name": "brand_management",
+  "attributes": {}
+}

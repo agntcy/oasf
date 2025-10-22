@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Regulatory Compliance",
+  "description": "Ensuring adherence to laws, regulations, and industry standards.",
+  "extends": "legal",
+  "name": "regulatory_compliance",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Precision Agriculture",
+  "description": "Data-driven farming using sensors, GPS, and analytics for optimized crop management.",
+  "extends": "agriculture",
+  "name": "precision_agriculture",
+  "attributes": {}
+}

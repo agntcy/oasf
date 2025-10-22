@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Construction",
+  "description": "Building construction, project management, and construction technology.",
+  "extends": "real_estate",
+  "name": "construction",
+  "attributes": {}
+}

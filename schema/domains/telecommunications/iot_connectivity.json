@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "IoT Connectivity",
+  "description": "IoT networks, M2M communications, NB-IoT, LoRaWAN, and connected device management",
+  "extends": "telecommunications",
+  "name": "iot_connectivity",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Internet Services",
+  "description": "ISP operations, broadband services, internet connectivity, and access technologies",
+  "extends": "telecommunications",
+  "name": "internet_services",
+  "attributes": {}
+}

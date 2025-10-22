@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Tourism Management",
+  "description": "Destination management, tourist attractions, tourism marketing, and visitor experiences",
+  "extends": "hospitality_and_tourism",
+  "name": "tourism_management",
+  "attributes": {}
+}

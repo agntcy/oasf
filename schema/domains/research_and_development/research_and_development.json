@@ -1,0 +1,8 @@
+{
+  "caption": "Research and Development",
+  "description": "Domain covering scientific research, innovation, R&D management, laboratory operations, and experimental design",
+  "extends": "base_domain",
+  "name": "research_and_development",
+  "category": "research_and_development",
+  "attributes": {}
+}

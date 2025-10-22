@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Insurance Sales",
+  "description": "Agent management, distribution channels, customer acquisition, and sales platforms",
+  "extends": "insurance",
+  "name": "insurance_sales",
+  "attributes": {}
+}

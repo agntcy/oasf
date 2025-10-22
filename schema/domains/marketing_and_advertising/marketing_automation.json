@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Marketing Automation",
+  "description": "Marketing platforms, campaign automation, lead nurturing, and marketing technology",
+  "extends": "marketing_and_advertising",
+  "name": "marketing_automation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Ecology",
+  "description": "Ecosystem science, ecological modeling, population dynamics, and environmental interactions",
+  "extends": "environmental_science",
+  "name": "ecology",
+  "attributes": {}
+}

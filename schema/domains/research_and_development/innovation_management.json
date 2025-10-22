@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Innovation Management",
+  "description": "Innovation processes, idea management, technology transfer, and commercialization",
+  "extends": "research_and_development",
+  "name": "innovation_management",
+  "attributes": {}
+}

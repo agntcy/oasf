@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Grant Management",
+  "description": "Research funding, grant applications, project budgeting, and compliance reporting",
+  "extends": "research_and_development",
+  "name": "grant_management",
+  "attributes": {}
+}

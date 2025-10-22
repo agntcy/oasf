@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "PropTech",
+  "description": "Property technology innovations including smart buildings and real estate platforms.",
+  "extends": "real_estate",
+  "name": "proptech",
+  "attributes": {}
+}

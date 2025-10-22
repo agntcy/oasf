@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Civic Engagement",
+  "description": "Citizen participation, community outreach, public consultation, and participatory governance",
+  "extends": "government_and_public_sector",
+  "name": "civic_engagement",
+  "attributes": {}
+}

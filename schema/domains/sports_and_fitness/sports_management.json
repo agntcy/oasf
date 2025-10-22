@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Sports Management",
+  "description": "Team management, sports facilities, event organization, and sports administration",
+  "extends": "sports_and_fitness",
+  "name": "sports_management",
+  "attributes": {}
+}

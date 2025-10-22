@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Content Creation",
+  "description": "Production of digital and traditional media content including video, audio, and written material.",
+  "extends": "media_and_entertainment",
+  "name": "content_creation",
+  "attributes": {}
+}

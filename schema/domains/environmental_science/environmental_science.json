@@ -1,0 +1,8 @@
+{
+  "caption": "Environmental Science",
+  "description": "Domain covering climate science, environmental monitoring, sustainability, conservation, and ecological research",
+  "extends": "base_domain",
+  "name": "environmental_science",
+  "category": "environmental_science",
+  "attributes": {}
+}

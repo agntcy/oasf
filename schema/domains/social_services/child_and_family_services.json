@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Child and Family Services",
+  "description": "Child welfare, family support, foster care, adoption services, and family counseling",
+  "extends": "social_services",
+  "name": "child_and_family_services",
+  "attributes": {}
+}

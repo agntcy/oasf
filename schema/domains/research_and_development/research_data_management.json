@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Research Data Management",
+  "description": "Data storage, research databases, data sharing, and research informatics",
+  "extends": "research_and_development",
+  "name": "research_data_management",
+  "attributes": {}
+}

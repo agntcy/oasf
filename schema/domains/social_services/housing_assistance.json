@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Housing Assistance",
+  "description": "Homeless services, housing support, emergency shelter, and housing programs",
+  "extends": "social_services",
+  "name": "housing_assistance",
+  "attributes": {}
+}

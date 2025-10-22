@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "InsurTech",
+  "description": "Insurance technology, digital insurance platforms, telematics, and insurance innovation",
+  "extends": "insurance",
+  "name": "insurtech",
+  "attributes": {}
+}

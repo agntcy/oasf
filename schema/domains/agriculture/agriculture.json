@@ -1,0 +1,8 @@
+{
+  "caption": "Agriculture",
+  "description": "Cultivation of plants and livestock, farm management, agtech innovations, and sustainable food production systems.",
+  "extends": "base_domain",
+  "name": "agriculture",
+  "category": "agriculture",
+  "attributes": {}
+}

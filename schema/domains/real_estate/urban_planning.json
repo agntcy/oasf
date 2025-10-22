@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Urban Planning",
+  "description": "City planning, zoning, and urban development strategies.",
+  "extends": "real_estate",
+  "name": "urban_planning",
+  "attributes": {}
+}
