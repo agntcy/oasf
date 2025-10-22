@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Digital Media",
+  "description": "Social media, blogs, podcasts, and other digital content platforms.",
+  "extends": "media_and_entertainment",
+  "name": "digital_media",
+  "attributes": {}
+}

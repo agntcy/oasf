@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Environmental Policy",
+  "description": "Environmental regulations, policy development, compliance, and environmental law",
+  "extends": "environmental_science",
+  "name": "environmental_policy",
+  "attributes": {}
+}

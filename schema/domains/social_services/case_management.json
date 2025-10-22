@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Case Management",
+  "description": "Client case tracking, service coordination, needs assessment, and case documentation",
+  "extends": "social_services",
+  "name": "case_management",
+  "attributes": {}
+}

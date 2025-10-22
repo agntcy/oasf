@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Smart Grids",
+  "description": "Intelligent power distribution networks with automated monitoring and control.",
+  "extends": "energy",
+  "name": "smart_grids",
+  "attributes": {}
+}

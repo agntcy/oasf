@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Publishing",
+  "description": "Book, magazine, and digital publishing operations and distribution.",
+  "extends": "media_and_entertainment",
+  "name": "publishing",
+  "attributes": {}
+}

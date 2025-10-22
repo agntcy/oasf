@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Customer Experience",
+  "description": "Personalization, customer service, loyalty programs, and shopping experience optimization",
+  "extends": "retail_and_ecommerce",
+  "name": "customer_experience",
+  "attributes": {}
+}

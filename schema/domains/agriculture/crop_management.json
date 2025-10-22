@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Crop Management",
+  "description": "Planning, monitoring, and optimizing crop production and yield.",
+  "extends": "agriculture",
+  "name": "crop_management",
+  "attributes": {}
+}

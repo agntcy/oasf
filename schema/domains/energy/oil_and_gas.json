@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Oil and Gas",
+  "description": "Exploration, extraction, refining, and distribution of petroleum products.",
+  "extends": "energy",
+  "name": "oil_and_gas",
+  "attributes": {}
+}

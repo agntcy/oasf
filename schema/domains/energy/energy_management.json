@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Energy Management",
+  "description": "Optimization of energy consumption, efficiency programs, and demand response.",
+  "extends": "energy",
+  "name": "energy_management",
+  "attributes": {}
+}

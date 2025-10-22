@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Inventory Management",
+  "description": "Stock control, warehouse management, inventory tracking, and supply planning",
+  "extends": "retail_and_ecommerce",
+  "name": "inventory_management",
+  "attributes": {}
+}

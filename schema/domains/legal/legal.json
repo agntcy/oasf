@@ -1,0 +1,8 @@
+{
+  "caption": "Legal",
+  "description": "Legal systems, compliance, regulatory frameworks, contract management, and judicial processes.",
+  "extends": "base_domain",
+  "name": "legal",
+  "category": "legal",
+  "attributes": {}
+}

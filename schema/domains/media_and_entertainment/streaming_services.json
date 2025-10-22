@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Streaming Services",
+  "description": "On-demand video and audio streaming platforms and content delivery.",
+  "extends": "media_and_entertainment",
+  "name": "streaming_services",
+  "attributes": {}
+}

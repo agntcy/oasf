@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Energy Storage",
+  "description": "Battery systems, pumped hydro, and other energy storage technologies.",
+  "extends": "energy",
+  "name": "energy_storage",
+  "attributes": {}
+}

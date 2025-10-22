@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Sustainability",
+  "description": "Sustainable practices, carbon footprint reduction, circular economy, and green technology",
+  "extends": "environmental_science",
+  "name": "sustainability",
+  "attributes": {}
+}

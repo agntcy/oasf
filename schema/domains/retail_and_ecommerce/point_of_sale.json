@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Point of Sale",
+  "description": "POS systems, retail checkout, payment processing, and in-store transactions",
+  "extends": "retail_and_ecommerce",
+  "name": "point_of_sale",
+  "attributes": {}
+}

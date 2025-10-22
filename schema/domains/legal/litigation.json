@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Litigation",
+  "description": "Legal proceedings and dispute resolution through court systems.",
+  "extends": "legal",
+  "name": "litigation",
+  "attributes": {}
+}

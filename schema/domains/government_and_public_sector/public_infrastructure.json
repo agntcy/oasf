@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Public Infrastructure",
+  "description": "Infrastructure planning, public works, utilities management, and infrastructure maintenance",
+  "extends": "government_and_public_sector",
+  "name": "public_infrastructure",
+  "attributes": {}
+}

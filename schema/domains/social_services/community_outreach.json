@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Community Outreach",
+  "description": "Community programs, outreach services, community engagement, and local support initiatives",
+  "extends": "social_services",
+  "name": "community_outreach",
+  "attributes": {}
+}

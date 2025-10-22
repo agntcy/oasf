@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Broadcasting",
+  "description": "Radio and television broadcasting systems and operations.",
+  "extends": "media_and_entertainment",
+  "name": "broadcasting",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Telecom Operations",
+  "description": "Service provisioning, billing systems, customer management, and operations support",
+  "extends": "telecommunications",
+  "name": "telecom_operations",
+  "attributes": {}
+}

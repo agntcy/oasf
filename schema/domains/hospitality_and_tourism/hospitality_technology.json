@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Hospitality Technology",
+  "description": "Property management systems, booking engines, guest experience platforms, and hospitality software",
+  "extends": "hospitality_and_tourism",
+  "name": "hospitality_technology",
+  "attributes": {}
+}

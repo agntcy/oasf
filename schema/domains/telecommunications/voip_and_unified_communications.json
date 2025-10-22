@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "VoIP and Unified Communications",
+  "description": "Voice over IP, video conferencing, unified communications platforms, and collaboration tools",
+  "extends": "telecommunications",
+  "name": "voip_and_unified_communications",
+  "attributes": {}
+}

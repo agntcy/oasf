@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Food and Beverage",
+  "description": "Restaurant management, catering services, menu planning, and culinary operations",
+  "extends": "hospitality_and_tourism",
+  "name": "food_and_beverage",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Legal Research",
+  "description": "Investigation of legal precedents, statutes, and case law.",
+  "extends": "legal",
+  "name": "legal_research",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "caption": "Real Estate",
+  "description": "Property management, real estate transactions, construction, urban planning, and property technology.",
+  "extends": "base_domain",
+  "name": "real_estate",
+  "category": "real_estate",
+  "attributes": {}
+}

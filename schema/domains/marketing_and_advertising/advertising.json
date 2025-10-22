@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Advertising",
+  "description": "Ad campaigns, media buying, creative development, and advertising platforms",
+  "extends": "marketing_and_advertising",
+  "name": "advertising",
+  "attributes": {}
+}

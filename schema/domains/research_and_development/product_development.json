@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Product Development",
+  "description": "New product design, prototyping, testing, and product lifecycle management",
+  "extends": "research_and_development",
+  "name": "product_development",
+  "attributes": {}
+}

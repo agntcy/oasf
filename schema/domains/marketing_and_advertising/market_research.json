@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Market Research",
+  "description": "Consumer research, market analysis, competitive intelligence, and research methodologies",
+  "extends": "marketing_and_advertising",
+  "name": "market_research",
+  "attributes": {}
+}

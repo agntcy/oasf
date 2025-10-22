@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Marketing Analytics",
+  "description": "Marketing metrics, ROI analysis, attribution modeling, and performance tracking",
+  "extends": "marketing_and_advertising",
+  "name": "marketing_analytics",
+  "attributes": {}
+}

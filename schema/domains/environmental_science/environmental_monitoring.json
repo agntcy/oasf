@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Environmental Monitoring",
+  "description": "Air quality monitoring, water quality testing, pollution tracking, and environmental sensors",
+  "extends": "environmental_science",
+  "name": "environmental_monitoring",
+  "attributes": {}
+}

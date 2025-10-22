@@ -1,0 +1,8 @@
+{
+  "caption": "Media and Entertainment",
+  "description": "Creation, distribution, and consumption of content across various media platforms including broadcasting, streaming, gaming, and publishing.",
+  "extends": "base_domain",
+  "name": "media_and_entertainment",
+  "category": "media_and_entertainment",
+  "attributes": {}
+}

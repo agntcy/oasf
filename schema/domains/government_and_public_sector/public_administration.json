@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Public Administration",
+  "description": "Government operations, administrative processes, civil service, and bureaucratic systems",
+  "extends": "government_and_public_sector",
+  "name": "public_administration",
+  "attributes": {}
+}

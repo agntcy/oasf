@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Hotel Management",
+  "description": "Hotel operations, reservations, guest services, and property management systems",
+  "extends": "hospitality_and_tourism",
+  "name": "hotel_management",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Agricultural Technology",
+  "description": "Innovation and technology applications in farming including drones, IoT, and automation.",
+  "extends": "agriculture",
+  "name": "agricultural_technology",
+  "attributes": {}
+}

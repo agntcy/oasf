@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Athletic Training",
+  "description": "Performance training, coaching, workout programs, and athlete development",
+  "extends": "sports_and_fitness",
+  "name": "athletic_training",
+  "attributes": {}
+}

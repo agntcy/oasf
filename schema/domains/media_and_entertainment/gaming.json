@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Gaming",
+  "description": "Video game development, esports, and interactive entertainment.",
+  "extends": "media_and_entertainment",
+  "name": "gaming",
+  "attributes": {}
+}

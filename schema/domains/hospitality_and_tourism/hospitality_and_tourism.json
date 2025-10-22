@@ -1,0 +1,8 @@
+{
+  "caption": "Hospitality and Tourism",
+  "description": "Domain covering hotel management, travel services, tourism, event planning, and hospitality technology",
+  "extends": "base_domain",
+  "name": "hospitality_and_tourism",
+  "category": "hospitality_and_tourism",
+  "attributes": {}
+}

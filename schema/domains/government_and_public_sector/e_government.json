@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "E-Government",
+  "description": "Digital government services, online portals, citizen engagement platforms, and digital identity",
+  "extends": "government_and_public_sector",
+  "name": "e_government",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Laboratory Management",
+  "description": "Lab operations, equipment management, safety protocols, and laboratory information systems",
+  "extends": "research_and_development",
+  "name": "laboratory_management",
+  "attributes": {}
+}

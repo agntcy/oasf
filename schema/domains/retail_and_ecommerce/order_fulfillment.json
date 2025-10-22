@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Order Fulfillment",
+  "description": "Order processing, shipping, logistics, returns management, and last-mile delivery",
+  "extends": "retail_and_ecommerce",
+  "name": "order_fulfillment",
+  "attributes": {}
+}

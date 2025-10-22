@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Livestock Management",
+  "description": "Care, breeding, and management of farm animals and livestock operations.",
+  "extends": "agriculture",
+  "name": "livestock_management",
+  "attributes": {}
+}

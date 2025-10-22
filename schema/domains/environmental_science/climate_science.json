@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Climate Science",
+  "description": "Climate modeling, climate change research, atmospheric science, and weather prediction",
+  "extends": "environmental_science",
+  "name": "climate_science",
+  "attributes": {}
+}

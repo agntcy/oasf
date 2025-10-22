@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Retail Analytics",
+  "description": "Sales analytics, customer insights, merchandising analytics, and retail intelligence",
+  "extends": "retail_and_ecommerce",
+  "name": "retail_analytics",
+  "attributes": {}
+}

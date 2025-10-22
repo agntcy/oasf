@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Actuarial Science",
+  "description": "Actuarial analysis, risk modeling, statistical modeling, and pricing strategies",
+  "extends": "insurance",
+  "name": "actuarial_science",
+  "attributes": {}
+}

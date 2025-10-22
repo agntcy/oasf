@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Wireless Communications",
+  "description": "Mobile networks, 5G/6G technology, wireless protocols, and cellular services",
+  "extends": "telecommunications",
+  "name": "wireless_communications",
+  "attributes": {}
+}

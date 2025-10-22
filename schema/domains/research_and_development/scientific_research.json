@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Scientific Research",
+  "description": "Research methodology, experimental design, data collection, and scientific investigation",
+  "extends": "research_and_development",
+  "name": "scientific_research",
+  "attributes": {}
+}

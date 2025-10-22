@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Renewable Energy",
+  "description": "Solar, wind, hydro, and other sustainable energy sources and technologies.",
+  "extends": "energy",
+  "name": "renewable_energy",
+  "attributes": {}
+}
