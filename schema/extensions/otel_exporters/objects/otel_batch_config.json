@@ -1,0 +1,32 @@
+{
+  "caption": "OpenTelemetry Batch Configuration",
+  "description": "Configuration for batching telemetry data before export",
+  "extends": "object",
+  "name": "otel_batch_config",
+  "attributes": {
+    "max_queue_size": {
+      "caption": "Max Queue Size",
+      "description": "Maximum queue size for pending exports",
+      "requirement": "required",
+      "type": "integer_t"
+    },
+    "scheduled_delay": {
+      "caption": "Scheduled Delay",
+      "description": "Delay interval between two consecutive exports in milliseconds",
+      "requirement": "required",
+      "type": "integer_t"
+    },
+    "export_timeout": {
+      "caption": "Export Timeout",
+      "description": "Maximum allowed time for export in milliseconds",
+      "requirement": "required",
+      "type": "integer_t"
+    },
+    "max_export_batch_size": {
+      "caption": "Max Export Batch Size",
+      "description": "Maximum batch size for export",
+      "requirement": "required",
+      "type": "integer_t"
+    }
+  }
+}
