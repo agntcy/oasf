@@ -559,7 +559,7 @@
     "previous_record_cid": {
       "caption": "Previous Record CID",
       "description": "Content Identifier (CID) of an Record's parent record.",
-      "type": "uuid_t"
+      "type": "cid_t"
     },
     "priority": {
       "caption": "Priority",
@@ -680,6 +680,20 @@
         "description": "Base64 encoded immutable byte sequence.",
         "type": "string_t",
         "type_name": "String"
+      },
+      "cid_t": {
+        "caption": "Content Identifier",
+        "description": "Content Identifier (CID) as defined by the multiformats specification. CIDs are self-describing content-addressed identifiers. Supports CIDv0 (base58btc) and CIDv1 (base32, base58btc, base64) formats. For example:<br><code>baeareiccegmypgujc6ru6f3nbib2a4ojuzfz2t5ugtfux4a4rtfru3g2sm</code>,<br><code>QmYjtig7VJQ6XsnUjqqJvj7QaMcCAwtrgNdahSiFofrE7o</code>.",
+        "max_len": 120,
+        "regex": "^(Qm[1-9A-HJ-NP-Za-km-z]{44}|b[a-z2-7]{46,}|z[1-9A-HJ-NP-Za-km-z]+|m[A-Za-z0-9+/=]+)$",
+        "type": "string_t",
+        "type_name": "String",
+        "references": [
+          {
+            "description": "Multiformats CID Specification",
+            "url": "https://github.com/multiformats/cid"
+          }
+        ]
       },
       "class_t": {
         "caption": "Class",

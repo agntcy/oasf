@@ -523,6 +523,7 @@ defmodule Schema.Generator do
   defp generate_data(_name, "url_t", _field), do: url()
   defp generate_data(_name, "unit_interval_t", _field), do: unit_interval()
   defp generate_data(_name, "uuid_t", _field), do: uuid()
+  defp generate_data(_name, "cid_t", _field), do: cid()
   defp generate_data(_name, "ip_t", _field), do: ipv4()
   defp generate_data(_name, "subnet_t", _field), do: subnet()
   defp generate_data(_name, "mac_t", _field), do: mac()
@@ -696,6 +697,15 @@ defmodule Schema.Generator do
 
   def uuid() do
     UUID.uuid1()
+  end
+
+  def cid() do
+    base32_chars = "abcdefghijklmnopqrstuvwxyz234567"
+
+    "b" <>
+      Enum.map_join(1..58, fn _ ->
+        String.at(base32_chars, random(String.length(base32_chars)))
+      end)
   end
 
   def unit_interval() do
