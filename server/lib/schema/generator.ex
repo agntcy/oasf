@@ -524,6 +524,7 @@ defmodule Schema.Generator do
   defp generate_data(_name, "unit_interval_t", _field), do: unit_interval()
   defp generate_data(_name, "uuid_t", _field), do: uuid()
   defp generate_data(_name, "cid_t", _field), do: cid()
+  defp generate_data(_name, "long_string_t", _field), do: sentence(20)
   defp generate_data(_name, "ip_t", _field), do: ipv4()
   defp generate_data(_name, "subnet_t", _field), do: subnet()
   defp generate_data(_name, "mac_t", _field), do: mac()

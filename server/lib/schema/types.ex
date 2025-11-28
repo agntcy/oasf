@@ -51,6 +51,7 @@ defmodule Schema.Types do
       "datetime_t" -> "string"
       "uuid_t" -> "string"
       "cid_t" -> "string"
+      "long_string_t" -> "string"
       "email_t" -> "string"
       "url_t" -> "string"
       "ip_t" -> "string"
