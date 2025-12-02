@@ -1,0 +1,14 @@
+{
+  "caption": "MCP Original Data",
+  "description": "The complete original MCP server JSON data structure.",
+  "extends": "object",
+  "name": "mcp_original_data",
+  "attributes": {
+    "server": {
+      "reference": "mcp_original_server_data",
+      "caption": "Server Data",
+      "description": "The original server.json data structure from MCP Registry.",
+      "requirement": "required"
+    }
+  }
+}

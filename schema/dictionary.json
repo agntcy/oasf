@@ -452,18 +452,20 @@
       "description": "Data supported by the agent for MCP.",
       "type": "mcp_data"
     },
-    "mcp_server_capabilities": {
-      "caption": "MCP Server Capabilities",
-      "description": "Describes the capabilities supported by an MCP server.",
-      "type": "string_t",
-      "enum": {
-        "subscribe": {
-          "caption": "The server can subscribe to events."
-        },
-        "notify": {
-          "caption": "The server can notify on events."
-        }
-      },
+    "mcp_original_data": {
+      "caption": "Original MCP Data",
+      "description": "The complete original MCP server JSON data structure for full fidelity storage.",
+      "type": "json_t"
+    },
+    "mcp_original_server_data": {
+      "caption": "Original Server Data",
+      "description": "The original server.json data structure from MCP Registry.",
+      "type": "json_t"
+    },
+    "mcp_server_connections": {
+      "caption": "MCP Server Connections",
+      "description": "List of connection configurations for accessing an MCP server (local packages or remote endpoints).",
+      "type": "mcp_server_connection",
       "is_array": true
     },
     "mcp_server_prompts": {
@@ -482,12 +484,6 @@
       "caption": "MCP Server Tools",
       "description": "Describes the configuration for an MCP server tools.",
       "type": "mcp_server_tool",
-      "is_array": true
-    },
-    "mcp_servers": {
-      "caption": "MCP Servers",
-      "description": "Describes the list of MCP servers.",
-      "type": "mcp_server",
       "is_array": true
     },
     "mime_type": {

@@ -1,22 +1,52 @@
 {
   "caption": "MCP Data",
-  "description": "Data for the MCP record module.",
+  "description": "Data for the MCP record module. Represents one MCP server with its capabilities and deployment options.",
   "extends": "module_data",
   "name": "mcp_data",
   "attributes": {
-    "servers": {
-      "reference": "mcp_servers",
-      "caption": "MCP Servers",
-      "description": "List of MCP servers supported by the agent. Exact properties may vary depending on the client or platform.",
-      "requirement": "required",
+    "name": {
+      "caption": "Server Name",
+      "description": "The name of the MCP server.",
+      "requirement": "required"
+    },
+    "description": {
+      "caption": "Server Description",
+      "description": "Description of the server's functionality and purpose.",
+      "requirement": "optional"
+    },
+    "prompts": {
+      "reference": "mcp_server_prompts",
+      "caption": "Prompts",
+      "description": "List of prompts supported by the server.",
+      "requirement": "optional"
+    },
+    "resources": {
+      "reference": "mcp_server_resources",
+      "caption": "Resources",
+      "description": "List of resources supported by the server.",
+      "requirement": "optional"
+    },
+    "tools": {
+      "reference": "mcp_server_tools",
+      "caption": "Tools",
+      "description": "List of tools supported by the server.",
+      "requirement": "optional"
+    },
+    "connections": {
+      "reference": "mcp_server_connections",
+      "caption": "Server Connections",
+      "description": "List of connection configurations for accessing this server (local packages or remote endpoints).",
+      "requirement": "required"
+    },
+    "mcp_data": {
+      "reference": "mcp_original_data",
+      "caption": "Original MCP Data",
+      "description": "The complete original MCP server JSON data structure for full fidelity storage.",
+      "requirement": "optional",
       "references": [
         {
-          "description": "VS Code MCP Server Extension",
-          "url": "https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_configuration-format"
-        },
-        {
-          "description": "Claude MCP Connector",
-          "url": "https://docs.anthropic.com/en/docs/agents-and-tools/mcp-connector#field-descriptions"
+          "description": "MCP Server Schema",
+          "url": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json"
         }
       ]
     }
