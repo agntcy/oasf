@@ -1,0 +1,7 @@
+{
+  "caption": "Communication Protocol Configuration",
+  "description": "Configuration for the protocol used to serve the Agent.",
+  "extends": "object",
+  "name": "agentspec_communication_protocol",
+  "attributes": {}
+}

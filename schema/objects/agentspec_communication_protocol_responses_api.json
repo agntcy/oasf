@@ -1,0 +1,27 @@
+{
+  "caption": "Communication Protocol Configuration Responses API",
+  "description": "Configuration for the Responses API-compatible agent endpoint.",
+  "extends": "agentspec_communication_protocol",
+  "name": "agentspec_communication_protocol_responses_api",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Communication protocol type.",
+      "requirement": "required",
+      "enum": {
+        "Responses_API": {
+          "caption": "Responses API"
+        }
+      }
+    },
+    "url": {
+      "description": "URL of the agent endpoint.",
+      "requirement": "required"
+    },
+    "model": {
+      "caption": "Model/Agent Identifier",
+      "description": "Model/Agent identifier for the Response API-compatible agent endpoint. If missing, will use the agent name as specified in the agent record.",
+      "requirement": "optional"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "caption": "Communication Protocol Configuration A2A",
+  "description": "Configuration for the A2A-compatible agent endpoint.",
+  "extends": "agentspec_communication_protocol",
+  "name": "agentspec_communication_protocol_a2a",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Communication protocol type.",
+      "requirement": "required",
+      "enum": {
+        "A2A": {
+          "caption": "A2A"
+        }
+      }
+    },
+    "url": {
+      "description": "URL of the agent endpoint.",
+      "requirement": "required"
+    },
+    "protocol_version": {
+      "reference": "a2a_protocol_version",
+      "caption": "Protocol Version",
+      "description": "Version of the A2A protocol used by the agent.",
+      "requirement": "required"
+    }
+  }
+}

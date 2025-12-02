@@ -1,0 +1,25 @@
+{
+  "caption": "Deployment Option",
+  "description": "Describes a deployment option for an agent.",
+  "extends": "object",
+  "name": "agentspec_deployment_option",
+  "attributes": {
+    "name": {
+      "caption": "Deployment Option Name",
+      "description": "Name of the deployment option.",
+      "requirement": "optional"
+    },
+    "protocol": {
+      "reference": "agentspec_communication_protocol",
+      "caption": "Communication Protocol Configuration",
+      "description": "Configuration for the protocol used to serve the Agent.",
+      "requirement": "required"
+    },
+    "runtime_framework": {
+      "reference": "agentspec_runtime_framework",
+      "caption": "Runtime Framework",
+      "description": "Name for the runtime framework to use to run the Agent Spec config.",
+      "requirement": "required"
+    }
+  }
+}
