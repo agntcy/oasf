@@ -4,24 +4,24 @@
   "name": "dictionary",
   "attributes": {
     "a2a_capabilities": {
-      "caption": "Capabilities",
-      "description": "List of capabilities supported by the agent for A2A communication.",
-      "type": "string_t",
-      "is_array": true,
-      "enum": {
-        "push_notifications": {
-          "caption": "Push Notifications",
-          "description": "Indicates whether the agent supports push notifications for A2A communication."
-        },
-        "streaming": {
-          "caption": "Streaming",
-          "description": "Indicates whether the agent supports streaming for A2A communication."
-        },
-        "state_transition_history": {
-          "caption": "State Transition History",
-          "description": "Indicates whether the agent supports state transition history for A2A communication."
-        }
-      }
+      "caption": "A2A Capabilities",
+      "description": "Defines optional capabilities supported by an A2A agent.",
+      "type": "a2a_capabilities"
+    },
+    "a2a_capability_push_notifications": {
+      "caption": "Push Notifications Capability",
+      "description": "Indicates if the agent supports sending push notifications for asynchronous task updates.",
+      "type": "boolean_t"
+    },
+    "a2a_capability_state_transition_history": {
+      "caption": "State Transition History Capability",
+      "description": "Indicates if the agent provides a history of state transitions for a task.",
+      "type": "boolean_t"
+    },
+    "a2a_capability_streaming": {
+      "caption": "Streaming Capability",
+      "description": "Indicates if the agent supports streaming responses.",
+      "type": "boolean_t"
     },
     "a2a_card_data": {
       "caption": "A2A Agent Card Data",
@@ -70,9 +70,30 @@
         }
       }
     },
+    "a2a_protocol_binding": {
+      "caption": "Protocol Binding",
+      "description": "The protocol binding used by an A2A interface (e.g., 'http+json', 'grpc').",
+      "type": "string_t"
+    },
     "a2a_protocol_version": {
       "caption": "Protocol Version",
       "description": "Version of the A2A protocol used by the agent.",
+      "type": "string_t"
+    },
+    "a2a_provider": {
+      "caption": "Provider Information",
+      "description": "Information about the A2A agent provider including organization, URL, and extensions.",
+      "type": "a2a_provider"
+    },
+    "a2a_provider_extensions": {
+      "caption": "Provider Extensions",
+      "description": "List of provider extensions for A2A protocol capability discovery.",
+      "type": "a2a_provider_extension",
+      "is_array": true
+    },
+    "a2a_provider_organization": {
+      "caption": "Provider Organization",
+      "description": "Name of the A2A provider organization.",
       "type": "string_t"
     },
     "a2a_security_schemes": {
@@ -107,25 +128,16 @@
         }
       }
     },
-    "a2a_supported_transports": {
-      "caption": "Supported Transports",
-      "description": "Supported transport protocols for A2A communication.",
-      "type": "string_t",
-      "is_array": true,
-      "enum": {
-        "jsonrpc": {
-          "caption": "JSONRPC",
-          "description": "JSON-RPC transport protocol for A2A communication."
-        },
-        "grpc": {
-          "caption": "GRPC",
-          "description": "gRPC transport protocol for A2A communication."
-        },
-        "http": {
-          "caption": "HTTP+JS",
-          "description": "HTTP transport protocol for A2A communication."
-        }
-      }
+    "a2a_supported_interfaces": {
+      "caption": "Supported Interfaces",
+      "description": "List of supported interfaces for A2A communication with URLs and protocol bindings.",
+      "type": "a2a_supported_interface",
+      "is_array": true
+    },
+    "a2a_supports_authenticated_extended_card": {
+      "caption": "Supports Authenticated Extended Card",
+      "description": "Indicates whether the A2A agent supports authenticated extended card retrieval.",
+      "type": "boolean_t"
     },
     "acp_agent": {
       "caption": "Agent Connect Protocol Specs",

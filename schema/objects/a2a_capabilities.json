@@ -1,0 +1,32 @@
+{
+  "caption": "A2A Capabilities",
+  "description": "Defines optional capabilities supported by an A2A agent.",
+  "extends": "object",
+  "name": "a2a_capabilities",
+  "attributes": {
+    "streaming": {
+      "reference": "a2a_capability_streaming",
+      "caption": "Streaming",
+      "description": "Indicates if the agent supports streaming responses.",
+      "requirement": "optional"
+    },
+    "push_notifications": {
+      "reference": "a2a_capability_push_notifications",
+      "caption": "Push Notifications",
+      "description": "Indicates if the agent supports sending push notifications for asynchronous task updates.",
+      "requirement": "optional"
+    },
+    "extensions": {
+      "reference": "a2a_provider_extensions",
+      "caption": "Extensions",
+      "description": "List of protocol extensions supported by the agent.",
+      "requirement": "optional"
+    },
+    "state_transition_history": {
+      "reference": "a2a_capability_state_transition_history",
+      "caption": "State Transition History",
+      "description": "Indicates if the agent provides a history of state transitions for a task.",
+      "requirement": "optional"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "caption": "A2A Supported Interface",
+  "description": "Describes a supported interface for A2A communication.",
+  "extends": "object",
+  "name": "a2a_supported_interface",
+  "attributes": {
+    "url": {
+      "reference": "url",
+      "caption": "Interface URL",
+      "description": "URL of the interface endpoint.",
+      "requirement": "required"
+    },
+    "protocol_binding": {
+      "reference": "a2a_protocol_binding",
+      "caption": "Protocol Binding",
+      "description": "The protocol binding used by this interface (e.g., 'http+json', 'grpc').",
+      "requirement": "optional"
+    }
+  }
+}
