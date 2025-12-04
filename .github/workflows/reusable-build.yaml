@@ -61,13 +61,15 @@ jobs:
         run: mkdir -p /tmp/.buildx-cache
 
       - name: Build image artifact
-        uses: docker/bake-action@a4d7f0b5b91c14a296d792d4ec53a9db17f02e67 # v5.5.0
+        uses: docker/bake-action@v6.10.0
         with:
+          source: .
           files: |
             ./docker-bake.hcl
             ${{ steps.metadata.outputs.bake-file }}
           targets: ${{ inputs.bake_target }}
           provenance: false
+          allow: fs.write=/tmp
           set: |
             *.platform=linux/amd64
             *.cache-to=type=local,dest=/tmp/.buildx-cache
@@ -77,7 +79,6 @@ jobs:
         env:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
-          BUILDX_BAKE_ENTITLEMENTS_FS: 0
 
       - name: Upload image artifact
         id: upload-artifacts
