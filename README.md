@@ -93,6 +93,33 @@ for more information on the Agent Record.
 The current skill set taxonomy is described in
 [Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/skill_categories).
 
+## Creating Valid OASF Records with MCP Server
+
+The [Directory MCP Server](https://github.com/agntcy/dir/tree/main/mcp) provides powerful capabilities to help create valid OASF agent records when configured with an LLM (such as in Cursor or other MCP-compatible IDEs). The MCP server exposes tools and prompts that enable LLMs to generate, validate, and refine OASF records with schema-aware assistance.
+
+### Key Capabilities
+
+- **Schema Discovery**: Query OASF schema versions and navigate domains/skills taxonomy
+- **Record Generation**: Automatically generate complete OASF records from your codebase
+- **Validation**: Check records against the schema and iteratively fix validation errors
+- **Format Conversion**: Import from MCP/A2A formats and export to other formats with automatic enrichment
+
+### Getting Started
+
+To use the MCP server with an LLM for creating OASF records:
+
+1. **Install the Directory MCP Server** - See the [MCP Server README](https://github.com/agntcy/dir/tree/main/mcp) for installation instructions
+2. **Configure your IDE** - Add the MCP server to your IDE's MCP configuration (e.g., `~/.cursor/mcp.json`)
+3. **Start Creating Records** - Use natural language to ask the LLM to create, validate, or refine OASF records
+
+### Example Usage
+
+Once configured, you can interact with the LLM using natural language:
+
+- "Create an OASF record for this project" - Generates a complete record from your codebase
+- "Validate this OASF record and fix any errors" - Checks and corrects validation issues
+- "Import this MCP server configuration to OASF format" - Converts from other formats
+
 ## Open Agentic Schema Framework Server
 
 The `server/` directory contains the Open Agentic Schema Framework (OASF) Schema
