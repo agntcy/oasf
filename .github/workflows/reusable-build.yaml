@@ -77,6 +77,7 @@ jobs:
         env:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
+          BUILDX_BAKE_ENTITLEMENTS_FS: 0
 
       - name: Upload image artifact
         id: upload-artifacts
