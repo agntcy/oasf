@@ -17,8 +17,8 @@
       "requirement": "required",
       "references": [
         {
-          "description": "A2A Card Data Schema",
-          "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+          "description": "A2A AgentCard Proto Message",
+          "url": "https://github.com/google-a2a/A2A/blob/main/specification/grpc/a2a.proto"
         }
       ]
     },
@@ -26,12 +26,6 @@
       "reference": "a2a_capabilities",
       "caption": "Capabilities",
       "description": "List of capabilities supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "transports": {
-      "reference": "a2a_supported_transports",
-      "caption": "Supported Transports",
-      "description": "Supported transport protocols for A2A communication.",
       "requirement": "optional"
     },
     "input_modes": {
@@ -50,6 +44,24 @@
       "reference": "a2a_security_schemes",
       "caption": "Supported Security Schemes",
       "description": "Supported security schemes for A2A communication.",
+      "requirement": "optional"
+    },
+    "supported_interfaces": {
+      "reference": "a2a_supported_interfaces",
+      "caption": "Supported Interfaces",
+      "description": "List of supported interfaces with URLs and protocol bindings for routing and protocol negotiation.",
+      "requirement": "optional"
+    },
+    "provider": {
+      "reference": "a2a_provider",
+      "caption": "Provider Information",
+      "description": "Information about the provider including organization and protocol extensions.",
+      "requirement": "optional"
+    },
+    "supports_authenticated_extended_card": {
+      "reference": "a2a_supports_authenticated_extended_card",
+      "caption": "Supports Authenticated Extended Card",
+      "description": "Indicates whether the agent supports authenticated extended card retrieval.",
       "requirement": "optional"
     }
   }

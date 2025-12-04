@@ -1,0 +1,58 @@
+{
+  "caption": "MCP Server Connection",
+  "description": "Base connection configuration for accessing an MCP server.",
+  "extends": "object",
+  "name": "mcp_server_connection",
+  "attributes": {
+    "type": {
+      "caption": "Type",
+      "description": "Type of the server transport.",
+      "requirement": "required",
+      "enum": {
+        "stdio": {
+          "caption": "Standard I/O Transport",
+          "description": "Local server using standard input/output"
+        },
+        "streamable-http": {
+          "caption": "Streamable HTTP Transport",
+          "description": "HTTP-based streaming transport"
+        },
+        "sse": {
+          "caption": "Server-Sent Events Transport",
+          "description": "SSE-based transport"
+        }
+      }
+    },
+    "url": {
+      "caption": "URL",
+      "description": "URL of the server endpoint (required for streamable-http and sse transports).",
+      "requirement": "optional"
+    },
+    "command": {
+      "caption": "Command",
+      "description": "Executable or runtime command (for stdio transport).",
+      "requirement": "optional"
+    },
+    "args": {
+      "caption": "Arguments",
+      "description": "Command-line arguments.",
+      "requirement": "optional"
+    },
+    "env_vars": {
+      "caption": "Environment Variables",
+      "description": "Environment variables such as tokens or API keys.",
+      "requirement": "optional"
+    },
+    "headers": {
+      "caption": "Headers",
+      "description": "HTTP headers for authentication (for HTTP-based transports).",
+      "requirement": "optional"
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "url",
+      "command"
+    ]
+  }
+}

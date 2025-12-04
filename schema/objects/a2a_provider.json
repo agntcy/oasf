@@ -1,0 +1,20 @@
+{
+  "caption": "A2A Provider",
+  "description": "Information about the A2A agent provider.",
+  "extends": "object",
+  "name": "a2a_provider",
+  "attributes": {
+    "organization": {
+      "reference": "a2a_provider_organization",
+      "caption": "Organization",
+      "description": "Name of the provider organization.",
+      "requirement": "optional"
+    },
+    "extensions": {
+      "reference": "a2a_provider_extensions",
+      "caption": "Extensions",
+      "description": "List of provider extensions for protocol capability discovery.",
+      "requirement": "optional"
+    }
+  }
+}
