@@ -10,16 +10,21 @@
       "description": "Location of the Agent Spec config. E.g. path to config, github repo url etc.",
       "requirement": "required"
     },
-    "runtime_framework": {
-      "reference": "agentspec_runtime_framework",
-      "caption": "Runtime Framework",
-      "description": "Name for the runtime framework to use to run the Agent Spec config.",
+    "deployment_options": {
+      "reference": "agentspec_deployment_options",
+      "caption": "Deployment Options",
+      "description": "List of possible configuration to instantiate or consume the agent. Any of the available option could be used.",
       "requirement": "required"
     },
     "runtime_deps": {
       "reference": "agentspec_runtime_deps",
       "caption": "Runtime Dependencies",
       "description": "List of locators for the non-serializable objects the Agent Spec config depends on (e.g. tool implementations).",
+      "requirement": "optional"
+    },
+    "env_vars": {
+      "caption": "Environment Variables",
+      "description": "List of environment variables to be set for the agent.",
       "requirement": "optional"
     }
   },
