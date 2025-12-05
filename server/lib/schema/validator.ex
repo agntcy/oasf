@@ -1629,6 +1629,16 @@ defmodule Schema.Validator do
           end
 
         if class do
+          # Check if this is a placeholder that should be replaced
+          response =
+            check_placeholder_warning(
+              response,
+              class,
+              attribute_path,
+              attribute_name,
+              attribute_details[:family]
+            )
+
           {response, profiles} = validate_and_return_profiles(response, value)
 
           validate_input_against_class(
@@ -2527,6 +2537,38 @@ defmodule Schema.Validator do
         since: deprecated[:since]
       }
     )
+  end
+
+  @spec check_placeholder_warning(map(), map(), String.t(), String.t(), String.t()) :: map()
+  defp check_placeholder_warning(response, class, attribute_path, attribute_name, family) do
+    class_name = class[:name]
+    # Normalize class name to string for comparison (it may be an atom)
+    class_name_str = if is_atom(class_name), do: Atom.to_string(class_name), else: class_name
+
+    placeholder_name =
+      case family do
+        "skill" -> "base_skill"
+        "domain" -> "base_domain"
+        "module" -> "base_module"
+        _ -> nil
+      end
+
+    if placeholder_name && class_name_str == placeholder_name do
+      add_warning(
+        response,
+        "placeholder_used",
+        "Placeholder \"#{placeholder_name}\" is used at \"#{attribute_path}\". " <>
+          "This placeholder needs to be replaced with an actual #{family}.",
+        %{
+          attribute_path: attribute_path,
+          attribute: attribute_name,
+          value: placeholder_name,
+          placeholder_type: family
+        }
+      )
+    else
+      response
+    end
   end
 
   @spec add_error(map(), String.t(), String.t(), map()) :: map()
