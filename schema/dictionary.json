@@ -338,7 +338,7 @@
     "description": {
       "caption": "Description",
       "description": "The description of the entity. See specific usage.",
-      "type": "string_t"
+      "type": "long_string_t"
     },
     "digest": {
       "caption": "Digest",
@@ -559,7 +559,7 @@
     "previous_record_cid": {
       "caption": "Previous Record CID",
       "description": "Content Identifier (CID) of an Record's parent record.",
-      "type": "uuid_t"
+      "type": "cid_t"
     },
     "priority": {
       "caption": "Priority",
@@ -681,6 +681,20 @@
         "type": "string_t",
         "type_name": "String"
       },
+      "cid_t": {
+        "caption": "Content Identifier",
+        "description": "Content Identifier (CID) as defined by the multiformats specification. CIDs are self-describing content-addressed identifiers. Supports CIDv0 (base58btc) and CIDv1 (base32, base58btc, base64) formats. For example:<br><code>baeareiccegmypgujc6ru6f3nbib2a4ojuzfz2t5ugtfux4a4rtfru3g2sm</code>,<br><code>QmYjtig7VJQ6XsnUjqqJvj7QaMcCAwtrgNdahSiFofrE7o</code>.",
+        "max_len": 120,
+        "regex": "^(Qm[1-9A-HJ-NP-Za-km-z]{44}|b[a-z2-7]{46,}|z[1-9A-HJ-NP-Za-km-z]+|m[A-Za-z0-9+/=]+)$",
+        "type": "string_t",
+        "type_name": "String",
+        "references": [
+          {
+            "description": "Multiformats CID Specification",
+            "url": "https://github.com/multiformats/cid"
+          }
+        ]
+      },
       "class_t": {
         "caption": "Class",
         "description": "Name of the class associated to an attribute."
@@ -695,6 +709,7 @@
       "email_t": {
         "caption": "Email Address",
         "description": "Email address. For example:<br><code>john_doe@example.com</code>.",
+        "max_len": 320,
         "regex": "^[a-zA-Z0-9!#$%&'*+-/=?^_`{|}~.]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
         "type": "string_t",
         "type_name": "String"
@@ -702,6 +717,7 @@
       "file_hash_t": {
         "caption": "Hash",
         "description": "Hash. A unique value that corresponds to the content of the file, image, ja3_hash or hassh found in the schema. For example:<br> MD5: <code>3172ac7e2b55cbb81f04a6e65855a628</code>.",
+        "max_len": 71,
         "regex": "^sha256:[a-fA-F0-9]+$",
         "type": "string_t",
         "type_name": "String"
@@ -709,6 +725,7 @@
       "file_name_t": {
         "caption": "File Name",
         "description": "File name. For example:<br><code>text-file.txt</code>.",
+        "max_len": 255,
         "type": "string_t",
         "type_name": "String"
       },
@@ -731,6 +748,13 @@
       "json_t": {
         "caption": "JSON",
         "description": "Embedded JSON value. A value can be a string, or a number, or true or false or null, or an object or an array. These structures can be nested. See <a target='_blank' href='https://www.json.org'>www.json.org</a>."
+      },
+      "long_string_t": {
+        "caption": "Long String",
+        "description": "A string type for longer text content such as descriptions, documentation, or detailed metadata. Supports up to 10,000 characters.",
+        "max_len": 10000,
+        "type": "string_t",
+        "type_name": "String"
       },
       "long_t": {
         "caption": "Long",
@@ -775,7 +799,8 @@
       },
       "string_t": {
         "caption": "String",
-        "description": "UTF-8 encoded byte sequence."
+        "description": "UTF-8 encoded byte sequence.",
+        "max_len": 2000
       },
       "subnet_t": {
         "max_len": 42,
@@ -819,6 +844,7 @@
       "username_t": {
         "caption": "User Name",
         "description": "User name. For example:<br><code>john_doe</code>.",
+        "max_len": 64,
         "type": "string_t",
         "type_name": "String"
       },
