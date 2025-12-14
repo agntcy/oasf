@@ -1,0 +1,7 @@
+{
+  "caption": "OpenTelemetry Exporters",
+  "name": "otel_exporters",
+  "uid": 200,
+  "version": "1.0.0",
+  "description": "Extension providing export configurations and destinations for AGNTCY observability data collected via OpenTelemetry"
+}
