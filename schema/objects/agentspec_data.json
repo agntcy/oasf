@@ -31,7 +31,7 @@
   "references": [
     {
       "description": "Agent Spec Language Specification",
-      "url": "https://oracle.github.io/agent-spec/agentspec/language_spec_25_4_1.html"
+      "url": "https://oracle.github.io/agent-spec/index.html"
     }
   ]
 }
