@@ -17,6 +17,7 @@ jobs:
       contents: read
       security-events: write
 
+    # Elixir is not (yet) supported by CodeQL, so we limit to Go and JavaScript for now.
     strategy:
       fail-fast: false
       matrix:
