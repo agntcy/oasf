@@ -1,0 +1,137 @@
+{
+  "caption": "OpenTelemetry Exporter Configuration",
+  "description": "Configuration for exporting AGNTCY observability data to various backends",
+  "extends": "object",
+  "name": "otel_exporter_config",
+  "attributes": {
+    "exporter_type": {
+      "caption": "Exporter Type",
+      "description": "Type of OpenTelemetry exporter being configured",
+      "requirement": "required",
+      "enum": {
+        "otlp": {
+          "caption": "OTLP",
+          "description": "OpenTelemetry Protocol exporter for sending to collectors"
+        },
+        "prometheus": {
+          "caption": "Prometheus",
+          "description": "Prometheus exporter for metrics scraping"
+        },
+        "jaeger": {
+          "caption": "Jaeger",
+          "description": "Jaeger exporter for distributed tracing"
+        },
+        "zipkin": {
+          "caption": "Zipkin",
+          "description": "Zipkin exporter for distributed tracing"
+        },
+        "datadog": {
+          "caption": "Datadog",
+          "description": "Datadog APM exporter"
+        },
+        "new_relic": {
+          "caption": "New Relic",
+          "description": "New Relic APM exporter"
+        },
+        "elastic_apm": {
+          "caption": "Elastic APM",
+          "description": "Elastic APM exporter"
+        },
+        "azure_monitor": {
+          "caption": "Azure Monitor",
+          "description": "Azure Monitor Application Insights exporter"
+        },
+        "google_cloud": {
+          "caption": "Google Cloud",
+          "description": "Google Cloud Operations (Stackdriver) exporter"
+        },
+        "aws_xray": {
+          "caption": "AWS X-Ray",
+          "description": "AWS X-Ray tracing exporter"
+        }
+      }
+    },
+    "endpoint": {
+      "caption": "Endpoint",
+      "description": "The endpoint URL where telemetry data should be sent",
+      "requirement": "required",
+      "type": "string_t"
+    },
+    "protocol": {
+      "caption": "Protocol",
+      "description": "Protocol used for exporting data",
+      "requirement": "required",
+      "enum": {
+        "grpc": {
+          "caption": "gRPC",
+          "description": "gRPC protocol (recommended for OTLP)"
+        },
+        "http": {
+          "caption": "HTTP/HTTPS",
+          "description": "HTTP/HTTPS protocol"
+        }
+      }
+    },
+    "authentication": {
+      "reference": "otel_auth_config",
+      "caption": "Authentication",
+      "description": "Authentication configuration for the exporter",
+      "requirement": "recommended"
+    },
+    "compression": {
+      "caption": "Compression",
+      "description": "Compression algorithm to use",
+      "requirement": "optional",
+      "enum": {
+        "none": {
+          "caption": "None",
+          "description": "No compression"
+        },
+        "gzip": {
+          "caption": "Gzip",
+          "description": "Gzip compression"
+        },
+        "zstd": {
+          "caption": "Zstandard",
+          "description": "Zstandard compression"
+        }
+      }
+    },
+    "retry_config": {
+      "reference": "otel_retry_config",
+      "caption": "Retry Configuration",
+      "description": "Configuration for retry behavior on export failures",
+      "requirement": "recommended"
+    },
+    "batch_config": {
+      "reference": "otel_batch_config",
+      "caption": "Batch Configuration",
+      "description": "Configuration for batching telemetry data before export",
+      "requirement": "recommended"
+    },
+    "resource_attributes": {
+      "caption": "Resource Attributes",
+      "description": "Additional resource attributes to attach to all exported data",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "headers": {
+      "caption": "Headers",
+      "description": "Additional headers to include in export requests",
+      "requirement": "optional",
+      "is_array": true
+    },
+    "timeout": {
+      "caption": "Timeout",
+      "description": "Export timeout in seconds",
+      "requirement": "optional",
+      "type": "integer_t"
+    },
+    "tls_config": {
+      "reference": "otel_tls_config",
+      "caption": "TLS Configuration",
+      "description": "TLS configuration for secure connections",
+      "requirement": "recommended"
+    }
+  }
+}
