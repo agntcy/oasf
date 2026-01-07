@@ -24,13 +24,9 @@ defmodule Schema.Translator do
         :skill ->
           case Map.get(data, "id") do
             nil ->
-              case Map.get(data, "name") do
-                nil ->
-                  data
-
-                name ->
-                  Logger.debug("translate skill class: #{name}")
-                  Schema.skill(Schema.Utils.descope(name))
+              if name = Map.get(data, "name") do
+                Logger.debug("translate skill class: #{name}")
+                Schema.skill(Schema.Utils.descope(name))
               end
 
             class_uid ->
@@ -41,13 +37,9 @@ defmodule Schema.Translator do
         :domain ->
           case Map.get(data, "id") do
             nil ->
-              case Map.get(data, "name") do
-                nil ->
-                  data
-
-                name ->
-                  Logger.debug("translate domain class: #{name}")
-                  Schema.domain(Schema.Utils.descope(name))
+              if name = Map.get(data, "name") do
+                Logger.debug("translate domain class: #{name}")
+                Schema.domain(Schema.Utils.descope(name))
               end
 
             class_uid ->
@@ -58,13 +50,9 @@ defmodule Schema.Translator do
         :module ->
           case Map.get(data, "id") do
             nil ->
-              case Map.get(data, "name") do
-                nil ->
-                  data
-
-                name ->
-                  Logger.debug("translate module class: #{name}")
-                  Schema.module(Schema.Utils.descope(name))
+              if name = Map.get(data, "name") do
+                Logger.debug("translate module class: #{name}")
+                Schema.module(Schema.Utils.descope(name))
               end
 
             class_uid ->
@@ -73,17 +61,13 @@ defmodule Schema.Translator do
           end
 
         :object ->
-          case Keyword.get(options, :name) do
-            nil ->
-              data
-
-            object_name ->
-              Logger.debug("translate object: #{object_name}")
-              Schema.object(object_name)
+          if object_name = Keyword.get(options, :name) do
+            Logger.debug("translate object: #{object_name}")
+            Schema.object(object_name)
           end
 
         _ ->
-          data
+          nil
       end
 
     translate_input(entity_def, enriched_data, options)
