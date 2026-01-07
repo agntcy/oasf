@@ -12,14 +12,14 @@ defmodule Schema.Translator do
       "translate input: #{inspect(data)}, options: #{inspect(options)}, type: #{type}}"
     )
 
-    translate_class(data, options, type)
+    translate_entity(data, options, type)
   end
 
   # this is not a valid input
   def translate(data, _options, _type), do: data
 
-  defp translate_class(data, options, type) do
-    type =
+  defp translate_entity(data, options, type) do
+    entity_def =
       case type do
         :skill ->
           case Map.get(data, "id") do
@@ -86,7 +86,7 @@ defmodule Schema.Translator do
           data
       end
 
-    translate_input(type, data, options)
+    translate_input(entity_def, enriched_data, options)
   end
 
   # unknown input class, thus cannot translate the input
@@ -172,7 +172,7 @@ defmodule Schema.Translator do
   end
 
   defp translate_attribute("class_t", name, attribute, value, options) when is_map(value) do
-    translated = translate_class(value, options, String.to_atom(attribute[:family]))
+    translated = translate_entity(value, options, String.to_atom(attribute[:family]))
     translate_attribute(name, attribute, translated, options)
   end
 
@@ -180,7 +180,7 @@ defmodule Schema.Translator do
     translated =
       if attribute[:is_array] and is_map(List.first(value)) do
         Enum.map(value, fn data ->
-          translate_class(data, options, String.to_atom(attribute[:family]))
+          translate_entity(data, options, String.to_atom(attribute[:family]))
         end)
       else
         value
