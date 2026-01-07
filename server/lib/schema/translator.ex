@@ -70,7 +70,19 @@ defmodule Schema.Translator do
           nil
       end
 
-    translate_input(entity_def, enriched_data, options)
+    if entity_def == nil do
+      data
+    else
+      # Enrich input data before translation if enrich option is enabled
+      enriched_data =
+        if Keyword.get(options, :enrich, false) do
+          enrich_input_data(data, entity_def, type)
+        else
+          data
+        end
+
+      translate_input(entity_def, enriched_data, options)
+    end
   end
 
   # unknown input class, thus cannot translate the input
@@ -262,4 +274,63 @@ defmodule Schema.Translator do
       ch -> String.replace(name, " ", ch)
     end
   end
+
+  # Enrich class result with both id and name
+  # Enrich input data by adding missing id or name BEFORE translation
+  defp enrich_input_data(data, class_def, type) when is_map(data) and class_def != nil do
+    data
+    |> enrich_input_id(class_def, type)
+    |> enrich_input_name(class_def, type)
+  end
+
+  defp enrich_input_data(data, _class_def, _type), do: data
+
+  # Add id to input if missing
+  defp enrich_input_id(data, class_def, _type) when is_map(data) do
+    if Map.has_key?(class_def, :uid) and not Map.has_key?(data, "id") do
+      Map.put(data, "id", class_def[:uid])
+    else
+      data
+    end
+  end
+
+  defp enrich_input_id(data, _class_def, _type), do: data
+
+  # Add name to input if missing
+  defp enrich_input_name(data, class_def, type) when is_map(data) do
+    if Map.has_key?(class_def, :name) and not Map.has_key?(data, "name") do
+      # Get the full class name with hierarchy
+      class_name = get_class_name(class_def, type)
+      Map.put(data, "name", class_name)
+    else
+      data
+    end
+  end
+
+  defp enrich_input_name(data, _class_def, _type), do: data
+
+  # Get the full class name from class definition with hierarchy
+  defp get_class_name(class_def, type) do
+    case class_def[:name] do
+      nil ->
+        nil
+
+      name ->
+        # Get all classes based on the type
+        all_classes = get_all_classes_for_type(type)
+
+        if all_classes != nil do
+          Schema.Utils.class_name_with_hierarchy(name, all_classes)
+        else
+          # Fallback to simple name conversion
+          if is_atom(name), do: Atom.to_string(name), else: name
+        end
+    end
+  end
+
+  # Get all classes map based on type
+  defp get_all_classes_for_type(:skill), do: Schema.all_skills()
+  defp get_all_classes_for_type(:domain), do: Schema.all_domains()
+  defp get_all_classes_for_type(:module), do: Schema.all_modules()
+  defp get_all_classes_for_type(_), do: nil
 end

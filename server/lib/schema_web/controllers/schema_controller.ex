@@ -12,6 +12,7 @@ defmodule SchemaWeb.SchemaController do
 
   @verbose "_mode"
   @spaces "_spaces"
+  @enrich "_enrich"
   @missing_recommended "missing_recommended"
 
   @extensions_param_description "When included in request, filters response to included only the" <>
@@ -1873,6 +1874,23 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
+      _enrich(
+        :query,
+        :boolean,
+        """
+        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
+        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
+        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
+        Works with all _mode values (1, 2, 3).<br/><br/>
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |true|Enrich response with both id and name|Input:<br/><code>{"id": 10101}</code><br/><br/>Output:<br/><code>{"id": 10101, "name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><br/>Input:<br/><code>{"name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><br/>Output:<br/><code>{"id": 10101, "name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code>|
+        |false|No enrichment (default)|Input:<br/><code>{"id": 10101}</code><br/><br/>Output:<br/><code>{"id": 10101}</code>|
+        """,
+        default: false
+      )
+
       data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class data to be translated",
         required: true
       )
@@ -1883,7 +1901,11 @@ defmodule SchemaWeb.SchemaController do
 
   @spec translate_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
   def translate_skill(conn, params) do
-    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+    options = [
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose]),
+      enrich: enrich(conn.query_params[@enrich])
+    ]
 
     {status, result} =
       case params["_json"] do
@@ -1955,6 +1977,23 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
+      _enrich(
+        :query,
+        :boolean,
+        """
+        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
+        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
+        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
+        Works with all _mode values (1, 2, 3).<br/><br/>
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |true|Enrich response with both id and name|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "technology/internet_of_things"}</code><br/><br/>Input:<br/><code>{"name": "technology/internet_of_things"}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "technology/internet_of_things"}</code>|
+        |false|No enrichment (default)|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101}</code>|
+        """,
+        default: false
+      )
+
       data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class data to be translated",
         required: true
       )
@@ -1965,7 +2004,11 @@ defmodule SchemaWeb.SchemaController do
 
   @spec translate_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
   def translate_domain(conn, params) do
-    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+    options = [
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose]),
+      enrich: enrich(conn.query_params[@enrich])
+    ]
 
     {status, result} =
       case params["_json"] do
@@ -2037,6 +2080,23 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
+      _enrich(
+        :query,
+        :boolean,
+        """
+        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
+        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
+        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
+        Works with all _mode values (1, 2, 3).<br/><br/>
+
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |true|Enrich response with both id and name|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "core/observability"}</code><br/><br/>Input:<br/><code>{"name": "core/observability"}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "core/observability"}</code>|
+        |false|No enrichment (default)|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101}</code>|
+        """,
+        default: false
+      )
+
       data(:body, PhoenixSwagger.Schema.ref(:Module), "The module class data to be translated",
         required: true
       )
@@ -2047,7 +2107,11 @@ defmodule SchemaWeb.SchemaController do
 
   @spec translate_module(Plug.Conn.t(), map) :: Plug.Conn.t()
   def translate_module(conn, params) do
-    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+    options = [
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose]),
+      enrich: enrich(conn.query_params[@enrich])
+    ]
 
     {status, result} =
       case params["_json"] do
@@ -2121,6 +2185,24 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
+      _enrich(
+        :query,
+        :boolean,
+        """
+        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
+        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
+        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
+        For objects (such as record objects), all embedded classes in arrays (skills, domains, modules) will be enriched.<br/>
+        Works with all _mode values (1, 2, 3).<br/><br/>
+
+        |Value|Description|
+        |-----|-----------|
+        |true|Enrich response with both id and name for all classes and nested class_t attributes|
+        |false|No enrichment (default)|
+        """,
+        default: false
+      )
+
       data(:body, PhoenixSwagger.Schema.ref(:Object), "The object data to be translated",
         required: true
       )
@@ -2134,7 +2216,8 @@ defmodule SchemaWeb.SchemaController do
     options = [
       name: id,
       spaces: conn.query_params[@spaces],
-      verbose: verbose(conn.query_params[@verbose])
+      verbose: verbose(conn.query_params[@verbose]),
+      enrich: enrich(conn.query_params[@enrich])
     ]
 
     {status, result} =
@@ -2814,6 +2897,16 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp verbose(_), do: 1
+
+  defp enrich(option) when is_binary(option) do
+    case option do
+      "true" -> true
+      "1" -> true
+      _ -> false
+    end
+  end
+
+  defp enrich(_), do: false
 
   defp profiles(params), do: params["profiles"]
   defp extension(params), do: params["extension"]
