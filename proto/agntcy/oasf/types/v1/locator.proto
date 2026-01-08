@@ -17,9 +17,9 @@ message Locator {
   // Native types are defined in the LocatorType enum.
   string type = 2;
 
-  // Location where the source can be found at.
+  // Locations where the source can be found at.
   // Specs: https://datatracker.ietf.org/doc/html/rfc1738
-  string url = 3;
+  repeated string urls = 3;
 }
 
 // LocatorType defines placeholders for supported locators.
