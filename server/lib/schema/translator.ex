@@ -73,13 +73,8 @@ defmodule Schema.Translator do
     if entity_def == nil do
       data
     else
-      # Enrich input data before translation if enrich option is enabled
-      enriched_data =
-        if Keyword.get(options, :enrich, false) do
-          enrich_input_data(data, entity_def, type)
-        else
-          data
-        end
+      # Always enrich input data before translation (add missing id or name)
+      enriched_data = enrich_input_data(data, entity_def, type)
 
       translate_input(entity_def, enriched_data, options)
     end

@@ -12,7 +12,6 @@ defmodule SchemaWeb.SchemaController do
 
   @verbose "_mode"
   @spaces "_spaces"
-  @enrich "_enrich"
   @missing_recommended "missing_recommended"
 
   @extensions_param_description "When included in request, filters response to included only the" <>
@@ -419,8 +418,7 @@ defmodule SchemaWeb.SchemaController do
               },
               export_format: "csv"
             },
-            name: "observability",
-            version: "v0.2.2"
+            name: "core/observability"
           })
         end,
       Object:
@@ -641,8 +639,7 @@ defmodule SchemaWeb.SchemaController do
                   },
                   export_format: "csv"
                 },
-                name: "observability",
-                version: "v0.2.2"
+                name: "core/observability"
               }
             ]
           })
@@ -1849,9 +1846,9 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Description|Example|
         |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"name": "Contextual Comprehension", "id": 10101}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"Class": "Contextual Comprehension", "Class ID": 10101}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Contextual Comprehension","name": "Class ID","type": "integer_t","value": 10101}}</code>|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"id": 10101, "name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><i>Note: Classes are automatically enriched with both id and name. For enum fields with siblings, the sibling field is also added.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ID": 10101, "Name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><i>Note: Attribute names are translated to their captions. Classes are automatically enriched with both id and name.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Contextual Comprehension","name": "ID","type": "integer_t","value": 10101}, "name": {"caption": "Name","name": "Name","type": "string_t","value": "analytical_skills/natural_language_processing/contextual_comprehension"}}</code>|
         """,
         default: 1
       )
@@ -1868,27 +1865,10 @@ defmodule SchemaWeb.SchemaController do
 
           |Value|Description|Example|
           |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ClassID": "Contextual Comprehension"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"Class_ID": "Contextual Comprehension"}</code>|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ID": "Contextual Comprehension"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ID": "Contextual Comprehension"}</code>|
         """,
         allowEmptyValue: true
-      )
-
-      _enrich(
-        :query,
-        :boolean,
-        """
-        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
-        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
-        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
-        Works with all _mode values (1, 2, 3).<br/><br/>
-
-        |Value|Description|Example|
-        |-----|-----------|-------|
-        |true|Enrich response with both id and name|Input:<br/><code>{"id": 10101}</code><br/><br/>Output:<br/><code>{"id": 10101, "name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><br/>Input:<br/><code>{"name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><br/>Output:<br/><code>{"id": 10101, "name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code>|
-        |false|No enrichment (default)|Input:<br/><code>{"id": 10101}</code><br/><br/>Output:<br/><code>{"id": 10101}</code>|
-        """,
-        default: false
       )
 
       data(:body, PhoenixSwagger.Schema.ref(:Skill), "The skill class data to be translated",
@@ -1903,8 +1883,7 @@ defmodule SchemaWeb.SchemaController do
   def translate_skill(conn, params) do
     options = [
       spaces: conn.query_params[@spaces],
-      verbose: verbose(conn.query_params[@verbose]),
-      enrich: enrich(conn.query_params[@enrich])
+      verbose: verbose(conn.query_params[@verbose])
     ]
 
     {status, result} =
@@ -1952,9 +1931,9 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Description|Example|
         |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"name": "Internet of Things (IoT)", "id": 101}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"Class": "Internet of Things (IoT)", "Class ID": 101}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Internet of Things (IoT)","name": "Class ID","type": "integer_t","value": 101}}</code>|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": 101, "name": "technology/internet_of_things"}</code><br/><i>Note: Classes are automatically enriched with both id and name. For enum fields with siblings, the sibling field is also added.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": 101, "Name": "technology/internet_of_things"}</code><br/><i>Note: Attribute names are translated to their captions. Classes are automatically enriched with both id and name.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Internet of Things (IoT)","name": "ID","type": "integer_t","value": 101}, "name": {"caption": "Name","name": "Name","type": "string_t","value": "technology/internet_of_things"}}</code>|
         """,
         default: 1
       )
@@ -1971,27 +1950,10 @@ defmodule SchemaWeb.SchemaController do
 
           |Value|Description|Example|
           |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ClassID": "Internet of Things (IoT)"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"Class_ID": "Internet of Things (IoT)"}</code>|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": "Internet of Things (IoT)"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": "Internet of Things (IoT)"}</code>|
         """,
         allowEmptyValue: true
-      )
-
-      _enrich(
-        :query,
-        :boolean,
-        """
-        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
-        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
-        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
-        Works with all _mode values (1, 2, 3).<br/><br/>
-
-        |Value|Description|Example|
-        |-----|-----------|-------|
-        |true|Enrich response with both id and name|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "technology/internet_of_things"}</code><br/><br/>Input:<br/><code>{"name": "technology/internet_of_things"}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "technology/internet_of_things"}</code>|
-        |false|No enrichment (default)|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101}</code>|
-        """,
-        default: false
       )
 
       data(:body, PhoenixSwagger.Schema.ref(:Domain), "The domain class data to be translated",
@@ -2006,8 +1968,7 @@ defmodule SchemaWeb.SchemaController do
   def translate_domain(conn, params) do
     options = [
       spaces: conn.query_params[@spaces],
-      verbose: verbose(conn.query_params[@verbose]),
-      enrich: enrich(conn.query_params[@enrich])
+      verbose: verbose(conn.query_params[@verbose])
     ]
 
     {status, result} =
@@ -2053,11 +2014,11 @@ defmodule SchemaWeb.SchemaController do
         Controls how attribute names and enumerated values are translated.<br/>
         The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
 
-        |Value|Description|
-        |-----|-----------|
-        |1|Translate only the enumerated values|
-        |2|Translate enumerated values and attribute names|
-        |3|Verbose translation|
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": 101, "name": "core/observability"}</code><br/><i>Note: Classes are automatically enriched with both id and name. For enum fields with siblings, the sibling field is also added.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": 101, "Name": "core/observability"}</code><br/><i>Note: Attribute names are translated to their captions. Classes are automatically enriched with both id and name.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Observability","name": "ID","type": "integer_t","value": 101}, "name": {"caption": "Name","name": "Name","type": "string_t","value": "core/observability"}}</code>|
         """,
         default: 1
       )
@@ -2080,23 +2041,6 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      _enrich(
-        :query,
-        :boolean,
-        """
-        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
-        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
-        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
-        Works with all _mode values (1, 2, 3).<br/><br/>
-
-        |Value|Description|Example|
-        |-----|-----------|-------|
-        |true|Enrich response with both id and name|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "core/observability"}</code><br/><br/>Input:<br/><code>{"name": "core/observability"}</code><br/><br/>Output:<br/><code>{"id": 101, "name": "core/observability"}</code>|
-        |false|No enrichment (default)|Input:<br/><code>{"id": 101}</code><br/><br/>Output:<br/><code>{"id": 101}</code>|
-        """,
-        default: false
-      )
-
       data(:body, PhoenixSwagger.Schema.ref(:Module), "The module class data to be translated",
         required: true
       )
@@ -2109,8 +2053,7 @@ defmodule SchemaWeb.SchemaController do
   def translate_module(conn, params) do
     options = [
       spaces: conn.query_params[@spaces],
-      verbose: verbose(conn.query_params[@verbose]),
-      enrich: enrich(conn.query_params[@enrich])
+      verbose: verbose(conn.query_params[@verbose])
     ]
 
     {status, result} =
@@ -2158,11 +2101,11 @@ defmodule SchemaWeb.SchemaController do
         Controls how attribute names and enumerated values are translated.<br/>
         The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
 
-        |Value|Description|
-        |-----|-----------|
-        |1|Translate only the enumerated values|
-        |2|Translate enumerated values and attribute names|
-        |3|Verbose translation|
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"type": 1}</code><br/><br/>Translated:<br/><code>{"type": 1}</code><br/><i>Note: For enum fields with siblings, the sibling field is added automatically.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"type": 1}</code><br/><br/>Translated:<br/><code>{"Type": 1}</code><br/><i>Note: Attribute names are translated to their captions.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"type": 1}</code><br/><br/>Translated:<br/><code>{"type": {"caption": "Example Type","name": "Type","type": "integer_t","value": 1}}</code>|
         """,
         default: 1
       )
@@ -2185,24 +2128,6 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      _enrich(
-        :query,
-        :boolean,
-        """
-        When true, enriches the response by ensuring both id and name are present for classes and objects.<br/>
-        If the input contains only id, the name will be added. If the input contains only name, the id will be added.<br/>
-        This also applies recursively to nested class_t attributes and object enums that reference classes.<br/>
-        For objects (such as record objects), all embedded classes in arrays (skills, domains, modules) will be enriched.<br/>
-        Works with all _mode values (1, 2, 3).<br/><br/>
-
-        |Value|Description|
-        |-----|-----------|
-        |true|Enrich response with both id and name for all classes and nested class_t attributes|
-        |false|No enrichment (default)|
-        """,
-        default: false
-      )
-
       data(:body, PhoenixSwagger.Schema.ref(:Object), "The object data to be translated",
         required: true
       )
@@ -2216,8 +2141,7 @@ defmodule SchemaWeb.SchemaController do
     options = [
       name: id,
       spaces: conn.query_params[@spaces],
-      verbose: verbose(conn.query_params[@verbose]),
-      enrich: enrich(conn.query_params[@enrich])
+      verbose: verbose(conn.query_params[@verbose])
     ]
 
     {status, result} =
@@ -2897,16 +2821,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp verbose(_), do: 1
-
-  defp enrich(option) when is_binary(option) do
-    case option do
-      "true" -> true
-      "1" -> true
-      _ -> false
-    end
-  end
-
-  defp enrich(_), do: false
 
   defp profiles(params), do: params["profiles"]
   defp extension(params), do: params["extension"]
