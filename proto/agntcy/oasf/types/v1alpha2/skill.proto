@@ -12,4 +12,7 @@ message Skill {
 
   // Unique identifier of the skill.
   uint32 id = 2;
+
+  // Metadata associated with the skill.
+  map<string, string> annotations = 3;
 }
