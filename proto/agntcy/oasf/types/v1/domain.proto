@@ -8,7 +8,7 @@ package agntcy.oasf.types.v1;
 // A specific domain under which the record can operate in.
 message Domain {
   // Metadata associated with the domain.
-  // Annotations with "org.agntcy." prefix are reserved for system use.
+  // Annotations with "agntcy." prefix are reserved for system use.
   map<string, string> annotations = 1;
 
   // Unique name of the domain.

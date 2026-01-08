@@ -10,7 +10,7 @@ package agntcy.oasf.types.v1;
 // details can be provided using a module.
 message Module {
   // Metadata associated with the module.
-  // Annotations with "org.agntcy." prefix are reserved for system use.
+  // Annotations with "agntcy." prefix are reserved for system use.
   map<string, string> annotations = 1;
 
   // Name of the module.

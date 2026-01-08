@@ -9,7 +9,7 @@ package agntcy.oasf.types.v1;
 // For example, a locator can be a link to a helm chart.
 message Locator {
   // Metadata associated with the locator.
-  // Annotations with "org.agntcy." prefix are reserved for system use.
+  // Annotations with "agntcy." prefix are reserved for system use.
   map<string, string> annotations = 1;
 
   // Type of the locator.
@@ -38,4 +38,5 @@ enum LocatorType {
   PYTHON_PACKAGE = 3; // "python_package"
   SOURCE_CODE = 4; // "source_code"
   BINARY = 5; // "binary"
+  URL = 6; // "url"
 }

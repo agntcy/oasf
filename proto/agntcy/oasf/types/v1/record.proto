@@ -20,7 +20,7 @@ import "agntcy/oasf/types/v1/skill.proto";
 // define how the Record is serialized, packaged, validated, and distributed.
 message Record {
   // Metadata associated with the record.
-  // Annotations with "org.agntcy." prefix are reserved for system use.
+  // Annotations with "agntcy." prefix are reserved for system use.
   map<string, string> annotations = 1;
 
   // Name of the record.
@@ -36,10 +36,7 @@ message Record {
   string description = 5;
 
   // List of record authors, e.g. in the form of `author-name <author-email>`.
-  string authors = 6;
-
-  // License(s) under which the record is released, formatted via SPDX License Expression.
-  string licenses = 7;
+  repeated string authors = 6;
 
   // Creation timestamp of the record in the RFC3339 format.
   // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
