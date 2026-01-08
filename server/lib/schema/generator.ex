@@ -369,7 +369,7 @@ defmodule Schema.Generator do
   end
 
   defp generate_array({name, field} = attribute) do
-    n = random(@max_array_size)
+    n = max(1, random(@max_array_size))
 
     case field[:type] do
       "object_t" ->
@@ -378,9 +378,9 @@ defmodule Schema.Generator do
       "class_t" ->
         n =
           case field[:family] do
-            "skill" -> random(10)
-            "domain" -> random(5)
-            "module" -> random(3)
+            "skill" -> max(1, random(10))
+            "domain" -> max(1, random(5))
+            "module" -> max(1, random(3))
             _ -> n
           end
 
