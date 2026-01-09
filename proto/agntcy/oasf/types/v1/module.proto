@@ -1,0 +1,28 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v1;
+
+import "google/protobuf/struct.proto";
+
+// Modules provide a generic way to attach additional information
+// to the record. For example, application-specific
+// details can be provided using a module.
+message Module {
+  // Metadata associated with the module.
+  // Annotations with "agntcy." prefix are reserved for system use.
+  map<string, string> annotations = 1;
+
+  // Name of the module.
+  // Can be used as a fully qualified name.
+  string name = 2;
+
+  // Unique identifier of the module.
+  uint32 id = 3;
+
+  // Data attached to the module.
+  // Usually a JSON-embedded object.
+  google.protobuf.Struct data = 4;
+}
