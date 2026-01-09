@@ -12,4 +12,7 @@ message Domain {
 
   // Unique identifier of the domain.
   uint32 id = 2;
+
+  // Metadata associated with the domain.
+  map<string, string> annotations = 3;
 }
