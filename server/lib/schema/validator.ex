@@ -1501,6 +1501,19 @@ defmodule Schema.Validator do
          dictionary
        ) do
     if is_list(value) do
+      # Check if array is empty for required attributes
+      response =
+        if Enum.empty?(value) and attribute_details[:requirement] == "required" do
+          add_error(
+            response,
+            "attribute_required_empty",
+            "Required array attribute \"#{attribute_path}\" is empty.",
+            %{attribute_path: attribute_path, attribute: attribute_name}
+          )
+        else
+          response
+        end
+
       {response, _} =
         Enum.reduce(
           value,
