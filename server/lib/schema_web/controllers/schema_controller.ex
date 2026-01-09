@@ -417,8 +417,7 @@ defmodule SchemaWeb.SchemaController do
               },
               export_format: "csv"
             },
-            name: "observability",
-            version: "v0.2.2"
+            name: "core/observability"
           })
         end,
       Object:
@@ -638,8 +637,7 @@ defmodule SchemaWeb.SchemaController do
                   },
                   export_format: "csv"
                 },
-                name: "observability",
-                version: "v0.2.2"
+                name: "core/observability"
               }
             ]
           })
@@ -1846,9 +1844,9 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Description|Example|
         |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"name": "Contextual Comprehension", "id": 10101}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"Class": "Contextual Comprehension", "Class ID": 10101}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Contextual Comprehension","name": "Class ID","type": "integer_t","value": 10101}}</code>|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"id": 10101, "name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><i>Note: Classes are automatically enriched with both id and name. For enum fields with siblings, the sibling field is also added.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ID": 10101, "Name": "analytical_skills/natural_language_processing/contextual_comprehension"}</code><br/><i>Note: Attribute names are translated to their captions. Classes are automatically enriched with both id and name.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Contextual Comprehension","name": "ID","type": "integer_t","value": 10101}, "name": {"caption": "Name","name": "Name","type": "string_t","value": "analytical_skills/natural_language_processing/contextual_comprehension"}}</code>|
         """,
         default: 1
       )
@@ -1865,8 +1863,8 @@ defmodule SchemaWeb.SchemaController do
 
           |Value|Description|Example|
           |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ClassID": "Contextual Comprehension"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"Class_ID": "Contextual Comprehension"}</code>|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ID": "Contextual Comprehension"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 10101}</code><br/><br/>Translated:<br/><code>{"ID": "Contextual Comprehension"}</code>|
         """,
         allowEmptyValue: true
       )
@@ -1881,7 +1879,10 @@ defmodule SchemaWeb.SchemaController do
 
   @spec translate_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
   def translate_skill(conn, params) do
-    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+    options = [
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose])
+    ]
 
     {status, result} =
       case params["_json"] do
@@ -1928,9 +1929,9 @@ defmodule SchemaWeb.SchemaController do
 
         |Value|Description|Example|
         |-----|-----------|-------|
-        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"name": "Internet of Things (IoT)", "id": 101}</code>|
-        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"Class": "Internet of Things (IoT)", "Class ID": 101}</code>|
-        |3|Verbose translation|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Internet of Things (IoT)","name": "Class ID","type": "integer_t","value": 101}}</code>|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": 101, "name": "technology/internet_of_things"}</code><br/><i>Note: Classes are automatically enriched with both id and name. For enum fields with siblings, the sibling field is also added.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": 101, "Name": "technology/internet_of_things"}</code><br/><i>Note: Attribute names are translated to their captions. Classes are automatically enriched with both id and name.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Internet of Things (IoT)","name": "ID","type": "integer_t","value": 101}, "name": {"caption": "Name","name": "Name","type": "string_t","value": "technology/internet_of_things"}}</code>|
         """,
         default: 1
       )
@@ -1947,8 +1948,8 @@ defmodule SchemaWeb.SchemaController do
 
           |Value|Description|Example|
           |-----|-----------|-------|
-          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ClassID": "Internet of Things (IoT)"}</code>|
-          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"Class_ID": "Internet of Things (IoT)"}</code>|
+          |&lt;empty&gt;|The spaces in the translated names are removed.|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": "Internet of Things (IoT)"}</code>|
+          |string|The spaces in the translated names are replaced with the given string.|For example, the string is an underscore (_).<br/>Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": "Internet of Things (IoT)"}</code>|
         """,
         allowEmptyValue: true
       )
@@ -1963,7 +1964,10 @@ defmodule SchemaWeb.SchemaController do
 
   @spec translate_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
   def translate_domain(conn, params) do
-    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+    options = [
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose])
+    ]
 
     {status, result} =
       case params["_json"] do
@@ -2008,11 +2012,11 @@ defmodule SchemaWeb.SchemaController do
         Controls how attribute names and enumerated values are translated.<br/>
         The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
 
-        |Value|Description|
-        |-----|-----------|
-        |1|Translate only the enumerated values|
-        |2|Translate enumerated values and attribute names|
-        |3|Verbose translation|
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": 101, "name": "core/observability"}</code><br/><i>Note: Classes are automatically enriched with both id and name. For enum fields with siblings, the sibling field is also added.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"ID": 101, "Name": "core/observability"}</code><br/><i>Note: Attribute names are translated to their captions. Classes are automatically enriched with both id and name.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"id": 101}</code><br/><br/>Translated:<br/><code>{"id": {"caption": "Observability","name": "ID","type": "integer_t","value": 101}, "name": {"caption": "Name","name": "Name","type": "string_t","value": "core/observability"}}</code>|
         """,
         default: 1
       )
@@ -2045,7 +2049,10 @@ defmodule SchemaWeb.SchemaController do
 
   @spec translate_module(Plug.Conn.t(), map) :: Plug.Conn.t()
   def translate_module(conn, params) do
-    options = [spaces: conn.query_params[@spaces], verbose: verbose(conn.query_params[@verbose])]
+    options = [
+      spaces: conn.query_params[@spaces],
+      verbose: verbose(conn.query_params[@verbose])
+    ]
 
     {status, result} =
       case params["_json"] do
@@ -2092,11 +2099,11 @@ defmodule SchemaWeb.SchemaController do
         Controls how attribute names and enumerated values are translated.<br/>
         The format is _mode=[1|2|3]. The default mode is `1` -- translate enumerated values.
 
-        |Value|Description|
-        |-----|-----------|
-        |1|Translate only the enumerated values|
-        |2|Translate enumerated values and attribute names|
-        |3|Verbose translation|
+        |Value|Description|Example|
+        |-----|-----------|-------|
+        |1|Translate only the enumerated values|Untranslated:<br/><code>{"type": 1}</code><br/><br/>Translated:<br/><code>{"type": 1}</code><br/><i>Note: For enum fields with siblings, the sibling field is added automatically.</i>|
+        |2|Translate enumerated values and attribute names|Untranslated:<br/><code>{"type": 1}</code><br/><br/>Translated:<br/><code>{"Type": 1}</code><br/><i>Note: Attribute names are translated to their captions.</i>|
+        |3|Verbose translation|Untranslated:<br/><code>{"type": 1}</code><br/><br/>Translated:<br/><code>{"type": {"caption": "Example Type","name": "Type","type": "integer_t","value": 1}}</code>|
         """,
         default: 1
       )
