@@ -12,25 +12,21 @@ defmodule Schema.Translator do
       "translate input: #{inspect(data)}, options: #{inspect(options)}, type: #{type}}"
     )
 
-    translate_class(data, options, type)
+    translate_entity(data, options, type)
   end
 
   # this is not a valid input
   def translate(data, _options, _type), do: data
 
-  defp translate_class(data, options, type) do
-    type =
+  defp translate_entity(data, options, type) do
+    entity_def =
       case type do
         :skill ->
           case Map.get(data, "id") do
             nil ->
-              case Map.get(data, "name") do
-                nil ->
-                  data
-
-                name ->
-                  Logger.debug("translate skill class: #{name}")
-                  Schema.skill(Schema.Utils.descope(name))
+              if name = Map.get(data, "name") do
+                Logger.debug("translate skill class: #{name}")
+                Schema.skill(Schema.Utils.descope(name))
               end
 
             class_uid ->
@@ -41,13 +37,9 @@ defmodule Schema.Translator do
         :domain ->
           case Map.get(data, "id") do
             nil ->
-              case Map.get(data, "name") do
-                nil ->
-                  data
-
-                name ->
-                  Logger.debug("translate domain class: #{name}")
-                  Schema.domain(Schema.Utils.descope(name))
+              if name = Map.get(data, "name") do
+                Logger.debug("translate domain class: #{name}")
+                Schema.domain(Schema.Utils.descope(name))
               end
 
             class_uid ->
@@ -58,13 +50,9 @@ defmodule Schema.Translator do
         :module ->
           case Map.get(data, "id") do
             nil ->
-              case Map.get(data, "name") do
-                nil ->
-                  data
-
-                name ->
-                  Logger.debug("translate module class: #{name}")
-                  Schema.module(Schema.Utils.descope(name))
+              if name = Map.get(data, "name") do
+                Logger.debug("translate module class: #{name}")
+                Schema.module(Schema.Utils.descope(name))
               end
 
             class_uid ->
@@ -73,20 +61,23 @@ defmodule Schema.Translator do
           end
 
         :object ->
-          case Keyword.get(options, :name) do
-            nil ->
-              data
-
-            object_name ->
-              Logger.debug("translate object: #{object_name}")
-              Schema.object(object_name)
+          if object_name = Keyword.get(options, :name) do
+            Logger.debug("translate object: #{object_name}")
+            Schema.object(object_name)
           end
 
         _ ->
-          data
+          nil
       end
 
-    translate_input(type, data, options)
+    if entity_def == nil do
+      data
+    else
+      # Always enrich input data before translation (add missing id or name)
+      enriched_data = enrich_input_data(data, entity_def, type)
+
+      translate_input(entity_def, enriched_data, options)
+    end
   end
 
   # unknown input class, thus cannot translate the input
@@ -172,7 +163,7 @@ defmodule Schema.Translator do
   end
 
   defp translate_attribute("class_t", name, attribute, value, options) when is_map(value) do
-    translated = translate_class(value, options, String.to_atom(attribute[:family]))
+    translated = translate_entity(value, options, String.to_atom(attribute[:family]))
     translate_attribute(name, attribute, translated, options)
   end
 
@@ -180,7 +171,7 @@ defmodule Schema.Translator do
     translated =
       if attribute[:is_array] and is_map(List.first(value)) do
         Enum.map(value, fn data ->
-          translate_class(data, options, String.to_atom(attribute[:family]))
+          translate_entity(data, options, String.to_atom(attribute[:family]))
         end)
       else
         value
@@ -278,4 +269,63 @@ defmodule Schema.Translator do
       ch -> String.replace(name, " ", ch)
     end
   end
+
+  # Enrich class result with both id and name
+  # Enrich input data by adding missing id or name BEFORE translation
+  defp enrich_input_data(data, class_def, type) when is_map(data) and class_def != nil do
+    data
+    |> enrich_input_id(class_def, type)
+    |> enrich_input_name(class_def, type)
+  end
+
+  defp enrich_input_data(data, _class_def, _type), do: data
+
+  # Add id to input if missing
+  defp enrich_input_id(data, class_def, _type) when is_map(data) do
+    if Map.has_key?(class_def, :uid) and not Map.has_key?(data, "id") do
+      Map.put(data, "id", class_def[:uid])
+    else
+      data
+    end
+  end
+
+  defp enrich_input_id(data, _class_def, _type), do: data
+
+  # Add name to input if missing
+  defp enrich_input_name(data, class_def, type) when is_map(data) do
+    if Map.has_key?(class_def, :name) and not Map.has_key?(data, "name") do
+      # Get the full class name with hierarchy
+      class_name = get_class_name(class_def, type)
+      Map.put(data, "name", class_name)
+    else
+      data
+    end
+  end
+
+  defp enrich_input_name(data, _class_def, _type), do: data
+
+  # Get the full class name from class definition with hierarchy
+  defp get_class_name(class_def, type) do
+    case class_def[:name] do
+      nil ->
+        nil
+
+      name ->
+        # Get all classes based on the type
+        all_classes = get_all_classes_for_type(type)
+
+        if all_classes != nil do
+          Schema.Utils.class_name_with_hierarchy(name, all_classes)
+        else
+          # Fallback to simple name conversion
+          if is_atom(name), do: Atom.to_string(name), else: name
+        end
+    end
+  end
+
+  # Get all classes map based on type
+  defp get_all_classes_for_type(:skill), do: Schema.all_skills()
+  defp get_all_classes_for_type(:domain), do: Schema.all_domains()
+  defp get_all_classes_for_type(:module), do: Schema.all_modules()
+  defp get_all_classes_for_type(_), do: nil
 end
