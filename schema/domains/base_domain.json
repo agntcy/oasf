@@ -1,7 +1,7 @@
 {
   "caption": "Domain",
   "category": "other",
-  "description": "The base domain is a generic domain defining a set of attributes for domain classes.",
+  "description": "The base domain is a generic domain defining a set of attributes for domain classes; not meant to be used as an actual domain.",
   "name": "base_domain",
   "attributes": {
     "name": {
