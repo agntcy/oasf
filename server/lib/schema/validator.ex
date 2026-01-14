@@ -185,7 +185,8 @@ defmodule Schema.Validator do
           class,
           profiles,
           options,
-          dictionary
+          dictionary,
+          ""
         )
       else
         # Can't continue if we can't find the class
@@ -444,7 +445,7 @@ defmodule Schema.Validator do
     end)
   end
 
-  @spec validate_input_against_class(map(), map(), map(), list(String.t()), list(), map()) ::
+  @spec validate_input_against_class(map(), map(), map(), list(String.t()), list(), map(), nil | String.t()) ::
           map()
   defp validate_input_against_class(
          response,
@@ -452,13 +453,14 @@ defmodule Schema.Validator do
          class,
          profiles,
          options,
-         dictionary
+         dictionary,
+         parent_attribute_path
        ) do
     response
     |> validate_class_deprecated(class)
     |> validate_attributes(
       input,
-      nil,
+      parent_attribute_path,
       class,
       profiles,
       options,
@@ -466,7 +468,7 @@ defmodule Schema.Validator do
       class[:is_enum] || false
     )
     |> validate_version(input)
-    |> validate_constraints(input, class)
+    |> validate_constraints(input, class, parent_attribute_path)
   end
 
   @spec validate_class_deprecated(map(), map()) :: map()
@@ -604,7 +606,7 @@ defmodule Schema.Validator do
   end
 
   @spec validate_constraints(map(), map(), map(), nil | String.t()) :: map()
-  defp validate_constraints(response, input_item, schema_item, attribute_path \\ nil) do
+  defp validate_constraints(response, input_item, schema_item, attribute_path) do
     if Map.has_key?(schema_item, :constraints) do
       Enum.reduce(
         schema_item[:constraints],
@@ -1660,7 +1662,8 @@ defmodule Schema.Validator do
             class,
             profiles,
             options,
-            dictionary
+            dictionary,
+            attribute_path
           )
         else
           # Can't continue if we can't find the class
