@@ -445,7 +445,15 @@ defmodule Schema.Validator do
     end)
   end
 
-  @spec validate_input_against_class(map(), map(), map(), list(String.t()), list(), map(), nil | String.t()) ::
+  @spec validate_input_against_class(
+          map(),
+          map(),
+          map(),
+          list(String.t()),
+          list(),
+          map(),
+          nil | String.t()
+        ) ::
           map()
   defp validate_input_against_class(
          response,
@@ -2579,13 +2587,17 @@ defmodule Schema.Validator do
         input_id = value["id"]
         # Check if input ID is 0 (could be integer 0 or string "0")
         cond do
-          is_integer(input_id) && input_id == 0 -> true
+          is_integer(input_id) && input_id == 0 ->
+            true
+
           is_bitstring(input_id) ->
             case Integer.parse(input_id) do
               {parsed_id, _} -> parsed_id == 0
               :error -> false
             end
-          true -> false
+
+          true ->
+            false
         end
       else
         false
@@ -2600,7 +2612,7 @@ defmodule Schema.Validator do
         %{
           attribute_path: attribute_path,
           attribute: attribute_name,
-          value: base_class_name,
+          value: base_class_name
         }
       )
     else
