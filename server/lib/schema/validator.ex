@@ -1525,7 +1525,14 @@ defmodule Schema.Validator do
         end
 
       # Check for duplicates in array
-      response = check_array_duplicates(response, value, attribute_path, attribute_name)
+      response =
+        check_array_duplicates(
+          response,
+          value,
+          attribute_path,
+          attribute_name,
+          attribute_details
+        )
 
       {response, _} =
         Enum.reduce(
@@ -2733,21 +2740,43 @@ defmodule Schema.Validator do
   defp is_long_t(_), do: false
 
   # Check for duplicate items in an array
-  @spec check_array_duplicates(map(), list(), String.t(), String.t()) :: map()
-  defp check_array_duplicates(response, array, attribute_path, attribute_name) do
+  @spec check_array_duplicates(map(), list(), String.t(), String.t(), map()) :: map()
+  defp check_array_duplicates(
+         response,
+         array,
+         attribute_path,
+         attribute_name,
+         attribute_details
+       ) do
+    # For class_t types, we need to resolve to class UID for comparison
+    # For other types, use deep equality comparison
+    is_class_t = attribute_details[:type] == "class_t"
+
     {response, _} =
       Enum.reduce(array, {response, {[], 0}}, fn element, {response, {seen, index}} ->
-        # Normalize element for comparison (convert to JSON-like structure)
-        normalized = normalize_for_comparison(element)
+        comparison_key =
+          if is_class_t do
+            # Resolve class reference to UID for comparison
+            resolve_class_uid(element, attribute_details)
+          else
+            # Normalize element for comparison (convert to JSON-like structure)
+            normalize_for_comparison(element)
+          end
 
-        # Check if this normalized value already exists in seen list
+        # Check if this comparison key already exists in seen list
         first_index =
           Enum.find_index(seen, fn seen_item ->
-            values_equal?(normalized, seen_item)
+            if is_class_t do
+              # For class_t, compare UIDs directly
+              seen_item == comparison_key
+            else
+              # For other types, use deep equality
+              values_equal?(seen_item, comparison_key)
+            end
           end)
 
-        if first_index do
-          # Found a duplicate
+        if first_index && comparison_key != nil do
+          # Found a duplicate (only report if comparison_key is valid)
           duplicate_path = make_attribute_path_array_element(attribute_path, index)
 
           response =
@@ -2766,12 +2795,63 @@ defmodule Schema.Validator do
 
           {response, {seen, index + 1}}
         else
-          {response, {[normalized | seen], index + 1}}
+          # Add to seen list if comparison_key is valid (nil means resolution failed, will be caught by validation)
+          if comparison_key != nil do
+            {response, {[comparison_key | seen], index + 1}}
+          else
+            {response, {seen, index + 1}}
+          end
         end
       end)
 
     response
   end
+
+  # Resolve a class reference (by id or name) to its UID
+  @spec resolve_class_uid(map(), map()) :: nil | integer()
+  defp resolve_class_uid(element, attribute_details) when is_map(element) do
+    family = attribute_details[:family]
+
+    # Determine the find functions based on family
+    {find_by_id_fn, find_by_name_fn} =
+      case family do
+        "skill" -> {&Schema.find_skill/1, &Schema.skill/1}
+        "domain" -> {&Schema.find_domain/1, &Schema.domain/1}
+        "module" -> {&Schema.find_module/1, &Schema.module/1}
+        _ -> {nil, nil}
+      end
+
+    if find_by_id_fn && find_by_name_fn do
+      # Try to resolve by ID first
+      class_by_id =
+        if Map.has_key?(element, "id") do
+          id = element["id"]
+          if is_integer(id), do: find_by_id_fn.(id), else: nil
+        else
+          nil
+        end
+
+      # Try to resolve by name
+      class_by_name =
+        if Map.has_key?(element, "name") do
+          name = Schema.Utils.descope(element["name"])
+          if is_binary(name), do: find_by_name_fn.(name), else: nil
+        else
+          nil
+        end
+
+      # Return UID if we found a class
+      cond do
+        class_by_id -> class_by_id.uid
+        class_by_name -> class_by_name.uid
+        true -> nil
+      end
+    else
+      nil
+    end
+  end
+
+  defp resolve_class_uid(_element, _attribute_details), do: nil
 
   # Normalize a value for comparison (convert to JSON-serializable structure)
   @spec normalize_for_comparison(any()) :: any()
