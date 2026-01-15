@@ -1524,6 +1524,9 @@ defmodule Schema.Validator do
           response
         end
 
+      # Check for duplicates in array
+      response = check_array_duplicates(response, value, attribute_path, attribute_name)
+
       {response, _} =
         Enum.reduce(
           value,
@@ -2728,4 +2731,89 @@ defmodule Schema.Validator do
   # Tests if value is an integer number in the OASF long_t range.
   defp is_long_t(v) when is_integer(v), do: v >= @min_long && v <= @max_long
   defp is_long_t(_), do: false
+
+  # Check for duplicate items in an array
+  @spec check_array_duplicates(map(), list(), String.t(), String.t()) :: map()
+  defp check_array_duplicates(response, array, attribute_path, attribute_name) do
+    {response, _} =
+      Enum.reduce(array, {response, {[], 0}}, fn element, {response, {seen, index}} ->
+        # Normalize element for comparison (convert to JSON-like structure)
+        normalized = normalize_for_comparison(element)
+
+        # Check if this normalized value already exists in seen list
+        first_index =
+          Enum.find_index(seen, fn seen_item ->
+            values_equal?(normalized, seen_item)
+          end)
+
+        if first_index do
+          # Found a duplicate
+          duplicate_path = make_attribute_path_array_element(attribute_path, index)
+
+          response =
+            add_error(
+              response,
+              "attribute_array_duplicate",
+              "Duplicate item found in array \"#{attribute_path}\" at index #{index}." <>
+                " First occurrence at index #{first_index}.",
+              %{
+                attribute_path: duplicate_path,
+                attribute: attribute_name,
+                duplicate_index: index,
+                first_index: first_index
+              }
+            )
+
+          {response, {seen, index + 1}}
+        else
+          {response, {[normalized | seen], index + 1}}
+        end
+      end)
+
+    response
+  end
+
+  # Normalize a value for comparison (convert to JSON-serializable structure)
+  @spec normalize_for_comparison(any()) :: any()
+  defp normalize_for_comparison(value) when is_map(value) do
+    # Sort map keys and recursively normalize values
+    value
+    |> Enum.sort_by(fn {k, _} -> k end)
+    |> Enum.map(fn {k, v} -> {k, normalize_for_comparison(v)} end)
+    |> Enum.into(%{})
+  end
+
+  defp normalize_for_comparison(value) when is_list(value) do
+    Enum.map(value, &normalize_for_comparison/1)
+  end
+
+  defp normalize_for_comparison(value) when is_atom(value) do
+    Atom.to_string(value)
+  end
+
+  defp normalize_for_comparison(value) do
+    value
+  end
+
+  # Deep equality check for normalized values
+  @spec values_equal?(any(), any()) :: boolean()
+  defp values_equal?(a, b) when is_map(a) and is_map(b) do
+    if map_size(a) == map_size(b) do
+      Enum.all?(a, fn {k, v} ->
+        Map.has_key?(b, k) and values_equal?(v, b[k])
+      end)
+    else
+      false
+    end
+  end
+
+  defp values_equal?(a, b) when is_list(a) and is_list(b) do
+    if length(a) == length(b) do
+      Enum.zip(a, b) |> Enum.all?(fn {x, y} -> values_equal?(x, y) end)
+    else
+      false
+    end
+  end
+
+  defp values_equal?(a, b), do: a == b
 end
