@@ -1534,6 +1534,14 @@ defmodule Schema.Validator do
           attribute_details
         )
 
+      # Check for duplicate types in locators array
+      response =
+        if attribute_name == "locators" do
+          check_locators_duplicate_types(response, value, attribute_path, attribute_name)
+        else
+          response
+        end
+
       {response, _} =
         Enum.reduce(
           value,
@@ -2896,4 +2904,43 @@ defmodule Schema.Validator do
   end
 
   defp values_equal?(a, b), do: a == b
+
+  # Check for duplicate types in locators array
+  @spec check_locators_duplicate_types(map(), list(), String.t(), String.t()) :: map()
+  defp check_locators_duplicate_types(response, array, attribute_path, attribute_name) do
+    {response, _} =
+      Enum.reduce(array, {response, {%{}, 0}}, fn element, {response, {seen_types, index}} ->
+        if is_map(element) and Map.has_key?(element, "type") do
+          locator_type = element["type"]
+
+          if Map.has_key?(seen_types, locator_type) do
+            first_index = seen_types[locator_type]
+            duplicate_path = make_attribute_path_array_element(attribute_path, index)
+
+            response =
+              add_error(
+                response,
+                "attribute_locators_duplicate_type",
+                "Duplicate locator type \"#{locator_type}\" found in array \"#{attribute_path}\" at index #{index}." <>
+                  " First occurrence at index #{first_index}. Duplicate types are not allowed in the locators array.",
+                %{
+                  attribute_path: duplicate_path,
+                  attribute: attribute_name,
+                  duplicate_index: index,
+                  first_index: first_index,
+                  locator_type: locator_type
+                }
+              )
+
+            {response, {seen_types, index + 1}}
+          else
+            {response, {Map.put(seen_types, locator_type, index), index + 1}}
+          end
+        else
+          {response, {seen_types, index + 1}}
+        end
+      end)
+
+    response
+  end
 end
