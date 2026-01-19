@@ -355,8 +355,13 @@ defmodule Schema.Repo do
   end
 
   def object(extensions, id) do
-    Agent.get(__MODULE__, fn schema -> Cache.object(schema, id) end)
-    |> Map.update(:_links, [], fn links -> remove_extension_links(links, extensions) end)
+    case Agent.get(__MODULE__, fn schema -> Cache.object(schema, id) end) do
+      nil ->
+        nil
+
+      object ->
+        Map.update(object, :_links, [], fn links -> remove_extension_links(links, extensions) end)
+    end
   end
 
   @spec entity_ex(atom, atom) :: nil | Cache.class_t()
@@ -370,8 +375,13 @@ defmodule Schema.Repo do
   end
 
   def entity_ex(extensions, type, id) do
-    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end)
-    |> Map.update(:_links, [], fn links -> remove_extension_links(links, extensions) end)
+    case Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end) do
+      nil ->
+        nil
+
+      entity ->
+        Map.update(entity, :_links, [], fn links -> remove_extension_links(links, extensions) end)
+    end
   end
 
   @spec reload() :: :ok
