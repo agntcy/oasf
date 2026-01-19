@@ -234,21 +234,6 @@
       "type": "agentspec_communication_protocol",
       "is_enum": true
     },
-    "agentspec_communication_protocol_a2a": {
-      "caption": "Communication Protocol Configuration A2A",
-      "description": "Configuration for the A2A-compatible agent endpoint.",
-      "type": "agentspec_communication_protocol_a2a"
-    },
-    "agentspec_communication_protocol_data": {
-      "caption": "Communication Protocol Data",
-      "description": "Configuration data for the communication protocol (e.g., urls, protocol versions)",
-      "type": "json_t"
-    },
-    "agentspec_communication_protocol_responses_api": {
-      "caption": "Communication Protocol Configuration Responses API",
-      "description": "Configuration for the Responses API-compatible agent endpoint.",
-      "type": "agentspec_communication_protocol_responses_api"
-    },
     "agentspec_config": {
       "caption": "Config Locator",
       "description": "Describes the location of the Agent Spec configuration.",
@@ -378,11 +363,6 @@
       "caption": "Description",
       "description": "The description of the entity. See specific usage.",
       "type": "long_string_t"
-    },
-    "digest": {
-      "caption": "Digest",
-      "description": "The digest of the targeted content, conforming to the requirements. Retrieved content SHOULD be verified against this digest when consumed via untrusted sources. The digest property acts as a content identifier, enabling content addressability. It uniquely identifies content by taking a collision-resistant hash of the bytes. If the digest can be communicated in a secure manner, one can verify content from an insecure source by recalculating the digest independently, ensuring the content has not been modified. The value of the digest property is a string consisting of an algorithm portion and an encoded portion. The algorithm specifies the cryptographic hash function and encoding used for the digest; the encoded portion contains the encoded result of the hash function. A digest MUST be calculated for all properties except the digest itself which MUST be ignored during the calculation. The model SHOULD then be updated with the calculated digest.",
-      "type": "file_hash_t"
     },
     "domains": {
       "caption": "Domains",
@@ -619,11 +599,6 @@
     "schema_version": {
       "caption": "Schema Version",
       "description": "Version of the OASF schema.",
-      "type": "string_t"
-    },
-    "scope": {
-      "caption": "Scope",
-      "description": "Boundary or permission within which an entity can operate in. See specific usage.",
       "type": "string_t"
     },
     "scopes": {
