@@ -40,18 +40,18 @@ message Record {
 
   // Creation timestamp of the record in the RFC3339 format.
   // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
-  string created_at = 8;
+  string created_at = 7;
 
   // List of source locators where the record can be found or used from.
-  repeated Locator locators = 9;
+  repeated Locator locators = 8;
 
   // List of skills that the record can perform.
-  repeated Skill skills = 10;
+  repeated Skill skills = 9;
 
   // List of domains under which the record can operate in.
-  repeated Domain domains = 11;
+  repeated Domain domains = 10;
 
   // Additional information attached to the record.
   // Modules are used to generically extend the record's functionality.
-  repeated Module modules = 12;
+  repeated Module modules = 11;
 }

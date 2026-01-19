@@ -591,11 +591,6 @@
       "description": "The path that pertains to the class or object. See specific usage.",
       "type": "string_t"
     },
-    "previous_record_cid": {
-      "caption": "Previous Record CID",
-      "description": "Content Identifier (CID) of an Record's parent record.",
-      "type": "cid_t"
-    },
     "priority": {
       "caption": "Priority",
       "description": "Value that indicates a priority of an entity. See specific usage.",
