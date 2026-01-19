@@ -1,7 +1,7 @@
 {
   "caption": "Base Module",
   "category": "other",
-  "description": "The base module is a generic and concrete module. It also defines a set of attributes available in most module classes. As a generic module that does not belong to any module category, it could be used to log modules that are not otherwise defined by the schema.",
+  "description": "The base module is a generic module defining a set of attributes for module classes; not meant to be used as an actual module.",
   "name": "base_module",
   "attributes": {
     "name": {
