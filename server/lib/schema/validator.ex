@@ -1524,6 +1524,24 @@ defmodule Schema.Validator do
           response
         end
 
+      # Check for duplicates in array
+      response =
+        check_array_duplicates(
+          response,
+          value,
+          attribute_path,
+          attribute_name,
+          attribute_details
+        )
+
+      # Check for duplicate types in locators array
+      response =
+        if attribute_name == "locators" do
+          check_locators_duplicate_types(response, value, attribute_path, attribute_name)
+        else
+          response
+        end
+
       {response, _} =
         Enum.reduce(
           value,
@@ -2728,4 +2746,201 @@ defmodule Schema.Validator do
   # Tests if value is an integer number in the OASF long_t range.
   defp is_long_t(v) when is_integer(v), do: v >= @min_long && v <= @max_long
   defp is_long_t(_), do: false
+
+  # Check for duplicate items in an array
+  @spec check_array_duplicates(map(), list(), String.t(), String.t(), map()) :: map()
+  defp check_array_duplicates(
+         response,
+         array,
+         attribute_path,
+         attribute_name,
+         attribute_details
+       ) do
+    # For class_t types, we need to resolve to class UID for comparison
+    # For other types, use deep equality comparison
+    is_class_t = attribute_details[:type] == "class_t"
+
+    {response, _} =
+      Enum.reduce(array, {response, {[], 0}}, fn element, {response, {seen, index}} ->
+        comparison_key =
+          if is_class_t do
+            # Resolve class reference to UID for comparison
+            resolve_class_uid(element, attribute_details)
+          else
+            # Normalize element for comparison (convert to JSON-like structure)
+            normalize_for_comparison(element)
+          end
+
+        # Check if this comparison key already exists in seen list
+        first_index =
+          Enum.find_index(seen, fn seen_item ->
+            if is_class_t do
+              # For class_t, compare UIDs directly
+              seen_item == comparison_key
+            else
+              # For other types, use deep equality
+              values_equal?(seen_item, comparison_key)
+            end
+          end)
+
+        if first_index && comparison_key != nil do
+          # Found a duplicate (only report if comparison_key is valid)
+          duplicate_path = make_attribute_path_array_element(attribute_path, index)
+
+          response =
+            add_error(
+              response,
+              "attribute_array_duplicate",
+              "Duplicate item found in array \"#{attribute_path}\" at index #{index}." <>
+                " First occurrence at index #{first_index}.",
+              %{
+                attribute_path: duplicate_path,
+                attribute: attribute_name,
+                duplicate_index: index,
+                first_index: first_index
+              }
+            )
+
+          {response, {seen, index + 1}}
+        else
+          # Add to seen list if comparison_key is valid (nil means resolution failed, will be caught by validation)
+          if comparison_key != nil do
+            {response, {[comparison_key | seen], index + 1}}
+          else
+            {response, {seen, index + 1}}
+          end
+        end
+      end)
+
+    response
+  end
+
+  # Resolve a class reference (by id or name) to its UID
+  @spec resolve_class_uid(map(), map()) :: nil | integer()
+  defp resolve_class_uid(element, attribute_details) when is_map(element) do
+    family = attribute_details[:family]
+
+    # Determine the find functions based on family
+    {find_by_id_fn, find_by_name_fn} =
+      case family do
+        "skill" -> {&Schema.find_skill/1, &Schema.skill/1}
+        "domain" -> {&Schema.find_domain/1, &Schema.domain/1}
+        "module" -> {&Schema.find_module/1, &Schema.module/1}
+        _ -> {nil, nil}
+      end
+
+    if find_by_id_fn && find_by_name_fn do
+      # Try to resolve by ID first
+      class_by_id =
+        if Map.has_key?(element, "id") do
+          id = element["id"]
+          if is_integer(id), do: find_by_id_fn.(id), else: nil
+        else
+          nil
+        end
+
+      # Try to resolve by name
+      class_by_name =
+        if Map.has_key?(element, "name") do
+          name = Schema.Utils.descope(element["name"])
+          if is_binary(name), do: find_by_name_fn.(name), else: nil
+        else
+          nil
+        end
+
+      # Return UID if we found a class
+      cond do
+        class_by_id -> class_by_id.uid
+        class_by_name -> class_by_name.uid
+        true -> nil
+      end
+    else
+      nil
+    end
+  end
+
+  defp resolve_class_uid(_element, _attribute_details), do: nil
+
+  # Normalize a value for comparison (convert to JSON-serializable structure)
+  @spec normalize_for_comparison(any()) :: any()
+  defp normalize_for_comparison(value) when is_map(value) do
+    # Sort map keys and recursively normalize values
+    value
+    |> Enum.sort_by(fn {k, _} -> k end)
+    |> Enum.map(fn {k, v} -> {k, normalize_for_comparison(v)} end)
+    |> Enum.into(%{})
+  end
+
+  defp normalize_for_comparison(value) when is_list(value) do
+    Enum.map(value, &normalize_for_comparison/1)
+  end
+
+  defp normalize_for_comparison(value) when is_atom(value) do
+    Atom.to_string(value)
+  end
+
+  defp normalize_for_comparison(value) do
+    value
+  end
+
+  # Deep equality check for normalized values
+  @spec values_equal?(any(), any()) :: boolean()
+  defp values_equal?(a, b) when is_map(a) and is_map(b) do
+    if map_size(a) == map_size(b) do
+      Enum.all?(a, fn {k, v} ->
+        Map.has_key?(b, k) and values_equal?(v, b[k])
+      end)
+    else
+      false
+    end
+  end
+
+  defp values_equal?(a, b) when is_list(a) and is_list(b) do
+    if length(a) == length(b) do
+      Enum.zip(a, b) |> Enum.all?(fn {x, y} -> values_equal?(x, y) end)
+    else
+      false
+    end
+  end
+
+  defp values_equal?(a, b), do: a == b
+
+  # Check for duplicate types in locators array
+  @spec check_locators_duplicate_types(map(), list(), String.t(), String.t()) :: map()
+  defp check_locators_duplicate_types(response, array, attribute_path, attribute_name) do
+    {response, _} =
+      Enum.reduce(array, {response, {%{}, 0}}, fn element, {response, {seen_types, index}} ->
+        if is_map(element) and Map.has_key?(element, "type") do
+          locator_type = element["type"]
+
+          if Map.has_key?(seen_types, locator_type) do
+            first_index = seen_types[locator_type]
+            duplicate_path = make_attribute_path_array_element(attribute_path, index)
+
+            response =
+              add_error(
+                response,
+                "attribute_locators_duplicate_type",
+                "Duplicate locator type \"#{locator_type}\" found in array \"#{attribute_path}\" at index #{index}." <>
+                  " First occurrence at index #{first_index}. Duplicate types are not allowed in the locators array.",
+                %{
+                  attribute_path: duplicate_path,
+                  attribute: attribute_name,
+                  duplicate_index: index,
+                  first_index: first_index,
+                  locator_type: locator_type
+                }
+              )
+
+            {response, {seen_types, index + 1}}
+          else
+            {response, {Map.put(seen_types, locator_type, index), index + 1}}
+          end
+        else
+          {response, {seen_types, index + 1}}
+        end
+      end)
+
+    response
+  end
 end
