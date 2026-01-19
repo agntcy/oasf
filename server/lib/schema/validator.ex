@@ -185,7 +185,8 @@ defmodule Schema.Validator do
           class,
           profiles,
           options,
-          dictionary
+          dictionary,
+          ""
         )
       else
         # Can't continue if we can't find the class
@@ -444,7 +445,15 @@ defmodule Schema.Validator do
     end)
   end
 
-  @spec validate_input_against_class(map(), map(), map(), list(String.t()), list(), map()) ::
+  @spec validate_input_against_class(
+          map(),
+          map(),
+          map(),
+          list(String.t()),
+          list(),
+          map(),
+          nil | String.t()
+        ) ::
           map()
   defp validate_input_against_class(
          response,
@@ -452,13 +461,14 @@ defmodule Schema.Validator do
          class,
          profiles,
          options,
-         dictionary
+         dictionary,
+         parent_attribute_path
        ) do
     response
     |> validate_class_deprecated(class)
     |> validate_attributes(
       input,
-      nil,
+      parent_attribute_path,
       class,
       profiles,
       options,
@@ -466,7 +476,7 @@ defmodule Schema.Validator do
       class[:is_enum] || false
     )
     |> validate_version(input)
-    |> validate_constraints(input, class)
+    |> validate_constraints(input, class, parent_attribute_path)
   end
 
   @spec validate_class_deprecated(map(), map()) :: map()
@@ -604,7 +614,7 @@ defmodule Schema.Validator do
   end
 
   @spec validate_constraints(map(), map(), map(), nil | String.t()) :: map()
-  defp validate_constraints(response, input_item, schema_item, attribute_path \\ nil) do
+  defp validate_constraints(response, input_item, schema_item, attribute_path) do
     if Map.has_key?(schema_item, :constraints) do
       Enum.reduce(
         schema_item[:constraints],
@@ -1642,11 +1652,11 @@ defmodule Schema.Validator do
           end
 
         if class do
-          # Check if this is a placeholder that should be replaced
           response =
-            check_placeholder_warning(
+            check_base_class_error(
               response,
               class,
+              value,
               attribute_path,
               attribute_name,
               attribute_details[:family]
@@ -1660,7 +1670,8 @@ defmodule Schema.Validator do
             class,
             profiles,
             options,
-            dictionary
+            dictionary,
+            attribute_path
           )
         else
           # Can't continue if we can't find the class
@@ -2552,13 +2563,13 @@ defmodule Schema.Validator do
     )
   end
 
-  @spec check_placeholder_warning(map(), map(), String.t(), String.t(), String.t()) :: map()
-  defp check_placeholder_warning(response, class, attribute_path, attribute_name, family) do
+  @spec check_base_class_error(map(), map(), map(), String.t(), String.t(), String.t()) :: map()
+  defp check_base_class_error(response, class, value, attribute_path, attribute_name, family) do
     class_name = class[:name]
     # Normalize class name to string for comparison (it may be an atom)
     class_name_str = if is_atom(class_name), do: Atom.to_string(class_name), else: class_name
 
-    placeholder_name =
+    base_class_name =
       case family do
         "skill" -> "base_skill"
         "domain" -> "base_domain"
@@ -2566,17 +2577,42 @@ defmodule Schema.Validator do
         _ -> nil
       end
 
-    if placeholder_name && class_name_str == placeholder_name do
-      add_warning(
+    # Check if name matches base class name
+    name_matches = base_class_name && class_name_str == base_class_name
+
+    # Check if ID is 0 (base classes have UID 0)
+    # Only check ID if it was provided in the input value
+    id_is_zero =
+      if Map.has_key?(value, "id") do
+        input_id = value["id"]
+        # Check if input ID is 0 (could be integer 0 or string "0")
+        cond do
+          is_integer(input_id) && input_id == 0 ->
+            true
+
+          is_bitstring(input_id) ->
+            case Integer.parse(input_id) do
+              {parsed_id, _} -> parsed_id == 0
+              :error -> false
+            end
+
+          true ->
+            false
+        end
+      else
+        false
+      end
+
+    if base_class_name && (name_matches || id_is_zero) do
+      add_error(
         response,
-        "placeholder_used",
-        "Placeholder \"#{placeholder_name}\" is used at \"#{attribute_path}\". " <>
-          "This placeholder needs to be replaced with an actual #{family}.",
+        "base_class_used",
+        "\"#{base_class_name}\" is used at \"#{attribute_path}\". " <>
+          "\"#{base_class_name}\" is not valid option for this attribute; please specify a concrete #{family}.",
         %{
           attribute_path: attribute_path,
           attribute: attribute_name,
-          value: placeholder_name,
-          placeholder_type: family
+          value: base_class_name
         }
       )
     else
