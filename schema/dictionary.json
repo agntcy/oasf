@@ -678,8 +678,14 @@
     },
     "url": {
       "caption": "URL",
-      "description": "The URL object that pertains to the class or object. See specific usage.",
+      "description": "A Uniform Resource Locator (URL) string that references a resource, endpoint, or link. The value must conform to RFC 3986 and should use http or https schemes when applicable.",
       "type": "url_t"
+    },
+    "urls": {
+      "caption": "URLs",
+      "description": "An array of Uniform Resource Locator (URL) strings that reference resources, endpoints, or links. Each value must conform to RFC 3986 and should use http or https schemes when applicable.",
+      "type": "url_t",
+      "is_array": true
     },
     "value": {
       "caption": "Value",

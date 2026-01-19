@@ -27,8 +27,8 @@ message Locator {
 enum LocatorType {
   UNSPECIFIED = 0; // ""
   HELM_CHART = 1; // "helm_chart"
-  DOCKER_IMAGE = 2; // "docker_image"
-  PYTHON_PACKAGE = 3; // "python_package"
+  CONTAINER_IMAGE = 2; // "container_image"
+  PACKAGE = 3; // "package"
   SOURCE_CODE = 4; // "source_code"
   BINARY = 5; // "binary"
   URL = 6; // "url"
