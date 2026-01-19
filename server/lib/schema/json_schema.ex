@@ -476,6 +476,7 @@ defmodule Schema.JsonSchema do
       schema
       |> Map.put("type", "array")
       |> Map.put("items", type)
+      |> Map.put("uniqueItems", true)
 
     # Add minItems: 1 for required arrays
     if requirement == "required" do
