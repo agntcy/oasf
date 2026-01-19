@@ -267,7 +267,7 @@ defmodule Schema.JsonSchema do
         |> (fn {required, just_one, at_least_one} ->
               schema =
                 encode_attribute(type_name, attribute[:type], attribute)
-                |> encode_array(attribute[:is_array])
+                |> encode_array(attribute[:is_array], attribute[:requirement])
 
               {{name, schema}, {required, just_one, at_least_one}}
             end).()
@@ -449,13 +449,23 @@ defmodule Schema.JsonSchema do
     end)
   end
 
-  defp encode_array(schema, true) do
+  defp encode_array(schema, true, requirement) do
     {type, schema} = items_type(schema)
 
-    Map.put(schema, "type", "array") |> Map.put("items", type)
+    schema =
+      schema
+      |> Map.put("type", "array")
+      |> Map.put("items", type)
+
+    # Add minItems: 1 for required arrays
+    if requirement == "required" do
+      Map.put(schema, "minItems", 1)
+    else
+      schema
+    end
   end
 
-  defp encode_array(schema, _is_array) do
+  defp encode_array(schema, _is_array, _requirement) do
     schema
   end
 
