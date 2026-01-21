@@ -35,3 +35,6 @@ config :schema_server, SchemaWeb.Endpoint,
 config :schema_server, Schema.Application, home: System.get_env("SCHEMA_DIR")
 config :schema_server, Schema.Application, extension: System.get_env("SCHEMA_EXTENSION")
 config :schema_server, Schema.Application, schema_versions: System.get_env("SCHEMA_VERSIONS")
+
+config :schema_server, :google_analytics,
+  tracking_id: System.get_env("GA_TRACKING_ID")

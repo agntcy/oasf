@@ -38,6 +38,10 @@ config :schema_server, Schema.Application, home: System.get_env("SCHEMA_DIR") ||
 config :schema_server, Schema.Application, extension: System.get_env("SCHEMA_EXTENSION")
 config :schema_server, Schema.Application, schema_versions: System.get_env("SCHEMA_VERSIONS")
 
+# Configures Google Analytics
+config :schema_server, :google_analytics,
+  tracking_id: System.get_env("GA_TRACKING_ID") || "G-9B6D1W2GX8"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
