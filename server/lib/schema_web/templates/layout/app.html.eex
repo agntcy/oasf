@@ -8,6 +8,53 @@
   <meta name="description" content="Open Agentic Schema Framework">
   <title>Open Agentic Schema Framework</title>
 
+  <% ga_tracking_id = Application.get_env(:schema_server, :google_analytics)[:tracking_id] %>
+  <%= if ga_tracking_id do %>
+    <script>
+      // GA Loading Logic
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      function loadGA() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=<%= ga_tracking_id %>";
+        document.head.appendChild(script);
+
+        gtag('js', new Date());
+        gtag('config', '<%= ga_tracking_id %>');
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        var consent = localStorage.getItem('ga_consent');
+        var banner = document.getElementById('cookie-consent-banner');
+
+        if (consent === 'granted') {
+          loadGA();
+        } else if (consent === null) {
+          if (banner) banner.style.display = 'block';
+        }
+
+        var acceptBtn = document.getElementById('accept-cookies');
+        if (acceptBtn) {
+          acceptBtn.addEventListener('click', function() {
+            localStorage.setItem('ga_consent', 'granted');
+            if (banner) banner.style.display = 'none';
+            loadGA();
+          });
+        }
+
+        var declineBtn = document.getElementById('decline-cookies');
+        if (declineBtn) {
+          declineBtn.addEventListener('click', function() {
+            localStorage.setItem('ga_consent', 'denied');
+            if (banner) banner.style.display = 'none';
+          });
+        }
+      });
+    </script>
+  <% end %>
+
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap-4.6.2.min.css") %>'/>
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap.select-1.13.18.min.css") %>'/>
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/fontawesome-6.4.0.min.css") %>'/>
@@ -313,6 +360,21 @@
     $('.profile-item').removeClass('profile-applicable profile-not-applicable');
   };
 </script>
+
+<% ga_tracking_id = Application.get_env(:schema_server, :google_analytics)[:tracking_id] %>
+<%= if ga_tracking_id do %>
+<div id="cookie-consent-banner" class="fixed-bottom bg-dark text-white p-3" style="display: none; z-index: 9999;">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div>
+      <p class="mb-0">We use cookies to improve your experience. By clicking "Accept", you agree to our use of cookies.</p>
+    </div>
+    <div>
+      <button id="decline-cookies" class="btn btn-outline-light btn-sm mr-2">Decline</button>
+      <button id="accept-cookies" class="btn btn-primary btn-sm">Accept</button>
+    </div>
+  </div>
+</div>
+<% end %>
 
 </body>
 </html>

@@ -25,6 +25,10 @@ image:
 config:
   server_port: 8080
 
+# Additional environment variables
+env:
+  GA_TRACKING_ID: "G-9B6D1W2GX8"
+
 # service exposes gRPC server api
 service:
   type: ClusterIP
