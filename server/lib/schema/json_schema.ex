@@ -382,33 +382,9 @@ defmodule Schema.JsonSchema do
         |> Enum.reject(fn item -> item[:hidden?] == true end)
 
       refs =
-        if family == "module" do
-          module_names =
-            Enum.map(children_classes, fn item ->
-              Utils.class_name_with_hierarchy(item[:name], Schema.all_modules())
-            end)
-
-          Enum.map(children_classes, fn item ->
-            %{"$ref" => make_class_ref(family, item[:name])}
-          end) ++
-            [
-              %{
-                "type" => "object",
-                "properties" => %{
-                  "name" => %{"type" => "string"}
-                },
-                "not" => %{
-                  "properties" => %{
-                    "name" => %{"enum" => module_names}
-                  }
-                }
-              }
-            ]
-        else
-          Enum.map(children_classes, fn item ->
-            %{"$ref" => make_class_ref(family, item[:name])}
-          end)
-        end
+        Enum.map(children_classes, fn item ->
+          %{"$ref" => make_class_ref(family, item[:name])}
+        end)
 
       Map.put(schema, "oneOf", refs)
     else

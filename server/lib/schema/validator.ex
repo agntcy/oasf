@@ -142,19 +142,7 @@ defmodule Schema.Validator do
           validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
 
         :module ->
-          if Schema.Utils.is_oasf_class?(type, input["name"]) do
-            validate_class_id_or_name(response, input, &Schema.find_module/1, &Schema.module/1)
-          else
-            response =
-              add_warning(
-                response,
-                "module_unknown",
-                "Module \"#{input["name"]}\" is not an OASF module; skipping validation.",
-                %{attribute_path: "name", attribute: "name", value: input["name"]}
-              )
-
-            {response, nil}
-          end
+          validate_class_id_or_name(response, input, &Schema.find_module/1, &Schema.module/1)
 
         :object ->
           validate_object_name_and_return_object(response, options)
@@ -1599,27 +1587,12 @@ defmodule Schema.Validator do
               validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
 
             "module" ->
-              if Schema.Utils.is_oasf_class?(
-                   String.to_atom(attribute_details[:family]),
-                   value["name"]
-                 ) do
-                validate_class_id_or_name(
-                  response,
-                  value,
-                  &Schema.find_module/1,
-                  &Schema.module/1
-                )
-              else
-                response =
-                  add_warning(
-                    response,
-                    "module_unknown",
-                    "Module \"#{value["name"]}\" is not an OASF module; skipping validation.",
-                    %{attribute_path: "name", attribute: "name", value: value["name"]}
-                  )
-
-                {response, nil}
-              end
+              validate_class_id_or_name(
+                response,
+                value,
+                &Schema.find_module/1,
+                &Schema.module/1
+              )
 
             _ ->
               # This should never happen for published schemas (validator will catch this) but
