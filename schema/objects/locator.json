@@ -15,38 +15,31 @@
         "helm_chart": {
           "caption": "Helm Chart"
         },
-        "docker_image": {
-          "caption": "Docker Image"
+        "container_image": {
+          "caption": "Container Image"
         },
-        "python_package": {
-          "caption": "Python Package"
+        "package": {
+          "caption": "Package"
         },
         "source_code": {
           "caption": "Source Code"
         },
         "binary": {
           "caption": "Binary"
+        },
+        "url": {
+          "caption": "URL"
         }
       }
     },
-    "url": {
-      "caption": "URL",
-      "description": "Specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
+    "urls": {
+      "caption": "URLs",
+      "description": "Specifies an array of URLs from which this object MAY be downloaded. Value MUST conform to RFC 1738. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
       "requirement": "required"
     },
     "annotations": {
       "caption": "Annotations",
       "description": "Additional metadata associated with the record locator.",
-      "requirement": "optional"
-    },
-    "size": {
-      "caption": "Size",
-      "description": "Specifies the size of the release manifest in bytes.",
-      "requirement": "optional"
-    },
-    "digest": {
-      "caption": "Digest",
-      "description": "Specifies the digest of the release manifest contents.",
       "requirement": "optional"
     }
   }

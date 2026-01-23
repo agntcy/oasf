@@ -4,12 +4,17 @@
   "description": "The base skill is a generic skill defining a set of attributes for skill classes; not meant to be used as an actual skill.",
   "name": "base_skill",
   "attributes": {
+    "annotations": {
+      "caption": "Annotations",
+      "description": "Additional metadata associated with the skill.",
+      "requirement": "optional"
+    },
     "name": {
-      "description": "The name as a unique identifier of the class.",
+      "description": "The name as a unique identifier of the skill.",
       "requirement": "recommended"
     },
     "id": {
-      "description": "The id as a unique identifier of the class.",
+      "description": "The id as a unique identifier of the skill.",
       "requirement": "recommended"
     }
   },

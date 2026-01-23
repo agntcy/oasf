@@ -117,13 +117,11 @@ populate it as described below.
       to add a generic description, specific descriptions can be added in the
       `class/object` definition.
       For example,
-   2. A generic definition of `name` in the dictionary:
-      1. `name` :
-         `The name of the entity.
+   2. A generic definition of `name` in the dictionary: 1. `name` :
+      `The name of the entity.
 See specific usage.`
-   3. Specific description of `name` in the `record` object:
-      1. `name` :
-         `The name of the record.
+   3. Specific description of `name` in the `record` object: 1. `name` :
+      `The name of the record.
 For example:
 <code>Marketing Strategy Agent</code>.`
 3. `type` → Review OASF data_types and ensure you utilize appropriate types
@@ -153,7 +151,7 @@ true`
 
    ```json
    {
-     "caption": "Record Locator",
+     "caption": "Locator",
      "description": "Locators provide actual artifact locators of the data's record. For example, this can reference sources such as Helm charts, Docker images, binaries, and so on.",
      "extends": "object",
      "name": "locator",
@@ -169,38 +167,31 @@ true`
            "helm_chart": {
              "caption": "Helm Chart"
            },
-           "docker_image": {
-             "caption": "Docker Image"
+           "container_image": {
+             "caption": "Container Image"
            },
-           "python_package": {
-             "caption": "Python Package"
+           "package": {
+             "caption": "Package"
            },
            "source_code": {
              "caption": "Source Code"
            },
            "binary": {
              "caption": "Binary"
+           },
+           "url": {
+             "caption": "URL"
            }
          }
        },
-       "url": {
-         "caption": "URL",
-         "description": "Specifies an URI from which this object MAY be downloaded. Value MUST conform to RFC 3986. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
+       "urls": {
+         "caption": "URLs",
+         "description": "Specifies an array of URLs from which this object MAY be downloaded. Value MUST conform to RFC 1738. Value SHOULD use the http and https schemes, as defined in RFC 7230.",
          "requirement": "required"
        },
        "annotations": {
          "caption": "Annotations",
          "description": "Additional metadata associated with the record locator.",
-         "requirement": "optional"
-       },
-       "size": {
-         "caption": "Size",
-         "description": "Specifies the size of the release manifest in bytes.",
-         "requirement": "optional"
-       },
-       "digest": {
-         "caption": "Digest",
-         "description": "Specifies the digest of the release manifest contents.",
          "requirement": "optional"
        }
      }
@@ -421,17 +412,17 @@ The extension's directory structure is the same as the top level schema
 directory, and it may contain the following files and subdirectories, depending
 on what type of extension is desired:
 
-| Name                | Description                                |
-| ------------------- | ------------------------------------------ |
+| Name                     | Description                                |
+| ------------------------ | ------------------------------------------ |
 | `skill_categories.json`  | Create it to define new skill categories.  |
 | `domain_categories.json` | Create it to define new domain categories. |
 | `module_categories.json` | Create it to define new module categories. |
-| `dictionary.json`   | Create it to define new attributes.        |
-| `skills`            | Create it to define new skill classes.     |
-| `domains`           | Create it to define new domain classes.    |
-| `modules`           | Create it to define new module classes.    |
-| `objects`           | Create it to define new objects.           |
-| `profiles`          | Create it to define new profiles.          |
+| `dictionary.json`        | Create it to define new attributes.        |
+| `skills`                 | Create it to define new skill classes.     |
+| `domains`                | Create it to define new domain classes.    |
+| `modules`                | Create it to define new module classes.    |
+| `objects`                | Create it to define new objects.           |
+| `profiles`               | Create it to define new profiles.          |
 
 ## Reporting Issues
 

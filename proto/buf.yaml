@@ -9,6 +9,10 @@ lint:
   ignore_only:
     PACKAGE_VERSION_SUFFIX:
       - agntcy/oasf/types/v1alpha0
+    ENUM_VALUE_PREFIX:
+      - agntcy/oasf/types/v1/locator.proto
+    ENUM_ZERO_VALUE_SUFFIX:
+      - agntcy/oasf/types/v1/locator.proto
 breaking:
   use:
     - WIRE_JSON

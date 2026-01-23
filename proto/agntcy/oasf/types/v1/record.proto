@@ -1,0 +1,57 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v1;
+
+import "agntcy/oasf/types/v1/domain.proto";
+import "agntcy/oasf/types/v1/locator.proto";
+import "agntcy/oasf/types/v1/module.proto";
+import "agntcy/oasf/types/v1/skill.proto";
+
+// Record defines a schema for versioned AI agentic content representation.
+// The schema provides a way to describe an agentic record in a structured format.
+//
+// Records are packaged and distributed as OCI Artifacts conforming to the
+// Record Manifest specification.
+//
+// The Record object simply defines the schema structure. Additional specifications
+// define how the Record is serialized, packaged, validated, and distributed.
+message Record {
+  // Metadata associated with the record.
+  // Annotations with "agntcy." prefix are reserved for system use.
+  map<string, string> annotations = 1;
+
+  // Name of the record.
+  string name = 2;
+
+  // Version of the record.
+  string version = 3;
+
+  // Schema version of the record.
+  string schema_version = 4;
+
+  // Description of the record.
+  string description = 5;
+
+  // List of record authors, e.g. in the form of `author-name <author-email>`.
+  repeated string authors = 6;
+
+  // Creation timestamp of the record in the RFC3339 format.
+  // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
+  string created_at = 7;
+
+  // List of source locators where the record can be found or used from.
+  repeated Locator locators = 8;
+
+  // List of skills that the record can perform.
+  repeated Skill skills = 9;
+
+  // List of domains under which the record can operate in.
+  repeated Domain domains = 10;
+
+  // Additional information attached to the record.
+  // Modules are used to generically extend the record's functionality.
+  repeated Module modules = 11;
+}
