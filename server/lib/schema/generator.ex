@@ -383,7 +383,21 @@ defmodule Schema.Generator do
         generate_classes(n, attribute)
 
       type ->
-        Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
+        # If field has enum values, ensure no duplicates in array
+        case field[:enum] do
+          nil ->
+            Enum.map(1..n, fn _ -> generate_data(name, type, field) end)
+
+          enum ->
+            # Get all enum keys, shuffle, and take up to n unique values
+            enum_keys =
+              enum
+              |> Map.keys()
+              |> Enum.shuffle()
+              |> Enum.take(n)
+
+            Enum.map(enum_keys, fn key -> Atom.to_string(key) end)
+        end
     end
   end
 
