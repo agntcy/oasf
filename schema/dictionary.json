@@ -8,6 +8,11 @@
       "description": "Defines optional capabilities supported by an A2A agent.",
       "type": "a2a_capabilities"
     },
+    "a2a_capability_extended_agent_card": {
+      "caption": "Extended Agent Card Capability",
+      "description": "Indicates if the A2A agent supports providing an extended agent card when authenticated.",
+      "type": "boolean_t"
+    },
     "a2a_capability_push_notifications": {
       "caption": "Push Notifications Capability",
       "description": "Indicates if the agent supports sending push notifications for asynchronous task updates.",
@@ -33,6 +38,16 @@
       "description": "Data supported by the agent for A2A.",
       "type": "a2a_data"
     },
+    "a2a_documentation_url": {
+      "caption": "Documentation URL",
+      "description": "A URL to provide additional documentation about the A2A agent.",
+      "type": "url_t"
+    },
+    "a2a_icon_url": {
+      "caption": "Icon URL",
+      "description": "An optional URL to an icon for the A2A agent.",
+      "type": "url_t"
+    },
     "a2a_input_modes": {
       "caption": "Supported Input Modes",
       "description": "Supported input modes supported by the agent for A2A communication.",
@@ -46,6 +61,11 @@
           "caption": "Text/Plain"
         }
       }
+    },
+    "a2a_interface_tenant": {
+      "caption": "Interface Tenant",
+      "description": "Tenant to be set in the request when calling the A2A agent interface.",
+      "type": "string_t"
     },
     "a2a_output_modes": {
       "caption": "Supported Output Modes",
@@ -80,6 +100,12 @@
       "description": "Version of the A2A protocol used by the agent.",
       "type": "string_t"
     },
+    "a2a_protocol_versions": {
+      "caption": "Protocol Versions",
+      "description": "Versions of the A2A protocol this agent supports. For stable versions (1.x+), list only the latest supported minor version per major version. For legacy experimental versions (0.x), explicitly list each supported version.",
+      "type": "string_t",
+      "is_array": true
+    },
     "a2a_provider": {
       "caption": "Provider Information",
       "description": "Information about the A2A agent provider including organization, URL, and extensions.",
@@ -95,6 +121,12 @@
       "caption": "Provider Organization",
       "description": "Name of the A2A provider organization.",
       "type": "string_t"
+    },
+    "a2a_security_requirements": {
+      "caption": "A2A Security Requirements",
+      "description": "Security requirements for contacting an A2A agent. Each requirement maps security scheme names to lists of scopes or requirements.",
+      "type": "a2a_security",
+      "is_array": true
     },
     "a2a_security_schemes": {
       "caption": "Supported Security Schemes",
@@ -127,6 +159,17 @@
           "description": "Mutual TLS security scheme for A2A communication."
         }
       }
+    },
+    "a2a_security_schemes_map": {
+      "caption": "Security Schemes Map",
+      "description": "A map of security scheme names to lists of scopes or requirements. Each key is a security scheme name, and the value is a list of strings (scopes or requirements).",
+      "type": "json_t"
+    },
+    "a2a_signatures": {
+      "caption": "A2A Signatures",
+      "description": "JSON Web Signatures computed for the AgentCard for verification purposes. Stored as JSON array of signature objects.",
+      "type": "json_t",
+      "is_array": true
     },
     "a2a_supported_interfaces": {
       "caption": "Supported Interfaces",

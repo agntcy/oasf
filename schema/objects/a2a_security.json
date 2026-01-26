@@ -1,0 +1,14 @@
+{
+  "caption": "A2A Security",
+  "description": "Security requirements for contacting an A2A agent. Maps security scheme names to lists of scopes or requirements.",
+  "extends": "object",
+  "name": "a2a_security",
+  "attributes": {
+    "schemes": {
+      "reference": "a2a_security_schemes_map",
+      "caption": "Security Schemes",
+      "description": "A map of security scheme names to lists of scopes or requirements. Each key is a security scheme name, and the value is a list of strings (scopes or requirements). Stored as JSON object.",
+      "requirement": "required"
+    }
+  }
+}

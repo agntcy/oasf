@@ -4,10 +4,10 @@
   "extends": "module_data",
   "name": "a2a_data",
   "attributes": {
-    "protocol_version": {
-      "reference": "a2a_protocol_version",
-      "caption": "Protocol Version",
-      "description": "Version of the A2A protocol used by the agent.",
+    "protocol_versions": {
+      "reference": "a2a_protocol_versions",
+      "caption": "Protocol Versions",
+      "description": "Versions of the A2A protocol this agent supports. For stable versions (1.x+), list only the latest supported minor version per major version. For legacy experimental versions (0.x), explicitly list each supported version.",
       "requirement": "required"
     },
     "card_data": {
@@ -46,6 +46,12 @@
       "description": "Supported security schemes for A2A communication.",
       "requirement": "optional"
     },
+    "security": {
+      "reference": "a2a_security_requirements",
+      "caption": "Security Requirements",
+      "description": "Security requirements for contacting the agent. Each requirement maps security scheme names to lists of scopes or requirements.",
+      "requirement": "optional"
+    },
     "supported_interfaces": {
       "reference": "a2a_supported_interfaces",
       "caption": "Supported Interfaces",
@@ -58,10 +64,22 @@
       "description": "Information about the provider including organization and protocol extensions.",
       "requirement": "optional"
     },
-    "supports_authenticated_extended_card": {
-      "reference": "a2a_supports_authenticated_extended_card",
-      "caption": "Supports Authenticated Extended Card",
-      "description": "Indicates whether the agent supports authenticated extended card retrieval.",
+    "documentation_url": {
+      "reference": "a2a_documentation_url",
+      "caption": "Documentation URL",
+      "description": "A URL to provide additional documentation about the agent.",
+      "requirement": "optional"
+    },
+    "icon_url": {
+      "reference": "a2a_icon_url",
+      "caption": "Icon URL",
+      "description": "An optional URL to an icon for the agent.",
+      "requirement": "optional"
+    },
+    "signatures": {
+      "reference": "a2a_signatures",
+      "caption": "Signatures",
+      "description": "JSON Web Signatures computed for this AgentCard for verification purposes.",
       "requirement": "optional"
     }
   }

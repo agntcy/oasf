@@ -15,6 +15,12 @@
       "caption": "Protocol Binding",
       "description": "The protocol binding used by this interface (e.g., 'http+json', 'grpc').",
       "requirement": "optional"
+    },
+    "tenant": {
+      "reference": "a2a_interface_tenant",
+      "caption": "Tenant",
+      "description": "Tenant to be set in the request when calling the agent.",
+      "requirement": "optional"
     }
   }
 }

@@ -4,11 +4,17 @@
   "extends": "object",
   "name": "a2a_provider",
   "attributes": {
+    "url": {
+      "reference": "url",
+      "caption": "Provider URL",
+      "description": "A URL for the agent provider's website or relevant documentation.",
+      "requirement": "required"
+    },
     "organization": {
       "reference": "a2a_provider_organization",
       "caption": "Organization",
       "description": "Name of the provider organization.",
-      "requirement": "optional"
+      "requirement": "required"
     },
     "extensions": {
       "reference": "a2a_provider_extensions",

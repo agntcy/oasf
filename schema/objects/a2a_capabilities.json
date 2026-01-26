@@ -27,6 +27,12 @@
       "caption": "State Transition History",
       "description": "Indicates if the agent provides a history of state transitions for a task.",
       "requirement": "optional"
+    },
+    "extended_agent_card": {
+      "reference": "a2a_capability_extended_agent_card",
+      "caption": "Extended Agent Card",
+      "description": "Indicates if the agent supports providing an extended agent card when authenticated.",
+      "requirement": "optional"
     }
   }
 }
