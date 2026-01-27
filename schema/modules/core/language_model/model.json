@@ -1,0 +1,15 @@
+{
+  "uid": 1,
+  "caption": "Language Model",
+  "description": "Describes Language Model support and its configuration for a given agent.",
+  "extends": "language_model",
+  "name": "model",
+  "attributes": {
+    "data": {
+      "reference": "language_model_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for Language Model.",
+      "requirement": "required"
+    }
+  }
+}

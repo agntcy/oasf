@@ -1,0 +1,7 @@
+{
+  "caption": "Language Model Prompt",
+  "description": "Defines the structure for Language Model prompts used in agent interactions.",
+  "extends": "prompt",
+  "name": "language_model_prompt",
+  "attributes": {}
+}

@@ -1,7 +1,0 @@
-{
-  "caption": "LLM Prompt",
-  "description": "Defines the structure for LLM prompts used in agent interactions.",
-  "extends": "prompt",
-  "name": "llm_prompt",
-  "attributes": {}
-}

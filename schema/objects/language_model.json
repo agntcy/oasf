@@ -1,0 +1,27 @@
+{
+  "caption": "Language Model Configuration",
+  "description": "Configures the MCP server for Language Model support.",
+  "extends": "object",
+  "name": "language_model",
+  "attributes": {
+    "model": {
+      "caption": "Model Name",
+      "description": "Name of the Language Model including its version (e.g., 'gpt-3.5-turbo').",
+      "requirement": "required"
+    },
+    "provider": {
+      "caption": "Provider",
+      "description": "Provider of the Language Model (e.g., 'ollama', 'azure').",
+      "requirement": "required"
+    },
+    "api_base": {
+      "caption": "API Base URL",
+      "description": "URL of the API base for the Language Model (e.g., 'https://api.openai.com/v1').",
+      "requirement": "required"
+    },
+    "env_vars": {
+      "description": "Environment variables, such as API key for accessing the Language Model, if required by the provider.",
+      "requirement": "optional"
+    }
+  }
+}
