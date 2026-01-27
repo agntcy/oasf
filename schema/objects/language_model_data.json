@@ -1,0 +1,14 @@
+{
+  "caption": "Language Model Data",
+  "description": "Data for the Language Model record module.",
+  "extends": "module_data",
+  "name": "language_model_data",
+  "attributes": {
+    "models": {
+      "reference": "language_models",
+      "caption": "Language Model Data",
+      "description": "Collection of Language Models supported by the agent, including their configurations and parameters.",
+      "requirement": "required"
+    }
+  }
+}

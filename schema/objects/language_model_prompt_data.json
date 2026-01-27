@@ -1,0 +1,14 @@
+{
+  "caption": "Language Model Prompt Data",
+  "description": "Data for the Language Model prompt record module.",
+  "extends": "module_data",
+  "name": "language_model_prompt_data",
+  "attributes": {
+    "prompts": {
+      "reference": "language_model_prompts",
+      "caption": "Language Model Prompts",
+      "description": "List of common prompts used for Language Model interactions with the agent, including their configurations and parameters.",
+      "requirement": "required"
+    }
+  }
+}

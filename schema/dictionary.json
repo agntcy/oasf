@@ -286,7 +286,7 @@
     },
     "api_base": {
       "caption": "API Base URL",
-      "description": "URL of the API base for the LLM model (e.g., 'https://api.openai.com/v1').",
+      "description": "URL of the API base for the Language Model (e.g., 'https://api.openai.com/v1').",
       "type": "string_t"
     },
     "args": {
@@ -433,26 +433,26 @@
       "description": "A location",
       "type": "string_t"
     },
-    "llm_model_data": {
+    "language_model_data": {
       "caption": "Data",
-      "description": "Data supported by the agent for LLM model.",
-      "type": "llm_model_data"
+      "description": "Data supported by the agent for Language Model.",
+      "type": "language_model_data"
     },
-    "llm_models": {
-      "caption": "List of LLM Model Data",
-      "description": "Collection of LLM models supported by the agent, including their configurations and parameters.",
-      "type": "llm_model",
+    "language_model_prompt_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for Language Model prompts.",
+      "type": "language_model_prompt_data"
+    },
+    "language_model_prompts": {
+      "caption": "List of Language Model Prompts",
+      "description": "List of common prompts used for Language Model interactions with the agent, including their configurations and parameters.",
+      "type": "language_model_prompt",
       "is_array": true
     },
-    "llm_prompt_data": {
-      "caption": "Data",
-      "description": "Data supported by the agent for LLM prompts.",
-      "type": "llm_prompt_data"
-    },
-    "llm_prompts": {
-      "caption": "List of LLM Prompts",
-      "description": "List of common prompts used for LLM interactions with the agent, including their configurations and parameters.",
-      "type": "llm_prompt",
+    "language_models": {
+      "caption": "List of Language Model Data",
+      "description": "Collection of Language Models supported by the agent, including their configurations and parameters.",
+      "type": "language_model",
       "is_array": true
     },
     "locator": {
@@ -512,7 +512,7 @@
     },
     "model": {
       "caption": "Model",
-      "description": "Name of the LLM model including its version (e.g., 'gpt-3.5-turbo').",
+      "description": "Name of the Language Model including its version (e.g., 'gpt-3.5-turbo').",
       "type": "string_t"
     },
     "module_data": {

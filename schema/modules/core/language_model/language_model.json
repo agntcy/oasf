@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Language Model",
+  "description": "Modules for basic Language Model functionality.",
+  "extends": "core",
+  "name": "language_model",
+  "attributes": {}
+}

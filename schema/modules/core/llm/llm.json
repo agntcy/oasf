@@ -1,8 +1,0 @@
-{
-  "uid": 2,
-  "caption": "LLM",
-  "description": "Modules for basic LLM functionality.",
-  "extends": "core",
-  "name": "llm",
-  "attributes": {}
-}

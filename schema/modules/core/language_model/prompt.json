@@ -1,0 +1,15 @@
+{
+  "uid": 2,
+  "caption": "Language Model Prompt",
+  "description": "Describes common Language Model interaction prompts to use the agent.",
+  "extends": "language_model",
+  "name": "prompt",
+  "attributes": {
+    "data": {
+      "reference": "language_model_prompt_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for Language Model prompt.",
+      "requirement": "required"
+    }
+  }
+}
