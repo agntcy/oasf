@@ -4,12 +4,6 @@
   "extends": "module_data",
   "name": "a2a_data",
   "attributes": {
-    "protocol_versions": {
-      "reference": "a2a_protocol_versions",
-      "caption": "Protocol Versions",
-      "description": "Versions of the A2A protocol this agent supports. For stable versions (1.x+), list only the latest supported minor version per major version. For legacy experimental versions (0.x), explicitly list each supported version.",
-      "requirement": "required"
-    },
     "card_data": {
       "reference": "a2a_card_data",
       "caption": "A2A Card Data",
@@ -22,65 +16,11 @@
         }
       ]
     },
-    "capabilities": {
-      "reference": "a2a_capabilities",
-      "caption": "Capabilities",
-      "description": "List of capabilities supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "input_modes": {
-      "reference": "a2a_input_modes",
-      "caption": "Supported Input Modes",
-      "description": "Supported input modes supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "output_modes": {
-      "reference": "a2a_output_modes",
-      "caption": "Supported Output Modes",
-      "description": "Supported output modes supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "security_schemes": {
-      "reference": "a2a_security_schemes",
-      "caption": "Supported Security Schemes",
-      "description": "Supported security schemes for A2A communication.",
-      "requirement": "optional"
-    },
-    "security": {
-      "reference": "a2a_security_requirements",
-      "caption": "Security Requirements",
-      "description": "Security requirements for contacting the agent. Each requirement maps security scheme names to lists of scopes or requirements.",
-      "requirement": "optional"
-    },
-    "supported_interfaces": {
-      "reference": "a2a_supported_interfaces",
-      "caption": "Supported Interfaces",
-      "description": "List of supported interfaces with URLs and protocol bindings for routing and protocol negotiation.",
-      "requirement": "optional"
-    },
-    "provider": {
-      "reference": "a2a_provider",
-      "caption": "Provider Information",
-      "description": "Information about the provider including organization and protocol extensions.",
-      "requirement": "optional"
-    },
-    "documentation_url": {
-      "reference": "a2a_documentation_url",
-      "caption": "Documentation URL",
-      "description": "A URL to provide additional documentation about the agent.",
-      "requirement": "optional"
-    },
-    "icon_url": {
-      "reference": "a2a_icon_url",
-      "caption": "Icon URL",
-      "description": "An optional URL to an icon for the agent.",
-      "requirement": "optional"
-    },
-    "signatures": {
-      "reference": "a2a_signatures",
-      "caption": "Signatures",
-      "description": "JSON Web Signatures computed for this AgentCard for verification purposes.",
-      "requirement": "optional"
+    "card_schema_version": {
+      "reference": "a2a_card_schema_version",
+      "caption": "Card Schema Version",
+      "description": "Version of the A2A card schema used for the card_data.",
+      "requirement": "required"
     }
   }
 }

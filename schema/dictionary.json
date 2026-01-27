@@ -3,184 +3,25 @@
   "description": "The Attribute Dictionary defines attributes and includes references to the classes and objects in which they are used.",
   "name": "dictionary",
   "attributes": {
-    "a2a_capabilities": {
-      "caption": "A2A Capabilities",
-      "description": "Defines optional capabilities supported by an A2A agent.",
-      "type": "a2a_capabilities"
-    },
-    "a2a_capability_extended_agent_card": {
-      "caption": "Extended Agent Card Capability",
-      "description": "Indicates if the A2A agent supports providing an extended agent card when authenticated.",
-      "type": "boolean_t"
-    },
-    "a2a_capability_push_notifications": {
-      "caption": "Push Notifications Capability",
-      "description": "Indicates if the agent supports sending push notifications for asynchronous task updates.",
-      "type": "boolean_t"
-    },
-    "a2a_capability_state_transition_history": {
-      "caption": "State Transition History Capability",
-      "description": "Indicates if the agent provides a history of state transitions for a task.",
-      "type": "boolean_t"
-    },
-    "a2a_capability_streaming": {
-      "caption": "Streaming Capability",
-      "description": "Indicates if the agent supports streaming responses.",
-      "type": "boolean_t"
-    },
     "a2a_card_data": {
       "caption": "A2A Agent Card Data",
       "description": "Content of the A2A card in JSON format.",
       "type": "json_t"
+    },
+    "a2a_card_schema_version": {
+      "caption": "Card Schema Version",
+      "description": "Version of the A2A card schema used for the card_data.",
+      "type": "string_t"
     },
     "a2a_data": {
       "caption": "A2A Data",
       "description": "Data supported by the agent for A2A.",
       "type": "a2a_data"
     },
-    "a2a_documentation_url": {
-      "caption": "Documentation URL",
-      "description": "A URL to provide additional documentation about the A2A agent.",
-      "type": "url_t"
-    },
-    "a2a_icon_url": {
-      "caption": "Icon URL",
-      "description": "An optional URL to an icon for the A2A agent.",
-      "type": "url_t"
-    },
-    "a2a_input_modes": {
-      "caption": "Supported Input Modes",
-      "description": "Supported input modes supported by the agent for A2A communication.",
-      "type": "string_t",
-      "is_array": true,
-      "enum": {
-        "application/json": {
-          "caption": "Application/JSON"
-        },
-        "text/plain": {
-          "caption": "Text/Plain"
-        }
-      }
-    },
-    "a2a_interface_tenant": {
-      "caption": "Interface Tenant",
-      "description": "Tenant to be set in the request when calling the A2A agent interface.",
-      "type": "string_t"
-    },
-    "a2a_output_modes": {
-      "caption": "Supported Output Modes",
-      "description": "Supported output modes supported by the agent for A2A communication.",
-      "type": "string_t",
-      "is_array": true,
-      "enum": {
-        "application/json": {
-          "caption": "Application/JSON"
-        },
-        "application/vnd.geo+json": {
-          "caption": "Application/Geo+JSON"
-        },
-        "image/jpeg": {
-          "caption": "Image/JPEG"
-        },
-        "image/png": {
-          "caption": "Image/PNG"
-        },
-        "text/html": {
-          "caption": "Text/HTML"
-        }
-      }
-    },
-    "a2a_protocol_binding": {
-      "caption": "Protocol Binding",
-      "description": "The protocol binding used by an A2A interface (e.g., 'http+json', 'grpc').",
-      "type": "string_t"
-    },
     "a2a_protocol_version": {
       "caption": "Protocol Version",
       "description": "Version of the A2A protocol used by the agent.",
       "type": "string_t"
-    },
-    "a2a_protocol_versions": {
-      "caption": "Protocol Versions",
-      "description": "Versions of the A2A protocol this agent supports. For stable versions (1.x+), list only the latest supported minor version per major version. For legacy experimental versions (0.x), explicitly list each supported version.",
-      "type": "string_t",
-      "is_array": true
-    },
-    "a2a_provider": {
-      "caption": "Provider Information",
-      "description": "Information about the A2A agent provider including organization, URL, and extensions.",
-      "type": "a2a_provider"
-    },
-    "a2a_provider_extensions": {
-      "caption": "Provider Extensions",
-      "description": "List of provider extensions for A2A protocol capability discovery.",
-      "type": "a2a_provider_extension",
-      "is_array": true
-    },
-    "a2a_provider_organization": {
-      "caption": "Provider Organization",
-      "description": "Name of the A2A provider organization.",
-      "type": "string_t"
-    },
-    "a2a_security_requirements": {
-      "caption": "A2A Security Requirements",
-      "description": "Security requirements for contacting an A2A agent. Each requirement maps security scheme names to lists of scopes or requirements.",
-      "type": "a2a_security",
-      "is_array": true
-    },
-    "a2a_security_schemes": {
-      "caption": "Supported Security Schemes",
-      "description": "Supported security schemes for A2A communication.",
-      "type": "string_t",
-      "is_array": true,
-      "enum": {
-        "none": {
-          "caption": "None",
-          "description": "No security scheme is used."
-        },
-        "oauth2": {
-          "caption": "OAuth2",
-          "description": "OAuth2 security scheme for A2A communication."
-        },
-        "api_key": {
-          "caption": "API Key",
-          "description": "API Key security scheme for A2A communication."
-        },
-        "http": {
-          "caption": "HTTP Basic",
-          "description": "HTTP Basic security scheme for A2A communication."
-        },
-        "openid": {
-          "caption": "OpenID Connect",
-          "description": "OpenID Connect security scheme for A2A communication."
-        },
-        "mtls": {
-          "caption": "Mutual TLS",
-          "description": "Mutual TLS security scheme for A2A communication."
-        }
-      }
-    },
-    "a2a_security_schemes_map": {
-      "caption": "Security Schemes Map",
-      "description": "A map of security scheme names to lists of scopes or requirements. Each key is a security scheme name, and the value is a list of strings (scopes or requirements).",
-      "type": "json_t"
-    },
-    "a2a_signatures": {
-      "caption": "A2A Signatures",
-      "description": "JSON Web Signatures computed for the AgentCard for verification purposes. Stored as JSON array of signature objects.",
-      "type": "json_t",
-      "is_array": true
-    },
-    "a2a_supported_interfaces": {
-      "caption": "Supported Interfaces",
-      "description": "List of supported interfaces for A2A communication with URLs and protocol bindings.",
-      "type": "a2a_supported_interface",
-      "is_array": true
-    },
-    "a2a_supports_authenticated_extended_card": {
-      "caption": "Supports Authenticated Extended Card",
-      "description": "Indicates whether the A2A agent supports authenticated extended card retrieval.",
-      "type": "boolean_t"
     },
     "acp_agent": {
       "caption": "Agent Connect Protocol Specs",
