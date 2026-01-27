@@ -1,0 +1,34 @@
+{
+  "caption": "Referred Evaluation",
+  "description": "Referred evaluation for an agent.",
+  "name": "referred_evaluation",
+  "attributes": {
+    "datasets": {
+      "reference": "evaluation_datasets",
+      "caption": "Datasets",
+      "description": "The datasets used for this evaluation.",
+      "requirement": "recommended"
+    },
+    "publisher": {
+      "caption": "Evaluation Publisher",
+      "description": "The entity that published this evaluation.",
+      "requirement": "required"
+    },
+    "created_at": {
+      "caption": "Creation Date",
+      "description": "Creation date of this evaluation.",
+      "requirement": "required"
+    },
+    "evaluation_report": {
+      "caption": "Evaluation Report",
+      "description": "The report of this evaluation.",
+      "requirement": "recommended"
+    }
+  },
+  "constraints": {
+    "at_least_one": [
+      "datasets",
+      "evaluation_report"
+    ]
+  }
+}

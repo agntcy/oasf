@@ -1,0 +1,27 @@
+{
+  "caption": "Dataset",
+  "description": "A dataset used for agent evaluation.",
+  "name": "evaluation_dataset",
+  "attributes": {
+    "url": {
+      "caption": "URL",
+      "description": "The URL pointing to the actual dataset.",
+      "requirement": "required"
+    },
+    "name": {
+      "caption": "Name",
+      "description": "The name of the dataset.",
+      "requirement": "required"
+    },
+    "version": {
+      "caption": "Version",
+      "description": "The version of the dataset.",
+      "requirement": "recommended"
+    },
+    "metadata": {
+      "caption": "Metadata",
+      "description": "The metadata associated to the dataset.",
+      "requirement": "optional"
+    }
+  }
+}
