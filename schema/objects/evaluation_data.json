@@ -1,0 +1,23 @@
+{
+  "caption": "Evaluation Data",
+  "description": "Data supported by the record module for evaluation.",
+  "extends": "module_data",
+  "name": "evaluation_data",
+  "attributes": {
+    "overall_rating": {
+      "caption": "Overall Rating",
+      "description": "Overall rating of the agent across all evaluation.",
+      "requirement": "optional"
+    },
+    "overall_scores": {
+      "caption": "Overall Scores",
+      "description": "Overall scores of the agent across all evaluation.",
+      "requirement": "optional"
+    },
+    "referred_evaluations": {
+      "caption": "Referred Evaluations",
+      "description": "Evaluations associated to the agent.",
+      "requirement": "required"
+    }
+  }
+}

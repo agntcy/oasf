@@ -391,6 +391,22 @@
       "type": "env_var",
       "is_array": true
     },
+    "evaluation_data": {
+      "caption": "Data",
+      "description": "Data supported by the agent for evaluation.",
+      "type": "evaluation_data"
+    },
+    "evaluation_datasets": {
+      "caption": "Datasets",
+      "description": "Datasets array.",
+      "type": "evaluation_dataset",
+      "is_array": true
+    },
+    "evaluation_report": {
+      "caption": "Evaluation report",
+      "description": "The report of an evaluation.",
+      "type": "evaluation_report"
+    },
     "export_format": {
       "caption": "Export Format",
       "description": "Format used by the agent for exporting observability data.",
@@ -505,6 +521,18 @@
       "type": "mcp_server_tool",
       "is_array": true
     },
+    "metadata": {
+      "caption": "Metadata",
+      "description": "Metadata associated with the object. See specific usage.",
+      "type": "key_value_object",
+      "is_array": true
+    },
+    "metrics": {
+      "caption": "Metrics",
+      "description": "Defines the key metrics used to evaluate system performance, cost, and other critical factors.",
+      "type": "metric",
+      "is_array": true
+    },
     "mime_type": {
       "caption": "MIME Type",
       "description": "The MIME type of the content. For example: <code>application/json</code>, <code>text/plain</code>.",
@@ -566,6 +594,16 @@
         }
       ]
     },
+    "overall_rating": {
+      "caption": "Overall Rating",
+      "description": "Overall rating.",
+      "type": "float_t"
+    },
+    "overall_scores": {
+      "caption": "Overall Scores",
+      "description": "Overall scores of the Agent across all evaluation.",
+      "type": "overall_scores"
+    },
     "path": {
       "caption": "Path",
       "description": "The path that pertains to the class or object. See specific usage.",
@@ -586,10 +624,21 @@
       "description": "Name of the provider of a service, tool, object, etc. See specific usage.",
       "type": "string_t"
     },
+    "publisher": {
+      "caption": "Publisher",
+      "description": "Data publisher. See specific usage.",
+      "type": "publisher"
+    },
     "quality_score": {
       "caption": "Quality Score",
       "description": "Overall score.",
       "type": "float_t"
+    },
+    "referred_evaluations": {
+      "caption": "Referred evaluations",
+      "description": "Evaluations associated to the Agent.",
+      "type": "referred_evaluation",
+      "is_array": true
     },
     "required": {
       "caption": "Required",
