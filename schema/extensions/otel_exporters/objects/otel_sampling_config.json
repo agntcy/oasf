@@ -1,0 +1,59 @@
+{
+  "caption": "OpenTelemetry Sampling Configuration",
+  "description": "Configuration for sampling telemetry data to manage volume and costs",
+  "extends": "object",
+  "name": "otel_sampling_config",
+  "attributes": {
+    "sampling_strategy": {
+      "caption": "Sampling Strategy",
+      "description": "Strategy for sampling telemetry data",
+      "requirement": "required",
+      "enum": {
+        "always_on": {
+          "caption": "Always On",
+          "description": "Sample all telemetry data"
+        },
+        "always_off": {
+          "caption": "Always Off",
+          "description": "Don't sample any telemetry data"
+        },
+        "trace_id_ratio": {
+          "caption": "Trace ID Ratio",
+          "description": "Sample based on trace ID ratio"
+        },
+        "parent_based": {
+          "caption": "Parent Based",
+          "description": "Sample based on parent span decision"
+        },
+        "adaptive": {
+          "caption": "Adaptive",
+          "description": "Adaptive sampling based on load"
+        }
+      }
+    },
+    "sampling_rate": {
+      "caption": "Sampling Rate",
+      "description": "Sampling rate between 0.0 and 1.0",
+      "requirement": "conditional",
+      "type": "float_t"
+    },
+    "max_traces_per_second": {
+      "caption": "Max Traces Per Second",
+      "description": "Maximum number of traces to sample per second",
+      "requirement": "optional",
+      "type": "integer_t"
+    },
+    "priority_sampling": {
+      "caption": "Priority Sampling",
+      "description": "Enable priority-based sampling for important operations",
+      "requirement": "optional",
+      "type": "boolean_t"
+    },
+    "excluded_operations": {
+      "caption": "Excluded Operations",
+      "description": "Operations to exclude from sampling",
+      "requirement": "optional",
+      "is_array": true
+    }
+  }
+}
