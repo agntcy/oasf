@@ -4,12 +4,6 @@
   "extends": "module_data",
   "name": "a2a_data",
   "attributes": {
-    "protocol_version": {
-      "reference": "a2a_protocol_version",
-      "caption": "Protocol Version",
-      "description": "Version of the A2A protocol used by the agent.",
-      "requirement": "required"
-    },
     "card_data": {
       "reference": "a2a_card_data",
       "caption": "A2A Card Data",
@@ -22,47 +16,11 @@
         }
       ]
     },
-    "capabilities": {
-      "reference": "a2a_capabilities",
-      "caption": "Capabilities",
-      "description": "List of capabilities supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "input_modes": {
-      "reference": "a2a_input_modes",
-      "caption": "Supported Input Modes",
-      "description": "Supported input modes supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "output_modes": {
-      "reference": "a2a_output_modes",
-      "caption": "Supported Output Modes",
-      "description": "Supported output modes supported by the agent for A2A communication.",
-      "requirement": "optional"
-    },
-    "security_schemes": {
-      "reference": "a2a_security_schemes",
-      "caption": "Supported Security Schemes",
-      "description": "Supported security schemes for A2A communication.",
-      "requirement": "optional"
-    },
-    "supported_interfaces": {
-      "reference": "a2a_supported_interfaces",
-      "caption": "Supported Interfaces",
-      "description": "List of supported interfaces with URLs and protocol bindings for routing and protocol negotiation.",
-      "requirement": "optional"
-    },
-    "provider": {
-      "reference": "a2a_provider",
-      "caption": "Provider Information",
-      "description": "Information about the provider including organization and protocol extensions.",
-      "requirement": "optional"
-    },
-    "supports_authenticated_extended_card": {
-      "reference": "a2a_supports_authenticated_extended_card",
-      "caption": "Supports Authenticated Extended Card",
-      "description": "Indicates whether the agent supports authenticated extended card retrieval.",
-      "requirement": "optional"
+    "card_schema_version": {
+      "reference": "a2a_card_schema_version",
+      "caption": "Card Schema Version",
+      "description": "Version of the A2A card schema used for the card_data.",
+      "requirement": "required"
     }
   }
 }
