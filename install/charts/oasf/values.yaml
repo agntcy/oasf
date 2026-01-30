@@ -53,7 +53,6 @@ volumeMounts: []
 #  - name: schema
 #    mountPath: /app/schema/reload
 
-env: {}
 #  SCHEMA_DIR: /app/schema/reload
 
 podAnnotations: {}
