@@ -609,3 +609,13 @@ button:hover,
   padding: 0;
   list-style: none;
 }
+
+/* Cookie Consent Banner - Ensure white text on dark background */
+#cookie-consent-banner {
+  color: #ffffff !important;
+}
+
+#cookie-consent-banner p,
+#cookie-consent-banner div {
+  color: #ffffff !important;
+}
