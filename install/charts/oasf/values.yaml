@@ -24,10 +24,6 @@ image:
 config:
   server_port: 8080
 
-# Additional environment variables
-env:
-  GA_TRACKING_ID: "G-9B6D1W2GX8"
-
 # service exposes gRPC server api
 service:
   type: ClusterIP
@@ -52,7 +48,10 @@ volumeMounts: []
 #  - name: schema
 #    mountPath: /app/schema/reload
 
-#  SCHEMA_DIR: /app/schema/reload
+# Additional environment variables
+env: {}
+  # GA_TRACKING_ID: "G-XXXXXXXX-X"
+  # SCHEMA_DIR: /app/schema/reload
 
 podAnnotations: {}
 
@@ -82,7 +81,7 @@ ingress:
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
-  service: {}  # Service configuration for the ingress controller
+  service: {} # Service configuration for the ingress controller
     # type: ClusterIP
 
 resources: {}
