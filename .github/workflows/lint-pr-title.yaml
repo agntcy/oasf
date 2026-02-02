@@ -1,0 +1,55 @@
+name: Lint and comment PR Title
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@48f256284bd46cdaab1048c3721360e808335d50 # v6.1.1
+        id: lint_pr_title
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          ignoreLabels: |
+            ignore-semantic-pr
+          subjectPattern: "^(?![A-Z]).+$"
+          types: |
+            build
+            chore
+            ci
+            deps
+            docs
+            feat
+            fix
+            perf
+            refactor
+            revert
+            style
+            test
+            release
+          scopes: |
+            server
+            schema
+            proto
+            helm
+            ci
+          requireScope: true
+
+      - uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405 # v2.9.4
+        if: always() && (steps.lint_pr_title.outputs.error_message != null)
+        with:
+          header: pr-title-lint-error
+          message: "Hey there and thank you for opening this pull request! 👋🏼\n\nWe require pull request titles to follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/),\nand it looks like your proposed title needs to be adjusted.\n\nThe scope (component) must be one of: `server`, `schema`, `proto`, `helm`, or `ci` to indicate which component is safe to backport.\nNote: `schema` changes should not be made retroactively.\n\nDetails:\n\n```\n${{ steps.lint_pr_title.outputs.error_message }}\n```\n\nExamples:\n\n```\n- fix(server): resolve validation issue\n- feat(schema): add new module\n- deps(server): update dependencies\n- feat(proto): add new field to record proto\n- fix(helm): correct resource limits\n- ci: update workflow configuration\n```\n"
+
+      - if: "${{ steps.lint_pr_title.outputs.error_message == null }}"
+        uses: marocchino/sticky-pull-request-comment@773744901bac0e8cbb5a0dc842800d45e9b2b405 # v2.9.4
+        with:
+          header: pr-title-lint-error
+          delete: true
