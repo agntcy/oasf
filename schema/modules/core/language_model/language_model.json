@@ -1,8 +1,15 @@
 {
-  "uid": 2,
+  "uid": 3,
   "caption": "Language Model",
   "description": "Modules for basic Language Model functionality.",
   "extends": "core",
   "name": "language_model",
-  "attributes": {}
+  "attributes": {
+    "data": {
+      "reference": "language_model_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for Language Model.",
+      "requirement": "required"
+    }
+  }
 }
