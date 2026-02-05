@@ -1,5 +1,5 @@
 {
-  "uid": 2,
+  "uid": 1,
   "caption": "Language Model Prompt",
   "description": "Describes common Language Model interaction prompts to use the agent.",
   "extends": "language_model",
