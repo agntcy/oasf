@@ -81,6 +81,20 @@ jobs:
       - name: OASF Server Validation
         run: task test:server
 
+      - name: Generate OASF server coverage report
+        working-directory: server
+        run: mix coveralls.json
+
+      - name: Upload OASF server coverage to Codecov
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+        with:
+          files: server/cover/excoveralls.json
+          flags: server
+          fail_ci_if_error: false
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
   prepare:
     name: Prepare
     needs:
