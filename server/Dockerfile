@@ -13,7 +13,7 @@
 # limitations under the License.
 
 ARG elixir_image=elixir:1.19-alpine
-ARG runtime_image=alpine:3.21.3
+ARG runtime_image=alpine:3.23.3
 
 FROM ${elixir_image} AS builder
 
