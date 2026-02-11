@@ -1,0 +1,47 @@
+{
+  "caption": "Agent Skill Manifest",
+  "description": "Normalized metadata extracted from a SKILL.md file.",
+  "extends": "object",
+  "name": "agentskills_manifest",
+  "attributes": {
+    "name": {
+      "caption": "Name",
+      "description": "The skill name declared in SKILL.md metadata.",
+      "requirement": "required"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "The skill description declared in SKILL.md metadata.",
+      "requirement": "required"
+    },
+    "version": {
+      "caption": "Version",
+      "description": "The skill version declared in SKILL.md metadata.",
+      "requirement": "optional"
+    },
+    "license": {
+      "reference": "agentskills_license",
+      "caption": "License",
+      "description": "License declared for the skill package.",
+      "requirement": "optional"
+    },
+    "compatibility": {
+      "reference": "agentskills_compatibility",
+      "caption": "Compatibility",
+      "description": "Compatibility declarations for agent runtimes and platforms.",
+      "requirement": "optional"
+    },
+    "allowed_tools": {
+      "reference": "agentskills_allowed_tools",
+      "caption": "Allowed Tools",
+      "description": "Tool names explicitly allowed by the skill metadata.",
+      "requirement": "optional"
+    },
+    "frontmatter_metadata": {
+      "reference": "agentskills_frontmatter_metadata",
+      "caption": "Frontmatter Metadata",
+      "description": "Additional SKILL.md frontmatter metadata not modeled as top-level fields.",
+      "requirement": "optional"
+    }
+  }
+}

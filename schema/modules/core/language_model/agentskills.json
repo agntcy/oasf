@@ -1,0 +1,21 @@
+{
+  "uid": 2,
+  "caption": "Language Model Agent Skills",
+  "description": "Describes Agent Skills associated with the language model module.",
+  "extends": "language_model",
+  "name": "agentskills",
+  "attributes": {
+    "data": {
+      "reference": "agentskills_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for Language Model Agent Skills.",
+      "requirement": "required"
+    }
+  },
+  "references": [
+    {
+      "description": "Agent Skills Specification",
+      "url": "https://agentskills.io/specification/"
+    }
+  ]
+}

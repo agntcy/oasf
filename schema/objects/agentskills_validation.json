@@ -1,0 +1,56 @@
+{
+  "caption": "Agent Skill Validation",
+  "description": "Validation status and details for SKILL.md and referenced artifacts.",
+  "extends": "object",
+  "name": "agentskills_validation",
+  "attributes": {
+    "validation_status": {
+      "reference": "agentskills_validation_status",
+      "caption": "Validation Status",
+      "description": "Overall validation status.",
+      "requirement": "required"
+    },
+    "validator": {
+      "reference": "agentskills_validator",
+      "caption": "Validator",
+      "description": "Validator implementation used for the checks (for example, skills-ref).",
+      "requirement": "required"
+    },
+    "validated_at": {
+      "reference": "agentskills_validated_at",
+      "caption": "Validated At",
+      "description": "Timestamp when validation was executed.",
+      "requirement": "required"
+    },
+    "skill_md_valid": {
+      "reference": "agentskills_skill_md_valid",
+      "caption": "SKILL.md Valid",
+      "description": "Indicates whether SKILL.md passed validation against the standard.",
+      "requirement": "required"
+    },
+    "artifacts_valid": {
+      "reference": "agentskills_artifacts_valid",
+      "caption": "Artifacts Valid",
+      "description": "Indicates whether referenced artifacts passed integrity and presence checks.",
+      "requirement": "optional"
+    },
+    "validation_errors": {
+      "reference": "agentskills_validation_errors",
+      "caption": "Validation Errors",
+      "description": "Validation errors emitted by the validator.",
+      "requirement": "optional"
+    },
+    "validation_warnings": {
+      "reference": "agentskills_validation_warnings",
+      "caption": "Validation Warnings",
+      "description": "Validation warnings emitted by the validator.",
+      "requirement": "optional"
+    },
+    "validation_report_url": {
+      "reference": "agentskills_validation_report_url",
+      "caption": "Validation Report URL",
+      "description": "Optional URL for a full validation report artifact.",
+      "requirement": "optional"
+    }
+  }
+}
