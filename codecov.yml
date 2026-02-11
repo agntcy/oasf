@@ -1,0 +1,32 @@
+codecov:
+  require_ci_to_pass: false
+
+comment:
+  layout: "files,diff,flags,tree"
+  hide_project_coverage: false
+  require_changes: false
+  require_base: false
+  require_head: true
+  behavior: default
+
+coverage:
+  precision: 1
+  round: nearest
+  range: 40..90
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+        informational: true
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true
+    changes: false
+
+ignore:
+  - "proto/**"
+  - "server/test/**"
+  - "**/testdata/**"
