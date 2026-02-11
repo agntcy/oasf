@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG elixir_image=elixir:1.18.3-alpine
+ARG elixir_image=elixir:1.19-alpine
+ARG runtime_image=alpine:3.23.3
 
 FROM ${elixir_image} AS builder
 
 # prepare build dir
 WORKDIR /app
 
-RUN apk --update add openssl
+RUN apk add --no-cache openssl
 
 # install hex + rebar
 RUN mix local.hex --force && \
@@ -64,16 +65,19 @@ RUN mix release
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
-FROM ${elixir_image}
+FROM ${runtime_image}
 
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
+RUN apk upgrade --no-cache && apk add --no-cache openssl ncurses-libs libstdc++
+RUN addgroup -S app && adduser -S -G app app
+
 WORKDIR "/app"
 EXPOSE 8080
 EXPOSE 8443
-RUN chown nobody /app
+RUN chown app:app /app
 
 # set runner ENV
 ENV MIX_ENV="prod"
@@ -83,11 +87,11 @@ ENV SCHEMA_EXTENSION="extensions"
 ENV PHX_SERVER=true
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/schema_server ./
+COPY --from=builder --chown=app:app /app/_build/${MIX_ENV}/rel/schema_server ./
 
 # Copy the things that need to be displayed
-COPY --from=schema . /app/schema
+COPY --from=schema --chown=app:app . /app/schema
 
-USER nobody
+USER app
 
 CMD ["/app/bin/schema_server", "start"]

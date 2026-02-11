@@ -24,7 +24,7 @@ jobs:
         include:
           - image: oasf-server
             repo: ghcr.io/agntcy/oasf-server
-            version: v0.8.1
+            version: latest
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
