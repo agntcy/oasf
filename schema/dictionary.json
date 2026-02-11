@@ -112,6 +112,167 @@
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
       "type": "boolean_t"
     },
+    "agentskills_allowed_tools": {
+      "caption": "Allowed Tools",
+      "description": "Tool names explicitly allowed by the skill metadata.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "agentskills_artifact_hash": {
+      "caption": "Artifact Hash",
+      "description": "Integrity hash associated with a skill artifact.",
+      "type": "file_hash_t"
+    },
+    "agentskills_artifact_type": {
+      "caption": "Artifact Type",
+      "description": "Artifact type referenced by a skill package.",
+      "type": "string_t",
+      "enum": {
+        "script": {
+          "caption": "Script"
+        },
+        "reference": {
+          "caption": "Reference"
+        },
+        "asset": {
+          "caption": "Asset"
+        },
+        "template": {
+          "caption": "Template"
+        },
+        "workflow": {
+          "caption": "Workflow"
+        },
+        "other": {
+          "caption": "Other"
+        }
+      }
+    },
+    "agentskills_artifacts": {
+      "caption": "Artifacts",
+      "description": "Referenced artifacts used by the skill.",
+      "type": "agentskills_artifact",
+      "is_array": true
+    },
+    "agentskills_artifacts_valid": {
+      "caption": "Artifacts Valid",
+      "description": "Indicates whether referenced artifacts passed validation checks.",
+      "type": "boolean_t"
+    },
+    "agentskills_capabilities": {
+      "caption": "Capabilities",
+      "description": "Capabilities exposed by the skill.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "agentskills_compatibility": {
+      "caption": "Compatibility",
+      "description": "Compatibility declarations for runtimes and platforms.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "agentskills_data": {
+      "caption": "Agent Skills Data",
+      "description": "Data for Agent Skills integration.",
+      "type": "agentskills_data",
+      "references": [
+        {
+          "description": "Agent Skills Specification",
+          "url": "https://agentskills.io/specification/"
+        }
+      ]
+    },
+    "agentskills_frontmatter_metadata": {
+      "caption": "Frontmatter Metadata",
+      "description": "Additional SKILL.md frontmatter metadata not modeled in dedicated fields.",
+      "type": "json_t"
+    },
+    "agentskills_license": {
+      "caption": "License",
+      "description": "License declared for the skill package.",
+      "type": "string_t"
+    },
+    "agentskills_manifest": {
+      "caption": "Skill Manifest",
+      "description": "Structured SKILL.md metadata extracted from a skill package.",
+      "type": "agentskills_manifest"
+    },
+    "agentskills_skill_file": {
+      "caption": "Skill File",
+      "description": "Path to the skill definition file, typically SKILL.md.",
+      "type": "string_t"
+    },
+    "agentskills_skill_md_valid": {
+      "caption": "SKILL.md Valid",
+      "description": "Indicates whether SKILL.md passed standard validation.",
+      "type": "boolean_t"
+    },
+    "agentskills_source_locator": {
+      "caption": "Source Locator",
+      "description": "Location of the Agent Skills package source.",
+      "type": "locator"
+    },
+    "agentskills_source_revision": {
+      "caption": "Source Revision",
+      "description": "Source revision identifier, such as commit, tag, or digest.",
+      "type": "string_t"
+    },
+    "agentskills_standard_version": {
+      "caption": "Standard Version",
+      "description": "Version of the Agent Skills standard used for validation.",
+      "type": "string_t"
+    },
+    "agentskills_validated_at": {
+      "caption": "Validated At",
+      "description": "Timestamp of the validation run.",
+      "type": "datetime_t"
+    },
+    "agentskills_validation": {
+      "caption": "Validation",
+      "description": "Validation details for SKILL.md and referenced artifacts.",
+      "type": "agentskills_validation"
+    },
+    "agentskills_validation_errors": {
+      "caption": "Validation Errors",
+      "description": "Validation errors emitted by the validator.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "agentskills_validation_report_url": {
+      "caption": "Validation Report URL",
+      "description": "Optional URL to a full validation report artifact.",
+      "type": "url_t"
+    },
+    "agentskills_validation_status": {
+      "caption": "Validation Status",
+      "description": "Overall status for the validation run.",
+      "type": "string_t",
+      "enum": {
+        "passed": {
+          "caption": "Passed"
+        },
+        "failed": {
+          "caption": "Failed"
+        },
+        "warning": {
+          "caption": "Warning"
+        },
+        "unknown": {
+          "caption": "Unknown"
+        }
+      }
+    },
+    "agentskills_validation_warnings": {
+      "caption": "Validation Warnings",
+      "description": "Validation warnings emitted by the validator.",
+      "type": "string_t",
+      "is_array": true
+    },
+    "agentskills_validator": {
+      "caption": "Validator",
+      "description": "Validator implementation used to evaluate SKILL.md and artifacts.",
+      "type": "string_t"
+    },
     "agentspec_communication_protocol": {
       "caption": "Communication Protocol Configuration",
       "description": "Configuration for the protocol used to serve the Agent.",
