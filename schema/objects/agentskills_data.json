@@ -1,0 +1,62 @@
+{
+  "caption": "Agent Skills Data",
+  "description": "Data for the Language Model Agent Skills module, including parsed SKILL.md metadata and validation outcomes.",
+  "extends": "module_data",
+  "name": "agentskills_data",
+  "attributes": {
+    "skill_manifest": {
+      "reference": "agentskills_manifest",
+      "caption": "Skill Manifest",
+      "description": "Structured SKILL.md metadata extracted from the skill package.",
+      "requirement": "required"
+    },
+    "source_locator": {
+      "reference": "agentskills_source_locator",
+      "caption": "Source Locator",
+      "description": "Location of the Agent Skills package (repository, registry, or local artifact).",
+      "requirement": "required"
+    },
+    "source_revision": {
+      "reference": "agentskills_source_revision",
+      "caption": "Source Revision",
+      "description": "Revision identifier (commit, tag, or digest) used to resolve the skill source.",
+      "requirement": "optional"
+    },
+    "skill_file": {
+      "reference": "agentskills_skill_file",
+      "caption": "Skill File",
+      "description": "Path to the skill definition file, typically SKILL.md.",
+      "requirement": "required"
+    },
+    "capabilities": {
+      "reference": "agentskills_capabilities",
+      "caption": "Capabilities",
+      "description": "Capabilities exposed by the skill.",
+      "requirement": "optional"
+    },
+    "artifacts": {
+      "reference": "agentskills_artifacts",
+      "caption": "Artifacts",
+      "description": "Referenced artifacts used by the skill (scripts, references, assets, and templates).",
+      "requirement": "optional"
+    },
+    "validation": {
+      "reference": "agentskills_validation",
+      "caption": "Validation",
+      "description": "Validation results for SKILL.md and referenced artifacts against the Agent Skills standard.",
+      "requirement": "required"
+    },
+    "standard_version": {
+      "reference": "agentskills_standard_version",
+      "caption": "Standard Version",
+      "description": "Version of the Agent Skills standard used for validation.",
+      "requirement": "optional"
+    }
+  },
+  "references": [
+    {
+      "description": "Agent Skills Specification",
+      "url": "https://agentskills.io/specification/"
+    }
+  ]
+}

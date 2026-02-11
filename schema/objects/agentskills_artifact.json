@@ -1,0 +1,40 @@
+{
+  "caption": "Agent Skill Artifact",
+  "description": "A file or resource referenced by a skill package.",
+  "extends": "object",
+  "name": "agentskills_artifact",
+  "attributes": {
+    "path": {
+      "caption": "Path",
+      "description": "Relative path of the artifact inside the skill package.",
+      "requirement": "required"
+    },
+    "type": {
+      "reference": "agentskills_artifact_type",
+      "caption": "Artifact Type",
+      "description": "Declared artifact type.",
+      "requirement": "required"
+    },
+    "required": {
+      "caption": "Required",
+      "description": "Indicates whether this artifact is required for skill execution.",
+      "requirement": "optional"
+    },
+    "artifact_hash": {
+      "reference": "agentskills_artifact_hash",
+      "caption": "Artifact Hash",
+      "description": "Optional digest for artifact integrity verification.",
+      "requirement": "optional"
+    },
+    "locator": {
+      "caption": "Locator",
+      "description": "External locator when the artifact is hosted outside of the skill package.",
+      "requirement": "optional"
+    },
+    "description": {
+      "caption": "Description",
+      "description": "Description of the artifact purpose.",
+      "requirement": "optional"
+    }
+  }
+}
