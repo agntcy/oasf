@@ -200,7 +200,7 @@
     "agentskills_skill_file": {
       "caption": "Skill File",
       "description": "Path to the skill definition file, typically SKILL.md.",
-      "type": "path_t"
+      "type": "string_t"
     },
     "agentskills_skill_md_valid": {
       "caption": "SKILL.md Valid",
