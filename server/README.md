@@ -108,7 +108,6 @@ The schema server uses a number of environment variables.
 | Variable Name    | Description                                                                               |
 | ---------------- | ----------------------------------------------------------------------------------------- |
 | HTTP_PORT        | The server HTTP port number, default: `8080`                                              |
-| HTTPS_PORT       | The server HTTPS port number, default: `8443`                                             |
 | SCHEMA_DIR       | The directory containing the schema, default: `../schema`                                 |
 | SCHEMA_EXTENSION | The directory containing the schema extensions, relative to SCHEMA_DIR or absolute path   |
 | RELEASE_NODE     | The Erlang node name. Set it if you want to run more than one server on the same computer |
