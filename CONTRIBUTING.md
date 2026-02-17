@@ -237,14 +237,16 @@ true`
    4. `references` → You can add a list of web links as references to the
       object.
       _e.g._
-      ```json
-      "references": [
-        {
-          "description": "A2A Card Data Schema",
-          "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
-        }
-       ]
-      ```
+
+   ```json
+   "references": [
+     {
+       "description": "A2A Card Data Schema",
+       "url": "https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto"
+     }
+   ]
+   ```
+
 9. `constraints` → For each class you can add constraints on the attribute
    requirements.
    Valid constraint types are `at_least_one`, `just_one`.
@@ -263,7 +265,7 @@ true`
     "references": [
       {
         "description": "A2A Card Data Schema",
-        "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+        "url": "https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto"
       }
      ]
     ```
