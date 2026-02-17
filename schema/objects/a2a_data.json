@@ -12,7 +12,7 @@
       "references": [
         {
           "description": "A2A AgentCard Proto Message",
-          "url": "https://github.com/google-a2a/A2A/blob/main/specification/grpc/a2a.proto"
+          "url": "https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto"
         }
       ]
     },
