@@ -12,12 +12,12 @@ fullnameOverride: ""
 image:
   repository: ghcr.io/agntcy/oasf-server
   versions: []
-    # - server: v0.7.4
+    # - server: v0.7.5
     #   schema: 0.7.0
-    # - server: v0.8.3
+    # - server: v0.8.4
     #   schema: 0.8.0
-    # - server: v1.0.1
-    #   schema: 1.0.0-rc.1
+    # - server: v1.0.0
+    #   schema: 1.0.0
   pullPolicy: IfNotPresent
   pullSecrets: []
 
