@@ -20,10 +20,10 @@ image:
       schema: 0.7.0
     - server: v0.8.3
       schema: 0.8.0
-    - server: v1.0.1
-      schema: 1.0.0-rc.1
+    - server: v1.0.0
+      schema: 1.0.0
     - server: latest
-      schema: 0.9.0-dev
+      schema: 1.1.0-dev
       default: true
   pullPolicy: IfNotPresent
 
