@@ -245,7 +245,7 @@ true`
    "references": [
      {
        "description": "A2A Card Data Schema",
-       "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+       "url": "https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto"
      }
    ]
    ```
@@ -270,7 +270,7 @@ true`
     "references": [
       {
         "description": "A2A Card Data Schema",
-        "url": "https://github.com/google-a2a/A2A/blob/main/docs/specification.md#55-agentcard-object-structure"
+        "url": "https://github.com/a2aproject/A2A/blob/v0.3.0/specification/grpc/a2a.proto"
       }
     ]
     ```
