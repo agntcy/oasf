@@ -1,6 +1,7 @@
 {
+  "uid": 8,
   "caption": "Security & Privacy",
-  "category": "security_privacy",
+  "category": true,
   "extends": "base_skill",
   "name": "security_privacy",
   "attributes": {}

@@ -57,15 +57,12 @@ defmodule Schema.Cache do
   @type category_t() :: map()
   @type dictionary_t() :: map()
 
-  @skill_categories_file "skill_categories.json"
   @skills_dir "skills"
   @skill_family "skill"
 
-  @domain_categories_file "domain_categories.json"
   @domains_dir "domains"
   @domain_family "domain"
 
-  @module_categories_file "module_categories.json"
   @modules_dir "modules"
   @module_family "module"
 
@@ -85,11 +82,10 @@ defmodule Schema.Cache do
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
     {skills, all_skills, skill_categories} =
-      read_classes(@skill_categories_file, @skills_dir, @skill_family, version[:version])
+      read_classes(@skills_dir, @skill_family, version[:version])
 
     {domains, all_domains, domain_categories} =
       read_classes(
-        @domain_categories_file,
         @domains_dir,
         @domain_family,
         version[:version]
@@ -97,7 +93,6 @@ defmodule Schema.Cache do
 
     {modules, all_modules, module_categories} =
       read_classes(
-        @module_categories_file,
         @modules_dir,
         @module_family,
         version[:version]
@@ -549,10 +544,7 @@ defmodule Schema.Cache do
     end
   end
 
-  defp read_classes(categories_file, classes_dir, class_family, version) do
-    categories = JsonReader.read_categories(categories_file) |> update_categories()
-    categories_attributes = categories[:attributes]
-
+  defp read_classes(classes_dir, class_family, version) do
     classes = JsonReader.read_classes(classes_dir)
 
     classes =
@@ -579,13 +571,16 @@ defmodule Schema.Cache do
       )
       |> Enum.into(%{})
 
+    # Build categories from classes that have the "category" field
+    categories = build_categories_from_classes(classes)
+
     classes =
       classes
       # remove intermediate hidden classes
       |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
       |> add_class_family(class_family)
       |> Enum.into(%{}, fn class_tuple ->
-        enrich_class(class_tuple, categories_attributes, classes, version, all_classes)
+        enrich_class(class_tuple, classes, version, all_classes)
       end)
 
     {classes, all_classes, categories}
@@ -640,7 +635,7 @@ defmodule Schema.Cache do
   @spec hidden_class?(atom(), map()) :: boolean()
   defp hidden_class?(class_key, class) do
     ignored_keys = [:base_module, :base_skill, :base_domain]
-    class_key not in ignored_keys and !Map.has_key?(class, :uid)
+    class_key not in ignored_keys and Map.get(class, :category) == true
   end
 
   defp deprecated_class?(class) do
@@ -648,10 +643,10 @@ defmodule Schema.Cache do
   end
 
   # Add class_uid, class_name, and schema_version to the class.
-  defp enrich_class({class_key, class}, categories, classes, version, all_classes) do
+  defp enrich_class({class_key, class}, classes, version, all_classes) do
     class =
       class
-      |> update_class_uid(categories, classes)
+      |> update_class_uid(classes)
       |> add_class_uid(class_key)
       |> add_class_name(class_key, all_classes)
       |> add_schema_version(version)
@@ -667,42 +662,63 @@ defmodule Schema.Cache do
     {object_key, object}
   end
 
-  defp update_categories(categories) do
-    Map.update!(categories, :attributes, fn attributes ->
-      Enum.into(attributes, Map.new(), fn {name, cat} ->
-        update_category_uid(name, cat, cat[:extension_id])
+  defp build_categories_from_classes(classes) do
+    # Build categories map from classes that have category: true
+    # Exclude base classes (base_module, base_skill, base_domain)
+    base_classes = [:base_module, :base_skill, :base_domain]
+
+    categories =
+      classes
+      |> Enum.filter(fn {key, class} ->
+        # Exclude base classes
+        # Only include classes with category: true
+        key not in base_classes and
+          Map.get(class, :category) == true
       end)
-    end)
+      |> Enum.map(fn {_key, class} ->
+        # Use the class name as the category key
+        category_key = String.to_atom(class[:name])
+
+        # Use the class itself as the category
+        category_data = %{
+          uid: class[:uid] || 0,
+          caption: class[:caption],
+          description: class[:description]
+        }
+
+        {category_key, category_data}
+      end)
+      |> Enum.into(%{})
+
+    %{attributes: categories}
   end
 
-  defp update_category_uid(name, category, nil) do
-    {name, category}
-  end
+  def update_class_uid(class, classes) do
+    # If this class has category: true, it's a category class itself
+    is_category = Map.get(class, :category) == true
 
-  defp update_category_uid(name, category, extension) do
-    {name, Map.update!(category, :uid, fn uid -> Types.category_uid(extension, uid) end)}
-  end
-
-  def update_class_uid(class, categories, classes) do
-    {key, category} = Utils.find_entity(categories, class, class[:category])
+    # Find the category class by traversing up the inheritance chain
+    category = find_category_class(class, classes)
 
     class =
       if category != nil do
+        category_key = String.to_atom(category[:name])
+
         class
-        |> Map.put(:category, Atom.to_string(key))
+        |> Map.put(:category, Atom.to_string(category_key))
         |> Map.put(:category_name, category[:caption])
       else
         class
       end
 
-    cat_uid = category[:uid] || 0
+    cat_uid = if category != nil, do: category[:uid] || 0, else: 0
     class_uid = class[:uid] || 0
 
     try do
       case class[:extension_id] do
         nil ->
-          if class[:name] == class[:category] do
-            # Use the category UID directly if extends is the same as category
+          if is_category do
+            # Use the category UID directly if this is a category class
             Map.put(class, :uid, Types.class_uid(cat_uid, class_uid))
           else
             # Calculate UID considering the hierarchy and hidden classes
@@ -719,12 +735,36 @@ defmodule Schema.Cache do
     end
   end
 
+  defp find_category_class(class, classes) do
+    # If this class itself is a category, return it
+    if Map.get(class, :category) == true do
+      class
+    else
+      # Otherwise, traverse up the inheritance chain to find the category
+      case class[:extends] do
+        nil ->
+          nil
+
+        extends ->
+          parent_key = String.to_atom(extends)
+
+          case classes[parent_key] do
+            nil ->
+              nil
+
+            parent ->
+              find_category_class(parent, classes)
+          end
+      end
+    end
+  end
+
   defp calculate_uid(classes, class_uid, extends, cat_uid) do
     case Enum.find(classes, fn {k, _v} -> Atom.to_string(k) == extends end) do
       {_, parent} ->
         if Map.has_key?(parent, :uid) do
-          if parent[:category] == parent[:name] do
-            # If parent extends category, use category UID
+          if Map.get(parent, :category) == true do
+            # If parent is a category class, use category UID
             Types.class_uid(cat_uid, class_uid)
           else
             # Recursively calculate the UID
@@ -956,8 +996,18 @@ defmodule Schema.Cache do
               |> Enum.filter(fn {_name, attr} -> attr != nil end)
               |> Map.new()
 
-            Map.merge(base, item, &merge_profiles/3)
-            |> Map.put(:attributes, attributes)
+            # Merge base into item, but don't inherit the category field
+            # Category should only be present if explicitly defined in the class itself
+            merged =
+              Map.merge(base, item, &merge_profiles/3)
+              |> Map.put(:attributes, attributes)
+
+            # Remove category if it wasn't originally in the item (don't inherit it)
+            if Map.has_key?(item, :category) do
+              merged
+            else
+              Map.delete(merged, :category)
+            end
         end
     end
   end

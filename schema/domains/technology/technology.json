@@ -1,8 +1,9 @@
 {
+  "uid": 1,
   "caption": "Technology",
   "description": "Development, management, and use of systems, devices, and software to solve problems and enhance human capabilities.",
   "extends": "base_domain",
   "name": "technology",
-  "category": "technology",
+  "category": true,
   "attributes": {}
 }

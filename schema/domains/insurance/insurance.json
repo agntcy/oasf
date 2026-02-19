@@ -1,8 +1,9 @@
 {
+  "uid": 23,
   "caption": "Insurance",
   "description": "Domain covering insurance products, risk assessment, claims processing, underwriting, and insurance technology",
   "extends": "base_domain",
   "name": "insurance",
-  "category": "insurance",
+  "category": true,
   "attributes": {}
 }

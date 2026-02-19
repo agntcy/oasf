@@ -1,8 +1,9 @@
 {
+  "uid": 18,
   "caption": "Government and Public Sector",
   "description": "Domain covering public administration, civic services, e-government, policy making, and public infrastructure",
   "extends": "base_domain",
   "name": "government_and_public_sector",
-  "category": "government_and_public_sector",
+  "category": true,
   "attributes": {}
 }

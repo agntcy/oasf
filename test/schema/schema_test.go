@@ -26,7 +26,6 @@ type SchemaCache struct {
 
 type entityTypeData struct {
 	names      map[string][]string
-	categories []string
 	extends    []struct {
 		extValue string
 		filePath string
@@ -139,13 +138,12 @@ var _ = Describe("Metaschema validation", func() {
 
 var _ = Describe("JSON content checks", func() {
 	targets := []struct {
-		Dir          string
-		CategoryFile string
+		Dir string
 	}{
-		{Dir: filepath.Join(schemaDir, "skills"), CategoryFile: filepath.Join(schemaDir, "skill_categories.json")},
-		{Dir: filepath.Join(schemaDir, "domains"), CategoryFile: filepath.Join(schemaDir, "domain_categories.json")},
-		{Dir: filepath.Join(schemaDir, "modules"), CategoryFile: filepath.Join(schemaDir, "module_categories.json")},
-		{Dir: filepath.Join(schemaDir, "objects"), CategoryFile: ""},
+		{Dir: filepath.Join(schemaDir, "skills")},
+		{Dir: filepath.Join(schemaDir, "domains")},
+		{Dir: filepath.Join(schemaDir, "modules")},
+		{Dir: filepath.Join(schemaDir, "objects")},
 	}
 	var typeData map[string]*entityTypeData
 
@@ -155,23 +153,10 @@ var _ = Describe("JSON content checks", func() {
 			dir := folder.Dir
 			data := &entityTypeData{
 				names:      make(map[string][]string),
-				categories: []string{"other"},
 				extends: []struct {
 					extValue string
 					filePath string
 				}{},
-			}
-			if folder.CategoryFile != "" {
-				raw, err := os.ReadFile(folder.CategoryFile)
-				Expect(err).NotTo(HaveOccurred(), "Failed to read category file %s", folder.CategoryFile)
-				var cat map[string]interface{}
-				err = json.Unmarshal(raw, &cat)
-				Expect(err).NotTo(HaveOccurred(), "Invalid JSON in category file %s", folder.CategoryFile)
-				if attrs, ok := cat["attributes"].(map[string]interface{}); ok {
-					for k := range attrs {
-						data.categories = append(data.categories, k)
-					}
-				}
 			}
 			for _, file := range cache.Files {
 				if !strings.HasPrefix(file.Path, dir+string(os.PathSeparator)) || filepath.Ext(file.Path) != ".json" {
@@ -236,30 +221,24 @@ var _ = Describe("JSON content checks", func() {
 		}
 	})
 
-	It("should have 'category' values within allowed categories if a category file is present", func() {
+	It("should have 'category' field as boolean true if present (categories are now marked with category: true)", func() {
 		var errors []string
-		for folder, data := range typeData {
-			if len(data.categories) == 0 {
-				continue
-			}
-			allowed := make(map[string]struct{}, len(data.categories))
-			for _, cat := range data.categories {
-				allowed[cat] = struct{}{}
-			}
+		for _, folder := range targets {
 			for _, file := range cache.Files {
-				if !strings.HasPrefix(file.Path, folder+string(os.PathSeparator)) || filepath.Ext(file.Path) != ".json" {
+				if !strings.HasPrefix(file.Path, folder.Dir+string(os.PathSeparator)) || filepath.Ext(file.Path) != ".json" {
 					continue
 				}
 				var js map[string]interface{}
 				err := json.Unmarshal(file.Data, &js)
 				Expect(err).NotTo(HaveOccurred(), "Invalid JSON in file %s", file.Path)
 				if catVal, ok := js["category"]; ok {
-					catStr, ok := catVal.(string)
-					if !ok {
-						errors = append(errors, fmt.Sprintf("'category' field in %s is not a string", file.Path))
-					}
-					if _, found := allowed[catStr]; !found {
-						errors = append(errors, fmt.Sprintf("'category' value '%s' in file %s is not allowed by %s", catStr, file.Path, folder))
+					// Category should be boolean true, not a string
+					if catBool, ok := catVal.(bool); ok {
+						if catBool != true {
+							errors = append(errors, fmt.Sprintf("'category' field in %s should be true (got %v)", file.Path, catBool))
+						}
+					} else {
+						errors = append(errors, fmt.Sprintf("'category' field in %s should be boolean true, got %T", file.Path, catVal))
 					}
 				}
 			}

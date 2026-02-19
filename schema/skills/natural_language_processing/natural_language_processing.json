@@ -1,6 +1,7 @@
 {
+  "uid": 1,
   "caption": "Natural Language Processing",
-  "category": "natural_language_processing",
+  "category": true,
   "extends": "base_skill",
   "name": "natural_language_processing",
   "attributes": {}

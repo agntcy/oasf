@@ -30,8 +30,8 @@
           }
         },
         "category": {
-          "type": "string",
-          "description": "The category that the class belongs to."
+          "type": "boolean",
+          "description": "If true, indicates this class is a category (organizational structure) and should not be used as an actual value."
         },
         "uid": {
           "type": "integer",

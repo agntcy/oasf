@@ -1,6 +1,7 @@
 {
+  "uid": 14,
   "caption": "Tool Interaction",
-  "category": "tool_interaction",
+  "category": true,
   "extends": "base_skill",
   "name": "tool_interaction",
   "attributes": {}

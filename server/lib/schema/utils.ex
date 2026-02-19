@@ -158,7 +158,12 @@ defmodule Schema.Utils do
 
   defp link_classes(dictionary, family, classes) do
     Enum.reduce(classes, dictionary, fn class, acc ->
-      add_class_links(acc, class, family)
+      # Skip category classes (category: true) - they shouldn't appear in _links
+      if Map.get(elem(class, 1), :category) != true do
+        add_class_links(acc, class, family)
+      else
+        acc
+      end
     end)
   end
 

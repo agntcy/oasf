@@ -1,6 +1,7 @@
 {
+  "uid": 10,
   "caption": "Agent Orchestration",
-  "category": "agent_orchestration",
+  "category": true,
   "extends": "base_skill",
   "name": "agent_orchestration",
   "attributes": {}

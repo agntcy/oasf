@@ -1,6 +1,7 @@
 {
+  "uid": 9,
   "caption": "Data Engineering",
-  "category": "data_engineering",
+  "category": true,
   "extends": "base_skill",
   "name": "data_engineering",
   "attributes": {}
