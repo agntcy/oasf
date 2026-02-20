@@ -56,6 +56,99 @@ SPDX-License-Identifier: Apache-2.0
   </table>
 </div>
 
+<%= if @data[:subcategories] && map_size(@data[:subcategories]) > 0 do %>
+  <%= for {subcat_id, subcategory} <- @data[:subcategories] do %>
+    <% subcat_name = Atom.to_string(subcat_id) %>
+    <% subcat_path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> subcat_name) %>
+    <div class="mt-5">
+      <h4>
+        <a href="<%= subcat_path %>"><%= subcategory[:caption] %></a>
+        <span class="text-secondary">
+          [<%= subcategory[:uid] %>] <%= @data[:class_type] %> subcategory
+        </span>
+      </h4>
+      <%= if subcategory[:description] do %>
+        <div class="text-secondary mb-3"><%= raw description(subcategory) %></div>
+      <% end %>
+      <table class="table table-bordered sortable">
+        <thead>
+          <tr class="thead-color">
+            <th class="col-caption">Caption</th>
+            <th class="col-name">Name</th>
+            <th class="col-id">ID</th>
+            <th class="col-description">Description</th>
+          </tr>
+        </thead>
+        <tbody class="searchable">
+          <%= for {id, class} <- (subcategory[:classes] || []) do %>
+            <% name = Atom.to_string(id) %>
+            <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
+            <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>
+              <td class="name"><%= raw format_caption(name, class) %></td>
+              <td class="extensions">
+                <a href="<%= path %>"><%= name %></a>
+              </td>
+              <% uid = class[:uid] %>
+              <%= if uid != nil do %>
+                <td><%= uid %></td>
+              <% else %>
+                <td></td>
+              <% end %>
+              <td><%= raw description(class) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= if subcategory[:subcategories] && map_size(subcategory[:subcategories]) > 0 do %>
+        <%= for {nested_subcat_id, nested_subcategory} <- subcategory[:subcategories] do %>
+          <% nested_subcat_name = Atom.to_string(nested_subcat_id) %>
+          <% nested_subcat_path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> nested_subcat_name) %>
+          <div class="mt-4 ml-4">
+            <h5>
+              <a href="<%= nested_subcat_path %>"><%= nested_subcategory[:caption] %></a>
+              <span class="text-secondary">
+                [<%= nested_subcategory[:uid] %>] <%= @data[:class_type] %> subcategory
+              </span>
+            </h5>
+            <%= if nested_subcategory[:description] do %>
+              <div class="text-secondary mb-3"><%= raw description(nested_subcategory) %></div>
+            <% end %>
+            <table class="table table-bordered sortable">
+              <thead>
+                <tr class="thead-color">
+                  <th class="col-caption">Caption</th>
+                  <th class="col-name">Name</th>
+                  <th class="col-id">ID</th>
+                  <th class="col-description">Description</th>
+                </tr>
+              </thead>
+              <tbody class="searchable">
+                <%= for {id, class} <- (nested_subcategory[:classes] || []) do %>
+                  <% name = Atom.to_string(id) %>
+                  <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
+                  <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>
+                    <td class="name"><%= raw format_caption(name, class) %></td>
+                    <td class="extensions">
+                      <a href="<%= path %>"><%= name %></a>
+                    </td>
+                    <% uid = class[:uid] %>
+                    <%= if uid != nil do %>
+                      <td><%= uid %></td>
+                    <% else %>
+                      <td></td>
+                    <% end %>
+                    <td><%= raw description(class) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
 <script>
   init_class_profiles();
 </script>

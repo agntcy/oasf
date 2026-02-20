@@ -25,14 +25,44 @@ SPDX-License-Identifier: Apache-2.0
   <div class="mt-3 multi-col">
     <%= for {category_key, category} <- @data[:attributes] do %>
     <% category_key_str = Atom.to_string(category_key) %>
-    <% category_path = Routes.static_path(@conn, "/"<> @data[:categories_path] <> "/" <> category_key_str) %>
+    <% category_path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> category_key_str) %>
+    <% subcategories = category[:subcategories] || [] %>
     <section class="category">
       <header><a href="<%= category_path %>"><%= raw format_caption(category_key_str, category) %></a></header>
-      <%= for {class_key, class} <- category[:classes] do %>
+      <%= for {class_key, class} <- category[:classes] || [] do %>
       <% class_key_str = Atom.to_string(class_key) %>
       <% class_path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> class_key_str) %>
       <div class="<%= show_deprecated_css_classes(class, "oasf-class") %> <%= indent_class(class) %>" <%= raw format_profiles(class[:profiles])%>>
         <%= raw format_linked_class_caption(class_path, class_key_str, class) %>
+      </div>
+      <% end %>
+      <%= for {subcategory_key, subcategory} <- subcategories do %>
+      <% subcategory_key_str = Atom.to_string(subcategory_key) %>
+      <% subcategory_path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> subcategory_key_str) %>
+      <% nested_subcategories = subcategory[:subcategories] || [] %>
+      <div class="oasf-class indent-level-1">
+        <header class="subcategory-header"><a href="<%= subcategory_path %>"><%= raw format_caption(subcategory_key_str, subcategory) %></a></header>
+        <%= for {class_key, class} <- subcategory[:classes] || [] do %>
+        <% class_key_str = Atom.to_string(class_key) %>
+        <% class_path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> class_key_str) %>
+        <div class="<%= show_deprecated_css_classes(class, "oasf-class") %> <%= indent_class(class) %>" <%= raw format_profiles(class[:profiles])%>>
+          <%= raw format_linked_class_caption(class_path, class_key_str, class) %>
+        </div>
+        <% end %>
+        <%= for {nested_subcategory_key, nested_subcategory} <- nested_subcategories do %>
+        <% nested_subcategory_key_str = Atom.to_string(nested_subcategory_key) %>
+        <% nested_subcategory_path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> nested_subcategory_key_str) %>
+        <div class="oasf-class indent-level-2">
+          <header class="subcategory-header"><a href="<%= nested_subcategory_path %>"><%= raw format_caption(nested_subcategory_key_str, nested_subcategory) %></a></header>
+          <%= for {class_key, class} <- nested_subcategory[:classes] || [] do %>
+          <% class_key_str = Atom.to_string(class_key) %>
+          <% class_path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> class_key_str) %>
+          <div class="<%= show_deprecated_css_classes(class, "oasf-class") %> <%= indent_class(class) %>" <%= raw format_profiles(class[:profiles])%>>
+            <%= raw format_linked_class_caption(class_path, class_key_str, class) %>
+          </div>
+          <% end %>
+        </div>
+        <% end %>
       </div>
       <% end %>
     </section>

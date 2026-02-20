@@ -160,9 +160,12 @@ defmodule SchemaWeb.PageController do
   end
 
   def skill_categories(conn, params) do
+    extensions = parse_extensions(params)
+
     data =
       Map.put_new(params, "extensions", "")
       |> SchemaController.skill_categories()
+      |> populate_category_classes(extensions, Schema.skills())
       |> sort_attributes(:uid)
       |> sort_classes()
       |> Map.put(:categories_path, "skill_categories")
@@ -201,9 +204,12 @@ defmodule SchemaWeb.PageController do
   end
 
   def domain_categories(conn, params) do
+    extensions = parse_extensions(params)
+
     data =
       Map.put_new(params, "extensions", "")
       |> SchemaController.domain_categories()
+      |> populate_category_classes(extensions, Schema.domains())
       |> sort_attributes(:uid)
       |> sort_classes()
       |> Map.put(:categories_path, "domain_categories")
@@ -242,9 +248,12 @@ defmodule SchemaWeb.PageController do
   end
 
   def module_categories(conn, params) do
+    extensions = parse_extensions(params)
+
     data =
       Map.put_new(params, "extensions", "")
       |> SchemaController.module_categories()
+      |> populate_category_classes(extensions, Schema.modules())
       |> sort_attributes(:uid)
       |> sort_classes()
       |> Map.put(:categories_path, "module_categories")
@@ -469,12 +478,130 @@ defmodule SchemaWeb.PageController do
     end
   end
 
+  defp populate_category_classes(categories, extensions, all_classes) do
+    Map.update!(categories, :attributes, fn attributes ->
+      Enum.into(attributes, %{}, fn {category_key, category} ->
+        category_uid = Atom.to_string(category_key)
+
+        # Get classes for this category
+        category_classes = get_classes_for_category(category_uid, extensions, all_classes)
+
+        # Recursively populate subcategories
+        category_with_classes =
+          category
+          |> Map.put(:classes, category_classes)
+          |> populate_subcategory_classes(extensions, all_classes)
+
+        {category_key, category_with_classes}
+      end)
+    end)
+  end
+
+  defp populate_subcategory_classes(category, extensions, all_classes) do
+    subcategories = category[:subcategories] || []
+
+    if length(subcategories) > 0 do
+      populated_subcategories =
+        Enum.map(subcategories, fn {subcategory_key, subcategory} ->
+          subcategory_uid = Atom.to_string(subcategory_key)
+          subcategory_classes = get_classes_for_category(subcategory_uid, extensions, all_classes)
+
+          populated_subcategory =
+            subcategory
+            |> Map.put(:classes, subcategory_classes)
+            |> populate_subcategory_classes(extensions, all_classes)
+
+          {subcategory_key, populated_subcategory}
+        end)
+
+      Map.put(category, :subcategories, populated_subcategories)
+    else
+      category
+    end
+  end
+
+  defp get_classes_for_category(category_uid, extensions, all_classes) do
+    category_key = String.to_atom(category_uid)
+
+    all_classes
+    |> Enum.filter(fn {_name, class} ->
+      cat = Map.get(class, :category)
+
+      if is_binary(cat) do
+        # Check if class belongs to this category (immediate parent category)
+        matches_category = cat == category_uid
+
+        # Also check extension-aware matching
+        matches_with_extension =
+          case class[:extension] do
+            nil ->
+              false
+
+            ext ->
+              MapSet.member?(extensions, ext) and
+                Schema.Utils.to_uid(ext, cat) == category_key
+          end
+
+        matches_category or matches_with_extension
+      else
+        false
+      end
+    end)
+    |> Enum.map(fn {name, class} ->
+      class
+      |> Map.delete(:category)
+      |> Map.delete(:category_name)
+      |> then(fn c -> {name, c} end)
+    end)
+  end
+
+  defp parse_extensions(params) do
+    case params["extensions"] do
+      nil ->
+        MapSet.new()
+
+      "" ->
+        MapSet.new()
+
+      extensions ->
+        extensions
+        |> String.split(",")
+        |> Enum.map(fn s -> String.trim(s) end)
+        |> MapSet.new()
+    end
+  end
+
   defp sort_classes(categories) do
     Map.update!(categories, :attributes, fn list ->
       Enum.map(list, fn {name, category} ->
-        {name, Map.update!(category, :classes, &sort_by_float_uid(&1))}
+        category =
+          category
+          |> Map.update(:classes, [], &sort_by_float_uid(&1))
+          |> sort_subcategories()
+
+        {name, category}
       end)
     end)
+  end
+
+  defp sort_subcategories(category) do
+    subcategories = category[:subcategories] || []
+
+    if length(subcategories) > 0 do
+      sorted_subcategories =
+        Enum.map(subcategories, fn {key, subcategory} ->
+          sorted_subcategory =
+            subcategory
+            |> Map.update(:classes, [], &sort_by_float_uid(&1))
+            |> sort_subcategories()
+
+          {key, sorted_subcategory}
+        end)
+
+      Map.put(category, :subcategories, sorted_subcategories)
+    else
+      category
+    end
   end
 
   defp sort_by_float_uid(classes) do
