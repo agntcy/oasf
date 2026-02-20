@@ -206,24 +206,24 @@ defmodule Schema.Cache do
   @spec skill_categories(__MODULE__.t()) :: map()
   def skill_categories(%__MODULE__{skill_categories: skill_categories}), do: skill_categories
 
-  @spec main_skill(__MODULE__.t(), any) :: nil | category_t()
-  def main_skill(%__MODULE__{skill_categories: skill_categories}, id) do
+  @spec skill_category(__MODULE__.t(), any) :: nil | category_t()
+  def skill_category(%__MODULE__{skill_categories: skill_categories}, id) do
     Map.get(skill_categories[:attributes], id)
   end
 
   @spec domain_categories(__MODULE__.t()) :: map()
   def domain_categories(%__MODULE__{domain_categories: domain_categories}), do: domain_categories
 
-  @spec main_domain(__MODULE__.t(), any) :: nil | category_t()
-  def main_domain(%__MODULE__{domain_categories: domain_categories}, id) do
+  @spec domain_category(__MODULE__.t(), any) :: nil | category_t()
+  def domain_category(%__MODULE__{domain_categories: domain_categories}, id) do
     Map.get(domain_categories[:attributes], id)
   end
 
   @spec module_categories(__MODULE__.t()) :: map()
   def module_categories(%__MODULE__{module_categories: module_categories}), do: module_categories
 
-  @spec main_module(__MODULE__.t(), any) :: nil | category_t()
-  def main_module(%__MODULE__{module_categories: module_categories}, id) do
+  @spec module_category(__MODULE__.t(), any) :: nil | category_t()
+  def module_category(%__MODULE__{module_categories: module_categories}, id) do
     Map.get(module_categories[:attributes], id)
   end
 

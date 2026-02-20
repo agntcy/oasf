@@ -81,16 +81,16 @@ defmodule SchemaWeb.Router do
     get "/extensions", SchemaController, :extensions
 
     get "/skill_categories", SchemaController, :skill_categories
-    get "/skill_categories/:id", SchemaController, :main_skill
-    get "/skill_categories/:extension/:id", SchemaController, :main_skill
+    get "/skill_categories/:id", SchemaController, :skill_category
+    get "/skill_categories/:extension/:id", SchemaController, :skill_category
 
     get "/domain_categories", SchemaController, :domain_categories
-    get "/domain_categories/:id", SchemaController, :main_domain
-    get "/domain_categories/:extension/:id", SchemaController, :main_domain
+    get "/domain_categories/:id", SchemaController, :domain_category
+    get "/domain_categories/:extension/:id", SchemaController, :domain_category
 
     get "/module_categories", SchemaController, :module_categories
-    get "/module_categories/:id", SchemaController, :main_module
-    get "/module_categories/:extension/:id", SchemaController, :main_module
+    get "/module_categories/:id", SchemaController, :module_category
+    get "/module_categories/:extension/:id", SchemaController, :module_category
 
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile

@@ -81,8 +81,8 @@ defmodule Schema do
   """
   def skill_categories(extensions) do
     Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_skill} ->
-        {name, main_skill(extensions, name)}
+      Enum.into(attributes, %{}, fn {name, _skill_category} ->
+        {name, skill_category(extensions, name)}
       end)
     end)
   end
@@ -90,15 +90,15 @@ defmodule Schema do
   @doc """
     Returns a single skill category with its classes.
   """
-  @spec main_skill(atom | String.t()) :: nil | Cache.category_t()
-  def main_skill(id), do: get_main_skill(Utils.to_uid(id))
+  @spec skill_category(atom | String.t()) :: nil | Cache.category_t()
+  def skill_category(id), do: get_skill_category(Utils.to_uid(id))
 
-  @spec main_skill(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_skill(extensions, id), do: get_main_skill(extensions, Utils.to_uid(id))
+  @spec skill_category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
+  def skill_category(extensions, id), do: get_skill_category(extensions, Utils.to_uid(id))
 
-  @spec main_skill(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_skill(extensions, extension, id),
-    do: get_main_skill(extensions, Utils.to_uid(extension, id))
+  @spec skill_category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
+  def skill_category(extensions, extension, id),
+    do: get_skill_category(extensions, Utils.to_uid(extension, id))
 
   @doc """
     Returns the main domains.
@@ -111,8 +111,8 @@ defmodule Schema do
   """
   def domain_categories(extensions) do
     Map.update(Repo.domain_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_domain} ->
-        {name, main_domain(extensions, name)}
+      Enum.into(attributes, %{}, fn {name, _domain_category} ->
+        {name, domain_category(extensions, name)}
       end)
     end)
   end
@@ -120,15 +120,15 @@ defmodule Schema do
   @doc """
     Returns a single domain category with its classes.
   """
-  @spec main_domain(atom | String.t()) :: nil | Cache.category_t()
-  def main_domain(id), do: get_main_domain(Utils.to_uid(id))
+  @spec domain_category(atom | String.t()) :: nil | Cache.category_t()
+  def domain_category(id), do: get_domain_category(Utils.to_uid(id))
 
-  @spec main_domain(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_domain(extensions, id), do: get_main_domain(extensions, Utils.to_uid(id))
+  @spec domain_category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
+  def domain_category(extensions, id), do: get_domain_category(extensions, Utils.to_uid(id))
 
-  @spec main_domain(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_domain(extensions, extension, id),
-    do: get_main_domain(extensions, Utils.to_uid(extension, id))
+  @spec domain_category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
+  def domain_category(extensions, extension, id),
+    do: get_domain_category(extensions, Utils.to_uid(extension, id))
 
   @doc """
     Returns module categories.
@@ -141,8 +141,8 @@ defmodule Schema do
   """
   def module_categories(extensions) do
     Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_module} ->
-        {name, main_module(extensions, name)}
+      Enum.into(attributes, %{}, fn {name, _module_category} ->
+        {name, module_category(extensions, name)}
       end)
     end)
   end
@@ -150,15 +150,15 @@ defmodule Schema do
   @doc """
     Returns a single module category with its classes.
   """
-  @spec main_module(atom | String.t()) :: nil | Cache.category_t()
-  def main_module(id), do: get_main_module(Utils.to_uid(id))
+  @spec module_category(atom | String.t()) :: nil | Cache.category_t()
+  def module_category(id), do: get_module_category(Utils.to_uid(id))
 
-  @spec main_module(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_module(extensions, id), do: get_main_module(extensions, Utils.to_uid(id))
+  @spec module_category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
+  def module_category(extensions, id), do: get_module_category(extensions, Utils.to_uid(id))
 
-  @spec main_module(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_module(extensions, extension, id),
-    do: get_main_module(extensions, Utils.to_uid(extension, id))
+  @spec module_category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
+  def module_category(extensions, extension, id),
+    do: get_module_category(extensions, Utils.to_uid(extension, id))
 
   @doc """
     Returns the attribute dictionary.
@@ -660,28 +660,28 @@ defmodule Schema do
     Schema.Generator.generate_sample_object(type, profiles)
   end
 
-  defp get_main_skill(id) do
-    Repo.main_skill(id) |> reduce_category()
+  defp get_skill_category(id) do
+    Repo.skill_category(id) |> reduce_category()
   end
 
-  defp get_main_skill(extensions, id) do
-    Repo.main_skill(extensions, id) |> reduce_category()
+  defp get_skill_category(extensions, id) do
+    Repo.skill_category(extensions, id) |> reduce_category()
   end
 
-  defp get_main_domain(id) do
-    Repo.main_domain(id) |> reduce_category()
+  defp get_domain_category(id) do
+    Repo.domain_category(id) |> reduce_category()
   end
 
-  defp get_main_domain(extensions, id) do
-    Repo.main_domain(extensions, id) |> reduce_category()
+  defp get_domain_category(extensions, id) do
+    Repo.domain_category(extensions, id) |> reduce_category()
   end
 
-  defp get_main_module(id) do
-    Repo.main_module(id) |> reduce_category()
+  defp get_module_category(id) do
+    Repo.module_category(id) |> reduce_category()
   end
 
-  defp get_main_module(extensions, id) do
-    Repo.main_module(extensions, id) |> reduce_category()
+  defp get_module_category(extensions, id) do
+    Repo.module_category(extensions, id) |> reduce_category()
   end
 
   defp reduce_category(nil) do

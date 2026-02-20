@@ -60,20 +60,20 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_skill(atom) :: nil | Cache.category_t()
-  def main_skill(id) do
-    main_skill(nil, id)
+  @spec skill_category(atom) :: nil | Cache.category_t()
+  def skill_category(id) do
+    skill_category(nil, id)
   end
 
-  @spec main_skill(extensions_t() | nil, atom) :: nil | Cache.category_t()
-  def main_skill(extensions, id) do
+  @spec skill_category(extensions_t() | nil, atom) :: nil | Cache.category_t()
+  def skill_category(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
-      case Cache.main_skill(schema, id) do
+      case Cache.skill_category(schema, id) do
         nil ->
           nil
 
-        main_skill ->
-          add_classes(extensions, {id, main_skill}, Cache.skills(schema))
+        skill_category ->
+          add_classes(extensions, {id, skill_category}, Cache.skills(schema))
       end
     end)
   end
@@ -95,20 +95,20 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_domain(atom) :: nil | Cache.category_t()
-  def main_domain(id) do
-    main_domain(nil, id)
+  @spec domain_category(atom) :: nil | Cache.category_t()
+  def domain_category(id) do
+    domain_category(nil, id)
   end
 
-  @spec main_domain(extensions_t() | nil, atom) :: nil | Cache.category_t()
-  def main_domain(extensions, id) do
+  @spec domain_category(extensions_t() | nil, atom) :: nil | Cache.category_t()
+  def domain_category(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
-      case Cache.main_domain(schema, id) do
+      case Cache.domain_category(schema, id) do
         nil ->
           nil
 
-        main_domain ->
-          add_classes(extensions, {id, main_domain}, Cache.domains(schema))
+        domain_category ->
+          add_classes(extensions, {id, domain_category}, Cache.domains(schema))
       end
     end)
   end
@@ -130,20 +130,20 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec main_module(atom) :: nil | Cache.category_t()
-  def main_module(id) do
-    main_module(nil, id)
+  @spec module_category(atom) :: nil | Cache.category_t()
+  def module_category(id) do
+    module_category(nil, id)
   end
 
-  @spec main_module(extensions_t() | nil, atom) :: nil | Cache.category_t()
-  def main_module(extensions, id) do
+  @spec module_category(extensions_t() | nil, atom) :: nil | Cache.category_t()
+  def module_category(extensions, id) do
     Agent.get(__MODULE__, fn schema ->
-      case Cache.main_module(schema, id) do
+      case Cache.module_category(schema, id) do
         nil ->
           nil
 
-        main_module ->
-          add_classes(extensions, {id, main_module}, Cache.modules(schema))
+        module_category ->
+          add_classes(extensions, {id, module_category}, Cache.modules(schema))
       end
     end)
   end

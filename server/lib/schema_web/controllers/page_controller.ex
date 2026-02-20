@@ -139,7 +139,7 @@ defmodule SchemaWeb.PageController do
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def skill_categories(conn, %{"id" => id} = params) do
-    case SchemaController.main_skill_skills(params) do
+    case SchemaController.skill_category_skills(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -183,7 +183,7 @@ defmodule SchemaWeb.PageController do
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def domain_categories(conn, %{"id" => id} = params) do
-    case SchemaController.main_dodomain_categories(params) do
+    case SchemaController.domain_category_domains(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -227,7 +227,7 @@ defmodule SchemaWeb.PageController do
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def module_categories(conn, %{"id" => id} = params) do
-    case SchemaController.main_module_modules(params) do
+    case SchemaController.module_category_modules(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
