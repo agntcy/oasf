@@ -160,12 +160,9 @@ defmodule SchemaWeb.PageController do
   end
 
   def skill_categories(conn, params) do
-    extensions = parse_extensions(params)
-
     data =
       Map.put_new(params, "extensions", "")
       |> SchemaController.skill_categories()
-      |> populate_category_classes(extensions, Schema.skills())
       |> sort_attributes(:uid)
       |> sort_classes()
       |> Map.put(:categories_path, "skill_categories")
@@ -204,12 +201,9 @@ defmodule SchemaWeb.PageController do
   end
 
   def domain_categories(conn, params) do
-    extensions = parse_extensions(params)
-
     data =
       Map.put_new(params, "extensions", "")
       |> SchemaController.domain_categories()
-      |> populate_category_classes(extensions, Schema.domains())
       |> sort_attributes(:uid)
       |> sort_classes()
       |> Map.put(:categories_path, "domain_categories")
@@ -248,12 +242,9 @@ defmodule SchemaWeb.PageController do
   end
 
   def module_categories(conn, params) do
-    extensions = parse_extensions(params)
-
     data =
       Map.put_new(params, "extensions", "")
       |> SchemaController.module_categories()
-      |> populate_category_classes(extensions, Schema.modules())
       |> sort_attributes(:uid)
       |> sort_classes()
       |> Map.put(:categories_path, "module_categories")
@@ -585,11 +576,12 @@ defmodule SchemaWeb.PageController do
   end
 
   defp sort_subcategories(category) do
-    subcategories = category[:subcategories] || []
+    subcategories = category[:subcategories] || %{}
 
-    if length(subcategories) > 0 do
+    if map_size(subcategories) > 0 do
       sorted_subcategories =
-        Enum.map(subcategories, fn {key, subcategory} ->
+        subcategories
+        |> Enum.map(fn {key, subcategory} ->
           sorted_subcategory =
             subcategory
             |> Map.update(:classes, [], &sort_by_float_uid(&1))
@@ -597,6 +589,7 @@ defmodule SchemaWeb.PageController do
 
           {key, sorted_subcategory}
         end)
+        |> Enum.into(%{})
 
       Map.put(category, :subcategories, sorted_subcategories)
     else

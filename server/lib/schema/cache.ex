@@ -20,18 +20,9 @@ defmodule Schema.Cache do
     :dictionary,
     :objects,
     :all_objects,
-    # domain libs
     :domains,
-    :all_domains,
-    :domain_categories,
-    # skill libs
     :skills,
-    :all_skills,
-    :skill_categories,
-    # module libs
-    :modules,
-    :all_modules,
-    :module_categories
+    :modules
   ]
   defstruct ~w[
     version
@@ -41,14 +32,8 @@ defmodule Schema.Cache do
     objects
     all_objects
     skills
-    all_skills
-    skill_categories
     domains
-    all_domains
-    domain_categories
     modules
-    all_modules
-    module_categories
   ]a
 
   @type t() :: %__MODULE__{}
@@ -81,22 +66,11 @@ defmodule Schema.Cache do
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
-    {skills, all_skills, skill_categories} =
-      read_classes(@skills_dir, @skill_family, version[:version])
+    skills = read_classes(@skills_dir, @skill_family, version[:version])
 
-    {domains, all_domains, domain_categories} =
-      read_classes(
-        @domains_dir,
-        @domain_family,
-        version[:version]
-      )
+    domains = read_classes(@domains_dir, @domain_family, version[:version])
 
-    {modules, all_modules, module_categories} =
-      read_classes(
-        @modules_dir,
-        @module_family,
-        version[:version]
-      )
+    modules = read_classes(@modules_dir, @module_family, version[:version])
 
     {objects, all_objects} =
       read_objects(version[:version])
@@ -161,18 +135,9 @@ defmodule Schema.Cache do
       dictionary: dictionary,
       objects: objects,
       all_objects: all_objects,
-      # skill libs
       skills: skills,
-      all_skills: all_skills,
-      skill_categories: skill_categories,
-      # domain libs
       domains: domains,
-      all_domains: all_domains,
-      domain_categories: domain_categories,
-      # module libs
-      modules: modules,
-      all_modules: all_modules,
-      module_categories: module_categories
+      modules: modules
     }
   end
 
@@ -203,38 +168,11 @@ defmodule Schema.Cache do
   @spec dictionary(__MODULE__.t()) :: dictionary_t()
   def dictionary(%__MODULE__{dictionary: dictionary}), do: dictionary
 
-  @spec skill_categories(__MODULE__.t()) :: map()
-  def skill_categories(%__MODULE__{skill_categories: skill_categories}), do: skill_categories
-
-  @spec skill_category(__MODULE__.t(), any) :: nil | category_t()
-  def skill_category(%__MODULE__{skill_categories: skill_categories}, id) do
-    Map.get(skill_categories[:attributes], id)
-  end
-
-  @spec domain_categories(__MODULE__.t()) :: map()
-  def domain_categories(%__MODULE__{domain_categories: domain_categories}), do: domain_categories
-
-  @spec domain_category(__MODULE__.t(), any) :: nil | category_t()
-  def domain_category(%__MODULE__{domain_categories: domain_categories}, id) do
-    Map.get(domain_categories[:attributes], id)
-  end
-
-  @spec module_categories(__MODULE__.t()) :: map()
-  def module_categories(%__MODULE__{module_categories: module_categories}), do: module_categories
-
-  @spec module_category(__MODULE__.t(), any) :: nil | category_t()
-  def module_category(%__MODULE__{module_categories: module_categories}, id) do
-    Map.get(module_categories[:attributes], id)
-  end
-
   @spec all_objects(__MODULE__.t()) :: map()
   def all_objects(%__MODULE__{all_objects: all_objects}), do: all_objects
 
   @spec skills(__MODULE__.t()) :: map()
   def skills(%__MODULE__{skills: skills}), do: skills
-
-  @spec all_skills(__MODULE__.t()) :: map()
-  def all_skills(%__MODULE__{all_skills: all_skills}), do: all_skills
 
   @spec export_skills(__MODULE__.t()) :: map()
   def export_skills(%__MODULE__{skills: skills, dictionary: dictionary}) do
@@ -264,9 +202,6 @@ defmodule Schema.Cache do
   @spec domains(__MODULE__.t()) :: map()
   def domains(%__MODULE__{domains: domains}), do: domains
 
-  @spec all_domains(__MODULE__.t()) :: map()
-  def all_domains(%__MODULE__{all_domains: all_domains}), do: all_domains
-
   @spec export_domains(__MODULE__.t()) :: map()
   def export_domains(%__MODULE__{domains: domains, dictionary: dictionary}) do
     Enum.into(domains, Map.new(), fn {name, domain} ->
@@ -294,9 +229,6 @@ defmodule Schema.Cache do
 
   @spec modules(__MODULE__.t()) :: map()
   def modules(%__MODULE__{modules: modules}), do: modules
-
-  @spec all_modules(__MODULE__.t()) :: map()
-  def all_modules(%__MODULE__{all_modules: all_modules}), do: all_modules
 
   @spec export_modules(__MODULE__.t()) :: map()
   def export_modules(%__MODULE__{modules: modules, dictionary: dictionary}) do
@@ -547,7 +479,6 @@ defmodule Schema.Cache do
   defp read_classes(classes_dir, class_family, version) do
     classes = JsonReader.read_classes(classes_dir)
 
-    # Resolve inheritance first
     classes =
       classes
       |> Enum.into(%{}, fn class_tuple -> attribute_source(class_tuple) end)
@@ -557,31 +488,7 @@ defmodule Schema.Cache do
         enrich_class(class_tuple, classes, class_family, version)
       end)
 
-    # Build categories from classes that have the "category" field
-    categories = build_categories_from_classes(classes)
-
-    # all_classes has just enough info to interrogate the complete class hierarchy.
-    # It can be used to get the caption, parent (extends), and name of any class, including hidden ones.
-    all_classes =
-      classes
-      |> Enum.map(fn {class_key, class} ->
-        class =
-          class
-          |> Map.take([:name, :caption, :extends, :extension])
-          |> Map.put(:hidden?, hidden_class?(class_key, class))
-          |> Map.put(:deprecated?, deprecated_class?(class))
-
-        {class_key, class}
-      end)
-      |> Enum.into(%{})
-
-    # Filter out hidden classes for the final classes output
-    classes =
-      classes
-      |> Stream.filter(fn {class_key, class} -> !hidden_class?(class_key, class) end)
-      |> Enum.into(%{})
-
-    {classes, all_classes, categories}
+    classes
   end
 
   defp read_objects(version) do

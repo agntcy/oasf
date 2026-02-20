@@ -80,11 +80,8 @@ defmodule Schema do
     Returns skill categories defined in the given extension set.
   """
   def skill_categories(extensions) do
-    Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _skill_category} ->
-        {name, skill_category(extensions, name)}
-      end)
-    end)
+    # Repo already populates classes recursively while preserving subcategories
+    Repo.skill_categories(extensions)
   end
 
   @doc """
@@ -110,11 +107,8 @@ defmodule Schema do
     Returns domain categories defined in the given extension set.
   """
   def domain_categories(extensions) do
-    Map.update(Repo.domain_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _domain_category} ->
-        {name, domain_category(extensions, name)}
-      end)
-    end)
+    # Repo already populates classes recursively while preserving subcategories
+    Repo.domain_categories(extensions)
   end
 
   @doc """
@@ -140,11 +134,8 @@ defmodule Schema do
     Returns module categories defined in the given extension set.
   """
   def module_categories(extensions) do
-    Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _module_category} ->
-        {name, module_category(extensions, name)}
-      end)
-    end)
+    # Repo already populates classes recursively while preserving subcategories
+    Repo.module_categories(extensions)
   end
 
   @doc """
@@ -689,10 +680,20 @@ defmodule Schema do
   end
 
   defp reduce_category(data) do
-    Map.update(data, :classes, [], fn classes ->
+    data
+    |> Map.update(:classes, [], fn classes ->
       Enum.into(classes, %{}, fn {name, class} ->
         {name, reduce_class(class)}
       end)
+    end)
+    |> Map.update(:subcategories, nil, fn subcategories ->
+      if subcategories != nil do
+        Enum.into(subcategories, %{}, fn {name, subcategory} ->
+          {name, reduce_category(subcategory)}
+        end)
+      else
+        nil
+      end
     end)
   end
 
