@@ -537,16 +537,6 @@ defmodule Schema.Cache do
     hidden_object?(Atom.to_string(object_key))
   end
 
-  @spec hidden_class?(atom(), map()) :: boolean()
-  defp hidden_class?(class_key, class) do
-    ignored_keys = [:base_module, :base_skill, :base_domain]
-    class_key not in ignored_keys and Map.get(class, :category) == true
-  end
-
-  defp deprecated_class?(class) do
-    Map.has_key?(class, :"@deprecated")
-  end
-
   # Add class_uid, class_name, schema_version, and family to the class.
   defp enrich_class({class_key, class}, classes, class_family, version) do
     class =
@@ -566,80 +556,6 @@ defmodule Schema.Cache do
       |> add_schema_version(version)
 
     {object_key, object}
-  end
-
-  defp build_categories_from_classes(classes) do
-    # Build categories map from classes that have category: true
-    # Exclude base classes (base_module, base_skill, base_domain)
-    base_classes = [:base_module, :base_skill, :base_domain]
-
-    # First, build a flat map of all categories
-    all_categories =
-      classes
-      |> Enum.filter(fn {key, class} ->
-        # Exclude base classes
-        # Only include classes with category: true
-        key not in base_classes and
-          Map.get(class, :category) == true
-      end)
-      |> Enum.map(fn {_key, class} ->
-        # Use the class name as the category key
-        category_key = String.to_atom(class[:name])
-
-        # Use the class itself as the category
-        category_data = %{
-          uid: class[:uid] || 0,
-          caption: class[:caption],
-          description: class[:description],
-          extends: class[:extends],
-          subcategories: []
-        }
-
-        {category_key, category_data}
-      end)
-      |> Enum.into(%{})
-
-    # Build hierarchical structure: nest subcategories under their parent categories
-    # Only include top-level categories (categories that don't extend another category with category: true)
-    top_level_categories =
-      all_categories
-      |> Enum.filter(fn {_key, category} ->
-        # Check if the parent is also a category
-        case category[:extends] do
-          nil ->
-            true
-
-          extends ->
-            parent_key = String.to_atom(extends)
-            # Top-level if parent is not a category
-            not Map.has_key?(all_categories, parent_key)
-        end
-      end)
-      |> Enum.into(%{})
-
-    # Nest subcategories under their parents
-    categories =
-      Enum.reduce(all_categories, top_level_categories, fn {key, category}, acc ->
-        case category[:extends] do
-          nil ->
-            acc
-
-          extends ->
-            parent_key = String.to_atom(extends)
-
-            if Map.has_key?(all_categories, parent_key) do
-              # This is a subcategory, nest it under its parent
-              Map.update(acc, parent_key, acc, fn parent ->
-                subcategories = parent[:subcategories] || []
-                Map.put(parent, :subcategories, [{key, category} | subcategories])
-              end)
-            else
-              acc
-            end
-        end
-      end)
-
-    %{attributes: categories}
   end
 
   def update_class_uid(class, classes_with_uids) do

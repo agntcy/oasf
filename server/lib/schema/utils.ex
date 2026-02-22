@@ -680,16 +680,4 @@ defmodule Schema.Utils do
       item[:name]
     end
   end
-
-  @spec is_oasf_class?(atom, String.t()) :: boolean
-  def is_oasf_class?(family, name) do
-    class_name = Schema.Utils.descope(name) |> String.to_atom()
-
-    case family do
-      :skill -> Map.has_key?(Schema.all_skills(), class_name)
-      :domain -> Map.has_key?(Schema.all_domains(), class_name)
-      :module -> Map.has_key?(Schema.all_modules(), class_name)
-      _ -> false
-    end
-  end
 end
