@@ -231,4 +231,239 @@ var _ = Describe("API", func() {
 			})
 		}
 	})
+
+	Describe("GET Endpoints Health Check", func() {
+		// Test IDs to use for parameterized endpoints
+		testSkillID := "base_skill"
+		testDomainID := "base_domain"
+		testModuleID := "base_module"
+		testSkillCategoryID := "natural_language_processing"
+		testDomainCategoryID := "healthcare"
+		testModuleCategoryID := "core"
+		testObjectID := "record"
+		// testProfileID := "default" // Uncomment and set to a valid profile ID if available
+
+		getEndpoints := []struct {
+			name string
+			url  string
+		}{
+			// Root and category pages
+			{"root", baseURL + "/"},
+			{"skill_categories", baseURL + "/skill_categories"},
+			{"skill_categories_by_id", baseURL + "/skill_categories/" + testSkillCategoryID},
+			{"domain_categories", baseURL + "/domain_categories"},
+			{"domain_categories_by_id", baseURL + "/domain_categories/" + testDomainCategoryID},
+			{"module_categories", baseURL + "/module_categories"},
+			{"module_categories_by_id", baseURL + "/module_categories/" + testModuleCategoryID},
+			{"profiles", baseURL + "/profiles"},
+			// {"profiles_by_id", baseURL + "/profiles/" + testProfileID},
+			{"skills", baseURL + "/skills"},
+			{"skills_by_id", baseURL + "/skills/" + testSkillID},
+			{"domains", baseURL + "/domains"},
+			{"domains_by_id", baseURL + "/domains/" + testDomainID},
+			{"modules", baseURL + "/modules"},
+			{"modules_by_id", baseURL + "/modules/" + testModuleID},
+			{"objects", baseURL + "/objects"},
+			{"objects_by_id", baseURL + "/objects/" + testObjectID},
+			{"dictionary", baseURL + "/dictionary"},
+			{"data_types", baseURL + "/data_types"},
+			{"skill_graph", baseURL + "/skill/graph/" + testSkillID},
+			{"domain_graph", baseURL + "/domain/graph/" + testDomainID},
+			{"module_graph", baseURL + "/module/graph/" + testModuleID},
+			{"object_graph", baseURL + "/object/graph/" + testObjectID},
+
+			// API endpoints
+			{"api_version", baseURL + "/api/version"},
+			{"api_versions", baseURL + "/api/versions"},
+			{"api_profiles", baseURL + "/api/profiles"},
+			// {"api_profiles_by_id", baseURL + "/api/profiles/" + testProfileID},
+			{"api_extensions", baseURL + "/api/extensions"},
+			{"api_skill_categories", baseURL + "/api/skill_categories"},
+			{"api_skill_categories_by_id", baseURL + "/api/skill_categories/" + testSkillCategoryID},
+			{"api_domain_categories", baseURL + "/api/domain_categories"},
+			{"api_domain_categories_by_id", baseURL + "/api/domain_categories/" + testDomainCategoryID},
+			{"api_module_categories", baseURL + "/api/module_categories"},
+			{"api_module_categories_by_id", baseURL + "/api/module_categories/" + testModuleCategoryID},
+			{"api_skills", baseURL + "/api/skills"},
+			{"api_skills_by_id", baseURL + "/api/skills/" + testSkillID},
+			{"api_domains", baseURL + "/api/domains"},
+			{"api_domains_by_id", baseURL + "/api/domains/" + testDomainID},
+			{"api_modules", baseURL + "/api/modules"},
+			{"api_modules_by_id", baseURL + "/api/modules/" + testModuleID},
+			{"api_objects", baseURL + "/api/objects"},
+			{"api_objects_by_id", baseURL + "/api/objects/" + testObjectID},
+			{"api_dictionary", baseURL + "/api/dictionary"},
+			{"api_data_types", baseURL + "/api/data_types"},
+
+			// Schema endpoints
+			{"schema_skills_by_id", baseURL + "/schema/skills/" + testSkillID},
+			{"schema_domains_by_id", baseURL + "/schema/domains/" + testDomainID},
+			{"schema_modules_by_id", baseURL + "/schema/modules/" + testModuleID},
+			{"schema_objects_by_id", baseURL + "/schema/objects/" + testObjectID},
+
+			// Export endpoints
+			{"export_skills", baseURL + "/export/skills"},
+			{"export_domains", baseURL + "/export/domains"},
+			{"export_modules", baseURL + "/export/modules"},
+			{"export_objects", baseURL + "/export/objects"},
+			{"export_schema", baseURL + "/export/schema"},
+
+			// Sample endpoints
+			{"sample_skills_by_id", baseURL + "/sample/skills/" + testSkillID},
+			{"sample_domains_by_id", baseURL + "/sample/domains/" + testDomainID},
+			{"sample_modules_by_id", baseURL + "/sample/modules/" + testModuleID},
+			{"sample_objects_by_id", baseURL + "/sample/objects/" + testObjectID},
+		}
+
+		for _, endpoint := range getEndpoints {
+			endpoint := endpoint
+			It("should return OK for GET "+endpoint.name, func() {
+				resp, err := http.Get(endpoint.url)
+				Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+				Expect(resp.StatusCode).To(BeNumerically("<", 400), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+			})
+		}
+	})
+
+	Describe("POST Endpoints Health Check", func() {
+		// Test IDs to use for parameterized endpoints
+		testObjectID := "record"
+
+		// Minimal valid JSON payloads for POST endpoints
+		emptyJSON := []byte(`{}`)
+		skillJSON := []byte(`{"name": "test_skill"}`)
+		domainJSON := []byte(`{"name": "test_domain"}`)
+		moduleJSON := []byte(`{"name": "test_module"}`)
+		objectJSON := []byte(`{"name": "test_object"}`)
+
+		postEndpoints := []struct {
+			name    string
+			url     string
+			payload []byte
+		}{
+			{"api_translate_skill", baseURL + "/api/translate/skill", skillJSON},
+			{"api_validate_skill", baseURL + "/api/validate/skill", skillJSON},
+			{"api_validate_bundle_skill", baseURL + "/api/validate_bundle/skill", emptyJSON},
+			{"api_translate_domain", baseURL + "/api/translate/domain", domainJSON},
+			{"api_validate_domain", baseURL + "/api/validate/domain", domainJSON},
+			{"api_validate_bundle_domain", baseURL + "/api/validate_bundle/domain", emptyJSON},
+			{"api_translate_module", baseURL + "/api/translate/module", moduleJSON},
+			{"api_validate_module", baseURL + "/api/validate/module", moduleJSON},
+			{"api_validate_bundle_module", baseURL + "/api/validate_bundle/module", emptyJSON},
+			{"api_translate_object", baseURL + "/api/translate/object/" + testObjectID, objectJSON},
+			{"api_validate_object", baseURL + "/api/validate/object/" + testObjectID, objectJSON},
+		}
+
+		for _, endpoint := range postEndpoints {
+			endpoint := endpoint
+			It("should return OK for POST "+endpoint.name, func() {
+				req, err := http.NewRequest("POST", endpoint.url, bytes.NewReader(endpoint.payload))
+				Expect(err).NotTo(HaveOccurred(), "Failed to create POST request for %s", endpoint.name)
+				req.Header.Set("Content-Type", "application/json")
+				resp, err := http.DefaultClient.Do(req)
+				Expect(err).NotTo(HaveOccurred(), "Failed to POST to %s", endpoint.name)
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+				Expect(resp.StatusCode).To(BeNumerically("<", 500), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+			})
+		}
+	})
+
+	Describe("404 Not Found Tests", func() {
+		// Non-existent ID used for all tests
+		nonExistentID := "non_existent_id_12345"
+
+		Describe("GET endpoints with non-existent category names", func() {
+			categoryEndpoints := []struct {
+				name string
+				url  string
+			}{
+				{"skill_categories_by_id", baseURL + "/skill_categories/" + nonExistentID},
+				{"domain_categories_by_id", baseURL + "/domain_categories/" + nonExistentID},
+				{"module_categories_by_id", baseURL + "/module_categories/" + nonExistentID},
+				{"api_skill_categories_by_id", baseURL + "/api/skill_categories/" + nonExistentID},
+				{"api_domain_categories_by_id", baseURL + "/api/domain_categories/" + nonExistentID},
+				{"api_module_categories_by_id", baseURL + "/api/module_categories/" + nonExistentID},
+			}
+
+			for _, endpoint := range categoryEndpoints {
+				endpoint := endpoint
+				It("should return 404 for GET "+endpoint.name+" with non-existent category", func() {
+					resp, err := http.Get(endpoint.url)
+					Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
+					defer resp.Body.Close()
+					Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent category %s, got %d", endpoint.name, resp.StatusCode)
+				})
+			}
+		})
+
+		Describe("GET endpoints with non-existent class names", func() {
+			classEndpoints := []struct {
+				name string
+				url  string
+			}{
+				{"skills_by_id", baseURL + "/skills/" + nonExistentID},
+				{"domains_by_id", baseURL + "/domains/" + nonExistentID},
+				{"modules_by_id", baseURL + "/modules/" + nonExistentID},
+				{"objects_by_id", baseURL + "/objects/" + nonExistentID},
+				{"skill_graph", baseURL + "/skill/graph/" + nonExistentID},
+				{"domain_graph", baseURL + "/domain/graph/" + nonExistentID},
+				{"module_graph", baseURL + "/module/graph/" + nonExistentID},
+				{"object_graph", baseURL + "/object/graph/" + nonExistentID},
+				{"api_skills_by_id", baseURL + "/api/skills/" + nonExistentID},
+				{"api_domains_by_id", baseURL + "/api/domains/" + nonExistentID},
+				{"api_modules_by_id", baseURL + "/api/modules/" + nonExistentID},
+				{"api_objects_by_id", baseURL + "/api/objects/" + nonExistentID},
+				{"schema_skills_by_id", baseURL + "/schema/skills/" + nonExistentID},
+				{"schema_domains_by_id", baseURL + "/schema/domains/" + nonExistentID},
+				{"schema_modules_by_id", baseURL + "/schema/modules/" + nonExistentID},
+				{"schema_objects_by_id", baseURL + "/schema/objects/" + nonExistentID},
+				{"sample_skills_by_id", baseURL + "/sample/skills/" + nonExistentID},
+				{"sample_domains_by_id", baseURL + "/sample/domains/" + nonExistentID},
+				{"sample_modules_by_id", baseURL + "/sample/modules/" + nonExistentID},
+				{"sample_objects_by_id", baseURL + "/sample/objects/" + nonExistentID},
+			}
+
+			for _, endpoint := range classEndpoints {
+				endpoint := endpoint
+				It("should return 404 for GET "+endpoint.name+" with non-existent class", func() {
+					resp, err := http.Get(endpoint.url)
+					Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
+					defer resp.Body.Close()
+					Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent class %s, got %d", endpoint.name, resp.StatusCode)
+				})
+			}
+		})
+
+	})
+
+	Describe("POST Endpoints with Non-Existent IDs (should return 200)", func() {
+		// Non-existent ID used for all tests
+		nonExistentID := "non_existent_id_12345"
+		objectJSON := []byte(`{"name": "test_object"}`)
+
+		postEndpoints := []struct {
+			name    string
+			url     string
+			payload []byte
+		}{
+			{"api_translate_object", baseURL + "/api/translate/object/" + nonExistentID, objectJSON},
+			{"api_validate_object", baseURL + "/api/validate/object/" + nonExistentID, objectJSON},
+		}
+
+		for _, endpoint := range postEndpoints {
+			endpoint := endpoint
+			It("should return 200 for POST "+endpoint.name+" with non-existent object ID", func() {
+				req, err := http.NewRequest("POST", endpoint.url, bytes.NewReader(endpoint.payload))
+				Expect(err).NotTo(HaveOccurred(), "Failed to create POST request for %s", endpoint.name)
+				req.Header.Set("Content-Type", "application/json")
+				resp, err := http.DefaultClient.Do(req)
+				Expect(err).NotTo(HaveOccurred(), "Failed to POST to %s", endpoint.name)
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK), "Expected 200 for %s with non-existent object ID, got %d", endpoint.name, resp.StatusCode)
+			})
+		}
+	})
 })
