@@ -80,8 +80,11 @@ defmodule Schema do
     Returns skill categories defined in the given extension set.
   """
   def skill_categories(extensions) do
-    # Repo already populates classes recursively while preserving subcategories
-    Repo.skill_categories(extensions)
+    Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
+      Enum.into(attributes, %{}, fn {name, _skill_category} ->
+        {name, skill_category(extensions, name)}
+      end)
+    end)
   end
 
   @doc """
@@ -107,8 +110,11 @@ defmodule Schema do
     Returns domain categories defined in the given extension set.
   """
   def domain_categories(extensions) do
-    # Repo already populates classes recursively while preserving subcategories
-    Repo.domain_categories(extensions)
+    Map.update(Repo.domain_categories(extensions), :attributes, %{}, fn attributes ->
+      Enum.into(attributes, %{}, fn {name, _domain_category} ->
+        {name, domain_category(extensions, name)}
+      end)
+    end)
   end
 
   @doc """
@@ -134,8 +140,11 @@ defmodule Schema do
     Returns module categories defined in the given extension set.
   """
   def module_categories(extensions) do
-    # Repo already populates classes recursively while preserving subcategories
-    Repo.module_categories(extensions)
+    Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
+      Enum.into(attributes, %{}, fn {name, _module_category} ->
+        {name, module_category(extensions, name)}
+      end)
+    end)
   end
 
   @doc """

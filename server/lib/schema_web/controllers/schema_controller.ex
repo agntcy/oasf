@@ -891,7 +891,10 @@ defmodule SchemaWeb.SchemaController do
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def skill_categories(conn, params) do
-    send_json_resp(conn, skill_categories(params))
+    result = skill_categories(params)
+    # Extract attributes to match the format of /api/skill_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
   end
 
   @spec skill_categories(map()) :: map()
@@ -970,7 +973,10 @@ defmodule SchemaWeb.SchemaController do
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def domain_categories(conn, params) do
-    send_json_resp(conn, domain_categories(params))
+    result = domain_categories(params)
+    # Extract attributes to match the format of /api/domain_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
   end
 
   @spec domain_categories(map()) :: map()
@@ -1049,7 +1055,10 @@ defmodule SchemaWeb.SchemaController do
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def module_categories(conn, params) do
-    send_json_resp(conn, module_categories(params))
+    result = module_categories(params)
+    # Extract attributes to match the format of /api/module_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
   end
 
   @spec module_categories(map()) :: map()

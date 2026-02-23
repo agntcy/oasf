@@ -80,9 +80,11 @@ SPDX-License-Identifier: Apache-2.0
           <span>
             <%= raw format_linked_class_caption(class_path, class[:name], class) %>
           </span>
-          <a href="<%= Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> class[:category]) %>" class="text-muted ml-2">
-            <%= class[:category_name] %>
-          </a>
+          <%= if class[:category] != nil && class[:category_name] != nil do %>
+            <a href="<%= Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> class[:category]) %>" class="text-muted ml-2">
+              <%= class[:category_name] %>
+            </a>
+          <% end %>
         </header>
         <div class="description-content">
           <%= class[:description] %>

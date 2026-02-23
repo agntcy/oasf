@@ -147,9 +147,12 @@ defmodule SchemaWeb.PageController do
         skills = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, skills)
+          data
+          |> Map.put(:classes, skills)
+          |> sort_subcategories()
           |> Map.put(:class_type, "skill")
           |> Map.put(:classes_path, "skills")
+          |> Map.put(:categories_path, "skill_categories")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -188,9 +191,12 @@ defmodule SchemaWeb.PageController do
         domains = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, domains)
+          data
+          |> Map.put(:classes, domains)
+          |> sort_subcategories()
           |> Map.put(:class_type, "domain")
           |> Map.put(:classes_path, "domains")
+          |> Map.put(:categories_path, "domain_categories")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -229,9 +235,12 @@ defmodule SchemaWeb.PageController do
         modules = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, modules)
+          data
+          |> Map.put(:classes, modules)
+          |> sort_subcategories()
           |> Map.put(:class_type, "module")
           |> Map.put(:classes_path, "modules")
+          |> Map.put(:categories_path, "module_categories")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -468,7 +477,6 @@ defmodule SchemaWeb.PageController do
         |> MapSet.new()
     end
   end
-
 
   defp sort_classes(categories) do
     Map.update!(categories, :attributes, fn list ->

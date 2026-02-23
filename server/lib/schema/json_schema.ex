@@ -30,6 +30,8 @@ defmodule Schema.JsonSchema do
   end
 
   @spec encode_entity(map(), boolean) :: map()
+  def encode_entity(nil, _top_level), do: %{}
+
   def encode_entity(type, top_level) do
     name = type[:name]
     ext = type[:extension]
@@ -196,7 +198,16 @@ defmodule Schema.JsonSchema do
 
           children =
             Utils.find_children(all_entities, Atom.to_string(name))
-            |> Enum.reject(& &1[:hidden?])
+            |> Enum.reject(fn child ->
+              # Filter out category classes (category: true) for skills/domains/modules
+              # Filter out hidden objects (hidden?: true) for objects
+              case family do
+                "skill" -> Map.get(child, :category) == true
+                "domain" -> Map.get(child, :category) == true
+                "module" -> Map.get(child, :category) == true
+                _ -> Map.get(child, :hidden?) == true
+              end
+            end)
             |> Enum.map(fn child ->
               Enum.find_value(all_entities, fn {key, value} ->
                 if value == child, do: to_string(key), else: nil
@@ -221,14 +232,19 @@ defmodule Schema.JsonSchema do
                 _ -> Schema.entity_ex(ext, :object, name)
               end
 
-            key = String.replace(child_name, "/", "_")
-            value = encode_entity(item, false)
+            # Skip if item is nil (category classes are filtered out)
+            if item == nil do
+              {skills, domains, modules, objects}
+            else
+              key = String.replace(child_name, "/", "_")
+              value = encode_entity(item, false)
 
-            case item[:family] do
-              "skill" -> {Map.put(skills, key, value), domains, modules, objects}
-              "domain" -> {skills, Map.put(domains, key, value), modules, objects}
-              "module" -> {skills, domains, Map.put(modules, key, value), objects}
-              _ -> {skills, domains, modules, Map.put(objects, key, value)}
+              case item[:family] do
+                "skill" -> {Map.put(skills, key, value), domains, modules, objects}
+                "domain" -> {skills, Map.put(domains, key, value), modules, objects}
+                "module" -> {skills, domains, Map.put(modules, key, value), objects}
+                _ -> {skills, domains, modules, Map.put(objects, key, value)}
+              end
             end
           end)
         else
@@ -255,12 +271,15 @@ defmodule Schema.JsonSchema do
   end
 
   defp map_reduce(type_name, type) do
+    attributes = type[:attributes] || %{}
+    constraints = type[:constraints] || %{}
+
     {properties, {required, just_one, at_least_one}} =
-      Enum.map_reduce(type[:attributes], {[], [], []}, fn {key, attribute},
-                                                          {required, just_one, at_least_one} ->
+      Enum.map_reduce(attributes, {[], [], []}, fn {key, attribute},
+                                                   {required, just_one, at_least_one} ->
         name = Atom.to_string(key)
-        just_one_list = List.wrap(type[:constraints][:just_one])
-        at_least_one_list = List.wrap(type[:constraints][:at_least_one])
+        just_one_list = List.wrap(constraints[:just_one])
+        at_least_one_list = List.wrap(constraints[:at_least_one])
 
         cond do
           name in just_one_list ->
@@ -396,7 +415,7 @@ defmodule Schema.JsonSchema do
 
       children_classes =
         Utils.find_children(all_classes_fn, type)
-        |> Enum.reject(fn item -> item[:hidden?] == true end)
+        |> Enum.reject(fn item -> Map.get(item, :category) == true end)
 
       refs =
         Enum.map(children_classes, fn item ->

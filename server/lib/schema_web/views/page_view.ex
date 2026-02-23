@@ -343,7 +343,15 @@ defmodule SchemaWeb.PageView do
       fn item_key ->
         item_info = all_items[item_key]
 
-        if item_info[:hidden?] do
+        # For classes (skill/domain/module), check category == true
+        # For objects, check hidden? == true
+        is_hidden =
+          case kind do
+            "object" -> Map.get(item_info, :hidden?) == true
+            _ -> Map.get(item_info, :category) == true
+          end
+
+        if is_hidden do
           [all_items[item_key][:caption], " (hidden #{kind})"]
         else
           all_items[item_key][:caption]

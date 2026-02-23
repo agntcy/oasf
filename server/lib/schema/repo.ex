@@ -45,31 +45,12 @@ defmodule Schema.Repo do
 
   @spec skill_categories :: map()
   def skill_categories() do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.skills(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      %{attributes: nested_categories}
-    end)
+    skill_categories(nil)
   end
 
   @spec skill_categories(extensions_t() | nil) :: map()
-  def skill_categories(nil) do
-    skill_categories()
-  end
-
   def skill_categories(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.skills(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      all_skills = Cache.skills(schema)
-
-      # Populate classes recursively while preserving subcategories
-      populated_categories =
-        populate_categories_recursive(extensions, nested_categories, all_skills)
-
-      %{attributes: populated_categories}
-      |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
-    end)
+    categories_generic(extensions, &Cache.skills/1, &filter/2)
   end
 
   @spec skill_category(atom) :: nil | Cache.category_t()
@@ -79,51 +60,17 @@ defmodule Schema.Repo do
 
   @spec skill_category(extensions_t() | nil, atom) :: nil | Cache.category_t()
   def skill_category(extensions, id) do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.skills(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      all_skills = Cache.skills(schema)
-
-      case Map.get(nested_categories, id) do
-        nil ->
-          nil
-
-        category ->
-          # Populate classes and subcategories recursively
-          category_uid = Atom.to_string(id)
-          populated_category = populate_category_recursive(extensions, id, category, all_skills)
-          Map.put(populated_category, :name, category_uid)
-      end
-    end)
+    category_generic(extensions, id, &Cache.skills/1)
   end
 
   @spec domain_categories :: map()
   def domain_categories() do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.domains(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      %{attributes: nested_categories}
-    end)
+    domain_categories(nil)
   end
 
   @spec domain_categories(extensions_t() | nil) :: map()
-  def domain_categories(nil) do
-    domain_categories()
-  end
-
   def domain_categories(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.domains(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      all_domains = Cache.domains(schema)
-
-      # Populate classes recursively while preserving subcategories
-      populated_categories =
-        populate_categories_recursive(extensions, nested_categories, all_domains)
-
-      %{attributes: populated_categories}
-      |> Map.update!(:attributes, fn attributes -> filter(attributes, extensions) end)
-    end)
+    categories_generic(extensions, &Cache.domains/1, &filter/2)
   end
 
   @spec domain_category(atom) :: nil | Cache.category_t()
@@ -133,51 +80,18 @@ defmodule Schema.Repo do
 
   @spec domain_category(extensions_t() | nil, atom) :: nil | Cache.category_t()
   def domain_category(extensions, id) do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.domains(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      all_domains = Cache.domains(schema)
-
-      case Map.get(nested_categories, id) do
-        nil ->
-          nil
-
-        category ->
-          # Populate classes and subcategories recursively
-          category_uid = Atom.to_string(id)
-          populated_category = populate_category_recursive(extensions, id, category, all_domains)
-          Map.put(populated_category, :name, category_uid)
-      end
-    end)
+    category_generic(extensions, id, &Cache.domains/1)
   end
 
   @spec module_categories :: map()
   def module_categories() do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.modules(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      %{attributes: nested_categories}
-    end)
+    module_categories(nil)
   end
 
   @spec module_categories(extensions_t() | nil) :: map()
-  def module_categories(nil) do
-    module_categories()
-  end
-
   def module_categories(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.modules(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      all_modules = Cache.modules(schema)
-
-      # Populate classes recursively while preserving subcategories
-      populated_categories =
-        populate_categories_recursive(extensions, nested_categories, all_modules)
-
-      # Categories are structural and don't have extension fields, so we don't filter them
-      %{attributes: populated_categories}
-    end)
+    # Categories are structural and don't have extension fields, so we don't filter them
+    categories_generic(extensions, &Cache.modules/1, fn attributes, _extensions -> attributes end)
   end
 
   @spec module_category(atom) :: nil | Cache.category_t()
@@ -187,22 +101,7 @@ defmodule Schema.Repo do
 
   @spec module_category(extensions_t() | nil, atom) :: nil | Cache.category_t()
   def module_category(extensions, id) do
-    Agent.get(__MODULE__, fn schema ->
-      flat_categories = Cache.modules(schema) |> build_categories_flat()
-      nested_categories = build_categories_nested(flat_categories)
-      all_modules = Cache.modules(schema)
-
-      case Map.get(nested_categories, id) do
-        nil ->
-          nil
-
-        category ->
-          # Populate classes and subcategories recursively
-          category_uid = Atom.to_string(id)
-          populated_category = populate_category_recursive(extensions, id, category, all_modules)
-          Map.put(populated_category, :name, category_uid)
-      end
-    end)
+    category_generic(extensions, id, &Cache.modules/1)
   end
 
   @spec data_types() :: map()
@@ -231,22 +130,12 @@ defmodule Schema.Repo do
 
   @spec skills() :: map()
   def skills() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.skills(schema) |> filter_category_classes()
-    end)
+    skills(nil)
   end
 
   @spec skills(extensions_t() | nil) :: map()
-  def skills(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.skills(schema) |> filter_category_classes()
-    end)
-  end
-
   def skills(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.skills(schema) |> filter_category_classes() |> filter(extensions)
-    end)
+    classes_generic(extensions, &Cache.skills/1, &filter_category_classes/1)
   end
 
   @spec all_skills() :: map()
@@ -258,22 +147,12 @@ defmodule Schema.Repo do
 
   @spec domains() :: map()
   def domains() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.domains(schema) |> filter_category_classes()
-    end)
+    domains(nil)
   end
 
   @spec domains(extensions_t() | nil) :: map()
-  def domains(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.domains(schema) |> filter_category_classes()
-    end)
-  end
-
   def domains(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.domains(schema) |> filter_category_classes() |> filter(extensions)
-    end)
+    classes_generic(extensions, &Cache.domains/1, &filter_category_classes/1)
   end
 
   @spec all_domains() :: map()
@@ -285,22 +164,12 @@ defmodule Schema.Repo do
 
   @spec modules() :: map()
   def modules() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.modules(schema) |> filter_category_classes()
-    end)
+    modules(nil)
   end
 
   @spec modules(extensions_t() | nil) :: map()
-  def modules(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.modules(schema) |> filter_category_classes()
-    end)
-  end
-
   def modules(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.modules(schema) |> filter_category_classes() |> filter(extensions)
-    end)
+    classes_generic(extensions, &Cache.modules/1, &filter_category_classes/1)
   end
 
   @spec all_modules() :: map()
@@ -317,55 +186,78 @@ defmodule Schema.Repo do
 
   @spec export_skills() :: map()
   def export_skills() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_skills(schema) end)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_skills(schema) |> filter_category_classes()
+    end)
   end
 
   @spec export_skills(extensions_t() | nil) :: map()
   def export_skills(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_skills(schema) end)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_skills(schema) |> filter_category_classes()
+    end)
   end
 
   def export_skills(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter(extensions)
+      Cache.export_skills(schema) |> filter_category_classes() |> filter(extensions)
     end)
   end
 
   @spec export_domains() :: map()
   def export_domains() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_domains(schema) end)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_domains(schema) |> filter_category_classes()
+    end)
   end
 
   @spec export_domains(extensions_t() | nil) :: map()
   def export_domains(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_domains(schema) end)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_domains(schema) |> filter_category_classes()
+    end)
   end
 
   def export_domains(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter(extensions)
+      Cache.export_domains(schema) |> filter_category_classes() |> filter(extensions)
     end)
   end
 
   @spec export_modules() :: map()
   def export_modules() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_modules(schema) end)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_modules(schema) |> filter_category_classes()
+    end)
   end
 
   @spec export_modules(extensions_t() | nil) :: map()
   def export_modules(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_modules(schema) end)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_modules(schema) |> filter_category_classes()
+    end)
   end
 
   def export_modules(extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter(extensions)
+      Cache.export_modules(schema) |> filter_category_classes() |> filter(extensions)
     end)
   end
 
   @spec skill(atom) :: nil | Cache.class_t()
   def skill(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end)
+    case Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end) do
+      nil ->
+        nil
+
+      skill ->
+        # Don't return category classes - they should be accessed via category endpoints
+        if Map.get(skill, :category) == true do
+          nil
+        else
+          skill
+        end
+    end
   end
 
   @spec find_skill(any) :: nil | map
@@ -375,7 +267,18 @@ defmodule Schema.Repo do
 
   @spec domain(atom) :: nil | Cache.class_t()
   def domain(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.domain(schema, id) end)
+    case Agent.get(__MODULE__, fn schema -> Cache.domain(schema, id) end) do
+      nil ->
+        nil
+
+      domain ->
+        # Don't return category classes - they should be accessed via category endpoints
+        if Map.get(domain, :category) == true do
+          nil
+        else
+          domain
+        end
+    end
   end
 
   @spec find_domain(any) :: nil | map
@@ -385,7 +288,18 @@ defmodule Schema.Repo do
 
   @spec module(atom) :: nil | Cache.class_t()
   def module(id) do
-    Agent.get(__MODULE__, fn schema -> Cache.module(schema, id) end)
+    case Agent.get(__MODULE__, fn schema -> Cache.module(schema, id) end) do
+      nil ->
+        nil
+
+      module ->
+        # Don't return category classes - they should be accessed via category endpoints
+        if Map.get(module, :category) == true do
+          nil
+        else
+          module
+        end
+    end
   end
 
   @spec find_module(any) :: nil | map
@@ -447,12 +361,23 @@ defmodule Schema.Repo do
 
   @spec entity_ex(atom, atom) :: nil | Cache.class_t()
   def entity_ex(type, id) do
-    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end)
+    case Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end) do
+      nil ->
+        nil
+
+      entity ->
+        # Don't return category classes - they should be accessed via category endpoints
+        if Map.get(entity, :category) == true do
+          nil
+        else
+          entity
+        end
+    end
   end
 
   @spec entity_ex(extensions_t() | nil, atom, atom) :: nil | Cache.class_t()
   def entity_ex(nil, type, id) do
-    Agent.get(__MODULE__, fn schema -> Cache.entity_ex(schema, type, id) end)
+    entity_ex(type, id)
   end
 
   def entity_ex(extensions, type, id) do
@@ -461,7 +386,14 @@ defmodule Schema.Repo do
         nil
 
       entity ->
-        Map.update(entity, :_links, [], fn links -> remove_extension_links(links, extensions) end)
+        # Don't return category classes - they should be accessed via category endpoints
+        if Map.get(entity, :category) == true do
+          nil
+        else
+          Map.update(entity, :_links, [], fn links ->
+            remove_extension_links(links, extensions)
+          end)
+        end
     end
   end
 
@@ -475,6 +407,116 @@ defmodule Schema.Repo do
   def reload(path) do
     Cache.reset(path)
     Agent.cast(__MODULE__, fn _ -> Cache.init() end)
+  end
+
+  # Generic helper for categories functions
+  defp categories_generic(extensions, cache_fn, filter_fn) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = cache_fn.(schema)
+      flat_categories = all_classes |> build_categories_flat()
+      nested_categories = build_categories_nested(flat_categories)
+
+      # Populate classes recursively while preserving subcategories
+      populated_categories =
+        populate_categories_recursive(extensions, nested_categories, all_classes)
+
+      result = %{attributes: populated_categories}
+
+      # Apply extension filtering if needed
+      if extensions != nil do
+        Map.update!(result, :attributes, fn attributes ->
+          filter_fn.(attributes, extensions)
+        end)
+      else
+        result
+      end
+    end)
+  end
+
+  # Generic helper for classes functions (skills, domains, modules)
+  defp classes_generic(extensions, cache_fn, preprocess_fn) do
+    Agent.get(__MODULE__, fn schema ->
+      classes = cache_fn.(schema) |> preprocess_fn.()
+
+      if extensions != nil do
+        filter(classes, extensions)
+      else
+        classes
+      end
+    end)
+  end
+
+  # Generic helper for single category functions
+  defp category_generic(extensions, id, cache_fn) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = cache_fn.(schema)
+      flat_categories = all_classes |> build_categories_flat()
+
+      case Map.get(flat_categories, id) do
+        nil ->
+          nil
+
+        category ->
+          # Build nested structure for this category and its subcategories
+          nested_categories = build_categories_nested(flat_categories)
+
+          # Get the category from nested structure if it's a top-level category,
+          # otherwise use the flat category and build its subcategories
+          category_with_subcategories =
+            case Map.get(nested_categories, id) do
+              nil ->
+                # It's a subcategory, build its subcategories structure
+                add_subcategories_to_category(category, id, flat_categories)
+
+              nested_category ->
+                nested_category
+            end
+
+          # Populate classes and subcategories recursively
+          category_uid = Atom.to_string(id)
+
+          populated_category =
+            populate_category_recursive(extensions, id, category_with_subcategories, all_classes)
+
+          Map.put(populated_category, :name, category_uid)
+      end
+    end)
+  end
+
+  # Extract class filtering logic to avoid duplication
+  defp filter_classes_for_category(extensions, category_uid, category_id, all_classes) do
+    all_classes
+    |> Enum.filter(fn {_name, class} ->
+      # Exclude classes that are themselves categories (category: true)
+      # These should appear in subcategories, not classes
+      if Map.get(class, :category) == true do
+        false
+      else
+        cat = class[:category]
+
+        # Match the original add_classes logic
+        if extensions == nil do
+          # When extensions is nil, check both conditions like original add_classes(nil, ...)
+          cat == category_uid or Utils.to_uid(class[:extension], cat) == category_id
+        else
+          # When extensions is provided, use case statement like original add_classes(extensions, ...)
+          case class[:extension] do
+            nil ->
+              cat == category_uid
+
+            ext ->
+              MapSet.member?(extensions, ext) and
+                (cat == category_uid or Utils.to_uid(ext, cat) == category_id)
+          end
+        end
+      end
+    end)
+    |> Enum.map(fn {name, class} ->
+      # Remove category and category_name fields like the original add_classes did
+      cleaned_class = class |> Map.delete(:category) |> Map.delete(:category_name)
+      {name, cleaned_class}
+    end)
+    |> Enum.into(%{})
   end
 
   defp filter(attributes, extensions) do
@@ -501,7 +543,6 @@ defmodule Schema.Repo do
       rest == [] or MapSet.member?(extensions, ext)
     end)
   end
-
 
   # Helper: Build all_classes map with name, extends, caption, and category fields
   defp build_all_classes(classes) do
@@ -584,7 +625,7 @@ defmodule Schema.Repo do
     end
   end
 
-  # Helper: Filter out category classes (category: true) from classes
+  # Helper: Filter out category classes (category: true)
   defp filter_category_classes(classes) do
     base_classes = [:base_module, :base_skill, :base_domain]
 
@@ -602,20 +643,7 @@ defmodule Schema.Repo do
       category_uid = Atom.to_string(category_id)
 
       category_classes =
-        all_classes
-        |> Enum.filter(fn {_name, class} ->
-          cat = class[:category]
-
-          case class[:extension] do
-            nil ->
-              cat == category_uid
-
-            ext ->
-              MapSet.member?(extensions, ext) and
-                (cat == category_uid or Utils.to_uid(ext, cat) == category_id)
-          end
-        end)
-        |> Enum.into(%{})
+        filter_classes_for_category(extensions, category_uid, category_id, all_classes)
 
       category_with_classes = Map.put(category, :classes, category_classes)
 
@@ -650,20 +678,7 @@ defmodule Schema.Repo do
     category_uid = Atom.to_string(category_id)
 
     category_classes =
-      all_classes
-      |> Enum.filter(fn {_name, class} ->
-        cat = class[:category]
-
-        case class[:extension] do
-          nil ->
-            cat == category_uid
-
-          ext ->
-            MapSet.member?(extensions, ext) and
-              (cat == category_uid or Utils.to_uid(ext, cat) == category_id)
-        end
-      end)
-      |> Enum.into(%{})
+      filter_classes_for_category(extensions, category_uid, category_id, all_classes)
 
     category_with_classes =
       category
