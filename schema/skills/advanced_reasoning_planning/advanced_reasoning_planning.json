@@ -1,6 +1,7 @@
 {
+  "uid": 15,
   "caption": "Advanced Reasoning & Planning",
-  "category": "advanced_reasoning_planning",
+  "category": true,
   "extends": "base_skill",
   "name": "advanced_reasoning_planning",
   "attributes": {}

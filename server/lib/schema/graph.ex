@@ -10,8 +10,14 @@ defmodule Schema.Graph do
 
   @node_color "#F5F5C8"
   @class_color "#C8F5D0"
+  # White background for categories
+  @category_color "#FFFFFF"
+  # Green text for categories
+  @category_text_color "#00AA00"
   @object_color "#e3e9fb"
   @enum_color "#D6A5FF"
+  # Green for class inheritance edges
+  @class_edge_color "#00AA00"
 
   @doc """
   Builds graph data for the given class.
@@ -26,11 +32,29 @@ defmodule Schema.Graph do
   end
 
   defp build_nodes(class) do
+    # Check if the main class is a category
+    is_category = class[:category] == true
+
+    node_color =
+      if is_category do
+        @category_color
+      else
+        @node_color
+      end
+
     node =
       Map.new()
-      |> Map.put(:color, @node_color)
+      |> Map.put(:color, node_color)
       |> Map.put(:id, make_id(class.name, class[:family], class[:extension]))
       |> Map.put(:label, class.caption)
+
+    # Add font color for categories
+    node =
+      if is_category do
+        Map.put(node, :font, %{color: @category_text_color})
+      else
+        node
+      end
 
     build_nodes([node], class)
   end
@@ -39,11 +63,15 @@ defmodule Schema.Graph do
     nodes =
       Map.get(class, :entities)
       |> Enum.reduce(nodes, fn {_name, obj}, acc ->
+        # Check if entity is a category or represents Domain/Skill/Module class types
+        is_category = obj[:category] == true
+        is_class_type = obj[:family] in ["domain", "skill", "module"]
+
         color =
-          if obj[:family] do
-            @class_color
-          else
-            @object_color
+          cond do
+            is_category or is_class_type -> @category_color
+            obj[:family] -> @class_color
+            true -> @object_color
           end
 
         node = %{
@@ -51,6 +79,14 @@ defmodule Schema.Graph do
           label: obj.caption,
           color: color
         }
+
+        # Add font color for categories and Domain/Skill/Module class types
+        node =
+          if is_category or is_class_type do
+            Map.put(node, :font, %{color: @category_text_color})
+          else
+            node
+          end
 
         acc =
           if not nodes_member?(nodes, node) do
@@ -67,11 +103,29 @@ defmodule Schema.Graph do
             end)
 
           Enum.reduce(children, acc, fn child, acc2 ->
+            # Check if child is a category
+            child_is_category = child[:category] == true
+
+            child_color =
+              cond do
+                child_is_category -> @category_color
+                obj[:family] -> @class_color
+                true -> @object_color
+              end
+
             child_node = %{
               id: make_id(child.name, obj[:family], child[:extension]),
               label: child.caption,
-              color: color
+              color: child_color
             }
+
+            # Add font color for categories
+            child_node =
+              if child_is_category do
+                Map.put(child_node, :font, %{color: @category_text_color})
+              else
+                child_node
+              end
 
             if not nodes_member?(nodes ++ acc, child_node) do
               [child_node | acc2]
@@ -90,11 +144,29 @@ defmodule Schema.Graph do
         children = Utils.find_children(collection, parent_name)
 
         Enum.reduce(children, nodes, fn child, acc2 ->
+          # Check if child is a category
+          is_category = child[:category] == true
+
+          node_color =
+            if is_category do
+              @category_color
+            else
+              @class_color
+            end
+
           child_node = %{
             id: make_id(child.name, class[:family], child[:extension]),
             label: child.caption,
-            color: @class_color
+            color: node_color
           }
+
+          # Add font color for categories
+          child_node =
+            if is_category do
+              Map.put(child_node, :font, %{color: @category_text_color})
+            else
+              child_node
+            end
 
           if not nodes_member?(nodes ++ acc2, child_node) do
             [child_node | acc2]
@@ -202,11 +274,14 @@ defmodule Schema.Graph do
             children = Utils.find_direct_children(collection, parent_name)
 
             Enum.reduce(children, acc_in, fn child, acc2 ->
+              # Use green color for class inheritance edges, purple for enum edges
+              edge_color = if obj[:family], do: @class_edge_color, else: @enum_color
+
               edge = %{
                 from: make_id(parent_name, parent_family, parent_extension),
                 to: make_id(child.name, parent_family, child[:extension]),
                 label: obj[:family] || "enum",
-                color: @enum_color
+                color: edge_color
               }
 
               # Recursively add edges for child's children
@@ -239,11 +314,14 @@ defmodule Schema.Graph do
           children = Utils.find_direct_children(collection, parent_name)
 
           Enum.reduce(children, acc_in, fn child, acc2 ->
+            # Use green color for class inheritance edges, purple for enum edges
+            edge_color = if class[:family], do: @class_edge_color, else: @enum_color
+
             edge = %{
               from: make_id(parent_name, parent_family, parent_extension),
               to: make_id(child.name, parent_family, child[:extension]),
               label: class[:family] || "enum",
-              color: @enum_color
+              color: edge_color
             }
 
             # Recursively add edges for child's children

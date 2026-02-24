@@ -1,6 +1,7 @@
 {
+  "uid": 11,
   "caption": "Evaluation & Monitoring",
-  "category": "evaluation_monitoring",
+  "category": true,
   "extends": "base_skill",
   "name": "evaluation_monitoring",
   "attributes": {}

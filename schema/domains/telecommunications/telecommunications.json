@@ -1,8 +1,9 @@
 {
+  "uid": 16,
   "caption": "Telecommunications",
   "description": "Domain covering network infrastructure, wireless communications, telecom services, and connectivity solutions",
   "extends": "base_domain",
   "name": "telecommunications",
-  "category": "telecommunications",
+  "category": true,
   "attributes": {}
 }

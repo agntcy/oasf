@@ -40,7 +40,7 @@ contribute to the development of OASF Schemas and the framework itself.
 - **Attribute**:
   An attribute is the more generic name for both fields and entities in OASF.
   A field is a scalar attribute while an entity is a complex attribute.
-- **Category:** A Category organizes classes that represent a particular domain.
+- **Category:** A Category organizes classes that represent a particular domain. Categories are marked by adding `category: true` to a class JSON file and can be created at any level of the taxonomy tree.
 
 ## How to Add to the Schema
 
@@ -48,12 +48,17 @@ contribute to the development of OASF Schemas and the framework itself.
 
 1. Determine where in the taxonomy of the class family you would want to add the
    new `class`.
-2. Create a new file → `<class_name.json>` inside the family and category
-   specific subdirectory in the
-   [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+2. Create a new file → `<class_name.json>` inside the appropriate subdirectory
+   in the [/schema](https://github.com/agntcy/oasf/tree/main/schema) folder.
+   The directory structure reflects the taxonomy hierarchy (e.g., classes that
+   extend a category should be placed in that category's subdirectory).
    Template available
    [here](https://github.com/agntcy/oasf/blob/main/schema/templates/class_name.json).
 3. Define the `class` itself.
+   - If this class represents a category (organizational structure), add
+     `"category": true` to the JSON. Categories can be created at any level of
+     the taxonomy tree by extending other categories.
+   - Set the `uid` field to a unique identifier within the category hierarchy.
 4. In case of a `module` class, make sure to overwrite the `data` attribute with
    a new object containing all the module-specific attributes →
    [Defining an `object`](#defining-an-object).
@@ -412,17 +417,21 @@ The extension's directory structure is the same as the top level schema
 directory, and it may contain the following files and subdirectories, depending
 on what type of extension is desired:
 
-| Name                     | Description                                |
-| ------------------------ | ------------------------------------------ |
-| `skill_categories.json`  | Create it to define new skill categories.  |
-| `domain_categories.json` | Create it to define new domain categories. |
-| `module_categories.json` | Create it to define new module categories. |
-| `dictionary.json`        | Create it to define new attributes.        |
-| `skills`                 | Create it to define new skill classes.     |
-| `domains`                | Create it to define new domain classes.    |
-| `modules`                | Create it to define new module classes.    |
-| `objects`                | Create it to define new objects.           |
-| `profiles`               | Create it to define new profiles.          |
+| Name              | Description                                                          |
+| ----------------- | -------------------------------------------------------------------- |
+| `dictionary.json`  | Create it to define new attributes.                                 |
+| `skills`          | Create it to define new skill classes. Categories are created by    |
+|                   | adding `"category": true` to a skill class JSON file.                |
+| `domains`         | Create it to define new domain classes. Categories are created by  |
+|                   | adding `"category": true` to a domain class JSON file.               |
+| `modules`         | Create it to define new module classes. Categories are created by  |
+|                   | adding `"category": true` to a module class JSON file.                |
+| `objects`         | Create it to define new objects.                                     |
+| `profiles`        | Create it to define new profiles.                                   |
+
+**Note:** Categories are no longer defined in separate category files. Instead,
+mark any class as a category by adding `"category": true` to its JSON file.
+Categories can be nested at any level by having one category extend another.
 
 ## Reporting Issues
 

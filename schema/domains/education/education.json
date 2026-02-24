@@ -1,8 +1,9 @@
 {
+  "uid": 6,
   "caption": "Education",
   "description": "Systems, methods, and technologies used to teach, learn, and foster knowledge development in individuals and communities. Subdomains: E-Learning, Curriculum Design, Learning Management Systems, Educational Technology, Pedagogy",
   "extends": "base_domain",
-  "category": "education",
+  "category": true,
   "name": "education",
   "attributes": {}
 }

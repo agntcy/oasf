@@ -1,6 +1,7 @@
 {
+  "uid": 5,
   "caption": "Analytical Skills",
-  "category": "analytical_skills",
+  "category": true,
   "extends": "base_skill",
   "name": "analytical_skills",
   "attributes": {}

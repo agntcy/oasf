@@ -1,8 +1,9 @@
 {
+  "uid": 12,
   "caption": "Energy",
   "description": "Production, distribution, and management of energy resources including renewable energy, power grids, and energy efficiency.",
   "extends": "base_domain",
   "name": "energy",
-  "category": "energy",
+  "category": true,
   "attributes": {}
 }

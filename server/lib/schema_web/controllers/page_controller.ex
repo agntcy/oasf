@@ -139,7 +139,7 @@ defmodule SchemaWeb.PageController do
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def skill_categories(conn, %{"id" => id} = params) do
-    case SchemaController.main_skill_skills(params) do
+    case SchemaController.skill_category_skills(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -147,9 +147,12 @@ defmodule SchemaWeb.PageController do
         skills = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, skills)
+          data
+          |> Map.put(:classes, skills)
+          |> sort_subcategories()
           |> Map.put(:class_type, "skill")
           |> Map.put(:classes_path, "skills")
+          |> Map.put(:categories_path, "skill_categories")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -180,7 +183,7 @@ defmodule SchemaWeb.PageController do
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def domain_categories(conn, %{"id" => id} = params) do
-    case SchemaController.main_dodomain_categories(params) do
+    case SchemaController.domain_category_domains(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -188,9 +191,12 @@ defmodule SchemaWeb.PageController do
         domains = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, domains)
+          data
+          |> Map.put(:classes, domains)
+          |> sort_subcategories()
           |> Map.put(:class_type, "domain")
           |> Map.put(:classes_path, "domains")
+          |> Map.put(:categories_path, "domain_categories")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -221,7 +227,7 @@ defmodule SchemaWeb.PageController do
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def module_categories(conn, %{"id" => id} = params) do
-    case SchemaController.main_module_modules(params) do
+    case SchemaController.module_category_modules(params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -229,9 +235,12 @@ defmodule SchemaWeb.PageController do
         modules = sort_by(data[:classes], :uid)
 
         data =
-          Map.put(data, :classes, modules)
+          data
+          |> Map.put(:classes, modules)
+          |> sort_subcategories()
           |> Map.put(:class_type, "module")
           |> Map.put(:classes_path, "modules")
+          |> Map.put(:categories_path, "module_categories")
 
         render(conn, "category.html",
           extensions: Schema.extensions(),
@@ -472,9 +481,36 @@ defmodule SchemaWeb.PageController do
   defp sort_classes(categories) do
     Map.update!(categories, :attributes, fn list ->
       Enum.map(list, fn {name, category} ->
-        {name, Map.update!(category, :classes, &sort_by_float_uid(&1))}
+        category =
+          category
+          |> Map.update(:classes, [], &sort_by_float_uid(&1))
+          |> sort_subcategories()
+
+        {name, category}
       end)
     end)
+  end
+
+  defp sort_subcategories(category) do
+    subcategories = category[:subcategories] || %{}
+
+    if map_size(subcategories) > 0 do
+      sorted_subcategories =
+        subcategories
+        |> Enum.map(fn {key, subcategory} ->
+          sorted_subcategory =
+            subcategory
+            |> Map.update(:classes, [], &sort_by_float_uid(&1))
+            |> sort_subcategories()
+
+          {key, sorted_subcategory}
+        end)
+        |> Enum.into(%{})
+
+      Map.put(category, :subcategories, sorted_subcategories)
+    else
+      category
+    end
   end
 
   defp sort_by_float_uid(classes) do

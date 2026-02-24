@@ -1,6 +1,7 @@
 {
+  "uid": 6,
   "caption": "Retrieval Augmented Generation",
-  "category": "retrieval_augmented_generation",
+  "category": true,
   "extends": "base_skill",
   "name": "retrieval_augmented_generation",
   "attributes": {}

@@ -158,7 +158,12 @@ defmodule Schema.Utils do
 
   defp link_classes(dictionary, family, classes) do
     Enum.reduce(classes, dictionary, fn class, acc ->
-      add_class_links(acc, class, family)
+      # Skip category classes (category: true) - they shouldn't appear in _links
+      if Map.get(elem(class, 1), :category) != true do
+        add_class_links(acc, class, family)
+      else
+        acc
+      end
     end)
   end
 
@@ -673,18 +678,6 @@ defmodule Schema.Utils do
       "#{item[:extension]}/#{item[:name]}"
     else
       item[:name]
-    end
-  end
-
-  @spec is_oasf_class?(atom, String.t()) :: boolean
-  def is_oasf_class?(family, name) do
-    class_name = Schema.Utils.descope(name) |> String.to_atom()
-
-    case family do
-      :skill -> Map.has_key?(Schema.all_skills(), class_name)
-      :domain -> Map.has_key?(Schema.all_domains(), class_name)
-      :module -> Map.has_key?(Schema.all_modules(), class_name)
-      _ -> false
     end
   end
 end

@@ -891,7 +891,10 @@ defmodule SchemaWeb.SchemaController do
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def skill_categories(conn, params) do
-    send_json_resp(conn, skill_categories(params))
+    result = skill_categories(params)
+    # Extract attributes to match the format of /api/skill_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
   end
 
   @spec skill_categories(map()) :: map()
@@ -902,7 +905,7 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the skills defined in a given main skill.
   """
-  swagger_path :main_skill do
+  swagger_path :skill_category do
     get("/api/skill_categories/{name}")
     summary("List skills of a skill category")
 
@@ -926,9 +929,9 @@ defmodule SchemaWeb.SchemaController do
     response(404, "Skill category <code>name</code> not found")
   end
 
-  @spec main_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_skill(conn, %{"id" => id} = params) do
-    case main_skill_skills(params) do
+  @spec skill_category(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def skill_category(conn, %{"id" => id} = params) do
+    case skill_category_skills(params) do
       nil ->
         send_json_resp(conn, 404, %{error: "Skill category #{id} not found"})
 
@@ -937,13 +940,13 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  @spec main_skill_skills(map()) :: map() | nil
-  def main_skill_skills(params) do
+  @spec skill_category_skills(map()) :: map() | nil
+  def skill_category_skills(params) do
     name = params["id"]
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.main_skill(extensions, extension, name)
+    Schema.skill_category(extensions, extension, name)
   end
 
   @doc """
@@ -970,7 +973,10 @@ defmodule SchemaWeb.SchemaController do
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def domain_categories(conn, params) do
-    send_json_resp(conn, domain_categories(params))
+    result = domain_categories(params)
+    # Extract attributes to match the format of /api/domain_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
   end
 
   @spec domain_categories(map()) :: map()
@@ -981,7 +987,7 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the domains defined in a given main domain.
   """
-  swagger_path :main_domain do
+  swagger_path :domain_category do
     get("/api/domain_categories/{name}")
     summary("List domains of a domain category")
 
@@ -1005,9 +1011,9 @@ defmodule SchemaWeb.SchemaController do
     response(404, "Domain category <code>name</code> not found")
   end
 
-  @spec main_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_domain(conn, %{"id" => id} = params) do
-    case main_dodomain_categories(params) do
+  @spec domain_category(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def domain_category(conn, %{"id" => id} = params) do
+    case domain_category_domains(params) do
       nil ->
         send_json_resp(conn, 404, %{error: "Domain category #{id} not found"})
 
@@ -1016,13 +1022,13 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  @spec main_dodomain_categories(map()) :: map() | nil
-  def main_dodomain_categories(params) do
+  @spec domain_category_domains(map()) :: map() | nil
+  def domain_category_domains(params) do
     name = params["id"]
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.main_domain(extensions, extension, name)
+    Schema.domain_category(extensions, extension, name)
   end
 
   @doc """
@@ -1049,7 +1055,10 @@ defmodule SchemaWeb.SchemaController do
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def module_categories(conn, params) do
-    send_json_resp(conn, module_categories(params))
+    result = module_categories(params)
+    # Extract attributes to match the format of /api/module_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
   end
 
   @spec module_categories(map()) :: map()
@@ -1060,7 +1069,7 @@ defmodule SchemaWeb.SchemaController do
   @doc """
   Get the modules defined in a given main module.
   """
-  swagger_path :main_module do
+  swagger_path :module_category do
     get("/api/module_categories/{name}")
     summary("List modules of a module category")
 
@@ -1084,9 +1093,9 @@ defmodule SchemaWeb.SchemaController do
     response(404, "Module category <code>name</code> not found")
   end
 
-  @spec main_module(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def main_module(conn, %{"id" => id} = params) do
-    case main_module_modules(params) do
+  @spec module_category(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def module_category(conn, %{"id" => id} = params) do
+    case module_category_modules(params) do
       nil ->
         send_json_resp(conn, 404, %{error: "Module category #{id} not found"})
 
@@ -1095,13 +1104,13 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  @spec main_module_modules(map()) :: map() | nil
-  def main_module_modules(params) do
+  @spec module_category_modules(map()) :: map() | nil
+  def module_category_modules(params) do
     name = params["id"]
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.main_module(extensions, extension, name)
+    Schema.module_category(extensions, extension, name)
   end
 
   @doc """
