@@ -297,7 +297,7 @@
         <a class="nav-link dropdown-toggle" href="#" role="button">Resources</a>
         <div class="dropdown-content">
           <a class="dropdown-link" target="_blank" href='https://docs.agntcy.org/oasf/open-agentic-schema-framework/'> Documentation</a>
-          <a class="dropdown-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
+          <a class="dropdown-link" target="_blank" href='<%= doc_path(@conn) %>'>API Documentation</a>
           <a class="dropdown-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
           <a class="dropdown-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
         </div>
