@@ -295,6 +295,11 @@ var _ = Describe("API", func() {
 			{"api_dictionary", baseURL + "/api/dictionary"},
 			{"api_data_types", baseURL + "/api/data_types"},
 
+			// Taxonomy endpoints
+			{"taxonomy_modules", baseURL + "/taxonomy/modules"},
+			{"taxonomy_skills", baseURL + "/taxonomy/skills"},
+			{"taxonomy_domains", baseURL + "/taxonomy/domains"},
+
 			// Schema endpoints
 			{"schema_skills_by_id", baseURL + "/schema/skills/" + testSkillID},
 			{"schema_domains_by_id", baseURL + "/schema/domains/" + testDomainID},

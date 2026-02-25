@@ -704,4 +704,248 @@ defmodule Schema.Repo do
         category_with_classes
     end
   end
+
+  @spec taxonomy_modules :: map()
+  def taxonomy_modules() do
+    taxonomy_modules(nil)
+  end
+
+  @spec taxonomy_modules(extensions_t() | nil) :: map()
+  def taxonomy_modules(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = Cache.modules(schema)
+      build_taxonomy_tree(extensions, all_classes, :base_module)
+    end)
+  end
+
+  @spec taxonomy_skills :: map()
+  def taxonomy_skills() do
+    taxonomy_skills(nil)
+  end
+
+  @spec taxonomy_skills(extensions_t() | nil) :: map()
+  def taxonomy_skills(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = Cache.skills(schema)
+      build_taxonomy_tree(extensions, all_classes, :base_skill)
+    end)
+  end
+
+  @spec taxonomy_domains :: map()
+  def taxonomy_domains() do
+    taxonomy_domains(nil)
+  end
+
+  @spec taxonomy_domains(extensions_t() | nil) :: map()
+  def taxonomy_domains(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = Cache.domains(schema)
+      build_taxonomy_tree(extensions, all_classes, :base_domain)
+    end)
+  end
+
+  # Build a complete taxonomy tree with categories, subcategories, classes, and subclasses
+  defp build_taxonomy_tree(extensions, all_classes, base_class_key) do
+    # Filter out base class and build flat categories
+    filtered_classes =
+      Enum.filter(all_classes, fn {key, _class} ->
+        key != base_class_key
+      end)
+      |> Enum.into(%{})
+
+    # Build flat categories map
+    flat_categories = build_categories_flat(filtered_classes)
+
+    # Build nested categories structure
+    nested_categories = build_categories_nested(flat_categories)
+
+    # Build complete taxonomy tree with classes and subclasses
+    build_taxonomy_tree_recursive(
+      extensions,
+      nested_categories,
+      filtered_classes,
+      flat_categories
+    )
+  end
+
+  # Recursively build taxonomy tree for categories
+  defp build_taxonomy_tree_recursive(extensions, categories, all_classes, flat_categories) do
+    Enum.into(categories, %{}, fn {category_id, category} ->
+      category_uid = Atom.to_string(category_id)
+
+      # Get regular classes for this category (non-category classes)
+      regular_classes =
+        filter_classes_for_category(extensions, category_uid, category_id, all_classes)
+        |> Enum.filter(fn {_name, class} ->
+          # Exclude classes that extend another non-category class
+          extends = class[:extends]
+
+          if extends do
+            extends_key = String.to_atom(extends)
+
+            # Only include if extends is a category, or if extends doesn't exist in all_classes as a non-category
+            case Map.get(all_classes, extends_key) do
+              # Parent doesn't exist, include it
+              nil -> true
+              # Only include if parent is a category
+              parent_class -> Map.get(parent_class, :category) == true
+            end
+          else
+            # No extends, include it
+            true
+          end
+        end)
+        |> Enum.into(%{}, fn {name, class} ->
+          # Build subclasses for this class - use class[:name] (string) not the atom key
+          parent_class_name = Map.get(class, :name) || Atom.to_string(name)
+
+          subclasses =
+            build_subclasses_for_class(
+              extensions,
+              parent_class_name,
+              all_classes,
+              flat_categories
+            )
+
+          simplified_class = simplify_class(class, name, all_classes)
+
+          class_with_subclasses =
+            if map_size(subclasses) > 0,
+              do: Map.put(simplified_class, :classes, subclasses),
+              else: simplified_class
+
+          {name, class_with_subclasses}
+        end)
+
+      # Get subcategories (category classes) and merge them into classes with category: true
+      subcategory_classes =
+        case category[:subcategories] do
+          nil ->
+            %{}
+
+          subs when is_map(subs) ->
+            build_taxonomy_tree_recursive(extensions, subs, all_classes, flat_categories)
+            |> Enum.into(%{}, fn {subcat_id, subcat_data} ->
+              # Add category: true to mark this as a category class
+              subcat_with_category = Map.put(subcat_data, :category, true)
+              {subcat_id, subcat_with_category}
+            end)
+
+          _ ->
+            %{}
+        end
+
+      # Merge regular classes and subcategory classes
+      all_category_classes = Map.merge(subcategory_classes, regular_classes)
+
+      simplified_category = simplify_category(category, category_id, all_classes)
+      # Mark this category with category: true
+      category_with_flag = Map.put(simplified_category, :category, true)
+      category_with_classes = Map.put(category_with_flag, :classes, all_category_classes)
+
+      {category_id, category_with_classes}
+    end)
+  end
+
+  # Build subclasses for a given class (classes that extend this class and are not categories)
+  defp build_subclasses_for_class(extensions, parent_class_name, all_classes, flat_categories) do
+    # parent_class_name should be a string (the name field from the class)
+    # Convert to atom for map key lookup if needed
+    parent_name_str =
+      if is_atom(parent_class_name),
+        do: Atom.to_string(parent_class_name),
+        else: parent_class_name
+
+    parent_key = String.to_atom(parent_name_str)
+
+    all_classes
+    |> Enum.filter(fn {_name, class} ->
+      # Exclude categories
+      if Map.get(class, :category) == true do
+        false
+      else
+        # Check if this class extends the parent
+        extends = class[:extends]
+
+        if extends do
+          # extends is a string, compare with parent_name_str
+          # Only include if it extends the parent AND the parent is not a category
+          if extends == parent_name_str do
+            # Make sure the parent is not a category
+            not Map.has_key?(flat_categories, parent_key)
+          else
+            false
+          end
+        else
+          false
+        end
+      end
+    end)
+    |> Enum.filter(fn {_name, class} ->
+      # Apply extension filtering if needed
+      if extensions == nil do
+        true
+      else
+        case class[:extension] do
+          nil -> true
+          ext -> MapSet.member?(extensions, ext)
+        end
+      end
+    end)
+    |> Enum.into(%{}, fn {name, class} ->
+      # Recursively build subclasses for this subclass - use class[:name] (string) not the atom key
+      subclass_parent_name = Map.get(class, :name) || Atom.to_string(name)
+
+      subclasses =
+        build_subclasses_for_class(extensions, subclass_parent_name, all_classes, flat_categories)
+
+      simplified_class = simplify_class(class, name, all_classes)
+
+      class_with_subclasses =
+        if map_size(subclasses) > 0,
+          do: Map.put(simplified_class, :classes, subclasses),
+          else: simplified_class
+
+      {name, class_with_subclasses}
+    end)
+  end
+
+  # Extract hierarchical name from class attributes.name.enum (already calculated in cache)
+  defp get_hierarchical_name(class) do
+    case get_in(class, [:attributes, :name, :enum]) do
+      nil ->
+        nil
+
+      enum_map when is_map(enum_map) ->
+        # Extract the hierarchical name from enum keys (stored as an atom key)
+        case Enum.at(Map.keys(enum_map), 0) do
+          nil -> nil
+          enum_key -> Atom.to_string(enum_key)
+        end
+    end
+  end
+
+  # Simplify a category to only include name, id, caption, description
+  defp simplify_category(category, _category_id, _all_classes) do
+    hierarchical_name = get_hierarchical_name(category)
+
+    %{
+      name: hierarchical_name,
+      id: Map.get(category, :uid) || 0,
+      caption: Map.get(category, :caption) || "",
+      description: Map.get(category, :description) || ""
+    }
+  end
+
+  # Simplify a class to only include name, id, caption, description
+  defp simplify_class(class, _name_key, _all_classes) do
+    hierarchical_name = get_hierarchical_name(class)
+
+    %{
+      name: hierarchical_name,
+      id: Map.get(class, :uid) || 0,
+      caption: Map.get(class, :caption) || "",
+      description: Map.get(class, :description) || ""
+    }
+  end
 end
