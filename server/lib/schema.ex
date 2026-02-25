@@ -335,6 +335,33 @@ defmodule Schema do
   def find_module(uid) when is_integer(uid), do: Repo.find_module(uid)
 
   @doc """
+    Returns the taxonomy tree for modules.
+  """
+  @spec taxonomy_modules :: map()
+  def taxonomy_modules(), do: Repo.taxonomy_modules()
+
+  @spec taxonomy_modules(Repo.extensions_t()) :: map()
+  def taxonomy_modules(extensions), do: Repo.taxonomy_modules(extensions)
+
+  @doc """
+    Returns the taxonomy tree for skills.
+  """
+  @spec taxonomy_skills :: map()
+  def taxonomy_skills(), do: Repo.taxonomy_skills()
+
+  @spec taxonomy_skills(Repo.extensions_t()) :: map()
+  def taxonomy_skills(extensions), do: Repo.taxonomy_skills(extensions)
+
+  @doc """
+    Returns the taxonomy tree for domains.
+  """
+  @spec taxonomy_domains :: map()
+  def taxonomy_domains(), do: Repo.taxonomy_domains()
+
+  @spec taxonomy_domains(Repo.extensions_t()) :: map()
+  def taxonomy_domains(extensions), do: Repo.taxonomy_domains(extensions)
+
+  @doc """
     Returns all objects.
   """
   @spec objects() :: map()

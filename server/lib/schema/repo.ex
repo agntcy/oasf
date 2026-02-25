@@ -704,4 +704,189 @@ defmodule Schema.Repo do
         category_with_classes
     end
   end
+
+  @spec taxonomy_modules :: map()
+  def taxonomy_modules() do
+    taxonomy_modules(nil)
+  end
+
+  @spec taxonomy_modules(extensions_t() | nil) :: map()
+  def taxonomy_modules(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = Cache.modules(schema)
+      build_taxonomy_tree(extensions, all_classes, :base_module)
+    end)
+  end
+
+  @spec taxonomy_skills :: map()
+  def taxonomy_skills() do
+    taxonomy_skills(nil)
+  end
+
+  @spec taxonomy_skills(extensions_t() | nil) :: map()
+  def taxonomy_skills(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = Cache.skills(schema)
+      build_taxonomy_tree(extensions, all_classes, :base_skill)
+    end)
+  end
+
+  @spec taxonomy_domains :: map()
+  def taxonomy_domains() do
+    taxonomy_domains(nil)
+  end
+
+  @spec taxonomy_domains(extensions_t() | nil) :: map()
+  def taxonomy_domains(extensions) do
+    Agent.get(__MODULE__, fn schema ->
+      all_classes = Cache.domains(schema)
+      build_taxonomy_tree(extensions, all_classes, :base_domain)
+    end)
+  end
+
+  # Build a complete taxonomy tree with categories, subcategories, classes, and subclasses
+  defp build_taxonomy_tree(extensions, all_classes, base_class_key) do
+    # Filter out base class
+    filtered_classes =
+      Enum.filter(all_classes, fn {key, _class} ->
+        key != base_class_key
+      end)
+      |> Enum.into(%{})
+
+    # Apply extension filtering if needed
+    filtered_classes =
+      if extensions != nil do
+        Enum.filter(filtered_classes, fn {_key, class} ->
+          case class[:extension] do
+            nil -> true
+            ext -> MapSet.member?(extensions, ext)
+          end
+        end)
+        |> Enum.into(%{})
+      else
+        filtered_classes
+      end
+
+    # Build tree structure using extends relationships
+    # Returns a map: {parent_key => [child_keys]}
+    children_map = build_children_map(filtered_classes, base_class_key)
+
+    # Find top-level items (those that extend base_class_key or have no extends)
+    top_level_keys = find_top_level_items(filtered_classes, base_class_key)
+
+    # Build simplified tree starting from top-level
+    Enum.reduce(top_level_keys, %{}, fn class_key, acc ->
+      simplified = build_tree_item(class_key, filtered_classes, children_map)
+      if simplified != nil, do: Map.put(acc, class_key, simplified), else: acc
+    end)
+  end
+
+  # Build a map of parent -> [children] based on extends relationships
+  defp build_children_map(all_classes, base_class_key) do
+    Enum.reduce(all_classes, %{}, fn {class_key, class}, acc ->
+      extends = class[:extends]
+
+      # Determine parent key
+      parent_key =
+        cond do
+          extends == nil -> nil
+          String.to_atom(extends) == base_class_key -> nil
+          true -> String.to_atom(extends)
+        end
+
+      # If parent exists in all_classes, add this as a child
+      if parent_key != nil && Map.has_key?(all_classes, parent_key) do
+        Map.update(acc, parent_key, [class_key], fn children ->
+          [class_key | children]
+        end)
+      else
+        acc
+      end
+    end)
+  end
+
+  # Find top-level items:
+  # 1. Items with no extends
+  # 2. Items that extend base_class_key
+  # 3. Items whose parent is not in all_classes (was filtered out)
+  defp find_top_level_items(all_classes, base_class_key) do
+    Enum.filter(all_classes, fn {_class_key, class} ->
+      extends = class[:extends]
+
+      cond do
+        extends == nil -> true
+        String.to_atom(extends) == base_class_key -> true
+        true -> not Map.has_key?(all_classes, String.to_atom(extends))
+      end
+    end)
+    |> Enum.map(fn {class_key, _class} -> class_key end)
+  end
+
+  # Recursively build a tree item and its children
+  defp build_tree_item(class_key, all_classes, children_map) do
+    class = Map.get(all_classes, class_key)
+
+    if class == nil do
+      nil
+    else
+      # Get children of this class
+      children_keys = Map.get(children_map, class_key, [])
+
+      # Simplify this class/category
+      simplified = simplify_class_or_category(class)
+
+      # Recursively build children
+      children =
+        Enum.reduce(children_keys, %{}, fn child_key, acc ->
+          child_simplified = build_tree_item(child_key, all_classes, children_map)
+
+          if child_simplified != nil do
+            Map.put(acc, child_key, child_simplified)
+          else
+            acc
+          end
+        end)
+
+      # Add children to simplified class if any exist
+      if map_size(children) > 0 do
+        Map.put(simplified, :classes, children)
+      else
+        simplified
+      end
+    end
+  end
+
+  # Simplify a class or category to only include needed fields
+  defp simplify_class_or_category(class) do
+    hierarchical_name = get_hierarchical_name(class)
+    is_category = Map.get(class, :category) == true
+    deprecated = Map.has_key?(class, :"@deprecated")
+
+    result = %{
+      name: hierarchical_name,
+      id: Map.get(class, :uid) || 0,
+      caption: Map.get(class, :caption) || "",
+      description: Map.get(class, :description) || ""
+    }
+
+    result =
+      if is_category, do: Map.put(result, :category, true), else: result
+
+    if deprecated, do: Map.put(result, :deprecated, true), else: result
+  end
+
+  # Extract hierarchical name from class attributes.name.enum (already calculated in cache)
+  defp get_hierarchical_name(class) do
+    case get_in(class, [:attributes, :name, :enum]) do
+      nil ->
+        nil
+
+      enum_map when is_map(enum_map) ->
+        # Extract the hierarchical name from enum keys (stored as an atom key)
+        case Enum.at(Map.keys(enum_map), 0) do
+          nil -> nil
+          enum_key -> Atom.to_string(enum_key)
+        end
+    end
+  end
 end
