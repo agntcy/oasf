@@ -1418,6 +1418,96 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
+  Get the taxonomy tree for modules.
+  """
+  swagger_path :taxonomy_modules do
+    get("/taxonomy/modules")
+    summary("Get modules taxonomy tree")
+
+    description(
+      "Get OASF modules taxonomy tree with nested categories, subcategories, classes, and subclasses."
+    )
+
+    produces("application/json")
+    tag("Taxonomy")
+
+    parameters do
+      extensions(:query, :array, "Related schema extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec taxonomy_modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def taxonomy_modules(conn, params) do
+    extensions = parse_options(extensions(params))
+    taxonomy = Schema.taxonomy_modules(extensions)
+    send_json_resp(conn, taxonomy)
+  end
+
+  @doc """
+  Get the taxonomy tree for skills.
+  """
+  swagger_path :taxonomy_skills do
+    get("/taxonomy/skills")
+    summary("Get skills taxonomy tree")
+
+    description(
+      "Get OASF skills taxonomy tree with nested categories, subcategories, classes, and subclasses."
+    )
+
+    produces("application/json")
+    tag("Taxonomy")
+
+    parameters do
+      extensions(:query, :array, "Related schema extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec taxonomy_skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def taxonomy_skills(conn, params) do
+    extensions = parse_options(extensions(params))
+    taxonomy = Schema.taxonomy_skills(extensions)
+    send_json_resp(conn, taxonomy)
+  end
+
+  @doc """
+  Get the taxonomy tree for domains.
+  """
+  swagger_path :taxonomy_domains do
+    get("/taxonomy/domains")
+    summary("Get domains taxonomy tree")
+
+    description(
+      "Get OASF domains taxonomy tree with nested categories, subcategories, classes, and subclasses."
+    )
+
+    produces("application/json")
+    tag("Taxonomy")
+
+    parameters do
+      extensions(:query, :array, "Related schema extensions to include in response.",
+        items: [type: :string]
+      )
+    end
+
+    response(200, "Success")
+  end
+
+  @spec taxonomy_domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def taxonomy_domains(conn, params) do
+    extensions = parse_options(extensions(params))
+    taxonomy = Schema.taxonomy_domains(extensions)
+    send_json_resp(conn, taxonomy)
+  end
+
+  @doc """
   Get an object by name.
   get /api/objects/:name
   get /api/objects/:extension/:name

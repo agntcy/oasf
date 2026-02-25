@@ -173,6 +173,14 @@ defmodule SchemaWeb.Router do
     get "/objects/:extension/:id", SchemaController, :sample_object
   end
 
+  scope "/taxonomy", SchemaWeb do
+    pipe_through :api
+
+    get "/modules", SchemaController, :taxonomy_modules
+    get "/skills", SchemaController, :taxonomy_skills
+    get "/domains", SchemaController, :taxonomy_domains
+  end
+
   scope "/doc" do
     forward "/", PhoenixSwagger.Plug.SwaggerUI,
       otp_app: :schema_server,
@@ -190,7 +198,7 @@ defmodule SchemaWeb.Router do
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        version: "0.5.1"
+        version: "0.5.2"
       }
     }
   end
