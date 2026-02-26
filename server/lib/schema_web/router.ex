@@ -173,10 +173,13 @@ defmodule SchemaWeb.Router do
     get "/objects/:extension/:id", SchemaController, :sample_object
   end
 
+  # Version-aware Swagger UI routes
   scope "/doc" do
-    forward "/", PhoenixSwagger.Plug.SwaggerUI,
-      otp_app: :schema_server,
-      swagger_file: "swagger.json"
+    get "/", SchemaWeb.SwaggerController, :swagger_ui
+  end
+
+  scope "/:version/doc" do
+    get "/", SchemaWeb.SwaggerController, :swagger_ui
   end
 
   def swagger_info do
