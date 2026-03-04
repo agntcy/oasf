@@ -707,40 +707,58 @@ defmodule Schema.Repo do
 
   @spec taxonomy_modules :: map()
   def taxonomy_modules() do
-    taxonomy_modules(nil)
+    taxonomy_modules(nil, nil)
   end
 
   @spec taxonomy_modules(extensions_t() | nil) :: map()
   def taxonomy_modules(extensions) do
+    taxonomy_modules(extensions, nil)
+  end
+
+  @spec taxonomy_modules(extensions_t() | nil, String.t() | nil) :: map()
+  def taxonomy_modules(extensions, parent) do
     Agent.get(__MODULE__, fn schema ->
       all_classes = Cache.modules(schema)
-      build_taxonomy_tree(extensions, all_classes, :base_module)
+      tree = build_taxonomy_tree(extensions, all_classes, :base_module)
+      filter_by_parent(tree, parent)
     end)
   end
 
   @spec taxonomy_skills :: map()
   def taxonomy_skills() do
-    taxonomy_skills(nil)
+    taxonomy_skills(nil, nil)
   end
 
   @spec taxonomy_skills(extensions_t() | nil) :: map()
   def taxonomy_skills(extensions) do
+    taxonomy_skills(extensions, nil)
+  end
+
+  @spec taxonomy_skills(extensions_t() | nil, String.t() | nil) :: map()
+  def taxonomy_skills(extensions, parent) do
     Agent.get(__MODULE__, fn schema ->
       all_classes = Cache.skills(schema)
-      build_taxonomy_tree(extensions, all_classes, :base_skill)
+      tree = build_taxonomy_tree(extensions, all_classes, :base_skill)
+      filter_by_parent(tree, parent)
     end)
   end
 
   @spec taxonomy_domains :: map()
   def taxonomy_domains() do
-    taxonomy_domains(nil)
+    taxonomy_domains(nil, nil)
   end
 
   @spec taxonomy_domains(extensions_t() | nil) :: map()
   def taxonomy_domains(extensions) do
+    taxonomy_domains(extensions, nil)
+  end
+
+  @spec taxonomy_domains(extensions_t() | nil, String.t() | nil) :: map()
+  def taxonomy_domains(extensions, parent) do
     Agent.get(__MODULE__, fn schema ->
       all_classes = Cache.domains(schema)
-      build_taxonomy_tree(extensions, all_classes, :base_domain)
+      tree = build_taxonomy_tree(extensions, all_classes, :base_domain)
+      filter_by_parent(tree, parent)
     end)
   end
 
@@ -889,4 +907,57 @@ defmodule Schema.Repo do
         end
     end
   end
+
+  # Filter taxonomy tree by parent name. If parent is nil, returns full tree.
+  # If parent is provided, finds the parent node and returns it at the top level with its children nested.
+  defp filter_by_parent(tree, nil), do: tree
+
+  defp filter_by_parent(tree, parent_name) when is_binary(parent_name) do
+    case find_node_by_name_with_key(tree, parent_name) do
+      nil ->
+        # Parent not found, return empty map
+        %{}
+
+      {parent_key, parent_node} ->
+        # Return the parent node at the top level with its children nested
+        %{parent_key => parent_node}
+    end
+  end
+
+  # Recursively search for a node with matching name in the taxonomy tree.
+  # Returns both the key and the node, so we can reconstruct the top-level structure.
+  defp find_node_by_name_with_key(tree, target_name) when is_map(tree) do
+    Enum.reduce_while(tree, nil, fn {key, node}, _acc ->
+      node_name = Map.get(node, :name)
+      key_name = Atom.to_string(key)
+
+      cond do
+        # Found the target node by name field
+        node_name == target_name ->
+          {:halt, {key, node}}
+
+        # Found the target node by key (for top-level items)
+        key_name == target_name ->
+          {:halt, {key, node}}
+
+        # Found by last segment of hierarchical name (e.g., "language_model" from "core/language_model")
+        is_binary(node_name) && String.contains?(node_name, "/") ->
+          last_segment = node_name |> String.split("/") |> List.last()
+          if last_segment == target_name, do: {:halt, {key, node}}, else: {:cont, nil}
+
+        # Check children recursively
+        Map.has_key?(node, :classes) ->
+          case find_node_by_name_with_key(Map.get(node, :classes, %{}), target_name) do
+            nil -> {:cont, nil}
+            found -> {:halt, found}
+          end
+
+        # Continue searching
+        true ->
+          {:cont, nil}
+      end
+    end)
+  end
+
+  defp find_node_by_name_with_key(_tree, _target_name), do: nil
 end

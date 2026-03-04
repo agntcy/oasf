@@ -341,7 +341,10 @@ defmodule Schema do
   def taxonomy_modules(), do: Repo.taxonomy_modules()
 
   @spec taxonomy_modules(Repo.extensions_t()) :: map()
-  def taxonomy_modules(extensions), do: Repo.taxonomy_modules(extensions)
+  def taxonomy_modules(extensions), do: Repo.taxonomy_modules(extensions, nil)
+
+  @spec taxonomy_modules(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_modules(extensions, parent), do: Repo.taxonomy_modules(extensions, parent)
 
   @doc """
     Returns the taxonomy tree for skills.
@@ -350,7 +353,10 @@ defmodule Schema do
   def taxonomy_skills(), do: Repo.taxonomy_skills()
 
   @spec taxonomy_skills(Repo.extensions_t()) :: map()
-  def taxonomy_skills(extensions), do: Repo.taxonomy_skills(extensions)
+  def taxonomy_skills(extensions), do: Repo.taxonomy_skills(extensions, nil)
+
+  @spec taxonomy_skills(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_skills(extensions, parent), do: Repo.taxonomy_skills(extensions, parent)
 
   @doc """
     Returns the taxonomy tree for domains.
@@ -359,7 +365,10 @@ defmodule Schema do
   def taxonomy_domains(), do: Repo.taxonomy_domains()
 
   @spec taxonomy_domains(Repo.extensions_t()) :: map()
-  def taxonomy_domains(extensions), do: Repo.taxonomy_domains(extensions)
+  def taxonomy_domains(extensions), do: Repo.taxonomy_domains(extensions, nil)
+
+  @spec taxonomy_domains(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_domains(extensions, parent), do: Repo.taxonomy_domains(extensions, parent)
 
   @doc """
     Returns all objects.

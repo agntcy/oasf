@@ -1425,7 +1425,8 @@ defmodule SchemaWeb.SchemaController do
     summary("Get modules taxonomy tree")
 
     description(
-      "Get OASF modules taxonomy tree with nested categories, subcategories, classes, and subclasses."
+      "Get OASF modules taxonomy tree with nested categories, subcategories, classes, and subclasses." <>
+        " If parent parameter is provided, returns only the children of that parent."
     )
 
     produces("application/json")
@@ -1434,6 +1435,12 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
+      )
+
+      parent(
+        :query,
+        :string,
+        "Optional parent name to filter children. Returns only children of this parent."
       )
     end
 
@@ -1450,7 +1457,9 @@ defmodule SchemaWeb.SchemaController do
 
   @spec taxonomy_modules(map()) :: map()
   def taxonomy_modules(params) do
-    parse_options(extensions(params)) |> Schema.taxonomy_modules()
+    extensions = parse_options(extensions(params))
+    parent = Map.get(params, "id")
+    Schema.taxonomy_modules(extensions, parent)
   end
 
   @doc """
@@ -1461,7 +1470,8 @@ defmodule SchemaWeb.SchemaController do
     summary("Get skills taxonomy tree")
 
     description(
-      "Get OASF skills taxonomy tree with nested categories, subcategories, classes, and subclasses."
+      "Get OASF skills taxonomy tree with nested categories, subcategories, classes, and subclasses." <>
+        " If parent parameter is provided, returns only the children of that parent."
     )
 
     produces("application/json")
@@ -1470,6 +1480,12 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
+      )
+
+      parent(
+        :query,
+        :string,
+        "Optional parent name to filter children. Returns only children of this parent."
       )
     end
 
@@ -1486,7 +1502,9 @@ defmodule SchemaWeb.SchemaController do
 
   @spec taxonomy_skills(map()) :: map()
   def taxonomy_skills(params) do
-    parse_options(extensions(params)) |> Schema.taxonomy_skills()
+    extensions = parse_options(extensions(params))
+    parent = Map.get(params, "id")
+    Schema.taxonomy_skills(extensions, parent)
   end
 
   @doc """
@@ -1497,7 +1515,8 @@ defmodule SchemaWeb.SchemaController do
     summary("Get domains taxonomy tree")
 
     description(
-      "Get OASF domains taxonomy tree with nested categories, subcategories, classes, and subclasses."
+      "Get OASF domains taxonomy tree with nested categories, subcategories, classes, and subclasses." <>
+        " If parent parameter is provided, returns only the children of that parent."
     )
 
     produces("application/json")
@@ -1506,6 +1525,12 @@ defmodule SchemaWeb.SchemaController do
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
+      )
+
+      parent(
+        :query,
+        :string,
+        "Optional parent name to filter children. Returns only children of this parent."
       )
     end
 
@@ -1522,7 +1547,9 @@ defmodule SchemaWeb.SchemaController do
 
   @spec taxonomy_domains(map()) :: map()
   def taxonomy_domains(params) do
-    parse_options(extensions(params)) |> Schema.taxonomy_domains()
+    extensions = parse_options(extensions(params))
+    parent = Map.get(params, "id")
+    Schema.taxonomy_domains(extensions, parent)
   end
 
   @doc """
