@@ -165,8 +165,9 @@ defmodule SchemaWeb.PageController do
   def skill_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.skill_categories()
-      |> sort_attributes(:uid)
+      |> SchemaController.taxonomy_skills()
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
       |> sort_classes()
       |> Map.put(:categories_path, "skill_categories")
       |> Map.put(:classes_path, "skills")
@@ -209,8 +210,9 @@ defmodule SchemaWeb.PageController do
   def domain_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.domain_categories()
-      |> sort_attributes(:uid)
+      |> SchemaController.taxonomy_domains()
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
       |> sort_classes()
       |> Map.put(:categories_path, "domain_categories")
       |> Map.put(:classes_path, "domains")
@@ -253,8 +255,9 @@ defmodule SchemaWeb.PageController do
   def module_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.module_categories()
-      |> sort_attributes(:uid)
+      |> SchemaController.taxonomy_modules()
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
       |> sort_classes()
       |> Map.put(:categories_path, "module_categories")
       |> Map.put(:classes_path, "modules")
@@ -479,11 +482,11 @@ defmodule SchemaWeb.PageController do
   end
 
   defp sort_classes(categories) do
-    Map.update!(categories, :attributes, fn list ->
-      Enum.map(list, fn {name, category} ->
+    Map.update!(categories, :attributes, fn attributes ->
+      Enum.map(attributes, fn {name, category} ->
         category =
           category
-          |> Map.update(:classes, [], &sort_by_float_uid(&1))
+          |> Map.update(:classes, [], &sort_by_float_id(&1))
           |> sort_subcategories()
 
         {name, category}
@@ -500,7 +503,7 @@ defmodule SchemaWeb.PageController do
         |> Enum.map(fn {key, subcategory} ->
           sorted_subcategory =
             subcategory
-            |> Map.update(:classes, [], &sort_by_float_uid(&1))
+            |> Map.update(:classes, [], &sort_by_float_id(&1))
             |> sort_subcategories()
 
           {key, sorted_subcategory}
@@ -513,16 +516,20 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  defp sort_by_float_uid(classes) do
-    Enum.sort_by(classes, fn {_, class} -> uid_to_float(class[:uid]) end)
+  defp sort_by_float_id(classes) do
+    Enum.sort_by(classes, fn {_, class} ->
+      id_to_float(Map.get(class, :id, Map.get(class, :uid, 0)))
+    end)
   end
 
-  # Convert the uid into a float with a leading "0."
-  defp uid_to_float(uid) do
-    uid_string = Integer.to_string(uid)
-    float_string = "0." <> String.slice(uid_string, 0..-1//1)
+  # Convert the id/uid into a float with a leading "0."
+  defp id_to_float(id) when is_integer(id) do
+    id_string = Integer.to_string(id)
+    float_string = "0." <> String.slice(id_string, 0..-1//1)
     String.to_float(float_string)
   end
+
+  defp id_to_float(_), do: 0.0
 
   defp sort_attributes(map, key) do
     Map.update!(map, :attributes, &sort_by(&1, key))

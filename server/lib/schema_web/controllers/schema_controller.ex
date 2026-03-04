@@ -1442,9 +1442,15 @@ defmodule SchemaWeb.SchemaController do
 
   @spec taxonomy_modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def taxonomy_modules(conn, params) do
-    extensions = parse_options(extensions(params))
-    taxonomy = Schema.taxonomy_modules(extensions)
-    send_json_resp(conn, taxonomy)
+    result = taxonomy_modules(params)
+    # Extract attributes to match the format of /api/module_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
+  end
+
+  @spec taxonomy_modules(map()) :: map()
+  def taxonomy_modules(params) do
+    parse_options(extensions(params)) |> Schema.taxonomy_modules()
   end
 
   @doc """
@@ -1472,9 +1478,15 @@ defmodule SchemaWeb.SchemaController do
 
   @spec taxonomy_skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def taxonomy_skills(conn, params) do
-    extensions = parse_options(extensions(params))
-    taxonomy = Schema.taxonomy_skills(extensions)
-    send_json_resp(conn, taxonomy)
+    result = taxonomy_skills(params)
+    # Extract attributes to match the format of /api/skill_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
+  end
+
+  @spec taxonomy_skills(map()) :: map()
+  def taxonomy_skills(params) do
+    parse_options(extensions(params)) |> Schema.taxonomy_skills()
   end
 
   @doc """
@@ -1502,9 +1514,15 @@ defmodule SchemaWeb.SchemaController do
 
   @spec taxonomy_domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def taxonomy_domains(conn, params) do
-    extensions = parse_options(extensions(params))
-    taxonomy = Schema.taxonomy_domains(extensions)
-    send_json_resp(conn, taxonomy)
+    result = taxonomy_domains(params)
+    # Extract attributes to match the format of /api/domain_categories/<name>
+    categories = Map.get(result, :attributes, result)
+    send_json_resp(conn, categories)
+  end
+
+  @spec taxonomy_domains(map()) :: map()
+  def taxonomy_domains(params) do
+    parse_options(extensions(params)) |> Schema.taxonomy_domains()
   end
 
   @doc """
