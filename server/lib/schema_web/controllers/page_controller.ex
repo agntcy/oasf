@@ -139,26 +139,27 @@ defmodule SchemaWeb.PageController do
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def skill_categories(conn, %{"id" => id} = params) do
-    case SchemaController.skill_category_skills(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+    taxonomy = SchemaController.taxonomy_skills(params)
 
-      data ->
-        skills = sort_by(data[:classes], :uid)
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{id}")
+    else
+      # Extract the category data from the taxonomy map (which has the category name as key)
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
 
-        data =
-          data
-          |> Map.put(:classes, skills)
-          |> sort_subcategories()
-          |> Map.put(:class_type, "skill")
-          |> Map.put(:classes_path, "skills")
-          |> Map.put(:categories_path, "skill_categories")
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: "skill",
+          classes_path: "skills",
+          categories_path: "skill_categories"
+        })
 
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 
@@ -184,26 +185,27 @@ defmodule SchemaWeb.PageController do
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def domain_categories(conn, %{"id" => id} = params) do
-    case SchemaController.domain_category_domains(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+    taxonomy = SchemaController.taxonomy_domains(params)
 
-      data ->
-        domains = sort_by(data[:classes], :uid)
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{id}")
+    else
+      # Extract the category data from the taxonomy map (which has the category name as key)
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
 
-        data =
-          data
-          |> Map.put(:classes, domains)
-          |> sort_subcategories()
-          |> Map.put(:class_type, "domain")
-          |> Map.put(:classes_path, "domains")
-          |> Map.put(:categories_path, "domain_categories")
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: "domain",
+          classes_path: "domains",
+          categories_path: "domain_categories"
+        })
 
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 
@@ -229,26 +231,27 @@ defmodule SchemaWeb.PageController do
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def module_categories(conn, %{"id" => id} = params) do
-    case SchemaController.module_category_modules(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+    taxonomy = SchemaController.taxonomy_modules(params)
 
-      data ->
-        modules = sort_by(data[:classes], :uid)
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{id}")
+    else
+      # Extract the category data from the taxonomy map (which has the category name as key)
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
 
-        data =
-          data
-          |> Map.put(:classes, modules)
-          |> sort_subcategories()
-          |> Map.put(:class_type, "module")
-          |> Map.put(:classes_path, "modules")
-          |> Map.put(:categories_path, "module_categories")
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: "module",
+          classes_path: "modules",
+          categories_path: "module_categories"
+        })
 
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 

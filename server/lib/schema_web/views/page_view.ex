@@ -184,6 +184,176 @@ defmodule SchemaWeb.PageView do
     end
   end
 
+  # Render category classes table - separates regular classes from categories
+  # Returns {regular_classes_rows, category_sections} where each is a list of iodata strings
+  def render_category_classes_table(conn, classes_map, data) when is_map(classes_map) do
+    if map_size(classes_map) == 0 do
+      {[], []}
+    else
+      classes_list = Enum.to_list(classes_map)
+      render_category_classes_table(conn, classes_list, data)
+    end
+  end
+
+  def render_category_classes_table(conn, classes_list, data) when is_list(classes_list) do
+    # Separate categories from regular classes using explicit filtering
+    # Categories have category: true, regular classes don't
+    regular_classes =
+      classes_list
+      |> Enum.filter(fn {_key, item} ->
+        category_atom = Map.get(item, :category)
+        category_string = Map.get(item, "category")
+        # Regular class = NOT a category (category is not true)
+        category_atom != true && category_string != true
+      end)
+
+    categories =
+      classes_list
+      |> Enum.filter(fn {_key, item} ->
+        category_atom = Map.get(item, :category)
+        category_string = Map.get(item, "category")
+        # Category = has category: true
+        category_atom == true || category_string == true
+      end)
+
+    # Sort regular classes by id
+    sorted_regular_classes =
+      Enum.sort_by(regular_classes, fn {_key, class} -> Map.get(class, :id, 0) end)
+
+    # Sort categories by id
+    sorted_categories =
+      Enum.sort_by(categories, fn {_key, category} -> Map.get(category, :id, 0) end)
+
+    # Render regular classes as table rows (each row is iodata string)
+    regular_rows =
+      Enum.map(sorted_regular_classes, fn {key, class} ->
+        render_class_table_row(conn, key, class, data)
+      end)
+
+    # Render categories as subcategory sections (each section is iodata string)
+    category_sections =
+      Enum.map(sorted_categories, fn {key, category} ->
+        render_category_section(conn, key, category, data)
+      end)
+
+    # Return both as tuple
+    {regular_rows, category_sections}
+  end
+
+  def render_category_classes_table(_conn, _other, _data), do: {[], []}
+
+  # Render a single class as a table row (returns iodata string)
+  defp render_class_table_row(conn, key, class, data) do
+    name = Atom.to_string(key)
+    path = Routes.static_path(conn, "/" <> data[:classes_path] <> "/" <> name)
+    uid = Map.get(class, :id, Map.get(class, :uid))
+    profiles = format_profiles(Map.get(class, :profiles, []))
+    caption_html = format_caption(name, class)
+    desc_html = description(class)
+
+    # Build iodata list and convert to string
+    iodata = [
+      "<tr class=\"oasf-class\" ",
+      profiles,
+      ">",
+      "<td class=\"name\">",
+      caption_html,
+      "</td>",
+      "<td class=\"extensions\">",
+      "<a href=\"",
+      path,
+      "\">",
+      name,
+      "</a>",
+      "</td>",
+      if uid != nil do
+        ["<td>", Integer.to_string(uid), "</td>"]
+      else
+        "<td></td>"
+      end,
+      "<td>",
+      desc_html,
+      "</td>",
+      "</tr>"
+    ]
+
+    # Convert iodata to string for template
+    IO.iodata_to_binary(iodata)
+  end
+
+  # Render a category as a subcategory section with its own table (returns iodata string)
+  defp render_category_section(conn, key, category, data) do
+    category_name = Atom.to_string(key)
+
+    category_path =
+      Routes.static_path(conn, "/" <> data[:categories_path] <> "/" <> category_name)
+
+    category_id = Map.get(category, :id, Map.get(category, :uid, 0))
+    nested_classes = Map.get(category, :classes, %{})
+
+    # Recursively get nested content
+    {nested_regular_rows, nested_category_sections} =
+      render_category_classes_table(conn, nested_classes, data)
+
+    # Build the subcategory section as iodata
+    nested_rows_html = Enum.join(nested_regular_rows, "")
+    nested_sections_html = Enum.join(nested_category_sections, "")
+
+    desc_html =
+      if Map.get(category, :description) do
+        desc = description(category)
+        ["<div class=\"text-secondary mb-3\">", desc, "</div>"]
+      else
+        []
+      end
+
+    table_html =
+      if length(nested_regular_rows) > 0 do
+        [
+          "<table class=\"table table-bordered sortable\">",
+          "<thead>",
+          "<tr class=\"thead-color\">",
+          "<th class=\"col-caption\">Caption</th>",
+          "<th class=\"col-name\">Name</th>",
+          "<th class=\"col-id\">ID</th>",
+          "<th class=\"col-description\">Description</th>",
+          "</tr>",
+          "</thead>",
+          "<tbody class=\"searchable\">",
+          nested_rows_html,
+          "</tbody>",
+          "</table>"
+        ]
+      else
+        []
+      end
+
+    iodata = [
+      "<div class=\"mt-5\">",
+      "<h4>",
+      "<a href=\"",
+      category_path,
+      "\">",
+      Map.get(category, :caption, category_name),
+      "</a>",
+      "<span class=\"text-secondary\">",
+      " [",
+      Integer.to_string(category_id),
+      "] ",
+      data[:class_type],
+      " subcategory",
+      "</span>",
+      "</h4>",
+      desc_html,
+      table_html,
+      nested_sections_html,
+      "</div>"
+    ]
+
+    # Convert iodata to string for template
+    IO.iodata_to_binary(iodata)
+  end
+
   @spec format_linked_class_caption(String.t(), String.t(), map()) :: any()
   def format_linked_class_caption(path, class_name, class) do
     name = format_caption(class_name, class)
@@ -1612,9 +1782,11 @@ defmodule SchemaWeb.PageView do
   end
 
   # Check if a class is a category (has category: true)
-  def is_category?(class) do
-    Map.get(class, :category, false) == true
+  def is_category?(class) when is_map(class) do
+    Map.get(class, :category) == true
   end
+
+  def is_category?(_), do: false
 
   # Recursively render classes and categories
   # This function handles the nested structure intelligently:
