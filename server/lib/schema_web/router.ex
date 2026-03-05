@@ -22,16 +22,16 @@ defmodule SchemaWeb.Router do
     get "/", PageController, :skill_categories
 
     get "/skill_categories", PageController, :skill_categories
-    get "/skill_categories/:id", PageController, :skill_categories
-    get "/skill_categories/:extension/:id", PageController, :skill_categories
+    get "/skill_categories/:name", PageController, :skill_categories
+    get "/skill_categories/:extension/:name", PageController, :skill_categories
 
     get "/domain_categories", PageController, :domain_categories
-    get "/domain_categories/:id", PageController, :domain_categories
-    get "/domain_categories/:extension/:id", PageController, :domain_categories
+    get "/domain_categories/:name", PageController, :domain_categories
+    get "/domain_categories/:extension/:name", PageController, :domain_categories
 
     get "/module_categories", PageController, :module_categories
-    get "/module_categories/:id", PageController, :module_categories
-    get "/module_categories/:extension/:id", PageController, :module_categories
+    get "/module_categories/:name", PageController, :module_categories
+    get "/module_categories/:extension/:name", PageController, :module_categories
 
     get "/profiles", PageController, :profiles
     get "/profiles/:id", PageController, :profiles

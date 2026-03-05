@@ -354,25 +354,23 @@ var _ = Describe("API", func() {
 		nonExistentID := "non_existent_id_12345"
 
 		Describe("GET endpoints with non-existent category names", func() {
-			// Browser-facing endpoints (these may return 200 with empty or 404)
+			// Browser-facing endpoints (these return 404 when category is not found)
 			browserEndpoints := []struct {
 				name string
 				url  string
 			}{
-				{"skill_categories_by_id", baseURL + "/skill_categories/" + nonExistentID},
-				{"domain_categories_by_id", baseURL + "/domain_categories/" + nonExistentID},
-				{"module_categories_by_id", baseURL + "/module_categories/" + nonExistentID},
+				{"skill_categories_by_name", baseURL + "/skill_categories/" + nonExistentID},
+				{"domain_categories_by_name", baseURL + "/domain_categories/" + nonExistentID},
+				{"module_categories_by_name", baseURL + "/module_categories/" + nonExistentID},
 			}
 
 			for _, endpoint := range browserEndpoints {
 				endpoint := endpoint
-				It("should return empty result or 404 for GET "+endpoint.name+" with non-existent category", func() {
+				It("should return 404 for GET "+endpoint.name+" with non-existent category", func() {
 					resp, err := http.Get(endpoint.url)
 					Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
 					defer resp.Body.Close()
-					// Browser endpoints may return 200 with empty result or 404
-					Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
-					Expect(resp.StatusCode).To(BeNumerically("<", 500), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+					Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent category %s, got %d", endpoint.name, resp.StatusCode)
 				})
 			}
 

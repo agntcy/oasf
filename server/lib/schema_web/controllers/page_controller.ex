@@ -138,13 +138,13 @@ defmodule SchemaWeb.PageController do
   Renders main skills or the skills in a given main skill.
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def skill_categories(conn, %{"id" => id} = params) do
-    # Convert path id parameter to name query parameter for taxonomy function
-    taxonomy_params = Map.put(params, "name", id) |> Map.delete("id")
+  def skill_categories(conn, %{"name" => name} = params) do
+    # Use name parameter directly for taxonomy function
+    taxonomy_params = Map.put(params, "name", name)
     taxonomy = SchemaController.taxonomy_skills(taxonomy_params)
 
     if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{id}")
+      send_resp(conn, 404, "Not Found: #{name}")
     else
       # Extract the category data from the taxonomy map (which has the category name as key)
       {_category_key, category_data} = Enum.at(taxonomy, 0)
@@ -186,13 +186,13 @@ defmodule SchemaWeb.PageController do
   Renders main domains or the domains in a given main domain.
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def domain_categories(conn, %{"id" => id} = params) do
-    # Convert path id parameter to name query parameter for taxonomy function
-    taxonomy_params = Map.put(params, "name", id) |> Map.delete("id")
+  def domain_categories(conn, %{"name" => name} = params) do
+    # Use name parameter directly for taxonomy function
+    taxonomy_params = Map.put(params, "name", name)
     taxonomy = SchemaController.taxonomy_domains(taxonomy_params)
 
     if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{id}")
+      send_resp(conn, 404, "Not Found: #{name}")
     else
       # Extract the category data from the taxonomy map (which has the category name as key)
       {_category_key, category_data} = Enum.at(taxonomy, 0)
@@ -234,13 +234,13 @@ defmodule SchemaWeb.PageController do
   Renders main modules or the modules in a given main module.
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def module_categories(conn, %{"id" => id} = params) do
-    # Convert path id parameter to name query parameter for taxonomy function
-    taxonomy_params = Map.put(params, "name", id) |> Map.delete("id")
+  def module_categories(conn, %{"name" => name} = params) do
+    # Use name parameter directly for taxonomy function
+    taxonomy_params = Map.put(params, "name", name)
     taxonomy = SchemaController.taxonomy_modules(taxonomy_params)
 
     if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{id}")
+      send_resp(conn, 404, "Not Found: #{name}")
     else
       # Extract the category data from the taxonomy map (which has the category name as key)
       {_category_key, category_data} = Enum.at(taxonomy, 0)
