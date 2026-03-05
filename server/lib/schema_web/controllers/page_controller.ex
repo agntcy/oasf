@@ -139,7 +139,9 @@ defmodule SchemaWeb.PageController do
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def skill_categories(conn, %{"id" => id} = params) do
-    taxonomy = SchemaController.taxonomy_skills(params)
+    # Convert path id parameter to name query parameter for taxonomy function
+    taxonomy_params = Map.put(params, "name", id) |> Map.delete("id")
+    taxonomy = SchemaController.taxonomy_skills(taxonomy_params)
 
     if map_size(taxonomy) == 0 do
       send_resp(conn, 404, "Not Found: #{id}")
@@ -185,7 +187,9 @@ defmodule SchemaWeb.PageController do
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def domain_categories(conn, %{"id" => id} = params) do
-    taxonomy = SchemaController.taxonomy_domains(params)
+    # Convert path id parameter to name query parameter for taxonomy function
+    taxonomy_params = Map.put(params, "name", id) |> Map.delete("id")
+    taxonomy = SchemaController.taxonomy_domains(taxonomy_params)
 
     if map_size(taxonomy) == 0 do
       send_resp(conn, 404, "Not Found: #{id}")
@@ -231,7 +235,9 @@ defmodule SchemaWeb.PageController do
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
   def module_categories(conn, %{"id" => id} = params) do
-    taxonomy = SchemaController.taxonomy_modules(params)
+    # Convert path id parameter to name query parameter for taxonomy function
+    taxonomy_params = Map.put(params, "name", id) |> Map.delete("id")
+    taxonomy = SchemaController.taxonomy_modules(taxonomy_params)
 
     if map_size(taxonomy) == 0 do
       send_resp(conn, 404, "Not Found: #{id}")

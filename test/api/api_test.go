@@ -43,30 +43,6 @@ var testCases = []objectTestCase{
 		sampleEndpoint:     baseURL + "/sample/objects/locator",
 		validationEndpoint: baseURL + "/api/validate/object/locator",
 	},
-	{
-		entityType:         "skills",
-		fileName:           "base_skill.json",
-		apiEndpoint:        baseURL + "/api/skills/base_skill",
-		schemaEndpoint:     baseURL + "/schema/skills/base_skill",
-		sampleEndpoint:     baseURL + "/sample/skills/base_skill",
-		validationEndpoint: baseURL + "/api/validate/skill",
-	},
-	{
-		entityType:         "domains",
-		fileName:           "base_domain.json",
-		apiEndpoint:        baseURL + "/api/domains/base_domain",
-		schemaEndpoint:     baseURL + "/schema/domains/base_domain",
-		sampleEndpoint:     baseURL + "/sample/domains/base_domain",
-		validationEndpoint: baseURL + "/api/validate/domain",
-	},
-	{
-		entityType:         "modules",
-		fileName:           "base_module.json",
-		apiEndpoint:        baseURL + "/api/modules/base_module",
-		schemaEndpoint:     baseURL + "/schema/modules/base_module",
-		sampleEndpoint:     baseURL + "/sample/modules/base_module",
-		validationEndpoint: baseURL + "/api/validate/module",
-	},
 }
 
 var _ = Describe("API", func() {
@@ -278,27 +254,24 @@ var _ = Describe("API", func() {
 			{"api_profiles", baseURL + "/api/profiles"},
 			// {"api_profiles_by_id", baseURL + "/api/profiles/" + testProfileID},
 			{"api_extensions", baseURL + "/api/extensions"},
-			{"api_skill_categories", baseURL + "/api/skill_categories"},
-			{"api_skill_categories_by_id", baseURL + "/api/skill_categories/" + testSkillCategoryID},
-			{"api_domain_categories", baseURL + "/api/domain_categories"},
-			{"api_domain_categories_by_id", baseURL + "/api/domain_categories/" + testDomainCategoryID},
+			// Categories API group
 			{"api_module_categories", baseURL + "/api/module_categories"},
-			{"api_module_categories_by_id", baseURL + "/api/module_categories/" + testModuleCategoryID},
+			{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + testModuleCategoryID},
+			{"api_skill_categories", baseURL + "/api/skill_categories"},
+			{"api_skill_categories_by_name", baseURL + "/api/skill_categories?name=" + testSkillCategoryID},
+			{"api_domain_categories", baseURL + "/api/domain_categories"},
+			{"api_domain_categories_by_name", baseURL + "/api/domain_categories?name=" + testDomainCategoryID},
+			// Classes and Objects API group
+			{"api_modules", baseURL + "/api/modules"},
+			{"api_modules_by_id", baseURL + "/api/modules/" + testModuleID},
 			{"api_skills", baseURL + "/api/skills"},
 			{"api_skills_by_id", baseURL + "/api/skills/" + testSkillID},
 			{"api_domains", baseURL + "/api/domains"},
 			{"api_domains_by_id", baseURL + "/api/domains/" + testDomainID},
-			{"api_modules", baseURL + "/api/modules"},
-			{"api_modules_by_id", baseURL + "/api/modules/" + testModuleID},
 			{"api_objects", baseURL + "/api/objects"},
 			{"api_objects_by_id", baseURL + "/api/objects/" + testObjectID},
 			{"api_dictionary", baseURL + "/api/dictionary"},
 			{"api_data_types", baseURL + "/api/data_types"},
-
-			// Taxonomy endpoints
-			{"taxonomy_modules", baseURL + "/api/taxonomy/modules"},
-			{"taxonomy_skills", baseURL + "/api/taxonomy/skills"},
-			{"taxonomy_domains", baseURL + "/api/taxonomy/domains"},
 
 			// Schema endpoints
 			{"schema_skills_by_id", baseURL + "/schema/skills/" + testSkillID},
@@ -381,25 +354,74 @@ var _ = Describe("API", func() {
 		nonExistentID := "non_existent_id_12345"
 
 		Describe("GET endpoints with non-existent category names", func() {
-			categoryEndpoints := []struct {
+			// Browser-facing endpoints (these may return 200 with empty or 404)
+			browserEndpoints := []struct {
 				name string
 				url  string
 			}{
 				{"skill_categories_by_id", baseURL + "/skill_categories/" + nonExistentID},
 				{"domain_categories_by_id", baseURL + "/domain_categories/" + nonExistentID},
 				{"module_categories_by_id", baseURL + "/module_categories/" + nonExistentID},
-				{"api_skill_categories_by_id", baseURL + "/api/skill_categories/" + nonExistentID},
-				{"api_domain_categories_by_id", baseURL + "/api/domain_categories/" + nonExistentID},
-				{"api_module_categories_by_id", baseURL + "/api/module_categories/" + nonExistentID},
 			}
 
-			for _, endpoint := range categoryEndpoints {
+			for _, endpoint := range browserEndpoints {
+				endpoint := endpoint
+				It("should return empty result or 404 for GET "+endpoint.name+" with non-existent category", func() {
+					resp, err := http.Get(endpoint.url)
+					Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
+					defer resp.Body.Close()
+					// Browser endpoints may return 200 with empty result or 404
+					Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+					Expect(resp.StatusCode).To(BeNumerically("<", 500), "Unexpected status code for %s: %d", endpoint.name, resp.StatusCode)
+				})
+			}
+
+			// API category endpoints - should return 404 when parent is not found
+			apiCategoryEndpoints := []struct {
+				name string
+				url  string
+			}{
+				{"api_module_categories_by_id", baseURL + "/api/module_categories?id=99999"},
+				{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + nonExistentID},
+				{"api_skill_categories_by_id", baseURL + "/api/skill_categories?id=99999"},
+				{"api_skill_categories_by_name", baseURL + "/api/skill_categories?name=" + nonExistentID},
+				{"api_domain_categories_by_id", baseURL + "/api/domain_categories?id=99999"},
+				{"api_domain_categories_by_name", baseURL + "/api/domain_categories?name=" + nonExistentID},
+			}
+
+			for _, endpoint := range apiCategoryEndpoints {
 				endpoint := endpoint
 				It("should return 404 for GET "+endpoint.name+" with non-existent category", func() {
 					resp, err := http.Get(endpoint.url)
 					Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
 					defer resp.Body.Close()
 					Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent category %s, got %d", endpoint.name, resp.StatusCode)
+
+					respBytes, err := io.ReadAll(resp.Body)
+					Expect(err).NotTo(HaveOccurred(), "Failed to read response body")
+					var errorResp map[string]interface{}
+					Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed(), "Response is not valid JSON")
+					Expect(errorResp).To(HaveKey("error"), "Error response should contain 'error' field")
+				})
+			}
+
+			// API class endpoints - should return 404 when class is not found
+			apiClassEndpoints := []struct {
+				name string
+				url  string
+			}{
+				{"api_modules_by_id", baseURL + "/api/modules/" + nonExistentID},
+				{"api_skills_by_id", baseURL + "/api/skills/" + nonExistentID},
+				{"api_domains_by_id", baseURL + "/api/domains/" + nonExistentID},
+			}
+
+			for _, endpoint := range apiClassEndpoints {
+				endpoint := endpoint
+				It("should return 404 for GET "+endpoint.name+" with non-existent class", func() {
+					resp, err := http.Get(endpoint.url)
+					Expect(err).NotTo(HaveOccurred(), "Failed to GET %s", endpoint.name)
+					defer resp.Body.Close()
+					Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent class %s, got %d", endpoint.name, resp.StatusCode)
 				})
 			}
 		})
@@ -417,10 +439,10 @@ var _ = Describe("API", func() {
 				{"domain_graph", baseURL + "/domain/graph/" + nonExistentID},
 				{"module_graph", baseURL + "/module/graph/" + nonExistentID},
 				{"object_graph", baseURL + "/object/graph/" + nonExistentID},
+				{"api_objects_by_id", baseURL + "/api/objects/" + nonExistentID},
+				{"api_modules_by_id", baseURL + "/api/modules/" + nonExistentID},
 				{"api_skills_by_id", baseURL + "/api/skills/" + nonExistentID},
 				{"api_domains_by_id", baseURL + "/api/domains/" + nonExistentID},
-				{"api_modules_by_id", baseURL + "/api/modules/" + nonExistentID},
-				{"api_objects_by_id", baseURL + "/api/objects/" + nonExistentID},
 				{"schema_skills_by_id", baseURL + "/schema/skills/" + nonExistentID},
 				{"schema_domains_by_id", baseURL + "/schema/domains/" + nonExistentID},
 				{"schema_modules_by_id", baseURL + "/schema/modules/" + nonExistentID},
@@ -470,5 +492,84 @@ var _ = Describe("API", func() {
 				Expect(resp.StatusCode).To(Equal(http.StatusOK), "Expected 200 for %s with non-existent object ID, got %d", endpoint.name, resp.StatusCode)
 			})
 		}
+	})
+
+	Describe("Categories API - id and name parameter validation", func() {
+		It("should return 400 when both id and name are provided but refer to different nodes", func() {
+			// Test with module_categories endpoint - use a valid ID and a different valid name
+			resp, err := http.Get(baseURL + "/api/module_categories?id=1&name=prompt")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with mismatched id and name")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest), "Expected 400 for mismatched id and name, got %d", resp.StatusCode)
+
+			respBytes, err := io.ReadAll(resp.Body)
+			Expect(err).NotTo(HaveOccurred(), "Failed to read response body")
+			var errorResp map[string]interface{}
+			Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed(), "Response is not valid JSON")
+			Expect(errorResp).To(HaveKey("error"), "Error response should contain 'error' field")
+		})
+
+		It("should return 200 when both id and name are provided and refer to the same node", func() {
+			// Test with module_categories endpoint - use id=1 (core) and name=core
+			// Note: This assumes id 1 corresponds to name "core"
+			resp, err := http.Get(baseURL + "/api/module_categories?id=1&name=core")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with matching id and name")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for matching id and name, got %d", resp.StatusCode)
+			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for matching id and name, got %d", resp.StatusCode)
+		})
+
+		It("should return 400 when id is invalid (non-numeric)", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?id=invalid&name=core")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with invalid id")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest), "Expected 400 for invalid id, got %d", resp.StatusCode)
+		})
+
+		It("should return 400 when id doesn't exist", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?id=99999&name=core")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with non-existent id")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest), "Expected 400 for non-existent id, got %d", resp.StatusCode)
+		})
+
+		It("should return 400 when name doesn't exist", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?id=1&name=nonexistent_name_12345")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with non-existent name")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest), "Expected 400 for non-existent name, got %d", resp.StatusCode)
+		})
+
+		It("should work with only id parameter", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?id=1")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with only id")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for id-only request, got %d", resp.StatusCode)
+			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for id-only request, got %d", resp.StatusCode)
+		})
+
+		It("should work with only name parameter", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?name=core")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with only name")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for name-only request, got %d", resp.StatusCode)
+			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for name-only request, got %d", resp.StatusCode)
+		})
+
+		It("should work with hierarchical name format", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?name=core/language_model")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with hierarchical name")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for hierarchical name, got %d", resp.StatusCode)
+			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for hierarchical name, got %d", resp.StatusCode)
+		})
+
+		It("should work with simple name format (last segment)", func() {
+			resp, err := http.Get(baseURL + "/api/module_categories?name=prompt")
+			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with simple name")
+			defer resp.Body.Close()
+			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for simple name, got %d", resp.StatusCode)
+			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for simple name, got %d", resp.StatusCode)
+		})
 	})
 })

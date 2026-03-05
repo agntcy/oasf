@@ -80,20 +80,20 @@ defmodule SchemaWeb.Router do
     get "/profiles", SchemaController, :profiles
     get "/extensions", SchemaController, :extensions
 
-    get "/skill_categories", SchemaController, :skill_categories
-    get "/skill_categories/:id", SchemaController, :skill_category
-    get "/skill_categories/:extension/:id", SchemaController, :skill_category
-
-    get "/domain_categories", SchemaController, :domain_categories
-    get "/domain_categories/:id", SchemaController, :domain_category
-    get "/domain_categories/:extension/:id", SchemaController, :domain_category
-
-    get "/module_categories", SchemaController, :module_categories
-    get "/module_categories/:id", SchemaController, :module_category
-    get "/module_categories/:extension/:id", SchemaController, :module_category
-
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile
+
+    get "/dictionary", SchemaController, :dictionary
+
+    # Categories API group
+    get "/module_categories", SchemaController, :module_categories
+    get "/skill_categories", SchemaController, :skill_categories
+    get "/domain_categories", SchemaController, :domain_categories
+
+    # Classes and Objects API group
+    get "/modules", SchemaController, :modules
+    get "/modules/:id", SchemaController, :module
+    get "/modules/:extension/:id", SchemaController, :module
 
     get "/skills", SchemaController, :skills
     get "/skills/:id", SchemaController, :skill
@@ -102,12 +102,6 @@ defmodule SchemaWeb.Router do
     get "/domains", SchemaController, :domains
     get "/domains/:id", SchemaController, :domain
     get "/domains/:extension/:id", SchemaController, :domain
-
-    get "/modules", SchemaController, :modules
-    get "/modules/:id", SchemaController, :module
-    get "/modules/:extension/:id", SchemaController, :module
-
-    get "/dictionary", SchemaController, :dictionary
 
     get "/objects", SchemaController, :objects
     get "/objects/:id", SchemaController, :object
@@ -171,14 +165,6 @@ defmodule SchemaWeb.Router do
 
     get "/objects/:id", SchemaController, :sample_object
     get "/objects/:extension/:id", SchemaController, :sample_object
-  end
-
-  scope "/api/taxonomy", SchemaWeb do
-    pipe_through :api
-
-    get "/modules", SchemaController, :taxonomy_modules
-    get "/skills", SchemaController, :taxonomy_skills
-    get "/domains", SchemaController, :taxonomy_domains
   end
 
   scope "/doc" do
