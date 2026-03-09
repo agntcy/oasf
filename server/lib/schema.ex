@@ -72,95 +72,7 @@ defmodule Schema do
 
   @doc """
     Returns skill categories.
-  """
-  @spec skill_categories :: map()
-  def skill_categories(), do: Repo.skill_categories()
-
-  @doc """
-    Returns skill categories defined in the given extension set.
-  """
-  def skill_categories(extensions) do
-    Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _skill_category} ->
-        {name, skill_category(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single skill category with its classes.
-  """
-  @spec skill_category(atom | String.t()) :: nil | Cache.category_t()
-  def skill_category(id), do: get_skill_category(Utils.to_uid(id))
-
-  @spec skill_category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def skill_category(extensions, id), do: get_skill_category(extensions, Utils.to_uid(id))
-
-  @spec skill_category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def skill_category(extensions, extension, id),
-    do: get_skill_category(extensions, Utils.to_uid(extension, id))
-
-  @doc """
-    Returns the main domains.
-  """
-  @spec domain_categories :: map()
-  def domain_categories(), do: Repo.domain_categories()
-
-  @doc """
-    Returns domain categories defined in the given extension set.
-  """
-  def domain_categories(extensions) do
-    Map.update(Repo.domain_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _domain_category} ->
-        {name, domain_category(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single domain category with its classes.
-  """
-  @spec domain_category(atom | String.t()) :: nil | Cache.category_t()
-  def domain_category(id), do: get_domain_category(Utils.to_uid(id))
-
-  @spec domain_category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def domain_category(extensions, id), do: get_domain_category(extensions, Utils.to_uid(id))
-
-  @spec domain_category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def domain_category(extensions, extension, id),
-    do: get_domain_category(extensions, Utils.to_uid(extension, id))
-
-  @doc """
-    Returns module categories.
-  """
-  @spec module_categories :: map()
-  def module_categories(), do: Repo.module_categories()
-
-  @doc """
-    Returns module categories defined in the given extension set.
-  """
-  def module_categories(extensions) do
-    Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _module_category} ->
-        {name, module_category(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single module category with its classes.
-  """
-  @spec module_category(atom | String.t()) :: nil | Cache.category_t()
-  def module_category(id), do: get_module_category(Utils.to_uid(id))
-
-  @spec module_category(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def module_category(extensions, id), do: get_module_category(extensions, Utils.to_uid(id))
-
-  @spec module_category(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def module_category(extensions, extension, id),
-    do: get_module_category(extensions, Utils.to_uid(extension, id))
-
-  @doc """
+  @doc \"""
     Returns the attribute dictionary.
   """
   @spec dictionary() :: Cache.dictionary_t()
@@ -333,6 +245,42 @@ defmodule Schema do
   """
   @spec find_module(integer()) :: nil | Cache.class_t()
   def find_module(uid) when is_integer(uid), do: Repo.find_module(uid)
+
+  @doc """
+    Returns the taxonomy tree for modules.
+  """
+  @spec taxonomy_modules :: map()
+  def taxonomy_modules(), do: Repo.taxonomy_modules()
+
+  @spec taxonomy_modules(Repo.extensions_t()) :: map()
+  def taxonomy_modules(extensions), do: Repo.taxonomy_modules(extensions, nil)
+
+  @spec taxonomy_modules(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_modules(extensions, parent), do: Repo.taxonomy_modules(extensions, parent)
+
+  @doc """
+    Returns the taxonomy tree for skills.
+  """
+  @spec taxonomy_skills :: map()
+  def taxonomy_skills(), do: Repo.taxonomy_skills()
+
+  @spec taxonomy_skills(Repo.extensions_t()) :: map()
+  def taxonomy_skills(extensions), do: Repo.taxonomy_skills(extensions, nil)
+
+  @spec taxonomy_skills(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_skills(extensions, parent), do: Repo.taxonomy_skills(extensions, parent)
+
+  @doc """
+    Returns the taxonomy tree for domains.
+  """
+  @spec taxonomy_domains :: map()
+  def taxonomy_domains(), do: Repo.taxonomy_domains()
+
+  @spec taxonomy_domains(Repo.extensions_t()) :: map()
+  def taxonomy_domains(extensions), do: Repo.taxonomy_domains(extensions, nil)
+
+  @spec taxonomy_domains(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_domains(extensions, parent), do: Repo.taxonomy_domains(extensions, parent)
 
   @doc """
     Returns all objects.
@@ -658,52 +606,6 @@ defmodule Schema do
   @spec generate_object(Cache.object_t(), Repo.profiles_t() | nil) :: map()
   def generate_object(type, profiles) when is_map(type) do
     Schema.Generator.generate_sample_object(type, profiles)
-  end
-
-  defp get_skill_category(id) do
-    Repo.skill_category(id) |> reduce_category()
-  end
-
-  defp get_skill_category(extensions, id) do
-    Repo.skill_category(extensions, id) |> reduce_category()
-  end
-
-  defp get_domain_category(id) do
-    Repo.domain_category(id) |> reduce_category()
-  end
-
-  defp get_domain_category(extensions, id) do
-    Repo.domain_category(extensions, id) |> reduce_category()
-  end
-
-  defp get_module_category(id) do
-    Repo.module_category(id) |> reduce_category()
-  end
-
-  defp get_module_category(extensions, id) do
-    Repo.module_category(extensions, id) |> reduce_category()
-  end
-
-  defp reduce_category(nil) do
-    nil
-  end
-
-  defp reduce_category(data) do
-    data
-    |> Map.update(:classes, [], fn classes ->
-      Enum.into(classes, %{}, fn {name, class} ->
-        {name, reduce_class(class)}
-      end)
-    end)
-    |> Map.update(:subcategories, nil, fn subcategories ->
-      if subcategories != nil do
-        Enum.into(subcategories, %{}, fn {name, subcategory} ->
-          {name, reduce_category(subcategory)}
-        end)
-      else
-        nil
-      end
-    end)
   end
 
   defp reduce_objects(objects) do

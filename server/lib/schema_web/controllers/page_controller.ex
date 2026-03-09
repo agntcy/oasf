@@ -138,35 +138,39 @@ defmodule SchemaWeb.PageController do
   Renders main skills or the skills in a given main skill.
   """
   @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def skill_categories(conn, %{"id" => id} = params) do
-    case SchemaController.skill_category_skills(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+  def skill_categories(conn, %{"name" => name} = params) do
+    # Use name parameter directly for taxonomy function
+    taxonomy_params = Map.put(params, "name", name)
+    taxonomy = SchemaController.taxonomy_skills(taxonomy_params)
 
-      data ->
-        skills = sort_by(data[:classes], :uid)
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{name}")
+    else
+      # Extract the category data from the taxonomy map (which has the category name as key)
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
 
-        data =
-          data
-          |> Map.put(:classes, skills)
-          |> sort_subcategories()
-          |> Map.put(:class_type, "skill")
-          |> Map.put(:classes_path, "skills")
-          |> Map.put(:categories_path, "skill_categories")
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: "skill",
+          classes_path: "skills",
+          categories_path: "skill_categories"
+        })
 
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 
   def skill_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.skill_categories()
-      |> sort_attributes(:uid)
+      |> SchemaController.taxonomy_skills()
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
       |> sort_classes()
       |> Map.put(:categories_path, "skill_categories")
       |> Map.put(:classes_path, "skills")
@@ -182,35 +186,39 @@ defmodule SchemaWeb.PageController do
   Renders main domains or the domains in a given main domain.
   """
   @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def domain_categories(conn, %{"id" => id} = params) do
-    case SchemaController.domain_category_domains(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+  def domain_categories(conn, %{"name" => name} = params) do
+    # Use name parameter directly for taxonomy function
+    taxonomy_params = Map.put(params, "name", name)
+    taxonomy = SchemaController.taxonomy_domains(taxonomy_params)
 
-      data ->
-        domains = sort_by(data[:classes], :uid)
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{name}")
+    else
+      # Extract the category data from the taxonomy map (which has the category name as key)
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
 
-        data =
-          data
-          |> Map.put(:classes, domains)
-          |> sort_subcategories()
-          |> Map.put(:class_type, "domain")
-          |> Map.put(:classes_path, "domains")
-          |> Map.put(:categories_path, "domain_categories")
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: "domain",
+          classes_path: "domains",
+          categories_path: "domain_categories"
+        })
 
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 
   def domain_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.domain_categories()
-      |> sort_attributes(:uid)
+      |> SchemaController.taxonomy_domains()
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
       |> sort_classes()
       |> Map.put(:categories_path, "domain_categories")
       |> Map.put(:classes_path, "domains")
@@ -226,35 +234,39 @@ defmodule SchemaWeb.PageController do
   Renders main modules or the modules in a given main module.
   """
   @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def module_categories(conn, %{"id" => id} = params) do
-    case SchemaController.module_category_modules(params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+  def module_categories(conn, %{"name" => name} = params) do
+    # Use name parameter directly for taxonomy function
+    taxonomy_params = Map.put(params, "name", name)
+    taxonomy = SchemaController.taxonomy_modules(taxonomy_params)
 
-      data ->
-        modules = sort_by(data[:classes], :uid)
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{name}")
+    else
+      # Extract the category data from the taxonomy map (which has the category name as key)
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
 
-        data =
-          data
-          |> Map.put(:classes, modules)
-          |> sort_subcategories()
-          |> Map.put(:class_type, "module")
-          |> Map.put(:classes_path, "modules")
-          |> Map.put(:categories_path, "module_categories")
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: "module",
+          classes_path: "modules",
+          categories_path: "module_categories"
+        })
 
-        render(conn, "category.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 
   def module_categories(conn, params) do
     data =
       Map.put_new(params, "extensions", "")
-      |> SchemaController.module_categories()
-      |> sort_attributes(:uid)
+      |> SchemaController.taxonomy_modules()
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
       |> sort_classes()
       |> Map.put(:categories_path, "module_categories")
       |> Map.put(:classes_path, "modules")
@@ -479,11 +491,11 @@ defmodule SchemaWeb.PageController do
   end
 
   defp sort_classes(categories) do
-    Map.update!(categories, :attributes, fn list ->
-      Enum.map(list, fn {name, category} ->
+    Map.update!(categories, :attributes, fn attributes ->
+      Enum.map(attributes, fn {name, category} ->
         category =
           category
-          |> Map.update(:classes, [], &sort_by_float_uid(&1))
+          |> Map.update(:classes, [], &sort_by_float_id(&1))
           |> sort_subcategories()
 
         {name, category}
@@ -500,7 +512,7 @@ defmodule SchemaWeb.PageController do
         |> Enum.map(fn {key, subcategory} ->
           sorted_subcategory =
             subcategory
-            |> Map.update(:classes, [], &sort_by_float_uid(&1))
+            |> Map.update(:classes, [], &sort_by_float_id(&1))
             |> sort_subcategories()
 
           {key, sorted_subcategory}
@@ -513,16 +525,20 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  defp sort_by_float_uid(classes) do
-    Enum.sort_by(classes, fn {_, class} -> uid_to_float(class[:uid]) end)
+  defp sort_by_float_id(classes) do
+    Enum.sort_by(classes, fn {_, class} ->
+      id_to_float(Map.get(class, :id, Map.get(class, :uid, 0)))
+    end)
   end
 
-  # Convert the uid into a float with a leading "0."
-  defp uid_to_float(uid) do
-    uid_string = Integer.to_string(uid)
-    float_string = "0." <> String.slice(uid_string, 0..-1//1)
+  # Convert the id/uid into a float with a leading "0."
+  defp id_to_float(id) when is_integer(id) do
+    id_string = Integer.to_string(id)
+    float_string = "0." <> String.slice(id_string, 0..-1//1)
     String.to_float(float_string)
   end
+
+  defp id_to_float(_), do: 0.0
 
   defp sort_attributes(map, key) do
     Map.update!(map, :attributes, &sort_by(&1, key))

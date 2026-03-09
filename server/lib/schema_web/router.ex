@@ -22,16 +22,16 @@ defmodule SchemaWeb.Router do
     get "/", PageController, :skill_categories
 
     get "/skill_categories", PageController, :skill_categories
-    get "/skill_categories/:id", PageController, :skill_categories
-    get "/skill_categories/:extension/:id", PageController, :skill_categories
+    get "/skill_categories/:name", PageController, :skill_categories
+    get "/skill_categories/:extension/:name", PageController, :skill_categories
 
     get "/domain_categories", PageController, :domain_categories
-    get "/domain_categories/:id", PageController, :domain_categories
-    get "/domain_categories/:extension/:id", PageController, :domain_categories
+    get "/domain_categories/:name", PageController, :domain_categories
+    get "/domain_categories/:extension/:name", PageController, :domain_categories
 
     get "/module_categories", PageController, :module_categories
-    get "/module_categories/:id", PageController, :module_categories
-    get "/module_categories/:extension/:id", PageController, :module_categories
+    get "/module_categories/:name", PageController, :module_categories
+    get "/module_categories/:extension/:name", PageController, :module_categories
 
     get "/profiles", PageController, :profiles
     get "/profiles/:id", PageController, :profiles
@@ -80,20 +80,20 @@ defmodule SchemaWeb.Router do
     get "/profiles", SchemaController, :profiles
     get "/extensions", SchemaController, :extensions
 
-    get "/skill_categories", SchemaController, :skill_categories
-    get "/skill_categories/:id", SchemaController, :skill_category
-    get "/skill_categories/:extension/:id", SchemaController, :skill_category
-
-    get "/domain_categories", SchemaController, :domain_categories
-    get "/domain_categories/:id", SchemaController, :domain_category
-    get "/domain_categories/:extension/:id", SchemaController, :domain_category
-
-    get "/module_categories", SchemaController, :module_categories
-    get "/module_categories/:id", SchemaController, :module_category
-    get "/module_categories/:extension/:id", SchemaController, :module_category
-
     get "/profiles/:id", SchemaController, :profile
     get "/profiles/:extension/:id", SchemaController, :profile
+
+    get "/dictionary", SchemaController, :dictionary
+
+    # Categories API group
+    get "/module_categories", SchemaController, :module_categories
+    get "/skill_categories", SchemaController, :skill_categories
+    get "/domain_categories", SchemaController, :domain_categories
+
+    # Classes and Objects API group
+    get "/modules", SchemaController, :modules
+    get "/modules/:id", SchemaController, :module
+    get "/modules/:extension/:id", SchemaController, :module
 
     get "/skills", SchemaController, :skills
     get "/skills/:id", SchemaController, :skill
@@ -102,12 +102,6 @@ defmodule SchemaWeb.Router do
     get "/domains", SchemaController, :domains
     get "/domains/:id", SchemaController, :domain
     get "/domains/:extension/:id", SchemaController, :domain
-
-    get "/modules", SchemaController, :modules
-    get "/modules/:id", SchemaController, :module
-    get "/modules/:extension/:id", SchemaController, :module
-
-    get "/dictionary", SchemaController, :dictionary
 
     get "/objects", SchemaController, :objects
     get "/objects/:id", SchemaController, :object
@@ -190,7 +184,7 @@ defmodule SchemaWeb.Router do
           name: "Apache 2.0",
           url: "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        version: "0.5.1"
+        version: "0.5.2"
       }
     }
   end
