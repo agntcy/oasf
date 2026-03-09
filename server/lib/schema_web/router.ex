@@ -141,15 +141,6 @@ defmodule SchemaWeb.Router do
     get "/objects/:extension/:id", SchemaController, :json_object
   end
 
-  scope "/export", SchemaWeb do
-    pipe_through :api
-
-    get "/skills", SchemaController, :export_skills
-    get "/domains", SchemaController, :export_domains
-    get "/modules", SchemaController, :export_modules
-    get "/objects", SchemaController, :export_objects
-    get "/schema", SchemaController, :export_schema
-  end
 
   scope "/sample", SchemaWeb do
     pipe_through :api

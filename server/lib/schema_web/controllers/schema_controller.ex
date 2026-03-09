@@ -14,16 +14,6 @@ defmodule SchemaWeb.SchemaController do
   @spaces "_spaces"
   @missing_recommended "missing_recommended"
 
-  @extensions_param_description "When included in request, filters response to included only the" <>
-                                  " supplied schema extensions, or no extensions if this parameter has" <>
-                                  " no value. When not included, all extensions are returned in" <>
-                                  " the response."
-
-  @profiles_param_description "When included in request, filters response to include only the" <>
-                                " supplied profiles, or no profiles if this parameter has no" <>
-                                " value. When not included, all profiles are returned in" <>
-                                " the response."
-
   # -------------------
   # Class Schema API's
   # -------------------
@@ -767,7 +757,7 @@ defmodule SchemaWeb.SchemaController do
 
   @spec data_types(Plug.Conn.t(), any) :: Plug.Conn.t()
   def data_types(conn, _params) do
-    send_json_resp(conn, Schema.export_data_types())
+    send_json_resp(conn, Schema.data_types_attributes())
   end
 
   @doc """
@@ -904,47 +894,6 @@ defmodule SchemaWeb.SchemaController do
   @spec dictionary(map) :: map
   def dictionary(params) do
     parse_options(extensions(params)) |> Schema.dictionary()
-  end
-
-  # Helper functions for PageController (browser routes)
-  # These are not API endpoints, just internal helpers
-  @spec skills(map) :: map
-  def skills(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.skills(extensions)
-
-      profiles ->
-        Schema.skills(extensions, profiles)
-    end
-  end
-
-  @spec domains(map) :: map
-  def domains(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.domains(extensions)
-
-      profiles ->
-        Schema.domains(extensions, profiles)
-    end
-  end
-
-  @spec modules(map) :: map
-  def modules(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.modules(extensions)
-
-      profiles ->
-        Schema.modules(extensions, profiles)
-    end
   end
 
   @doc """
@@ -1193,11 +1142,9 @@ defmodule SchemaWeb.SchemaController do
 
   @spec modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def modules(conn, params) do
-    modules =
-      Enum.map(modules(params), fn {_name, module} ->
-        Schema.reduce_class(module)
-      end)
-
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    modules = Schema.modules(extensions, profiles)
     send_json_resp(conn, modules)
   end
 
@@ -1207,14 +1154,8 @@ defmodule SchemaWeb.SchemaController do
   @spec modules(map) :: map
   def modules(params) do
     extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.modules(extensions)
-
-      profiles ->
-        Schema.modules(extensions, profiles)
-    end
+    profiles = parse_options(profiles(params))
+    Schema.modules(extensions, profiles)
   end
 
   @doc """
@@ -1283,11 +1224,9 @@ defmodule SchemaWeb.SchemaController do
 
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def skills(conn, params) do
-    skills =
-      Enum.map(skills(params), fn {_name, skill} ->
-        Schema.reduce_class(skill)
-      end)
-
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    skills = Schema.skills(extensions, profiles)
     send_json_resp(conn, skills)
   end
 
@@ -1297,14 +1236,8 @@ defmodule SchemaWeb.SchemaController do
   @spec skills(map) :: map
   def skills(params) do
     extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.skills(extensions)
-
-      profiles ->
-        Schema.skills(extensions, profiles)
-    end
+    profiles = parse_options(profiles(params))
+    Schema.skills(extensions, profiles)
   end
 
   @doc """
@@ -1380,11 +1313,9 @@ defmodule SchemaWeb.SchemaController do
 
   @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def domains(conn, params) do
-    domains =
-      Enum.map(domains(params), fn {_name, domain} ->
-        Schema.reduce_class(domain)
-      end)
-
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    domains = Schema.domains(extensions, profiles)
     send_json_resp(conn, domains)
   end
 
@@ -1394,14 +1325,8 @@ defmodule SchemaWeb.SchemaController do
   @spec domains(map) :: map
   def domains(params) do
     extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.domains(extensions)
-
-      profiles ->
-        Schema.domains(extensions, profiles)
-    end
+    profiles = parse_options(profiles(params))
+    Schema.domains(extensions, profiles)
   end
 
   @doc """
@@ -1512,17 +1437,17 @@ defmodule SchemaWeb.SchemaController do
 
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
   def objects(conn, params) do
-    objects =
-      Enum.map(objects(params), fn {_name, map} ->
-        Map.delete(map, :_links) |> Schema.delete_attributes()
-      end)
-
+    profiles = parse_options(profiles(params))
+    extensions = parse_options(extensions(params))
+    objects = Schema.objects(extensions, profiles)
     send_json_resp(conn, objects)
   end
 
   @spec objects(map) :: map
   def objects(params) do
-    parse_options(extensions(params)) |> Schema.objects()
+    extensions = parse_options(extensions(params))
+    profiles = parse_options(profiles(params))
+    Schema.objects(extensions, profiles)
   end
 
   @spec object(map) :: map() | nil
@@ -1534,144 +1459,36 @@ defmodule SchemaWeb.SchemaController do
     Schema.object(extensions, extension, id, profiles)
   end
 
-  # -------------------
-  # Schema Export API's
-  # -------------------
-
   @doc """
-  Export the OASF schema definitions.
+  Get the complete OASF schema definitions.
   """
-  swagger_path :export_schema do
-    get("/export/schema")
-    summary("Export schema")
-
+  swagger_path :schema do
+    get("/api/schema")
+    summary("Get schema")
     description(
       "Get OASF schema definitions, including data types, objects, classes," <>
         " and the dictionary of attributes."
     )
-
     produces("application/json")
-    tag("Schema Export")
+    tag("Classes and Objects")
 
     parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+      extensions(:query, :array, "Related schema extensions to include in response.",
+        items: [type: :string]
+      )
+
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
-  @spec export_schema(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def export_schema(conn, params) do
+  @spec schema(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def schema(conn, params) do
     profiles = parse_options(profiles(params))
     extensions = parse_options(extensions(params))
-    data = Schema.export_schema(extensions, profiles)
+    data = Schema.schema(extensions, profiles)
     send_json_resp(conn, data)
-  end
-
-  @doc """
-  Export the OASF skill classes.
-  """
-  swagger_path :export_skills do
-    get("/export/skills")
-    summary("Export skill classes")
-    description("Get OASF schema skill classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_skills(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_skills(extensions, profiles)
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF domain classes.
-  """
-  swagger_path :export_domains do
-    get("/export/domains")
-    summary("Export domain classes")
-    description("Get OASF schema domain classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_domains(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_domains(extensions, profiles)
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF module classes.
-  """
-  swagger_path :export_modules do
-    get("/export/modules")
-    summary("Export module classes")
-    description("Get OASF schema module classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_modules(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_modules(extensions, profiles)
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF schema objects.
-  """
-  swagger_path :export_objects do
-    get("/export/objects")
-    summary("Export objects")
-    description("Get OASF schema objects.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_objects(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    objects = Schema.export_objects(extensions, profiles)
-    send_json_resp(conn, objects)
   end
 
   # -----------------
