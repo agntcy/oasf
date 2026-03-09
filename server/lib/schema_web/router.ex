@@ -100,6 +100,7 @@ defmodule SchemaWeb.Router do
     get "/objects", SchemaController, :objects
 
     get "/data_types", SchemaController, :data_types
+    get "/schema", SchemaController, :export_schema
 
     post "/translate/skill", SchemaController, :translate_skill
     post "/validate/skill", SchemaController, :validate_skill

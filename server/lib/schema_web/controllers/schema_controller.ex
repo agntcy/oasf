@@ -750,14 +750,46 @@ defmodule SchemaWeb.SchemaController do
     summary("Data types")
     description("Get OASF schema data types.")
     produces("application/json")
-    tag("Dictionary and Types")
+    tag("Schema")
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec data_types(Plug.Conn.t(), any) :: Plug.Conn.t()
   def data_types(conn, _params) do
     send_json_resp(conn, Schema.data_types_attributes())
+  end
+
+  @doc """
+  Export the OASF schema definitions.
+  """
+  swagger_path :export_schema do
+    get("/api/schema")
+    summary("Export schema")
+
+    description(
+      "Get OASF schema definitions, including data types, objects, classes," <>
+        " and the dictionary of attributes."
+    )
+
+    produces("application/json")
+    tag("Schema")
+
+    parameters do
+      extensions(:query, :array, "Related schema extensions to include in response.",
+        items: [type: :string]
+      )
+
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+    end
+
+    response(200, "Success")
+  end
+
+  @spec export_schema(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def export_schema(conn, params) do
+    extensions = parse_options(extensions(params))
+    profiles = parse_options(profiles(params))
+    send_json_resp(conn, Schema.schema(extensions, profiles))
   end
 
   @doc """
@@ -869,7 +901,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Dictionary")
     description("Get OASF schema dictionary.")
     produces("application/json")
-    tag("Dictionary and Types")
+    tag("Schema")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
