@@ -92,16 +92,10 @@ defmodule SchemaWeb.Router do
 
     # Classes and Objects API group
     get "/modules", SchemaController, :modules
-    get "/modules/:id", SchemaController, :module
-    get "/modules/:extension/:id", SchemaController, :module
 
     get "/skills", SchemaController, :skills
-    get "/skills/:id", SchemaController, :skill
-    get "/skills/:extension/:id", SchemaController, :skill
 
     get "/domains", SchemaController, :domains
-    get "/domains/:id", SchemaController, :domain
-    get "/domains/:extension/:id", SchemaController, :domain
 
     get "/objects", SchemaController, :objects
     get "/objects/:id", SchemaController, :object
@@ -140,7 +134,6 @@ defmodule SchemaWeb.Router do
     get "/objects/:id", SchemaController, :json_object
     get "/objects/:extension/:id", SchemaController, :json_object
   end
-
 
   scope "/sample", SchemaWeb do
     pipe_through :api
