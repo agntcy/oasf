@@ -883,7 +883,7 @@ defmodule SchemaWeb.SchemaController do
 
   @spec dictionary(Plug.Conn.t(), any) :: Plug.Conn.t()
   def dictionary(conn, params) do
-    data = dictionary(params) |> remove_links(:attributes)
+    data = dictionary(params) |> remove_internal_attribute_fields()
 
     send_json_resp(conn, data)
   end
@@ -1309,24 +1309,22 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get an object by name.
-  get /api/objects/:name
-  get /api/objects/:extension/:name
+  List objects or get a specific object by name.
   """
-  swagger_path :object do
-    get("/api/objects/{name}")
-    summary("Object")
+  swagger_path :objects do
+    get("/api/objects")
+    summary("List objects or get a specific object")
 
     description(
-      "Get OASF schema object by name. The object name may contain a schema extension name." <>
-        " For example, \"dev/os_service\"."
+      "Get OASF schema objects. When a name is provided, returns a single object." <>
+        " The object name may contain a schema extension name, for example \"dev/os_service\"."
     )
 
     produces("application/json")
     tag("Classes and Objects")
 
     parameters do
-      name(:path, :string, "Object name", required: true)
+      name(:query, :string, "Object name to retrieve a specific object")
 
       extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
@@ -1335,48 +1333,31 @@ defmodule SchemaWeb.SchemaController do
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-    response(404, "Object <code>name</code> not found")
-  end
-
-  @spec object(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def object(conn, %{"id" => id} = params) do
-    case object(params) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Object #{id} not found"})
-
-      data ->
-        object = add_objects(data, params)
-        send_json_resp(conn, object)
-    end
-  end
-
-  @doc """
-  Get the schema objects.
-  """
-  swagger_path :objects do
-    get("/api/objects")
-    summary("List objects")
-    description("Get OASF schema objects.")
-    produces("application/json")
-    tag("Classes and Objects")
-
-    parameters do
-      extensions(:query, :array, "Related schema extensions to include in response.",
-        items: [type: :string]
-      )
-    end
-
     response(200, "Success", :ObjectsDesc)
+    response(404, "Not Found - No object found with the specified name")
   end
 
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
   def objects(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    objects = Schema.objects(extensions, profiles)
-    send_json_resp(conn, objects)
+    profiles_opt = parse_options(profiles(params))
+    extensions_opt = parse_options(extensions(params))
+    name_param = Map.get(params, "name")
+
+    if name_param == nil do
+      objects =
+        Schema.objects(extensions_opt, profiles_opt)
+        |> Enum.into(%{}, fn {k, v} -> {k, remove_internal_fields(v)} end)
+
+      send_json_resp(conn, objects)
+    else
+      case find_object(extensions_opt, name_param, profiles_opt) do
+        nil ->
+          send_json_resp(conn, 404, %{error: "No object found with name '#{name_param}'"})
+
+        data ->
+          send_json_resp(conn, add_objects(data, params))
+      end
+    end
   end
 
   @spec objects(map) :: map
@@ -2565,25 +2546,31 @@ defmodule SchemaWeb.SchemaController do
     |> send_resp(200, Jason.encode!(data))
   end
 
-  defp remove_links(data) do
+  defp remove_internal_fields(data) do
     data
-    |> Schema.delete_links()
-    |> remove_links(:attributes)
+    |> drop_private_keys()
+    |> remove_internal_attribute_fields()
   end
 
-  defp remove_links(data, key) do
-    case data[key] do
+  defp remove_internal_attribute_fields(data) do
+    case data[:attributes] do
       nil ->
         data
 
-      list ->
+      attrs ->
         updated =
-          Enum.map(list, fn {k, v} ->
-            %{k => Schema.delete_links(v)}
+          Enum.map(attrs, fn {k, v} ->
+            %{k => drop_private_keys(v)}
           end)
 
-        Map.put(data, key, updated)
+        Map.put(data, :attributes, updated)
     end
+  end
+
+  defp drop_private_keys(map) when is_map(map) do
+    Map.reject(map, fn {k, _v} ->
+      is_atom(k) and String.starts_with?(Atom.to_string(k), "_")
+    end)
   end
 
   defp add_objects(data, %{"objects" => "1"}) do
@@ -2594,11 +2581,11 @@ defmodule SchemaWeb.SchemaController do
     else
       data
     end
-    |> remove_links()
+    |> remove_internal_fields()
   end
 
   defp add_objects(data, _params) do
-    remove_links(data)
+    remove_internal_fields(data)
   end
 
   defp update_objects(objects, attributes) do
@@ -2616,7 +2603,9 @@ defmodule SchemaWeb.SchemaController do
           acc
         else
           object = Schema.object(type)
-          Map.put(acc, type, remove_links(object)) |> update_objects(object[:attributes])
+
+          Map.put(acc, type, remove_internal_fields(object))
+          |> update_objects(object[:attributes])
         end
 
       _other ->
@@ -2784,6 +2773,10 @@ defmodule SchemaWeb.SchemaController do
     Map.update!(class, :attributes, fn attributes ->
       Schema.Utils.apply_profiles(attributes, profiles)
     end)
+  end
+
+  defp find_object(extensions, name, profiles) do
+    Schema.object(extensions, nil, name, profiles)
   end
 
   defp parse_java_package(nil), do: []

@@ -98,8 +98,6 @@ defmodule SchemaWeb.Router do
     get "/domains", SchemaController, :domains
 
     get "/objects", SchemaController, :objects
-    get "/objects/:id", SchemaController, :object
-    get "/objects/:extension/:id", SchemaController, :object
 
     get "/data_types", SchemaController, :data_types
 

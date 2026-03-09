@@ -30,7 +30,7 @@ var testCases = []objectTestCase{
 	{
 		entityType:         "objects",
 		fileName:           "record.json",
-		apiEndpoint:        baseURL + "/api/objects/record",
+		apiEndpoint:        baseURL + "/api/objects?name=record",
 		schemaEndpoint:     baseURL + "/schema/objects/record",
 		sampleEndpoint:     baseURL + "/sample/objects/record",
 		validationEndpoint: baseURL + "/api/validate/object/record",
@@ -38,7 +38,7 @@ var testCases = []objectTestCase{
 	{
 		entityType:         "objects",
 		fileName:           "locator.json",
-		apiEndpoint:        baseURL + "/api/objects/locator",
+		apiEndpoint:        baseURL + "/api/objects?name=locator",
 		schemaEndpoint:     baseURL + "/schema/objects/locator",
 		sampleEndpoint:     baseURL + "/sample/objects/locator",
 		validationEndpoint: baseURL + "/api/validate/object/locator",
@@ -269,7 +269,7 @@ var _ = Describe("API", func() {
 			{"api_domains", baseURL + "/api/domains"},
 			{"api_domains_by_name", baseURL + "/api/domains?name=" + testDomainID},
 			{"api_objects", baseURL + "/api/objects"},
-			{"api_objects_by_id", baseURL + "/api/objects/" + testObjectID},
+			{"api_objects_by_name", baseURL + "/api/objects?name=" + testObjectID},
 			{"api_dictionary", baseURL + "/api/dictionary"},
 			{"api_data_types", baseURL + "/api/data_types"},
 
@@ -439,7 +439,7 @@ var _ = Describe("API", func() {
 				{"domain_graph", baseURL + "/domain/graph/" + nonExistentID},
 				{"module_graph", baseURL + "/module/graph/" + nonExistentID},
 				{"object_graph", baseURL + "/object/graph/" + nonExistentID},
-				{"api_objects_by_id", baseURL + "/api/objects/" + nonExistentID},
+				{"api_objects_by_name", baseURL + "/api/objects?name=" + nonExistentID},
 				{"schema_skills_by_id", baseURL + "/schema/skills/" + nonExistentID},
 				{"schema_domains_by_id", baseURL + "/schema/domains/" + nonExistentID},
 				{"schema_modules_by_id", baseURL + "/schema/modules/" + nonExistentID},

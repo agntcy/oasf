@@ -96,7 +96,6 @@ defmodule Schema do
   @spec all_objects() :: map()
   def all_objects(), do: Repo.all_objects()
 
-
   @spec all_skills() :: map()
   def all_skills(), do: Repo.all_skills()
 
@@ -131,7 +130,6 @@ defmodule Schema do
   @spec find_skill(integer()) :: nil | Cache.class_t()
   def find_skill(uid) when is_integer(uid), do: Repo.find_skill(uid)
 
-
   @spec all_domains() :: map()
   def all_domains(), do: Repo.all_domains()
 
@@ -165,7 +163,6 @@ defmodule Schema do
   """
   @spec find_domain(integer()) :: nil | Cache.class_t()
   def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
-
 
   @spec all_modules() :: map()
   def all_modules(), do: Repo.all_modules()
@@ -236,7 +233,6 @@ defmodule Schema do
 
   @spec taxonomy_domains(Repo.extensions_t(), String.t() | nil) :: map()
   def taxonomy_domains(extensions, parent), do: Repo.taxonomy_domains(extensions, parent)
-
 
   @doc """
     Returns a single object.
