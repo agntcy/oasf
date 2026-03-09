@@ -16,6 +16,8 @@ ARG elixir_image=elixir:1.19-alpine
 ARG runtime_image=alpine:3.23.3
 
 FROM ${elixir_image} AS builder
+# TODO(secops-cve): upgrade zlib to '1.3.2-r0' to fix CVE
+# TODO(secops-cve): upgrade zlib to '1.3.2-r0' to fix CVE
 
 # prepare build dir
 WORKDIR /app
@@ -63,6 +65,8 @@ RUN mix release
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
 FROM ${runtime_image}
+# TODO(secops-cve): upgrade zlib to '1.3.2-r0' to fix CVE
+# TODO(secops-cve): upgrade zlib to '1.3.2-r0' to fix CVE
 
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
