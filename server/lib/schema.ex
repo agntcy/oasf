@@ -438,51 +438,51 @@ defmodule Schema do
     Returns all skill classes.
   """
   @spec skills() :: map()
-  def skills(), do: Repo.export_skills() |> reduce_objects()
+  def skills(), do: Repo.skills() |> reduce_objects()
 
   @spec skills(Repo.extensions_t()) :: map()
-  def skills(extensions), do: Repo.export_skills(extensions) |> reduce_objects()
+  def skills(extensions), do: Repo.skills(extensions) |> reduce_objects()
 
   @spec skills(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
   def skills(extensions, nil), do: skills(extensions)
 
   def skills(extensions, profiles) do
-    Repo.export_skills(extensions) |> update_exported_classes(profiles)
+    Repo.skills(extensions) |> apply_profiles_and_reduce(profiles)
   end
 
   @doc """
     Returns all domains.
   """
   @spec domains() :: map()
-  def domains(), do: Repo.export_domains() |> reduce_objects()
+  def domains(), do: Repo.domains() |> reduce_objects()
 
   @spec domains(Repo.extensions_t()) :: map()
-  def domains(extensions), do: Repo.export_domains(extensions) |> reduce_objects()
+  def domains(extensions), do: Repo.domains(extensions) |> reduce_objects()
 
   @spec domains(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
   def domains(extensions, nil), do: domains(extensions)
 
   def domains(extensions, profiles) do
-    Repo.export_domains(extensions) |> update_exported_classes(profiles)
+    Repo.domains(extensions) |> apply_profiles_and_reduce(profiles)
   end
 
   @doc """
     Returns all modules.
   """
   @spec modules() :: map()
-  def modules(), do: Repo.export_modules() |> reduce_objects()
+  def modules(), do: Repo.modules() |> reduce_objects()
 
   @spec modules(Repo.extensions_t()) :: map()
-  def modules(extensions), do: Repo.export_modules(extensions) |> reduce_objects()
+  def modules(extensions), do: Repo.modules(extensions) |> reduce_objects()
 
   @spec modules(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
   def modules(extensions, nil), do: modules(extensions)
 
   def modules(extensions, profiles) do
-    Repo.export_modules(extensions) |> update_exported_classes(profiles)
+    Repo.modules(extensions) |> apply_profiles_and_reduce(profiles)
   end
 
-  defp update_exported_classes(classes, profiles) do
+  defp apply_profiles_and_reduce(classes, profiles) do
     apply_profiles(classes, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
 
@@ -490,16 +490,16 @@ defmodule Schema do
     Returns all objects.
   """
   @spec objects() :: map()
-  def objects(), do: Repo.export_objects() |> reduce_objects()
+  def objects(), do: Repo.objects() |> reduce_objects()
 
   @spec objects(Repo.extensions_t()) :: map()
-  def objects(extensions), do: Repo.export_objects(extensions) |> reduce_objects()
+  def objects(extensions), do: Repo.objects(extensions) |> reduce_objects()
 
   @spec objects(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
   def objects(extensions, nil), do: objects(extensions)
 
   def objects(extensions, profiles) do
-    Repo.export_objects(extensions)
+    Repo.objects(extensions)
     |> apply_profiles(profiles, MapSet.size(profiles))
     |> reduce_objects()
   end

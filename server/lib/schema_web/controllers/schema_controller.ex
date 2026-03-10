@@ -760,39 +760,6 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Export the OASF schema definitions.
-  """
-  swagger_path :export_schema do
-    get("/api/schema")
-    summary("Export schema")
-
-    description(
-      "Get OASF schema definitions, including data types, objects, classes," <>
-        " and the dictionary of attributes."
-    )
-
-    produces("application/json")
-    tag("Schema")
-
-    parameters do
-      extensions(:query, :array, "Related schema extensions to include in response.",
-        items: [type: :string]
-      )
-
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-  end
-
-  @spec export_schema(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def export_schema(conn, params) do
-    extensions = parse_options(extensions(params))
-    profiles = parse_options(profiles(params))
-    send_json_resp(conn, Schema.schema(extensions, profiles))
-  end
-
-  @doc """
   Get the schema extensions.
   """
   swagger_path :extensions do
@@ -802,7 +769,6 @@ defmodule SchemaWeb.SchemaController do
     produces("application/json")
     tag("Schema")
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec extensions(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -826,7 +792,6 @@ defmodule SchemaWeb.SchemaController do
     produces("application/json")
     tag("Schema")
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec profiles(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -870,7 +835,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Profile <code>name</code> not found")
   end
 
@@ -910,12 +874,11 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec dictionary(Plug.Conn.t(), any) :: Plug.Conn.t()
   def dictionary(conn, params) do
-    data = dictionary(params) |> remove_internal_attribute_fields()
+    data = dictionary(params) |> Schema.deep_clean()
 
     send_json_resp(conn, data)
   end
@@ -943,7 +906,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories")
+    tag("Taxonomy")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1007,7 +970,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories")
+    tag("Taxonomy")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1071,7 +1034,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories")
+    tag("Taxonomy")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1168,13 +1131,12 @@ defmodule SchemaWeb.SchemaController do
   @spec modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def modules(conn, params) do
     profiles_opt = parse_options(profiles(params))
-    extensions_opt = parse_options(extensions(params))
 
     handle_with_optional_id_and_name(
       conn,
       params,
       :modules,
-      fn -> Schema.modules(extensions_opt, profiles_opt) end,
+      fn -> modules(params) end,
       fn id_or_name ->
         case find_class(:modules, id_or_name, profiles_opt) do
           nil -> nil
@@ -1191,7 +1153,9 @@ defmodule SchemaWeb.SchemaController do
   def modules(params) do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
+
     Schema.modules(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -1241,13 +1205,12 @@ defmodule SchemaWeb.SchemaController do
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def skills(conn, params) do
     profiles_opt = parse_options(profiles(params))
-    extensions_opt = parse_options(extensions(params))
 
     handle_with_optional_id_and_name(
       conn,
       params,
       :skills,
-      fn -> Schema.skills(extensions_opt, profiles_opt) end,
+      fn -> skills(params) end,
       fn id_or_name ->
         case find_class(:skills, id_or_name, profiles_opt) do
           nil -> nil
@@ -1264,7 +1227,9 @@ defmodule SchemaWeb.SchemaController do
   def skills(params) do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
+
     Schema.skills(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -1314,13 +1279,12 @@ defmodule SchemaWeb.SchemaController do
   @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def domains(conn, params) do
     profiles_opt = parse_options(profiles(params))
-    extensions_opt = parse_options(extensions(params))
 
     handle_with_optional_id_and_name(
       conn,
       params,
       :domains,
-      fn -> Schema.domains(extensions_opt, profiles_opt) end,
+      fn -> domains(params) end,
       fn id_or_name ->
         case find_class(:domains, id_or_name, profiles_opt) do
           nil -> nil
@@ -1337,7 +1301,9 @@ defmodule SchemaWeb.SchemaController do
   def domains(params) do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
+
     Schema.domains(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -1376,11 +1342,7 @@ defmodule SchemaWeb.SchemaController do
     name_param = Map.get(params, "name")
 
     if name_param == nil do
-      objects =
-        Schema.objects(extensions_opt, profiles_opt)
-        |> Enum.into(%{}, fn {k, v} -> {k, remove_internal_fields(v)} end)
-
-      send_json_resp(conn, objects)
+      send_json_resp(conn, objects(params))
     else
       case find_object(extensions_opt, name_param, profiles_opt) do
         nil ->
@@ -1396,16 +1358,9 @@ defmodule SchemaWeb.SchemaController do
   def objects(params) do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
+
     Schema.objects(extensions, profiles)
-  end
-
-  @spec object(map) :: map() | nil
-  def object(%{"id" => id} = params) do
-    profiles = parse_options(profiles(params))
-    extension = extension(params)
-    extensions = parse_options(extensions(params))
-
-    Schema.object(extensions, extension, id, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -1421,7 +1376,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Classes and Objects")
+    tag("Schema")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1469,7 +1424,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Skill class <code>name</code> not found")
   end
 
@@ -1515,7 +1469,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Domain class <code>name</code> not found")
   end
 
@@ -1561,7 +1514,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Module class <code>name</code> not found")
   end
 
@@ -1607,7 +1559,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Object <code>name</code> not found")
   end
 
@@ -1694,7 +1645,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -1780,7 +1731,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -1866,7 +1817,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_module(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -1954,7 +1905,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2399,7 +2350,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Skill class <code>name</code> not found")
   end
 
@@ -2494,7 +2444,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Module class <code>name</code> not found")
   end
 
@@ -2542,7 +2491,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Object <code>name</code> not found")
   end
 
@@ -2578,33 +2526,6 @@ defmodule SchemaWeb.SchemaController do
     |> send_resp(200, Jason.encode!(data))
   end
 
-  defp remove_internal_fields(data) do
-    data
-    |> drop_private_keys()
-    |> remove_internal_attribute_fields()
-  end
-
-  defp remove_internal_attribute_fields(data) do
-    case data[:attributes] do
-      nil ->
-        data
-
-      attrs ->
-        updated =
-          Enum.map(attrs, fn {k, v} ->
-            %{k => drop_private_keys(v)}
-          end)
-
-        Map.put(data, :attributes, updated)
-    end
-  end
-
-  defp drop_private_keys(map) when is_map(map) do
-    Map.reject(map, fn {k, _v} ->
-      is_atom(k) and String.starts_with?(Atom.to_string(k), "_")
-    end)
-  end
-
   defp add_objects(data, %{"objects" => "1"}) do
     objects = update_objects(Map.new(), data[:attributes])
 
@@ -2613,11 +2534,11 @@ defmodule SchemaWeb.SchemaController do
     else
       data
     end
-    |> remove_internal_fields()
+    |> Schema.deep_clean()
   end
 
   defp add_objects(data, _params) do
-    remove_internal_fields(data)
+    Schema.deep_clean(data)
   end
 
   defp update_objects(objects, attributes) do
@@ -2636,7 +2557,7 @@ defmodule SchemaWeb.SchemaController do
         else
           object = Schema.object(type)
 
-          Map.put(acc, type, remove_internal_fields(object))
+          Map.put(acc, type, Schema.deep_clean(object))
           |> update_objects(object[:attributes])
         end
 
@@ -2741,7 +2662,20 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  # Find a single class by numeric UID or string name.
+  @doc """
+  Look up a single class by name (with optional extension prefix) and return
+  cleaned data (internal fields stripped).  Returns nil when not found.
+  """
+  @spec class(atom(), String.t() | nil, String.t(), map() | nil) :: map() | nil
+  def class(class_family, extension, name, profiles) do
+    full_name = Schema.Utils.make_path(extension, name)
+
+    case find_class(class_family, full_name, profiles) do
+      nil -> nil
+      data -> Schema.deep_clean(data)
+    end
+  end
+
   defp find_class(class_family, uid, profiles) when is_integer(uid) do
     class =
       case class_family do
@@ -2805,6 +2739,18 @@ defmodule SchemaWeb.SchemaController do
     Map.update!(class, :attributes, fn attributes ->
       Schema.Utils.apply_profiles(attributes, profiles)
     end)
+  end
+
+  @doc """
+  Look up a single object by name (with optional extension prefix) and return
+  cleaned data (internal fields stripped).  Returns nil when not found.
+  """
+  @spec object(String.t() | nil, String.t() | nil, String.t(), map() | nil) :: map() | nil
+  def object(extensions, extension, name, profiles) do
+    case Schema.object(extensions, extension, name, profiles) do
+      nil -> nil
+      data -> Schema.deep_clean(data)
+    end
   end
 
   defp find_object(extensions, name, profiles) do

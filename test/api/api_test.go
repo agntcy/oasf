@@ -252,8 +252,8 @@ var _ = Describe("API", func() {
 			{"api_version", baseURL + "/api/version"},
 			{"api_versions", baseURL + "/api/versions"},
 			{"api_profiles", baseURL + "/api/profiles"},
-			// {"api_profiles_by_id", baseURL + "/api/profiles/" + testProfileID},
 			{"api_extensions", baseURL + "/api/extensions"},
+			{"api_schema", baseURL + "/api/schema"},
 			// Categories API group
 			{"api_module_categories", baseURL + "/api/module_categories"},
 			{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + testModuleCategoryID},
@@ -491,37 +491,177 @@ var _ = Describe("API", func() {
 		}
 	})
 
+	Describe("POST Endpoints with Invalid Body (should return 400)", func() {
+		invalidBody := []byte(`"just a string"`)
+
+		translateEndpoints := []struct {
+			name string
+			url  string
+		}{
+			{"api_translate_skill", baseURL + "/api/translate/skill"},
+			{"api_translate_domain", baseURL + "/api/translate/domain"},
+			{"api_translate_module", baseURL + "/api/translate/module"},
+			{"api_translate_object", baseURL + "/api/translate/object/record"},
+		}
+
+		for _, endpoint := range translateEndpoints {
+			endpoint := endpoint
+			It("should return 400 for POST "+endpoint.name+" with non-object body", func() {
+				req, err := http.NewRequest("POST", endpoint.url, bytes.NewReader(invalidBody))
+				Expect(err).NotTo(HaveOccurred())
+				req.Header.Set("Content-Type", "application/json")
+				resp, err := http.DefaultClient.Do(req)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+		}
+
+		validateEndpoints := []struct {
+			name string
+			url  string
+		}{
+			{"api_validate_skill", baseURL + "/api/validate/skill"},
+			{"api_validate_domain", baseURL + "/api/validate/domain"},
+			{"api_validate_module", baseURL + "/api/validate/module"},
+			{"api_validate_object", baseURL + "/api/validate/object/record"},
+		}
+
+		for _, endpoint := range validateEndpoints {
+			endpoint := endpoint
+			It("should return 400 for POST "+endpoint.name+" with non-object body", func() {
+				req, err := http.NewRequest("POST", endpoint.url, bytes.NewReader(invalidBody))
+				Expect(err).NotTo(HaveOccurred())
+				req.Header.Set("Content-Type", "application/json")
+				resp, err := http.DefaultClient.Do(req)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+		}
+	})
+
 	Describe("Classes API - id and name parameter validation", func() {
-		testSkillName := "base_skill"
-		testDomainName := "base_domain"
-		testModuleName := "base_module"
+		classEndpoints := []struct {
+			family          string
+			path            string
+			validName       string
+			validID         string
+			mismatchID      string
+			hierarchicalName string
+		}{
+			{"skills", "/api/skills", "base_skill", "0", "601", "analytical_skills/mathematical_reasoning"},
+			{"domains", "/api/domains", "base_domain", "0", "2005", "agriculture/precision_agriculture"},
+			{"modules", "/api/modules", "base_module", "0", "103", "core/language_model/prompt"},
+		}
 
-		It("should return a single skill when name is provided", func() {
-			resp, err := http.Get(baseURL + "/api/skills?name=" + testSkillName)
+		for _, ep := range classEndpoints {
+			ep := ep
+
+			It("should return 200 for "+ep.family+" when name is provided", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=" + ep.validName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" when id is provided", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=" + ep.validID)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" when both matching id and name are provided", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=" + ep.validID + "&name=" + ep.validName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" with hierarchical name", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=" + ep.hierarchicalName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 400 for "+ep.family+" when id is invalid (non-numeric)", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=invalid")
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+
+			It("should return 400 for "+ep.family+" when id and name refer to different classes", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=" + ep.mismatchID + "&name=" + ep.validName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+
+			It("should return 404 for "+ep.family+" when name does not exist", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=nonexistent_12345")
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+
+			It("should return 404 for "+ep.family+" when id does not exist", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=99999")
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+		}
+	})
+
+	Describe("Objects API - name parameter validation", func() {
+		It("should return 200 for objects when name is provided", func() {
+			resp, err := http.Get(baseURL + "/api/objects?name=record")
 			Expect(err).NotTo(HaveOccurred())
 			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200))
-			Expect(resp.StatusCode).To(BeNumerically("<", 400))
+			Expect(resp.StatusCode).To(Equal(http.StatusOK))
 		})
 
-		It("should return a single domain when name is provided", func() {
-			resp, err := http.Get(baseURL + "/api/domains?name=" + testDomainName)
-			Expect(err).NotTo(HaveOccurred())
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200))
-			Expect(resp.StatusCode).To(BeNumerically("<", 400))
-		})
-
-		It("should return a single module when name is provided", func() {
-			resp, err := http.Get(baseURL + "/api/modules?name=" + testModuleName)
-			Expect(err).NotTo(HaveOccurred())
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200))
-			Expect(resp.StatusCode).To(BeNumerically("<", 400))
-		})
-
-		It("should return 404 for non-existent skill name", func() {
-			resp, err := http.Get(baseURL + "/api/skills?name=nonexistent_skill_12345")
+		It("should return 404 for objects when name does not exist", func() {
+			resp, err := http.Get(baseURL + "/api/objects?name=nonexistent_12345")
 			Expect(err).NotTo(HaveOccurred())
 			defer resp.Body.Close()
 			Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
@@ -531,118 +671,129 @@ var _ = Describe("API", func() {
 			var errorResp map[string]interface{}
 			Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
 			Expect(errorResp).To(HaveKey("error"))
-		})
-
-		It("should return 404 for non-existent skill id", func() {
-			resp, err := http.Get(baseURL + "/api/skills?id=99999")
-			Expect(err).NotTo(HaveOccurred())
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
-
-			respBytes, err := io.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			var errorResp map[string]interface{}
-			Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
-			Expect(errorResp).To(HaveKey("error"))
-		})
-
-		It("should return 404 when both id and name are provided but name does not exist", func() {
-			resp, err := http.Get(baseURL + "/api/skills?id=1&name=nonexistent_skill_12345")
-			Expect(err).NotTo(HaveOccurred())
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
-
-			respBytes, err := io.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred())
-			var errorResp map[string]interface{}
-			Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
-			Expect(errorResp).To(HaveKey("error"))
-		})
-
-		It("should return 400 when id is invalid (non-numeric)", func() {
-			resp, err := http.Get(baseURL + "/api/skills?id=invalid&name=" + testSkillName)
-			Expect(err).NotTo(HaveOccurred())
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
 		})
 	})
 
 	Describe("Categories API - id and name parameter validation", func() {
-		It("should return 400 when both id and name are provided but refer to different nodes", func() {
-			// Test with module_categories endpoint - use a valid ID and a different valid name
-			resp, err := http.Get(baseURL + "/api/module_categories?id=1&name=prompt")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with mismatched id and name")
+		categoryEndpoints := []struct {
+			family     string
+			path       string
+			validName  string
+			validID    string
+			mismatchID string
+			hierName   string
+			simpleName string
+		}{
+			{"module_categories", "/api/module_categories", "core", "1", "2", "core/language_model", "prompt"},
+			{"skill_categories", "/api/skill_categories", "analytical_skills", "5", "1", "natural_language_processing/personalization", "personalization"},
+			{"domain_categories", "/api/domain_categories", "agriculture", "11", "1", "healthcare/telemedicine", "telemedicine"},
+		}
+
+		for _, ep := range categoryEndpoints {
+			ep := ep
+
+			It("should return 200 for "+ep.family+" when name is provided", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=" + ep.validName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" when id is provided", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=" + ep.validID)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" when matching id and name are provided", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=" + ep.validID + "&name=" + ep.validName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" with hierarchical name", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=" + ep.hierName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 200 for "+ep.family+" with simple name (last segment)", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=" + ep.simpleName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusOK))
+			})
+
+			It("should return 400 for "+ep.family+" when id is invalid (non-numeric)", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=invalid")
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+
+			It("should return 400 for "+ep.family+" when id and name refer to different nodes", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=" + ep.mismatchID + "&name=" + ep.validName)
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusBadRequest))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+
+			It("should return 404 for "+ep.family+" when name does not exist", func() {
+				resp, err := http.Get(baseURL + ep.path + "?name=nonexistent_12345")
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+
+			It("should return 404 for "+ep.family+" when id does not exist", func() {
+				resp, err := http.Get(baseURL + ep.path + "?id=99999")
+				Expect(err).NotTo(HaveOccurred())
+				defer resp.Body.Close()
+				Expect(resp.StatusCode).To(Equal(http.StatusNotFound))
+
+				respBytes, err := io.ReadAll(resp.Body)
+				Expect(err).NotTo(HaveOccurred())
+				var errorResp map[string]interface{}
+				Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed())
+				Expect(errorResp).To(HaveKey("error"))
+			})
+		}
+	})
+
+	Describe("Schema API - response content", func() {
+		It("should return valid JSON with expected top-level keys from /api/schema", func() {
+			resp, err := http.Get(baseURL + "/api/schema")
+			Expect(err).NotTo(HaveOccurred())
 			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest), "Expected 400 for mismatched id and name, got %d", resp.StatusCode)
+			Expect(resp.StatusCode).To(Equal(http.StatusOK))
 
 			respBytes, err := io.ReadAll(resp.Body)
-			Expect(err).NotTo(HaveOccurred(), "Failed to read response body")
-			var errorResp map[string]interface{}
-			Expect(json.Unmarshal(respBytes, &errorResp)).To(Succeed(), "Response is not valid JSON")
-			Expect(errorResp).To(HaveKey("error"), "Error response should contain 'error' field")
-		})
+			Expect(err).NotTo(HaveOccurred())
 
-		It("should return 200 when both id and name are provided and refer to the same node", func() {
-			// Test with module_categories endpoint - use id=1 (core) and name=core
-			// Note: This assumes id 1 corresponds to name "core"
-			resp, err := http.Get(baseURL + "/api/module_categories?id=1&name=core")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with matching id and name")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for matching id and name, got %d", resp.StatusCode)
-			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for matching id and name, got %d", resp.StatusCode)
-		})
-
-		It("should return 400 when id is invalid (non-numeric)", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?id=invalid&name=core")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with invalid id")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusBadRequest), "Expected 400 for invalid id, got %d", resp.StatusCode)
-		})
-
-		It("should return 404 when id doesn't exist", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?id=99999&name=core")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with non-existent id")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent id, got %d", resp.StatusCode)
-		})
-
-		It("should return 404 when name doesn't exist", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?id=1&name=nonexistent_name_12345")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with non-existent name")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(Equal(http.StatusNotFound), "Expected 404 for non-existent name, got %d", resp.StatusCode)
-		})
-
-		It("should work with only id parameter", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?id=1")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with only id")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for id-only request, got %d", resp.StatusCode)
-			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for id-only request, got %d", resp.StatusCode)
-		})
-
-		It("should work with only name parameter", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?name=core")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with only name")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for name-only request, got %d", resp.StatusCode)
-			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for name-only request, got %d", resp.StatusCode)
-		})
-
-		It("should work with hierarchical name format", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?name=core/language_model")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with hierarchical name")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for hierarchical name, got %d", resp.StatusCode)
-			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for hierarchical name, got %d", resp.StatusCode)
-		})
-
-		It("should work with simple name format (last segment)", func() {
-			resp, err := http.Get(baseURL + "/api/module_categories?name=prompt")
-			Expect(err).NotTo(HaveOccurred(), "Failed to GET /api/module_categories with simple name")
-			defer resp.Body.Close()
-			Expect(resp.StatusCode).To(BeNumerically(">=", 200), "Expected 200+ for simple name, got %d", resp.StatusCode)
-			Expect(resp.StatusCode).To(BeNumerically("<", 400), "Expected <400 for simple name, got %d", resp.StatusCode)
+			var schemaResp map[string]interface{}
+			Expect(json.Unmarshal(respBytes, &schemaResp)).To(Succeed(), "/api/schema response is not valid JSON")
+			Expect(len(schemaResp)).To(BeNumerically(">", 0), "/api/schema response should not be empty")
 		})
 	})
 })

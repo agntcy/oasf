@@ -69,12 +69,22 @@ defmodule Schema.Repo do
 
   @spec skills() :: map()
   def skills() do
-    skills(nil)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_skills(schema) |> filter_category_classes()
+    end)
   end
 
   @spec skills(extensions_t() | nil) :: map()
+  def skills(nil) do
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_skills(schema) |> filter_category_classes()
+    end)
+  end
+
   def skills(extensions) do
-    classes_generic(extensions, &Cache.skills/1, &filter_category_classes/1)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_skills(schema) |> filter_category_classes() |> filter(extensions)
+    end)
   end
 
   @spec all_skills() :: map()
@@ -86,12 +96,22 @@ defmodule Schema.Repo do
 
   @spec domains() :: map()
   def domains() do
-    domains(nil)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_domains(schema) |> filter_category_classes()
+    end)
   end
 
   @spec domains(extensions_t() | nil) :: map()
+  def domains(nil) do
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_domains(schema) |> filter_category_classes()
+    end)
+  end
+
   def domains(extensions) do
-    classes_generic(extensions, &Cache.domains/1, &filter_category_classes/1)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_domains(schema) |> filter_category_classes() |> filter(extensions)
+    end)
   end
 
   @spec all_domains() :: map()
@@ -103,12 +123,22 @@ defmodule Schema.Repo do
 
   @spec modules() :: map()
   def modules() do
-    modules(nil)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_modules(schema) |> filter_category_classes()
+    end)
   end
 
   @spec modules(extensions_t() | nil) :: map()
+  def modules(nil) do
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_modules(schema) |> filter_category_classes()
+    end)
+  end
+
   def modules(extensions) do
-    classes_generic(extensions, &Cache.modules/1, &filter_category_classes/1)
+    Agent.get(__MODULE__, fn schema ->
+      Cache.export_modules(schema) |> filter_category_classes() |> filter(extensions)
+    end)
   end
 
   @spec all_modules() :: map()
@@ -121,66 +151,6 @@ defmodule Schema.Repo do
   @spec all_objects() :: map()
   def all_objects() do
     Agent.get(__MODULE__, fn schema -> Cache.all_objects(schema) end)
-  end
-
-  @spec export_skills() :: map()
-  def export_skills() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter_category_classes()
-    end)
-  end
-
-  @spec export_skills(extensions_t() | nil) :: map()
-  def export_skills(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter_category_classes()
-    end)
-  end
-
-  def export_skills(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter_category_classes() |> filter(extensions)
-    end)
-  end
-
-  @spec export_domains() :: map()
-  def export_domains() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter_category_classes()
-    end)
-  end
-
-  @spec export_domains(extensions_t() | nil) :: map()
-  def export_domains(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter_category_classes()
-    end)
-  end
-
-  def export_domains(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter_category_classes() |> filter(extensions)
-    end)
-  end
-
-  @spec export_modules() :: map()
-  def export_modules() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter_category_classes()
-    end)
-  end
-
-  @spec export_modules(extensions_t() | nil) :: map()
-  def export_modules(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter_category_classes()
-    end)
-  end
-
-  def export_modules(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter_category_classes() |> filter(extensions)
-    end)
   end
 
   @spec skill(atom) :: nil | Cache.class_t()
@@ -248,31 +218,15 @@ defmodule Schema.Repo do
 
   @spec objects() :: map()
   def objects() do
-    Agent.get(__MODULE__, fn schema -> Cache.objects(schema) end)
+    Agent.get(__MODULE__, fn schema -> Cache.export_objects(schema) end)
   end
 
   @spec objects(extensions_t() | nil) :: map()
   def objects(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.objects(schema) end)
+    Agent.get(__MODULE__, fn schema -> Cache.export_objects(schema) end)
   end
 
   def objects(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.objects(schema) |> filter(extensions)
-    end)
-  end
-
-  @spec export_objects() :: map()
-  def export_objects() do
-    Agent.get(__MODULE__, fn schema -> Cache.export_objects(schema) end)
-  end
-
-  @spec export_objects(extensions_t() | nil) :: map()
-  def export_objects(nil) do
-    Agent.get(__MODULE__, fn schema -> Cache.export_objects(schema) end)
-  end
-
-  def export_objects(extensions) do
     Agent.get(__MODULE__, fn schema ->
       Cache.export_objects(schema) |> filter(extensions)
     end)
@@ -346,19 +300,6 @@ defmodule Schema.Repo do
   def reload(path) do
     Cache.reset(path)
     Agent.cast(__MODULE__, fn _ -> Cache.init() end)
-  end
-
-  # Generic helper for classes functions (skills, domains, modules)
-  defp classes_generic(extensions, cache_fn, preprocess_fn) do
-    Agent.get(__MODULE__, fn schema ->
-      classes = cache_fn.(schema) |> preprocess_fn.()
-
-      if extensions != nil do
-        filter(classes, extensions)
-      else
-        classes
-      end
-    end)
   end
 
   defp filter(attributes, extensions) do
