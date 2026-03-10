@@ -210,9 +210,9 @@ var _ = Describe("API", func() {
 
 	Describe("GET Endpoints Health Check", func() {
 		// Test IDs to use for parameterized endpoints
-		testSkillID := "base_skill"
-		testDomainID := "base_domain"
-		testModuleID := "base_module"
+		testSkillID := "contextual_comprehension"
+		testDomainID := "internet_of_things"
+		testModuleID := "observability"
 		testSkillCategoryID := "natural_language_processing"
 		testDomainCategoryID := "healthcare"
 		testModuleCategoryID := "core"
@@ -562,9 +562,9 @@ var _ = Describe("API", func() {
 			mismatchID      string
 			hierarchicalName string
 		}{
-			{"skills", "/api/skills", "base_skill", "0", "601", "analytical_skills/mathematical_reasoning"},
-			{"domains", "/api/domains", "base_domain", "0", "2005", "agriculture/precision_agriculture"},
-			{"modules", "/api/modules", "base_module", "0", "103", "core/language_model/prompt"},
+			{"skills", "/api/skills", "contextual_comprehension", "10101", "601", "analytical_skills/mathematical_reasoning"},
+			{"domains", "/api/domains", "internet_of_things", "101", "2005", "agriculture/precision_agriculture"},
+			{"modules", "/api/modules", "observability", "101", "103", "core/language_model/prompt"},
 		}
 
 		for _, ep := range classEndpoints {

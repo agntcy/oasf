@@ -329,11 +329,9 @@ defmodule Schema.Repo do
 
   # Helper: Filter out category classes (category: true)
   defp filter_category_classes(classes) do
-    base_classes = [:base_module, :base_skill, :base_domain]
-
     classes
     |> Enum.filter(fn {key, class} ->
-      key in base_classes || Map.get(class, :category) != true
+      key in Utils.base_classes() || Map.get(class, :category) != true
     end)
     |> Enum.into(%{})
   end

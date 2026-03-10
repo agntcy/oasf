@@ -5,6 +5,10 @@ defmodule Schema.Utils do
   @moduledoc """
   Defines map helper functions.
   """
+
+  @base_classes [:base_module, :base_skill, :base_domain]
+  def base_classes, do: @base_classes
+
   @type link_t() :: %{
           :group => :skill | :domain | :module | :object,
           :type => String.t(),
@@ -645,7 +649,7 @@ defmodule Schema.Utils do
   excluding base classes.
   """
   def class_name_with_hierarchy(name, all_classes) do
-    base_items = ["base_skill", "base_domain", "base_module"]
+    base_items = Enum.map(@base_classes, &Atom.to_string/1)
     hierarchy = build_hierarchy(name, all_classes, [])
     filtered = Enum.reject(hierarchy, &(&1 in base_items))
     name_str = if is_atom(name), do: Atom.to_string(name), else: name
