@@ -209,15 +209,15 @@ var _ = Describe("API", func() {
 	})
 
 	Describe("GET Endpoints Health Check", func() {
-		// Test IDs to use for parameterized endpoints
-		testSkillID := "base_skill"
-		testDomainID := "base_domain"
-		testModuleID := "base_module"
-		testSkillCategoryID := "natural_language_processing"
-		testDomainCategoryID := "healthcare"
-		testModuleCategoryID := "core"
-		testObjectID := "record"
-		// testProfileID := "default" // Uncomment and set to a valid profile ID if available
+		// Test names to use for parameterized endpoints
+		testSkillName := "contextual_comprehension"
+		testDomainName := "internet_of_things"
+		testModuleName := "observability"
+		testSkillCategoryName := "natural_language_processing"
+		testDomainCategoryName := "healthcare"
+		testModuleCategoryName := "core"
+		testObjectName := "record"
+		// testProfileName := "default" // Uncomment and set to a valid profile name if available
 
 		getEndpoints := []struct {
 			name string
@@ -226,27 +226,27 @@ var _ = Describe("API", func() {
 			// Root and category pages
 			{"root", baseURL + "/"},
 			{"skill_categories", baseURL + "/skill_categories"},
-			{"skill_categories_by_id", baseURL + "/skill_categories/" + testSkillCategoryID},
+			{"skill_categories_by_name", baseURL + "/skill_categories/" + testSkillCategoryName},
 			{"domain_categories", baseURL + "/domain_categories"},
-			{"domain_categories_by_id", baseURL + "/domain_categories/" + testDomainCategoryID},
+			{"domain_categories_by_name", baseURL + "/domain_categories/" + testDomainCategoryName},
 			{"module_categories", baseURL + "/module_categories"},
-			{"module_categories_by_id", baseURL + "/module_categories/" + testModuleCategoryID},
+			{"module_categories_by_name", baseURL + "/module_categories/" + testModuleCategoryName},
 			{"profiles", baseURL + "/profiles"},
-			// {"profiles_by_id", baseURL + "/profiles/" + testProfileID},
+			// {"profiles_by_name", baseURL + "/profiles/" + testProfileName},
 			{"skills", baseURL + "/skills"},
-			{"skills_by_id", baseURL + "/skills/" + testSkillID},
+			{"skills_by_name", baseURL + "/skills/" + testSkillName},
 			{"domains", baseURL + "/domains"},
-			{"domains_by_id", baseURL + "/domains/" + testDomainID},
+			{"domains_by_name", baseURL + "/domains/" + testDomainName},
 			{"modules", baseURL + "/modules"},
-			{"modules_by_id", baseURL + "/modules/" + testModuleID},
+			{"modules_by_name", baseURL + "/modules/" + testModuleName},
 			{"objects", baseURL + "/objects"},
-			{"objects_by_id", baseURL + "/objects/" + testObjectID},
+			{"objects_by_name", baseURL + "/objects/" + testObjectName},
 			{"dictionary", baseURL + "/dictionary"},
 			{"data_types", baseURL + "/data_types"},
-			{"skill_graph", baseURL + "/skill/graph/" + testSkillID},
-			{"domain_graph", baseURL + "/domain/graph/" + testDomainID},
-			{"module_graph", baseURL + "/module/graph/" + testModuleID},
-			{"object_graph", baseURL + "/object/graph/" + testObjectID},
+			{"skill_graph", baseURL + "/skill/graph/" + testSkillName},
+			{"domain_graph", baseURL + "/domain/graph/" + testDomainName},
+			{"module_graph", baseURL + "/module/graph/" + testModuleName},
+			{"object_graph", baseURL + "/object/graph/" + testObjectName},
 
 			// API endpoints
 			{"api_version", baseURL + "/api/version"},
@@ -256,34 +256,34 @@ var _ = Describe("API", func() {
 			{"api_schema", baseURL + "/api/schema"},
 			// Categories API group
 			{"api_module_categories", baseURL + "/api/module_categories"},
-			{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + testModuleCategoryID},
+			{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + testModuleCategoryName},
 			{"api_skill_categories", baseURL + "/api/skill_categories"},
-			{"api_skill_categories_by_name", baseURL + "/api/skill_categories?name=" + testSkillCategoryID},
+			{"api_skill_categories_by_name", baseURL + "/api/skill_categories?name=" + testSkillCategoryName},
 			{"api_domain_categories", baseURL + "/api/domain_categories"},
-			{"api_domain_categories_by_name", baseURL + "/api/domain_categories?name=" + testDomainCategoryID},
+			{"api_domain_categories_by_name", baseURL + "/api/domain_categories?name=" + testDomainCategoryName},
 			// Classes and Objects API group
 			{"api_modules", baseURL + "/api/modules"},
-			{"api_modules_by_name", baseURL + "/api/modules?name=" + testModuleID},
+			{"api_modules_by_name", baseURL + "/api/modules?name=" + testModuleName},
 			{"api_skills", baseURL + "/api/skills"},
-			{"api_skills_by_name", baseURL + "/api/skills?name=" + testSkillID},
+			{"api_skills_by_name", baseURL + "/api/skills?name=" + testSkillName},
 			{"api_domains", baseURL + "/api/domains"},
-			{"api_domains_by_name", baseURL + "/api/domains?name=" + testDomainID},
+			{"api_domains_by_name", baseURL + "/api/domains?name=" + testDomainName},
 			{"api_objects", baseURL + "/api/objects"},
-			{"api_objects_by_name", baseURL + "/api/objects?name=" + testObjectID},
+			{"api_objects_by_name", baseURL + "/api/objects?name=" + testObjectName},
 			{"api_dictionary", baseURL + "/api/dictionary"},
 			{"api_data_types", baseURL + "/api/data_types"},
 
 			// Schema endpoints
-			{"schema_skills_by_id", baseURL + "/schema/skills/" + testSkillID},
-			{"schema_domains_by_id", baseURL + "/schema/domains/" + testDomainID},
-			{"schema_modules_by_id", baseURL + "/schema/modules/" + testModuleID},
-			{"schema_objects_by_id", baseURL + "/schema/objects/" + testObjectID},
+			{"schema_skills_by_name", baseURL + "/schema/skills/" + testSkillName},
+			{"schema_domains_by_name", baseURL + "/schema/domains/" + testDomainName},
+			{"schema_modules_by_name", baseURL + "/schema/modules/" + testModuleName},
+			{"schema_objects_by_name", baseURL + "/schema/objects/" + testObjectName},
 
 			// Sample endpoints
-			{"sample_skills_by_id", baseURL + "/sample/skills/" + testSkillID},
-			{"sample_domains_by_id", baseURL + "/sample/domains/" + testDomainID},
-			{"sample_modules_by_id", baseURL + "/sample/modules/" + testModuleID},
-			{"sample_objects_by_id", baseURL + "/sample/objects/" + testObjectID},
+			{"sample_skills_by_name", baseURL + "/sample/skills/" + testSkillName},
+			{"sample_domains_by_name", baseURL + "/sample/domains/" + testDomainName},
+			{"sample_modules_by_name", baseURL + "/sample/modules/" + testModuleName},
+			{"sample_objects_by_name", baseURL + "/sample/objects/" + testObjectName},
 		}
 
 		for _, endpoint := range getEndpoints {
@@ -299,11 +299,10 @@ var _ = Describe("API", func() {
 	})
 
 	Describe("POST Endpoints Health Check", func() {
-		// Test IDs to use for parameterized endpoints
-		testObjectID := "record"
+		// Test names to use for parameterized endpoints
+		testObjectName := "record"
 
 		// Minimal valid JSON payloads for POST endpoints
-		emptyJSON := []byte(`{}`)
 		skillJSON := []byte(`{"name": "test_skill"}`)
 		domainJSON := []byte(`{"name": "test_domain"}`)
 		moduleJSON := []byte(`{"name": "test_module"}`)
@@ -316,15 +315,12 @@ var _ = Describe("API", func() {
 		}{
 			{"api_translate_skill", baseURL + "/api/translate/skill", skillJSON},
 			{"api_validate_skill", baseURL + "/api/validate/skill", skillJSON},
-			{"api_validate_bundle_skill", baseURL + "/api/validate_bundle/skill", emptyJSON},
 			{"api_translate_domain", baseURL + "/api/translate/domain", domainJSON},
 			{"api_validate_domain", baseURL + "/api/validate/domain", domainJSON},
-			{"api_validate_bundle_domain", baseURL + "/api/validate_bundle/domain", emptyJSON},
 			{"api_translate_module", baseURL + "/api/translate/module", moduleJSON},
 			{"api_validate_module", baseURL + "/api/validate/module", moduleJSON},
-			{"api_validate_bundle_module", baseURL + "/api/validate_bundle/module", emptyJSON},
-			{"api_translate_object", baseURL + "/api/translate/object/" + testObjectID, objectJSON},
-			{"api_validate_object", baseURL + "/api/validate/object/" + testObjectID, objectJSON},
+			{"api_translate_object", baseURL + "/api/translate/object/" + testObjectName, objectJSON},
+			{"api_validate_object", baseURL + "/api/validate/object/" + testObjectName, objectJSON},
 		}
 
 		for _, endpoint := range postEndpoints {
@@ -343,8 +339,8 @@ var _ = Describe("API", func() {
 	})
 
 	Describe("404 Not Found Tests", func() {
-		// Non-existent ID used for all tests
-		nonExistentID := "non_existent_id_12345"
+		// Non-existent name used for all tests
+		nonExistentName := "non_existent_name_12345"
 
 		Describe("GET endpoints with non-existent category names", func() {
 			// Browser-facing endpoints (these return 404 when category is not found)
@@ -352,9 +348,9 @@ var _ = Describe("API", func() {
 				name string
 				url  string
 			}{
-				{"skill_categories_by_name", baseURL + "/skill_categories/" + nonExistentID},
-				{"domain_categories_by_name", baseURL + "/domain_categories/" + nonExistentID},
-				{"module_categories_by_name", baseURL + "/module_categories/" + nonExistentID},
+				{"skill_categories_by_name", baseURL + "/skill_categories/" + nonExistentName},
+				{"domain_categories_by_name", baseURL + "/domain_categories/" + nonExistentName},
+				{"module_categories_by_name", baseURL + "/module_categories/" + nonExistentName},
 			}
 
 			for _, endpoint := range browserEndpoints {
@@ -373,11 +369,11 @@ var _ = Describe("API", func() {
 				url  string
 			}{
 				{"api_module_categories_by_id", baseURL + "/api/module_categories?id=99999"},
-				{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + nonExistentID},
+				{"api_module_categories_by_name", baseURL + "/api/module_categories?name=" + nonExistentName},
 				{"api_skill_categories_by_id", baseURL + "/api/skill_categories?id=99999"},
-				{"api_skill_categories_by_name", baseURL + "/api/skill_categories?name=" + nonExistentID},
+				{"api_skill_categories_by_name", baseURL + "/api/skill_categories?name=" + nonExistentName},
 				{"api_domain_categories_by_id", baseURL + "/api/domain_categories?id=99999"},
-				{"api_domain_categories_by_name", baseURL + "/api/domain_categories?name=" + nonExistentID},
+				{"api_domain_categories_by_name", baseURL + "/api/domain_categories?name=" + nonExistentName},
 			}
 
 			for _, endpoint := range apiCategoryEndpoints {
@@ -401,9 +397,9 @@ var _ = Describe("API", func() {
 				name string
 				url  string
 			}{
-				{"api_modules_by_name", baseURL + "/api/modules?name=" + nonExistentID},
-				{"api_skills_by_name", baseURL + "/api/skills?name=" + nonExistentID},
-				{"api_domains_by_name", baseURL + "/api/domains?name=" + nonExistentID},
+				{"api_modules_by_name", baseURL + "/api/modules?name=" + nonExistentName},
+				{"api_skills_by_name", baseURL + "/api/skills?name=" + nonExistentName},
+				{"api_domains_by_name", baseURL + "/api/domains?name=" + nonExistentName},
 				{"api_modules_by_id", baseURL + "/api/modules?id=99999"},
 				{"api_skills_by_id", baseURL + "/api/skills?id=99999"},
 				{"api_domains_by_id", baseURL + "/api/domains?id=99999"},
@@ -431,23 +427,23 @@ var _ = Describe("API", func() {
 				name string
 				url  string
 			}{
-				{"skills_by_id", baseURL + "/skills/" + nonExistentID},
-				{"domains_by_id", baseURL + "/domains/" + nonExistentID},
-				{"modules_by_id", baseURL + "/modules/" + nonExistentID},
-				{"objects_by_id", baseURL + "/objects/" + nonExistentID},
-				{"skill_graph", baseURL + "/skill/graph/" + nonExistentID},
-				{"domain_graph", baseURL + "/domain/graph/" + nonExistentID},
-				{"module_graph", baseURL + "/module/graph/" + nonExistentID},
-				{"object_graph", baseURL + "/object/graph/" + nonExistentID},
-				{"api_objects_by_name", baseURL + "/api/objects?name=" + nonExistentID},
-				{"schema_skills_by_id", baseURL + "/schema/skills/" + nonExistentID},
-				{"schema_domains_by_id", baseURL + "/schema/domains/" + nonExistentID},
-				{"schema_modules_by_id", baseURL + "/schema/modules/" + nonExistentID},
-				{"schema_objects_by_id", baseURL + "/schema/objects/" + nonExistentID},
-				{"sample_skills_by_id", baseURL + "/sample/skills/" + nonExistentID},
-				{"sample_domains_by_id", baseURL + "/sample/domains/" + nonExistentID},
-				{"sample_modules_by_id", baseURL + "/sample/modules/" + nonExistentID},
-				{"sample_objects_by_id", baseURL + "/sample/objects/" + nonExistentID},
+				{"skills_by_name", baseURL + "/skills/" + nonExistentName},
+				{"domains_by_name", baseURL + "/domains/" + nonExistentName},
+				{"modules_by_name", baseURL + "/modules/" + nonExistentName},
+				{"objects_by_name", baseURL + "/objects/" + nonExistentName},
+				{"skill_graph", baseURL + "/skill/graph/" + nonExistentName},
+				{"domain_graph", baseURL + "/domain/graph/" + nonExistentName},
+				{"module_graph", baseURL + "/module/graph/" + nonExistentName},
+				{"object_graph", baseURL + "/object/graph/" + nonExistentName},
+				{"api_objects_by_name", baseURL + "/api/objects?name=" + nonExistentName},
+				{"schema_skills_by_name", baseURL + "/schema/skills/" + nonExistentName},
+				{"schema_domains_by_name", baseURL + "/schema/domains/" + nonExistentName},
+				{"schema_modules_by_name", baseURL + "/schema/modules/" + nonExistentName},
+				{"schema_objects_by_name", baseURL + "/schema/objects/" + nonExistentName},
+				{"sample_skills_by_name", baseURL + "/sample/skills/" + nonExistentName},
+				{"sample_domains_by_name", baseURL + "/sample/domains/" + nonExistentName},
+				{"sample_modules_by_name", baseURL + "/sample/modules/" + nonExistentName},
+				{"sample_objects_by_name", baseURL + "/sample/objects/" + nonExistentName},
 			}
 
 			for _, endpoint := range classEndpoints {
@@ -463,9 +459,9 @@ var _ = Describe("API", func() {
 
 	})
 
-	Describe("POST Endpoints with Non-Existent IDs (should return 200)", func() {
-		// Non-existent ID used for all tests
-		nonExistentID := "non_existent_id_12345"
+	Describe("POST Endpoints with Non-Existent Names (should return 200)", func() {
+		// Non-existent name used for all tests
+		nonExistentName := "non_existent_name_12345"
 		objectJSON := []byte(`{"name": "test_object"}`)
 
 		postEndpoints := []struct {
@@ -473,20 +469,20 @@ var _ = Describe("API", func() {
 			url     string
 			payload []byte
 		}{
-			{"api_translate_object", baseURL + "/api/translate/object/" + nonExistentID, objectJSON},
-			{"api_validate_object", baseURL + "/api/validate/object/" + nonExistentID, objectJSON},
+			{"api_translate_object", baseURL + "/api/translate/object/" + nonExistentName, objectJSON},
+			{"api_validate_object", baseURL + "/api/validate/object/" + nonExistentName, objectJSON},
 		}
 
 		for _, endpoint := range postEndpoints {
 			endpoint := endpoint
-			It("should return 200 for POST "+endpoint.name+" with non-existent object ID", func() {
+			It("should return 200 for POST "+endpoint.name+" with non-existent object name", func() {
 				req, err := http.NewRequest("POST", endpoint.url, bytes.NewReader(endpoint.payload))
 				Expect(err).NotTo(HaveOccurred(), "Failed to create POST request for %s", endpoint.name)
 				req.Header.Set("Content-Type", "application/json")
 				resp, err := http.DefaultClient.Do(req)
 				Expect(err).NotTo(HaveOccurred(), "Failed to POST to %s", endpoint.name)
 				defer resp.Body.Close()
-				Expect(resp.StatusCode).To(Equal(http.StatusOK), "Expected 200 for %s with non-existent object ID, got %d", endpoint.name, resp.StatusCode)
+				Expect(resp.StatusCode).To(Equal(http.StatusOK), "Expected 200 for %s with non-existent object name, got %d", endpoint.name, resp.StatusCode)
 			})
 		}
 	})
@@ -562,9 +558,9 @@ var _ = Describe("API", func() {
 			mismatchID      string
 			hierarchicalName string
 		}{
-			{"skills", "/api/skills", "base_skill", "0", "601", "analytical_skills/mathematical_reasoning"},
-			{"domains", "/api/domains", "base_domain", "0", "2005", "agriculture/precision_agriculture"},
-			{"modules", "/api/modules", "base_module", "0", "103", "core/language_model/prompt"},
+			{"skills", "/api/skills", "contextual_comprehension", "10101", "601", "analytical_skills/mathematical_reasoning"},
+			{"domains", "/api/domains", "internet_of_things", "101", "2005", "agriculture/precision_agriculture"},
+			{"modules", "/api/modules", "observability", "101", "103", "core/language_model/prompt"},
 		}
 
 		for _, ep := range classEndpoints {

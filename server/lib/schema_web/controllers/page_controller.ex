@@ -10,10 +10,10 @@ defmodule SchemaWeb.PageController do
   alias SchemaWeb.SchemaController
 
   @spec skill_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def skill_graph(conn, %{"id" => id} = params) do
-    case SchemaController.skill_ex(id, params) do
+  def skill_graph(conn, %{"name" => name} = params) do
+    case SchemaController.skill_ex(name, params) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       class ->
         data =
@@ -29,10 +29,10 @@ defmodule SchemaWeb.PageController do
   end
 
   @spec domain_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def domain_graph(conn, %{"id" => id} = params) do
-    case SchemaController.domain_ex(id, params) do
+  def domain_graph(conn, %{"name" => name} = params) do
+    case SchemaController.domain_ex(name, params) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       class ->
         data =
@@ -48,10 +48,10 @@ defmodule SchemaWeb.PageController do
   end
 
   @spec module_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def module_graph(conn, %{"id" => id} = params) do
-    case SchemaController.module_ex(id, params) do
+  def module_graph(conn, %{"name" => name} = params) do
+    case SchemaController.module_ex(name, params) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       class ->
         data =
@@ -67,10 +67,10 @@ defmodule SchemaWeb.PageController do
   end
 
   @spec object_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def object_graph(conn, %{"id" => id} = params) do
-    case SchemaController.object_ex(id, params) do
+  def object_graph(conn, %{"name" => name} = params) do
+    case SchemaController.object_ex(name, params) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       obj ->
         data = Schema.Graph.build(obj)
@@ -101,18 +101,18 @@ defmodule SchemaWeb.PageController do
   Renders schema profiles.
   """
   @spec profiles(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def profiles(conn, %{"id" => id} = params) do
-    name =
+  def profiles(conn, %{"name" => name} = params) do
+    full_name =
       case params["extension"] do
-        nil -> id
-        extension -> "#{extension}/#{id}"
+        nil -> name
+        extension -> "#{extension}/#{name}"
       end
 
     profiles = SchemaController.get_profiles(params)
 
-    case Schema.profile(profiles, name) do
+    case Schema.profile(profiles, full_name) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
+        send_resp(conn, 404, "Not Found: #{full_name}")
 
       profile ->
         render(conn, "profile.html",
@@ -296,13 +296,13 @@ defmodule SchemaWeb.PageController do
   Renders skills.
   """
   @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def skills(conn, %{"id" => id} = params) do
+  def skills(conn, %{"name" => name} = params) do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:skills, extension, id, profiles) do
+    case SchemaController.class(:skills, extension, name, profiles) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
@@ -312,7 +312,7 @@ defmodule SchemaWeb.PageController do
         data =
           data
           |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:key, Schema.Utils.to_uid(extension, name))
           |> Map.put(:subclasses, children)
 
         render(conn, "class.html",
@@ -344,13 +344,13 @@ defmodule SchemaWeb.PageController do
   Renders domains.
   """
   @spec domains(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def domains(conn, %{"id" => id} = params) do
+  def domains(conn, %{"name" => name} = params) do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:domains, extension, id, profiles) do
+    case SchemaController.class(:domains, extension, name, profiles) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
@@ -360,7 +360,7 @@ defmodule SchemaWeb.PageController do
         data =
           data
           |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:key, Schema.Utils.to_uid(extension, name))
           |> Map.put(:subclasses, children)
 
         render(conn, "class.html",
@@ -392,13 +392,13 @@ defmodule SchemaWeb.PageController do
   Renders modules.
   """
   @spec modules(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def modules(conn, %{"id" => id} = params) do
+  def modules(conn, %{"name" => name} = params) do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:modules, extension, id, profiles) do
+    case SchemaController.class(:modules, extension, name, profiles) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
@@ -408,7 +408,7 @@ defmodule SchemaWeb.PageController do
         data =
           data
           |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:key, Schema.Utils.to_uid(extension, name))
           |> Map.put(:subclasses, children)
 
         render(conn, "class.html",
@@ -440,14 +440,14 @@ defmodule SchemaWeb.PageController do
   Renders objects.
   """
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def objects(conn, %{"id" => id} = params) do
+  def objects(conn, %{"name" => name} = params) do
     extension = params["extension"]
     extensions = parse_extensions_from_params(params)
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.object(extensions, extension, id, profiles) do
+    case SchemaController.object(extensions, extension, name, profiles) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{id}")
+        send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
@@ -457,7 +457,7 @@ defmodule SchemaWeb.PageController do
         data =
           data
           |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
+          |> Map.put(:key, Schema.Utils.to_uid(extension, name))
           |> Map.put(:options, children)
 
         render(conn, "object.html",

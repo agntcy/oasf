@@ -7,8 +7,8 @@ defmodule Schema.Validator do
   """
 
   # Implementation note:
-  # The validate_* and add_* functions (other than the top level validate/1 and validate_bundle/1
-  # functions) take a response and return one, possibly updated.
+  # The validate_* and add_* functions (other than the top level validate/1 function) take a
+  # response and return one, possibly updated.
   # The overall flow is to examine the class/object or list of classes/objects, and return a validation response.
 
   require Logger
@@ -16,117 +16,6 @@ defmodule Schema.Validator do
   @spec validate(map(), list(), atom()) :: map()
   def validate(data, options, type) when is_map(data) do
     validate_input(data, options, Schema.dictionary(), type)
-  end
-
-  @spec validate_bundle(map(), list(), atom()) :: map()
-  def validate_bundle(bundle, options, type) when is_map(bundle) do
-    bundle_structure = get_bundle_structure()
-
-    # First validate the bundle itself
-    response =
-      Enum.reduce(
-        bundle_structure,
-        %{},
-        fn attribute_tuple, response ->
-          validate_bundle_attribute(response, bundle, attribute_tuple)
-        end
-      )
-
-    # Check that there are no extra keys in the bundle
-    response =
-      Enum.reduce(
-        bundle,
-        response,
-        fn {key, _}, response ->
-          if Map.has_key?(bundle_structure, key) do
-            response
-          else
-            add_error(
-              response,
-              "attribute_unknown",
-              "Unknown attribute \"#{key}\" in input bundle.",
-              %{attribute_path: key, attribute: key}
-            )
-          end
-        end
-      )
-
-    # TODO: validate the bundle times and count against inputs
-
-    # Next validate the inputs in the bundle
-    response =
-      validate_bundle_inputs(
-        response,
-        bundle,
-        options,
-        Schema.dictionary(),
-        type
-      )
-
-    finalize_response(response)
-  end
-
-  # Returns structure of an input bundle.
-  # See "Bundling" here: https://github.com/OASF/examples/blob/main/encodings/json/README.md
-  @spec get_bundle_structure() :: map()
-  defp get_bundle_structure() do
-    %{
-      "inputs" => {:required, "array", &is_list/1},
-      "count" => {:optional, "integer_t", &is_integer_t/1}
-    }
-  end
-
-  @spec validate_bundle_attribute(map(), map(), tuple()) :: map()
-  defp validate_bundle_attribute(
-         response,
-         bundle,
-         {attribute_name, {requirement, type_name, is_type_fn}}
-       ) do
-    if Map.has_key?(bundle, attribute_name) do
-      value = bundle[attribute_name]
-
-      if is_type_fn.(value) do
-        response
-      else
-        add_error_wrong_type(response, attribute_name, attribute_name, value, type_name)
-      end
-    else
-      if requirement == :required do
-        add_error_required_attribute_missing(response, attribute_name, attribute_name)
-      else
-        response
-      end
-    end
-  end
-
-  @spec validate_bundle_inputs(map(), map(), list(), map(), atom()) :: map()
-  defp validate_bundle_inputs(response, bundle, options, dictionary, class_type) do
-    inputs = bundle["inputs"]
-
-    if is_list(inputs) do
-      Map.put(
-        response,
-        :input_validations,
-        Enum.map(
-          inputs,
-          fn input ->
-            if is_map(input) do
-              validate_input(input, options, dictionary, class_type)
-            else
-              {type, type_extra} = type_of(input)
-
-              %{
-                error: "input has wrong type; expected object, got #{type}#{type_extra}.",
-                type: type,
-                expected_type: "object"
-              }
-            end
-          end
-        )
-      )
-    else
-      response
-    end
   end
 
   @spec validate_input(map(), list(), map(), atom()) :: map()

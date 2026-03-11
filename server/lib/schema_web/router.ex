@@ -34,38 +34,38 @@ defmodule SchemaWeb.Router do
     get "/module_categories/:extension/:name", PageController, :module_categories
 
     get "/profiles", PageController, :profiles
-    get "/profiles/:id", PageController, :profiles
-    get "/profiles/:extension/:id", PageController, :profiles
+    get "/profiles/:name", PageController, :profiles
+    get "/profiles/:extension/:name", PageController, :profiles
 
     get "/skills", PageController, :skills
-    get "/skills/:id", PageController, :skills
-    get "/skills/:extension/:id", PageController, :skills
+    get "/skills/:name", PageController, :skills
+    get "/skills/:extension/:name", PageController, :skills
 
-    get "/skill/graph/:id", PageController, :skill_graph
-    get "/skill/graph/:extension/:id", PageController, :skill_graph
+    get "/skill/graph/:name", PageController, :skill_graph
+    get "/skill/graph/:extension/:name", PageController, :skill_graph
 
     get "/domains", PageController, :domains
-    get "/domains/:id", PageController, :domains
-    get "/domains/:extension/:id", PageController, :domains
+    get "/domains/:name", PageController, :domains
+    get "/domains/:extension/:name", PageController, :domains
 
-    get "/domain/graph/:id", PageController, :domain_graph
-    get "/domain/graph/:extension/:id", PageController, :domain_graph
+    get "/domain/graph/:name", PageController, :domain_graph
+    get "/domain/graph/:extension/:name", PageController, :domain_graph
 
     get "/modules", PageController, :modules
-    get "/modules/:id", PageController, :modules
-    get "/modules/:extension/:id", PageController, :modules
+    get "/modules/:name", PageController, :modules
+    get "/modules/:extension/:name", PageController, :modules
 
-    get "/module/graph/:id", PageController, :module_graph
-    get "/module/graph/:extension/:id", PageController, :module_graph
+    get "/module/graph/:name", PageController, :module_graph
+    get "/module/graph/:extension/:name", PageController, :module_graph
 
     get "/dictionary", PageController, :dictionary
 
     get "/objects", PageController, :objects
-    get "/objects/:id", PageController, :objects
-    get "/objects/:extension/:id", PageController, :objects
+    get "/objects/:name", PageController, :objects
+    get "/objects/:extension/:name", PageController, :objects
 
-    get "/object/graph/:id", PageController, :object_graph
-    get "/object/graph/:extension/:id", PageController, :object_graph
+    get "/object/graph/:name", PageController, :object_graph
+    get "/object/graph/:extension/:name", PageController, :object_graph
 
     get "/data_types", PageController, :data_types
   end
@@ -80,8 +80,8 @@ defmodule SchemaWeb.Router do
     get "/profiles", SchemaController, :profiles
     get "/extensions", SchemaController, :extensions
 
-    get "/profiles/:id", SchemaController, :profile
-    get "/profiles/:extension/:id", SchemaController, :profile
+    get "/profiles/:name", SchemaController, :profile
+    get "/profiles/:extension/:name", SchemaController, :profile
 
     get "/dictionary", SchemaController, :dictionary
 
@@ -104,50 +104,47 @@ defmodule SchemaWeb.Router do
 
     post "/translate/skill", SchemaController, :translate_skill
     post "/validate/skill", SchemaController, :validate_skill
-    post "/validate_bundle/skill", SchemaController, :validate_bundle_skill
 
     post "/translate/domain", SchemaController, :translate_domain
     post "/validate/domain", SchemaController, :validate_domain
-    post "/validate_bundle/domain", SchemaController, :validate_bundle_domain
 
     post "/translate/module", SchemaController, :translate_module
     post "/validate/module", SchemaController, :validate_module
-    post "/validate_bundle/module", SchemaController, :validate_bundle_module
 
-    post "/translate/object/:id", SchemaController, :translate_object
-    post "/validate/object/:id", SchemaController, :validate_object
+    post "/translate/object/:name", SchemaController, :translate_object
+    post "/validate/object/:name", SchemaController, :validate_object
   end
 
   scope "/schema", SchemaWeb do
     pipe_through :api
 
-    get "/skills/:id", SchemaController, :json_skill_class
-    get "/skills/:extension/:id", SchemaController, :json_skill_class
+    get "/skills/:name", SchemaController, :json_skill_class
+    get "/skills/:extension/:name", SchemaController, :json_skill_class
 
-    get "/domains/:id", SchemaController, :json_domain_class
-    get "/domains/:extension/:id", SchemaController, :json_domain_class
+    get "/domains/:name", SchemaController, :json_domain_class
+    get "/domains/:extension/:name", SchemaController, :json_domain_class
 
-    get "/modules/:id", SchemaController, :json_module_class
-    get "/modules/:extension/:id", SchemaController, :json_module_class
+    get "/modules/:name", SchemaController, :json_module_class
+    get "/modules/:extension/:name", SchemaController, :json_module_class
 
-    get "/objects/:id", SchemaController, :json_object
-    get "/objects/:extension/:id", SchemaController, :json_object
+    get "/objects/:name", SchemaController, :json_object
+    get "/objects/:extension/:name", SchemaController, :json_object
   end
 
   scope "/sample", SchemaWeb do
     pipe_through :api
 
-    get "/skills/:id", SchemaController, :sample_skill
-    get "/skills/:extension/:id", SchemaController, :sample_skill
+    get "/skills/:name", SchemaController, :sample_skill
+    get "/skills/:extension/:name", SchemaController, :sample_skill
 
-    get "/domains/:id", SchemaController, :sample_domain
-    get "/domains/:extension/:id", SchemaController, :sample_domain
+    get "/domains/:name", SchemaController, :sample_domain
+    get "/domains/:extension/:name", SchemaController, :sample_domain
 
-    get "/modules/:id", SchemaController, :sample_module
-    get "/modules/:extension/:id", SchemaController, :sample_module
+    get "/modules/:name", SchemaController, :sample_module
+    get "/modules/:extension/:name", SchemaController, :sample_module
 
-    get "/objects/:id", SchemaController, :sample_object
-    get "/objects/:extension/:id", SchemaController, :sample_object
+    get "/objects/:name", SchemaController, :sample_object
+    get "/objects/:extension/:name", SchemaController, :sample_object
   end
 
   scope "/doc" do
