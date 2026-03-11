@@ -14,16 +14,6 @@ defmodule SchemaWeb.SchemaController do
   @spaces "_spaces"
   @missing_recommended "missing_recommended"
 
-  @extensions_param_description "When included in request, filters response to included only the" <>
-                                  " supplied schema extensions, or no extensions if this parameter has" <>
-                                  " no value. When not included, all extensions are returned in" <>
-                                  " the response."
-
-  @profiles_param_description "When included in request, filters response to include only the" <>
-                                " supplied profiles, or no profiles if this parameter has no" <>
-                                " value. When not included, all profiles are returned in" <>
-                                " the response."
-
   # -------------------
   # Class Schema API's
   # -------------------
@@ -760,14 +750,13 @@ defmodule SchemaWeb.SchemaController do
     summary("Data types")
     description("Get OASF schema data types.")
     produces("application/json")
-    tag("Dictionary and Types")
+    tag("Schema")
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec data_types(Plug.Conn.t(), any) :: Plug.Conn.t()
   def data_types(conn, _params) do
-    send_json_resp(conn, Schema.export_data_types())
+    send_json_resp(conn, Schema.data_types_attributes())
   end
 
   @doc """
@@ -780,7 +769,6 @@ defmodule SchemaWeb.SchemaController do
     produces("application/json")
     tag("Schema")
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec extensions(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -804,7 +792,6 @@ defmodule SchemaWeb.SchemaController do
     produces("application/json")
     tag("Schema")
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec profiles(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -848,7 +835,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Profile <code>name</code> not found")
   end
 
@@ -879,7 +865,7 @@ defmodule SchemaWeb.SchemaController do
     summary("Dictionary")
     description("Get OASF schema dictionary.")
     produces("application/json")
-    tag("Dictionary and Types")
+    tag("Schema")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -888,12 +874,11 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
   @spec dictionary(Plug.Conn.t(), any) :: Plug.Conn.t()
   def dictionary(conn, params) do
-    data = dictionary(params) |> remove_links(:attributes)
+    data = dictionary(params) |> Schema.deep_clean()
 
     send_json_resp(conn, data)
   end
@@ -904,47 +889,6 @@ defmodule SchemaWeb.SchemaController do
   @spec dictionary(map) :: map
   def dictionary(params) do
     parse_options(extensions(params)) |> Schema.dictionary()
-  end
-
-  # Helper functions for PageController (browser routes)
-  # These are not API endpoints, just internal helpers
-  @spec skills(map) :: map
-  def skills(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.skills(extensions)
-
-      profiles ->
-        Schema.skills(extensions, profiles)
-    end
-  end
-
-  @spec domains(map) :: map
-  def domains(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.domains(extensions)
-
-      profiles ->
-        Schema.domains(extensions, profiles)
-    end
-  end
-
-  @spec modules(map) :: map
-  def modules(params) do
-    extensions = parse_options(extensions(params))
-
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.modules(extensions)
-
-      profiles ->
-        Schema.modules(extensions, profiles)
-    end
   end
 
   @doc """
@@ -962,7 +906,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories")
+    tag("Taxonomy")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -991,34 +935,24 @@ defmodule SchemaWeb.SchemaController do
 
   @spec module_categories(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def module_categories(conn, params) do
-    case validate_parent_params(params, :modules) do
-      {:error, message} ->
-        send_json_resp(conn, 400, %{error: message})
+    extensions_opt = parse_options(extensions(params))
 
-      :ok ->
-        result = taxonomy_modules(params)
-        parent = parse_parent_param(params)
-
-        # If a parent was specified but result is empty, return 404
-        if parent != nil && map_size(result) == 0 do
-          parent_str =
-            case parent do
-              id when is_integer(id) -> "id #{id}"
-              name when is_binary(name) -> "name '#{name}'"
-              _ -> "parent"
-            end
-
-          send_json_resp(conn, 404, %{error: "No module class found with #{parent_str}"})
-        else
-          send_json_resp(conn, result)
-        end
-    end
+    handle_with_optional_id_and_name(
+      conn,
+      params,
+      :modules,
+      fn -> Schema.taxonomy_modules(extensions_opt, nil) end,
+      fn id_or_name ->
+        result = Schema.taxonomy_modules(extensions_opt, id_or_name)
+        if map_size(result) == 0, do: nil, else: result
+      end
+    )
   end
 
   @spec taxonomy_modules(map()) :: map()
   def taxonomy_modules(params) do
     extensions = parse_options(extensions(params))
-    parent = parse_parent_param(params)
+    parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
     Schema.taxonomy_modules(extensions, parent)
   end
 
@@ -1036,7 +970,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories")
+    tag("Taxonomy")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1065,34 +999,24 @@ defmodule SchemaWeb.SchemaController do
 
   @spec skill_categories(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def skill_categories(conn, params) do
-    case validate_parent_params(params, :skills) do
-      {:error, message} ->
-        send_json_resp(conn, 400, %{error: message})
+    extensions_opt = parse_options(extensions(params))
 
-      :ok ->
-        result = taxonomy_skills(params)
-        parent = parse_parent_param(params)
-
-        # If a parent was specified but result is empty, return 404
-        if parent != nil && map_size(result) == 0 do
-          parent_str =
-            case parent do
-              id when is_integer(id) -> "id #{id}"
-              name when is_binary(name) -> "name '#{name}'"
-              _ -> "parent"
-            end
-
-          send_json_resp(conn, 404, %{error: "No skill class found with #{parent_str}"})
-        else
-          send_json_resp(conn, result)
-        end
-    end
+    handle_with_optional_id_and_name(
+      conn,
+      params,
+      :skills,
+      fn -> Schema.taxonomy_skills(extensions_opt, nil) end,
+      fn id_or_name ->
+        result = Schema.taxonomy_skills(extensions_opt, id_or_name)
+        if map_size(result) == 0, do: nil, else: result
+      end
+    )
   end
 
   @spec taxonomy_skills(map()) :: map()
   def taxonomy_skills(params) do
     extensions = parse_options(extensions(params))
-    parent = parse_parent_param(params)
+    parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
     Schema.taxonomy_skills(extensions, parent)
   end
 
@@ -1110,7 +1034,7 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Categories")
+    tag("Taxonomy")
 
     parameters do
       extensions(:query, :array, "Related schema extensions to include in response.",
@@ -1139,34 +1063,24 @@ defmodule SchemaWeb.SchemaController do
 
   @spec domain_categories(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def domain_categories(conn, params) do
-    case validate_parent_params(params, :domains) do
-      {:error, message} ->
-        send_json_resp(conn, 400, %{error: message})
+    extensions_opt = parse_options(extensions(params))
 
-      :ok ->
-        result = taxonomy_domains(params)
-        parent = parse_parent_param(params)
-
-        # If a parent was specified but result is empty, return 404
-        if parent != nil && map_size(result) == 0 do
-          parent_str =
-            case parent do
-              id when is_integer(id) -> "id #{id}"
-              name when is_binary(name) -> "name '#{name}'"
-              _ -> "parent"
-            end
-
-          send_json_resp(conn, 404, %{error: "No domain class found with #{parent_str}"})
-        else
-          send_json_resp(conn, result)
-        end
-    end
+    handle_with_optional_id_and_name(
+      conn,
+      params,
+      :domains,
+      fn -> Schema.taxonomy_domains(extensions_opt, nil) end,
+      fn id_or_name ->
+        result = Schema.taxonomy_domains(extensions_opt, id_or_name)
+        if map_size(result) == 0, do: nil, else: result
+      end
+    )
   end
 
   @spec taxonomy_domains(map()) :: map()
   def taxonomy_domains(params) do
     extensions = parse_options(extensions(params))
-    parent = parse_parent_param(params)
+    parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
     Schema.taxonomy_domains(extensions, parent)
   end
 
@@ -1175,8 +1089,15 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :modules do
     get("/api/modules")
-    summary("List modules")
-    description("Get OASF schema modules.")
+    summary("List modules or get a specific module")
+
+    description(
+      "Get OASF schema modules. Returns all modules when no id or name is provided." <>
+        " If id (numeric) or name (string) query parameter is provided, returns a single module." <>
+        " Name can include an extension prefix (e.g., 'dev/cpu_usage')." <>
+        " If both id and name are provided, they must refer to the same class."
+    )
+
     produces("application/json")
     tag("Classes and Objects")
 
@@ -1186,19 +1107,43 @@ defmodule SchemaWeb.SchemaController do
       )
 
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+
+      id(
+        :query,
+        :integer,
+        "Optional numeric ID to get a specific module.",
+        required: false
+      )
+
+      name(
+        :query,
+        :string,
+        "Optional name to get a specific module. Can include extension prefix (e.g., 'dev/cpu_usage').",
+        required: false
+      )
     end
 
     response(200, "Success", :ModulesDesc)
+    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(404, "Not Found - No module found with the specified id or name")
   end
 
   @spec modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def modules(conn, params) do
-    modules =
-      Enum.map(modules(params), fn {_name, module} ->
-        Schema.reduce_class(module)
-      end)
+    profiles_opt = parse_options(profiles(params))
 
-    send_json_resp(conn, modules)
+    handle_with_optional_id_and_name(
+      conn,
+      params,
+      :modules,
+      fn -> modules(params) end,
+      fn id_or_name ->
+        case find_class(:modules, id_or_name, profiles_opt) do
+          nil -> nil
+          data -> add_objects(data, params)
+        end
+      end
+    )
   end
 
   @doc """
@@ -1207,57 +1152,10 @@ defmodule SchemaWeb.SchemaController do
   @spec modules(map) :: map
   def modules(params) do
     extensions = parse_options(extensions(params))
+    profiles = parse_options(profiles(params))
 
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.modules(extensions)
-
-      profiles ->
-        Schema.modules(extensions, profiles)
-    end
-  end
-
-  @doc """
-  Get a module by name.
-  get /api/modules/:name
-  """
-  swagger_path :module do
-    get("/api/modules/{name}")
-    summary("Module")
-
-    description(
-      "Get OASF module class by name. The module name may contain a schema extension name." <>
-        " For example, \"dev/cpu_usage\"."
-    )
-
-    produces("application/json")
-    tag("Classes and Objects")
-
-    parameters do
-      name(:path, :string, "Module class name", required: true)
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(404, "Module <code>name</code> not found")
-  end
-
-  @spec module(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def module(conn, %{"id" => id} = params) do
-    module(conn, id, params)
-  end
-
-  defp module(conn, id, params) do
-    extension = extension(params)
-
-    case Schema.module(extension, id, parse_options(profiles(params))) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Module #{id} not found"})
-
-      data ->
-        module = add_objects(data, params)
-        send_json_resp(conn, module)
-    end
+    Schema.modules(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -1265,8 +1163,15 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :skills do
     get("/api/skills")
-    summary("List skills")
-    description("Get OASF schema skills.")
+    summary("List skills or get a specific skill")
+
+    description(
+      "Get OASF schema skills. Returns all skills when no id or name is provided." <>
+        " If id (numeric) or name (string) query parameter is provided, returns a single skill." <>
+        " Name can include an extension prefix (e.g., 'dev/cpu_usage')." <>
+        " If both id and name are provided, they must refer to the same class."
+    )
+
     produces("application/json")
     tag("Classes and Objects")
 
@@ -1276,19 +1181,43 @@ defmodule SchemaWeb.SchemaController do
       )
 
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+
+      id(
+        :query,
+        :integer,
+        "Optional numeric ID to get a specific skill.",
+        required: false
+      )
+
+      name(
+        :query,
+        :string,
+        "Optional name to get a specific skill. Can include extension prefix (e.g., 'dev/cpu_usage').",
+        required: false
+      )
     end
 
     response(200, "Success", :SkillsDesc)
+    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(404, "Not Found - No skill found with the specified id or name")
   end
 
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def skills(conn, params) do
-    skills =
-      Enum.map(skills(params), fn {_name, skill} ->
-        Schema.reduce_class(skill)
-      end)
+    profiles_opt = parse_options(profiles(params))
 
-    send_json_resp(conn, skills)
+    handle_with_optional_id_and_name(
+      conn,
+      params,
+      :skills,
+      fn -> skills(params) end,
+      fn id_or_name ->
+        case find_class(:skills, id_or_name, profiles_opt) do
+          nil -> nil
+          data -> add_objects(data, params)
+        end
+      end
+    )
   end
 
   @doc """
@@ -1297,64 +1226,10 @@ defmodule SchemaWeb.SchemaController do
   @spec skills(map) :: map
   def skills(params) do
     extensions = parse_options(extensions(params))
+    profiles = parse_options(profiles(params))
 
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.skills(extensions)
-
-      profiles ->
-        Schema.skills(extensions, profiles)
-    end
-  end
-
-  @doc """
-  Get a skill by name.
-  get /api/skills/:name
-  get /api/skills/:extension/:name
-  """
-  swagger_path :skill do
-    get("/api/skills/{name}")
-    summary("Skill")
-
-    description(
-      "Get OASF schema skill by name. The skill name may contain a schema extension name." <>
-        " For example, \"dev/cpu_usage\"."
-    )
-
-    produces("application/json")
-    tag("Classes and Objects")
-
-    parameters do
-      name(:path, :string, "Skill name", required: true)
-
-      extensions(:query, :array, "Related schema extensions to include in response.",
-        items: [type: :string]
-      )
-
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-    response(404, "Skill <code>name</code> not found")
-  end
-
-  @spec skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def skill(conn, %{"id" => id} = params) do
-    skill(conn, id, params)
-  end
-
-  defp skill(conn, id, params) do
-    extension = extension(params)
-
-    case Schema.skill(extension, id, parse_options(profiles(params))) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Skill #{id} not found"})
-
-      data ->
-        skill = add_objects(data, params)
-        send_json_resp(conn, skill)
-    end
+    Schema.skills(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -1362,8 +1237,15 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :domains do
     get("/api/domains")
-    summary("List domains")
-    description("Get OASF schema domains.")
+    summary("List domains or get a specific domain")
+
+    description(
+      "Get OASF schema domains. Returns all domains when no id or name is provided." <>
+        " If id (numeric) or name (string) query parameter is provided, returns a single domain." <>
+        " Name can include an extension prefix (e.g., 'dev/cpu_usage')." <>
+        " If both id and name are provided, they must refer to the same class."
+    )
+
     produces("application/json")
     tag("Classes and Objects")
 
@@ -1373,19 +1255,43 @@ defmodule SchemaWeb.SchemaController do
       )
 
       profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
+
+      id(
+        :query,
+        :integer,
+        "Optional numeric ID to get a specific domain.",
+        required: false
+      )
+
+      name(
+        :query,
+        :string,
+        "Optional name to get a specific domain. Can include extension prefix (e.g., 'dev/cpu_usage').",
+        required: false
+      )
     end
 
     response(200, "Success", :DomainsDesc)
+    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(404, "Not Found - No domain found with the specified id or name")
   end
 
   @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def domains(conn, params) do
-    domains =
-      Enum.map(domains(params), fn {_name, domain} ->
-        Schema.reduce_class(domain)
-      end)
+    profiles_opt = parse_options(profiles(params))
 
-    send_json_resp(conn, domains)
+    handle_with_optional_id_and_name(
+      conn,
+      params,
+      :domains,
+      fn -> domains(params) end,
+      fn id_or_name ->
+        case find_class(:domains, id_or_name, profiles_opt) do
+          nil -> nil
+          data -> add_objects(data, params)
+        end
+      end
+    )
   end
 
   @doc """
@@ -1394,156 +1300,75 @@ defmodule SchemaWeb.SchemaController do
   @spec domains(map) :: map
   def domains(params) do
     extensions = parse_options(extensions(params))
+    profiles = parse_options(profiles(params))
 
-    case parse_options(profiles(params)) do
-      nil ->
-        Schema.domains(extensions)
-
-      profiles ->
-        Schema.domains(extensions, profiles)
-    end
+    Schema.domains(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
-  Get a domain by name.
-  get /api/domains/:name
-  """
-  swagger_path :domain do
-    get("/api/domains/{name}")
-    summary("Domain")
-
-    description(
-      "Get OASF domain class by name. The domain name may contain a schema extension name." <>
-        " For example, \"dev/cpu_usage\"."
-    )
-
-    produces("application/json")
-    tag("Classes and Objects")
-
-    parameters do
-      name(:path, :string, "Domain class name", required: true)
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(404, "Domain <code>name</code> not found")
-  end
-
-  @spec domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def domain(conn, %{"id" => id} = params) do
-    domain(conn, id, params)
-  end
-
-  defp domain(conn, id, params) do
-    extension = extension(params)
-
-    case Schema.domain(extension, id, parse_options(profiles(params))) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Domain #{id} not found"})
-
-      data ->
-        domain = add_objects(data, params)
-        send_json_resp(conn, domain)
-    end
-  end
-
-  @doc """
-  Get an object by name.
-  get /api/objects/:name
-  get /api/objects/:extension/:name
-  """
-  swagger_path :object do
-    get("/api/objects/{name}")
-    summary("Object")
-
-    description(
-      "Get OASF schema object by name. The object name may contain a schema extension name." <>
-        " For example, \"dev/os_service\"."
-    )
-
-    produces("application/json")
-    tag("Classes and Objects")
-
-    parameters do
-      name(:path, :string, "Object name", required: true)
-
-      extensions(:query, :array, "Related schema extensions to include in response.",
-        items: [type: :string]
-      )
-
-      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-    response(404, "Object <code>name</code> not found")
-  end
-
-  @spec object(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def object(conn, %{"id" => id} = params) do
-    case object(params) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Object #{id} not found"})
-
-      data ->
-        object = add_objects(data, params)
-        send_json_resp(conn, object)
-    end
-  end
-
-  @doc """
-  Get the schema objects.
+  List objects or get a specific object by name.
   """
   swagger_path :objects do
     get("/api/objects")
-    summary("List objects")
-    description("Get OASF schema objects.")
+    summary("List objects or get a specific object")
+
+    description(
+      "Get OASF schema objects. When a name is provided, returns a single object." <>
+        " The object name may contain a schema extension name, for example \"dev/os_service\"."
+    )
+
     produces("application/json")
     tag("Classes and Objects")
 
     parameters do
+      name(:query, :string, "Object name to retrieve a specific object")
+
       extensions(:query, :array, "Related schema extensions to include in response.",
         items: [type: :string]
       )
+
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
     response(200, "Success", :ObjectsDesc)
+    response(404, "Not Found - No object found with the specified name")
   end
 
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
   def objects(conn, params) do
-    objects =
-      Enum.map(objects(params), fn {_name, map} ->
-        Map.delete(map, :_links) |> Schema.delete_attributes()
-      end)
+    profiles_opt = parse_options(profiles(params))
+    extensions_opt = parse_options(extensions(params))
+    name_param = Map.get(params, "name")
 
-    send_json_resp(conn, objects)
+    if name_param == nil do
+      send_json_resp(conn, objects(params))
+    else
+      case find_object(extensions_opt, name_param, profiles_opt) do
+        nil ->
+          send_json_resp(conn, 404, %{error: "No object found with name '#{name_param}'"})
+
+        data ->
+          send_json_resp(conn, add_objects(data, params))
+      end
+    end
   end
 
   @spec objects(map) :: map
   def objects(params) do
-    parse_options(extensions(params)) |> Schema.objects()
-  end
-
-  @spec object(map) :: map() | nil
-  def object(%{"id" => id} = params) do
-    profiles = parse_options(profiles(params))
-    extension = extension(params)
     extensions = parse_options(extensions(params))
+    profiles = parse_options(profiles(params))
 
-    Schema.object(extensions, extension, id, profiles)
+    Schema.objects(extensions, profiles)
+    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
-
-  # -------------------
-  # Schema Export API's
-  # -------------------
 
   @doc """
-  Export the OASF schema definitions.
+  Get the complete OASF schema definitions.
   """
-  swagger_path :export_schema do
-    get("/export/schema")
-    summary("Export schema")
+  swagger_path :schema do
+    get("/api/schema")
+    summary("Get schema")
 
     description(
       "Get OASF schema definitions, including data types, objects, classes," <>
@@ -1551,127 +1376,25 @@ defmodule SchemaWeb.SchemaController do
     )
 
     produces("application/json")
-    tag("Schema Export")
+    tag("Schema")
 
     parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
+      extensions(:query, :array, "Related schema extensions to include in response.",
+        items: [type: :string]
+      )
+
+      profiles(:query, :array, "Related profiles to include in response.", items: [type: :string])
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
   end
 
-  @spec export_schema(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def export_schema(conn, params) do
+  @spec schema(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def schema(conn, params) do
     profiles = parse_options(profiles(params))
     extensions = parse_options(extensions(params))
-    data = Schema.export_schema(extensions, profiles)
+    data = Schema.schema(extensions, profiles)
     send_json_resp(conn, data)
-  end
-
-  @doc """
-  Export the OASF skill classes.
-  """
-  swagger_path :export_skills do
-    get("/export/skills")
-    summary("Export skill classes")
-    description("Get OASF schema skill classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_skills(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_skills(extensions, profiles)
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF domain classes.
-  """
-  swagger_path :export_domains do
-    get("/export/domains")
-    summary("Export domain classes")
-    description("Get OASF schema domain classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_domains(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_domains(extensions, profiles)
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF module classes.
-  """
-  swagger_path :export_modules do
-    get("/export/modules")
-    summary("Export module classes")
-    description("Get OASF schema module classes.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_modules(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    classes = Schema.export_modules(extensions, profiles)
-    send_json_resp(conn, classes)
-  end
-
-  @doc """
-  Export the OASF schema objects.
-  """
-  swagger_path :export_objects do
-    get("/export/objects")
-    summary("Export objects")
-    description("Get OASF schema objects.")
-    produces("application/json")
-    tag("Schema Export")
-
-    parameters do
-      extensions(:query, :array, @extensions_param_description, items: [type: :string])
-      profiles(:query, :array, @profiles_param_description, items: [type: :string])
-    end
-
-    response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
-  end
-
-  def export_objects(conn, params) do
-    profiles = parse_options(profiles(params))
-    extensions = parse_options(extensions(params))
-    objects = Schema.export_objects(extensions, profiles)
-    send_json_resp(conn, objects)
   end
 
   # -----------------
@@ -1701,7 +1424,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Skill class <code>name</code> not found")
   end
 
@@ -1747,7 +1469,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Domain class <code>name</code> not found")
   end
 
@@ -1793,7 +1514,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Module class <code>name</code> not found")
   end
 
@@ -1839,7 +1559,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Object <code>name</code> not found")
   end
 
@@ -1926,7 +1645,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_skill(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2012,7 +1731,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_domain(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2098,7 +1817,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_module(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2186,7 +1905,7 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
+    response(400, "Bad Request - unexpected body, expected a JSON object or array")
   end
 
   @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
@@ -2631,7 +2350,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Skill class <code>name</code> not found")
   end
 
@@ -2726,7 +2444,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Module class <code>name</code> not found")
   end
 
@@ -2774,7 +2491,6 @@ defmodule SchemaWeb.SchemaController do
     end
 
     response(200, "Success")
-    response(400, "Bad Request - id and name parameters refer to different classes")
     response(404, "Object <code>name</code> not found")
   end
 
@@ -2810,27 +2526,6 @@ defmodule SchemaWeb.SchemaController do
     |> send_resp(200, Jason.encode!(data))
   end
 
-  defp remove_links(data) do
-    data
-    |> Schema.delete_links()
-    |> remove_links(:attributes)
-  end
-
-  defp remove_links(data, key) do
-    case data[key] do
-      nil ->
-        data
-
-      list ->
-        updated =
-          Enum.map(list, fn {k, v} ->
-            %{k => Schema.delete_links(v)}
-          end)
-
-        Map.put(data, key, updated)
-    end
-  end
-
   defp add_objects(data, %{"objects" => "1"}) do
     objects = update_objects(Map.new(), data[:attributes])
 
@@ -2839,11 +2534,11 @@ defmodule SchemaWeb.SchemaController do
     else
       data
     end
-    |> remove_links()
+    |> Schema.deep_clean()
   end
 
   defp add_objects(data, _params) do
-    remove_links(data)
+    Schema.deep_clean(data)
   end
 
   defp update_objects(objects, attributes) do
@@ -2861,7 +2556,9 @@ defmodule SchemaWeb.SchemaController do
           acc
         else
           object = Schema.object(type)
-          Map.put(acc, type, remove_links(object)) |> update_objects(object[:attributes])
+
+          Map.put(acc, type, Schema.deep_clean(object))
+          |> update_objects(object[:attributes])
         end
 
       _other ->
@@ -2892,120 +2589,172 @@ defmodule SchemaWeb.SchemaController do
     |> MapSet.new()
   end
 
-  # Validate that if both id and name are provided, they refer to the same node.
-  # Returns :ok if valid, {:error, message} if invalid.
-  defp validate_parent_params(params, class_family) do
+  defp class_family_label(:skills), do: "skill"
+  defp class_family_label(:domains), do: "domain"
+  defp class_family_label(:modules), do: "module"
+
+  # Shared handler for endpoints with optional id and name query parameters.
+  # list_fn: zero-arity function returning all items when no filter is given.
+  # find_fn: one-arity function accepting an integer id or string name; returns a
+  #          result or nil when not found.
+  #
+  # When id is provided, find_fn is called with the parsed integer; 404 if nil.
+  # When name is provided, find_fn is called with the string; 404 if nil.
+  # When both are provided, both lookups run and must return the same result,
+  # otherwise 400 is returned.
+  defp handle_with_optional_id_and_name(conn, params, class_family, list_fn, find_fn) do
     id_param = Map.get(params, "id")
     name_param = Map.get(params, "name")
+    id_int = parse_integer_param(id_param)
+    label = class_family_label(class_family)
 
-    # If both are provided, they must refer to the same node
-    if id_param != nil && name_param != nil do
-      # Parse id to integer if it's a string
-      id_int =
-        case id_param do
-          id_string when is_binary(id_string) ->
-            case Integer.parse(id_string) do
-              {id, _} -> id
-              :error -> nil
-            end
+    cond do
+      id_param != nil && id_int == nil ->
+        send_json_resp(conn, 400, %{error: "Invalid id parameter: must be a numeric value"})
 
-          id_int when is_integer(id_int) ->
-            id_int
+      id_int == nil && name_param == nil ->
+        send_json_resp(conn, list_fn.())
 
-          _ ->
-            nil
+      id_int != nil && name_param == nil ->
+        case find_fn.(id_int) do
+          nil -> send_json_resp(conn, 404, %{error: "No #{label} found with id #{id_int}"})
+          result -> send_json_resp(conn, result)
         end
 
-      if id_int == nil do
-        {:error, "Invalid id parameter: must be a numeric value"}
-      else
-        # Get the taxonomy to validate
-        extensions = parse_options(extensions(params))
+      id_int == nil ->
+        case find_fn.(name_param) do
+          nil ->
+            send_json_resp(conn, 404, %{error: "No #{label} found with name '#{name_param}'"})
 
-        # Get the node by ID
-        node_by_id = get_node_by_id(class_family, extensions, id_int)
+          result ->
+            send_json_resp(conn, result)
+        end
 
-        # Get the node by name
-        node_by_name = get_node_by_name(class_family, extensions, name_param)
+      true ->
+        found_by_id = find_fn.(id_int)
+        found_by_name = find_fn.(name_param)
 
         cond do
-          node_by_id == nil ->
-            {:error, "No node found with id #{id_int}"}
+          found_by_id == nil ->
+            send_json_resp(conn, 404, %{error: "No #{label} found with id #{id_int}"})
 
-          node_by_name == nil ->
-            {:error, "No node found with name '#{name_param}'"}
+          found_by_name == nil ->
+            send_json_resp(conn, 404, %{error: "No #{label} found with name '#{name_param}'"})
 
-          Map.get(node_by_id, :id) != Map.get(node_by_name, :id) ->
-            {:error,
-             "id #{id_int} and name '#{name_param}' refer to different nodes. They must match."}
+          found_by_id != found_by_name ->
+            send_json_resp(conn, 400, %{
+              error: "id #{id_int} and name '#{name_param}' refer to different #{label}s"
+            })
 
           true ->
-            :ok
+            send_json_resp(conn, found_by_id)
         end
-      end
-    else
-      :ok
     end
   end
 
-  # Helper to get node by ID from the appropriate taxonomy
-  defp get_node_by_id(class_family, extensions, id_int) do
-    taxonomy =
+  defp parse_integer_param(nil), do: nil
+  defp parse_integer_param(id) when is_integer(id), do: id
+
+  defp parse_integer_param(id) when is_binary(id) do
+    case Integer.parse(id) do
+      {int, _} -> int
+      :error -> nil
+    end
+  end
+
+  @doc """
+  Look up a single class by name (with optional extension prefix) and return
+  cleaned data (internal fields stripped).  Returns nil when not found.
+  """
+  @spec class(atom(), String.t() | nil, String.t(), map() | nil) :: map() | nil
+  def class(class_family, extension, name, profiles) do
+    full_name = Schema.Utils.make_path(extension, name)
+
+    case find_class(class_family, full_name, profiles) do
+      nil -> nil
+      data -> Schema.deep_clean(data)
+    end
+  end
+
+  defp find_class(class_family, uid, profiles) when is_integer(uid) do
+    class =
       case class_family do
-        :modules -> Schema.taxonomy_modules(extensions, id_int)
-        :skills -> Schema.taxonomy_skills(extensions, id_int)
-        :domains -> Schema.taxonomy_domains(extensions, id_int)
+        :skills -> Schema.find_skill(uid)
+        :domains -> Schema.find_domain(uid)
+        :modules -> Schema.find_module(uid)
       end
 
-    # Extract the first (and only) node from the result map
-    case Enum.to_list(taxonomy) do
-      [{_key, node}] -> node
-      _ -> nil
-    end
-  end
-
-  # Helper to get node by name from the appropriate taxonomy
-  defp get_node_by_name(class_family, extensions, name) do
-    taxonomy =
-      case class_family do
-        :modules -> Schema.taxonomy_modules(extensions, name)
-        :skills -> Schema.taxonomy_skills(extensions, name)
-        :domains -> Schema.taxonomy_domains(extensions, name)
-      end
-
-    # Extract the first (and only) node from the result map
-    case Enum.to_list(taxonomy) do
-      [{_key, node}] -> node
-      _ -> nil
-    end
-  end
-
-  # Parse parent parameter from query params.
-  # Prefers id (numeric) over name (string) if both are provided.
-  defp parse_parent_param(params) do
-    case Map.get(params, "id") do
+    case class do
       nil ->
-        # No id, check for name
-        Map.get(params, "name")
+        nil
 
-      id_string when is_binary(id_string) ->
-        # Try to parse as integer
-        case Integer.parse(id_string) do
-          {id_int, _} ->
-            id_int
-
-          :error ->
-            # id is not a valid integer, check for name instead
-            Map.get(params, "name")
+      class ->
+        if Map.get(class, :category) == true do
+          nil
+        else
+          apply_profiles_to_class(class, profiles)
         end
+    end
+  end
 
-      id_int when is_integer(id_int) ->
-        id_int
+  defp find_class(class_family, name, profiles) when is_binary(name) do
+    direct =
+      case class_family do
+        :skills -> Schema.skill(nil, name, profiles)
+        :domains -> Schema.domain(nil, name, profiles)
+        :modules -> Schema.module(nil, name, profiles)
+      end
+
+    case direct do
+      nil ->
+        resolve_class_via_taxonomy(class_family, name, profiles)
+
+      result ->
+        result
+    end
+  end
+
+  # Resolve a class name through the taxonomy tree.  Handles hierarchical names
+  # like "core/language_model/prompt" that don't match simple cache keys.
+  defp resolve_class_via_taxonomy(class_family, name, profiles) do
+    taxonomy =
+      case class_family do
+        :skills -> Schema.taxonomy_skills(nil, name)
+        :domains -> Schema.taxonomy_domains(nil, name)
+        :modules -> Schema.taxonomy_modules(nil, name)
+      end
+
+    case Enum.to_list(taxonomy) do
+      [{_key, %{id: uid}}] when is_integer(uid) and uid > 0 ->
+        find_class(class_family, uid, profiles)
 
       _ ->
-        # Fallback to name if id is invalid
-        Map.get(params, "name")
+        nil
     end
+  end
+
+  defp apply_profiles_to_class(class, nil), do: class
+
+  defp apply_profiles_to_class(class, profiles) do
+    Map.update!(class, :attributes, fn attributes ->
+      Schema.Utils.apply_profiles(attributes, profiles)
+    end)
+  end
+
+  @doc """
+  Look up a single object by name (with optional extension prefix) and return
+  cleaned data (internal fields stripped).  Returns nil when not found.
+  """
+  @spec object(String.t() | nil, String.t() | nil, String.t(), map() | nil) :: map() | nil
+  def object(extensions, extension, name, profiles) do
+    case Schema.object(extensions, extension, name, profiles) do
+      nil -> nil
+      data -> Schema.deep_clean(data)
+    end
+  end
+
+  defp find_object(extensions, name, profiles) do
+    Schema.object(extensions, nil, name, profiles)
   end
 
   defp parse_java_package(nil), do: []

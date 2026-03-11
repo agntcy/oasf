@@ -11,7 +11,7 @@ defmodule SchemaWeb.PageController do
 
   @spec skill_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
   def skill_graph(conn, %{"id" => id} = params) do
-    case SchemaWeb.SchemaController.skill_ex(id, params) do
+    case SchemaController.skill_ex(id, params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -30,7 +30,7 @@ defmodule SchemaWeb.PageController do
 
   @spec domain_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
   def domain_graph(conn, %{"id" => id} = params) do
-    case SchemaWeb.SchemaController.domain_ex(id, params) do
+    case SchemaController.domain_ex(id, params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -49,7 +49,7 @@ defmodule SchemaWeb.PageController do
 
   @spec module_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
   def module_graph(conn, %{"id" => id} = params) do
-    case SchemaWeb.SchemaController.module_ex(id, params) do
+    case SchemaController.module_ex(id, params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -68,7 +68,7 @@ defmodule SchemaWeb.PageController do
 
   @spec object_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
   def object_graph(conn, %{"id" => id} = params) do
-    case SchemaWeb.SchemaController.object_ex(id, params) do
+    case SchemaController.object_ex(id, params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -300,7 +300,7 @@ defmodule SchemaWeb.PageController do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case Schema.skill(extension, id, profiles) do
+    case SchemaController.class(:skills, extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -348,7 +348,7 @@ defmodule SchemaWeb.PageController do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case Schema.domain(extension, id, profiles) do
+    case SchemaController.class(:domains, extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -396,7 +396,7 @@ defmodule SchemaWeb.PageController do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case Schema.module(extension, id, profiles) do
+    case SchemaController.class(:modules, extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -441,7 +441,11 @@ defmodule SchemaWeb.PageController do
   """
   @spec objects(Plug.Conn.t(), map) :: Plug.Conn.t()
   def objects(conn, %{"id" => id} = params) do
-    case SchemaController.object(params) do
+    extension = params["extension"]
+    extensions = parse_extensions_from_params(params)
+    profiles = parse_profiles_from_params(params)
+
+    case SchemaController.object(extensions, extension, id, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{id}")
 
@@ -453,7 +457,7 @@ defmodule SchemaWeb.PageController do
         data =
           data
           |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(params["extension"], id))
+          |> Map.put(:key, Schema.Utils.to_uid(extension, id))
           |> Map.put(:options, children)
 
         render(conn, "object.html",
@@ -472,6 +476,14 @@ defmodule SchemaWeb.PageController do
       profiles: SchemaController.get_profiles(params),
       data: data
     )
+  end
+
+  defp parse_extensions_from_params(params) do
+    case params["extensions"] do
+      nil -> nil
+      "" -> nil
+      ext -> ext
+    end
   end
 
   defp parse_profiles_from_params(params) do

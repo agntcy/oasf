@@ -1,6 +1,12 @@
 # Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+defimpl Jason.Encoder, for: MapSet do
+  def encode(mapset, opts) do
+    Jason.Encode.list(MapSet.to_list(mapset), opts)
+  end
+end
+
 defmodule SchemaWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
