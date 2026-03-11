@@ -189,18 +189,18 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec profile(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def profile(conn, %{"id" => id} = params) do
-    name =
+  def profile(conn, %{"name" => name} = params) do
+    full_name =
       case params["extension"] do
-        nil -> id
-        extension -> "#{extension}/#{id}"
+        nil -> name
+        extension -> "#{extension}/#{name}"
       end
 
     data = Schema.profiles()
 
-    case Map.get(data, name) do
+    case Map.get(data, full_name) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Profile #{name} not found"})
+        send_json_resp(conn, 404, %{error: "Profile #{full_name} not found"})
 
       profile ->
         send_json_resp(conn, Schema.delete_links(profile))
@@ -778,12 +778,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_skill_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_skill_class(conn, %{"id" => id} = params) do
+  def json_skill_class(conn, %{"name" => name} = params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case skill_ex(id, params) do
+    case skill_ex(name, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Skill class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Skill class #{name} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
@@ -791,9 +791,9 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  def skill_ex(id, params) do
+  def skill_ex(name, params) do
     extension = extension(params)
-    Schema.entity_ex(extension, :skill, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :skill, name, parse_options(profiles(params)))
   end
 
   @doc """
@@ -823,12 +823,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_domain_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_domain_class(conn, %{"id" => id} = params) do
+  def json_domain_class(conn, %{"name" => name} = params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case domain_ex(id, params) do
+    case domain_ex(name, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Domain class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Domain class #{name} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
@@ -836,9 +836,9 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  def domain_ex(id, params) do
+  def domain_ex(name, params) do
     extension = extension(params)
-    Schema.entity_ex(extension, :domain, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :domain, name, parse_options(profiles(params)))
   end
 
   @doc """
@@ -868,12 +868,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_module_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_module_class(conn, %{"id" => id} = params) do
+  def json_module_class(conn, %{"name" => name} = params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case module_ex(id, params) do
+    case module_ex(name, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Module class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Module class #{name} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
@@ -881,9 +881,9 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  def module_ex(id, params) do
+  def module_ex(name, params) do
     extension = extension(params)
-    Schema.entity_ex(extension, :module, id, parse_options(profiles(params)))
+    Schema.entity_ex(extension, :module, name, parse_options(profiles(params)))
   end
 
   @doc """
@@ -913,12 +913,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_object(conn, %{"id" => id} = params) do
+  def json_object(conn, %{"name" => name} = params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case object_ex(id, params) do
+    case object_ex(name, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Object #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Object #{name} not found"})
 
       data ->
         object = Schema.JsonSchema.encode(data, options)
@@ -926,12 +926,12 @@ defmodule SchemaWeb.SchemaController do
     end
   end
 
-  def object_ex(id, params) do
+  def object_ex(name, params) do
     profiles = parse_options(profiles(params))
     extension = extension(params)
     extensions = parse_options(extensions(params))
 
-    Schema.entity_ex(extensions, extension, :object, id, profiles)
+    Schema.entity_ex(extensions, extension, :object, name, profiles)
   end
 
   # ---------------------------------------------
@@ -989,9 +989,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The skill class data to be translated",
-        required: true
-      )
+      data(:body, :object, "The skill class data to be translated", required: true)
     end
 
     response(200, "Success")
@@ -1075,9 +1073,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The domain class data to be translated",
-        required: true
-      )
+      data(:body, :object, "The domain class data to be translated", required: true)
     end
 
     response(200, "Success")
@@ -1161,9 +1157,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The module class data to be translated",
-        required: true
-      )
+      data(:body, :object, "The module class data to be translated", required: true)
     end
 
     response(200, "Success")
@@ -1249,9 +1243,7 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The object data to be translated",
-        required: true
-      )
+      data(:body, :object, "The object data to be translated", required: true)
     end
 
     response(200, "Success")
@@ -1259,9 +1251,9 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def translate_object(conn, %{"id" => id} = params) do
+  def translate_object(conn, %{"name" => name} = params) do
     options = [
-      name: id,
+      name: name,
       spaces: conn.query_params[@spaces],
       verbose: verbose(conn.query_params[@verbose])
     ]
@@ -1311,9 +1303,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The skill class to be validated",
-        required: true
-      )
+      data(:body, :object, "The skill class to be validated", required: true)
     end
 
     response(200, "Success")
@@ -1362,9 +1352,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The domain class to be validated",
-        required: true
-      )
+      data(:body, :object, "The domain class to be validated", required: true)
     end
 
     response(200, "Success")
@@ -1413,9 +1401,7 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The module class to be validated",
-        required: true
-      )
+      data(:body, :object, "The module class to be validated", required: true)
     end
 
     response(200, "Success")
@@ -1466,18 +1452,16 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The object to be validated",
-        required: true
-      )
+      data(:body, :object, "The object to be validated", required: true)
     end
 
     response(200, "Success")
   end
 
   @spec validate_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate_object(conn, %{"id" => id} = params) do
+  def validate_object(conn, %{"name" => name} = params) do
     options = [
-      name: id,
+      name: name,
       warn_on_missing_recommended:
         case conn.query_params[@missing_recommended] do
           "true" -> true
@@ -1704,17 +1688,17 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_skill(conn, %{"id" => id} = params) do
-    sample_skill(conn, id, params)
+  def sample_skill(conn, %{"name" => name} = params) do
+    sample_skill(conn, name, params)
   end
 
-  defp sample_skill(conn, id, options) do
+  defp sample_skill(conn, name, options) do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.skill(extension, id) do
+    case Schema.skill(extension, name) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Skill class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Skill class #{name} not found"})
 
       class ->
         class =
@@ -1751,17 +1735,17 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_domain(conn, %{"id" => id} = params) do
-    sample_domain(conn, id, params)
+  def sample_domain(conn, %{"name" => name} = params) do
+    sample_domain(conn, name, params)
   end
 
-  defp sample_domain(conn, id, options) do
+  defp sample_domain(conn, name, options) do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.domain(extension, id) do
+    case Schema.domain(extension, name) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Domain class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Domain class #{name} not found"})
 
       class ->
         class =
@@ -1798,17 +1782,17 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_module(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_module(conn, %{"id" => id} = params) do
-    sample_module(conn, id, params)
+  def sample_module(conn, %{"name" => name} = params) do
+    sample_module(conn, name, params)
   end
 
-  defp sample_module(conn, id, options) do
+  defp sample_module(conn, name, options) do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.module(extension, id) do
+    case Schema.module(extension, name) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Module class #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Module class #{name} not found"})
 
       class ->
         class =
@@ -1845,13 +1829,13 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_object(conn, %{"id" => id} = options) do
+  def sample_object(conn, %{"name" => name} = options) do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.object(extension, id) do
+    case Schema.object(extension, name) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Object #{id} not found"})
+        send_json_resp(conn, 404, %{error: "Object #{name} not found"})
 
       data ->
         send_json_resp(conn, Schema.generate_object(data, profiles))
