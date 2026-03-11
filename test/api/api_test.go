@@ -303,7 +303,6 @@ var _ = Describe("API", func() {
 		testObjectName := "record"
 
 		// Minimal valid JSON payloads for POST endpoints
-		emptyJSON := []byte(`{}`)
 		skillJSON := []byte(`{"name": "test_skill"}`)
 		domainJSON := []byte(`{"name": "test_domain"}`)
 		moduleJSON := []byte(`{"name": "test_module"}`)
@@ -316,13 +315,10 @@ var _ = Describe("API", func() {
 		}{
 			{"api_translate_skill", baseURL + "/api/translate/skill", skillJSON},
 			{"api_validate_skill", baseURL + "/api/validate/skill", skillJSON},
-			{"api_validate_bundle_skill", baseURL + "/api/validate_bundle/skill", emptyJSON},
 			{"api_translate_domain", baseURL + "/api/translate/domain", domainJSON},
 			{"api_validate_domain", baseURL + "/api/validate/domain", domainJSON},
-			{"api_validate_bundle_domain", baseURL + "/api/validate_bundle/domain", emptyJSON},
 			{"api_translate_module", baseURL + "/api/translate/module", moduleJSON},
 			{"api_validate_module", baseURL + "/api/validate/module", moduleJSON},
-			{"api_validate_bundle_module", baseURL + "/api/validate_bundle/module", emptyJSON},
 			{"api_translate_object", baseURL + "/api/translate/object/" + testObjectName, objectJSON},
 			{"api_validate_object", baseURL + "/api/validate/object/" + testObjectName, objectJSON},
 		}

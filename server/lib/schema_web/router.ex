@@ -104,15 +104,12 @@ defmodule SchemaWeb.Router do
 
     post "/translate/skill", SchemaController, :translate_skill
     post "/validate/skill", SchemaController, :validate_skill
-    post "/validate_bundle/skill", SchemaController, :validate_bundle_skill
 
     post "/translate/domain", SchemaController, :translate_domain
     post "/validate/domain", SchemaController, :validate_domain
-    post "/validate_bundle/domain", SchemaController, :validate_bundle_domain
 
     post "/translate/module", SchemaController, :translate_module
     post "/validate/module", SchemaController, :validate_module
-    post "/validate_bundle/module", SchemaController, :validate_bundle_module
 
     post "/translate/object/:name", SchemaController, :translate_object
     post "/validate/object/:name", SchemaController, :validate_object
