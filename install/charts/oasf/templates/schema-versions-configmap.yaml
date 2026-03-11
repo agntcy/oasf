@@ -9,8 +9,9 @@ metadata:
     app: {{ .Chart.Name }}
 data:
   versions: |-
-    {{ $schemaValues := list -}}
-      {{- range .Values.image.versions -}}
-        {{- $schemaValues = append $schemaValues .schema -}}
+    {"versions":[
+      {{- range $index, $version := .Values.image.versions -}}
+      {{- if $index }},{{ end }}
+      {"schema_version":"{{ $version.schema }}","server_version":"{{ $version.server }}","api_version":"{{ default $version.server $version.api }}"}
       {{- end -}}
-    {{- $schemaValues | join "," -}}
+    ]}

@@ -23,12 +23,12 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @doc """
-  Get the OASF schema version.
+  Get the OASF schema, server, and API versions.
   """
   swagger_path :version do
     get("/api/version")
     summary("Version")
-    description("Get OASF schema version.")
+    description("Get OASF schema, server, and API versions.")
     produces("application/json")
     tag("Schema")
     response(200, "Success")
@@ -36,17 +36,16 @@ defmodule SchemaWeb.SchemaController do
 
   @spec version(Plug.Conn.t(), any) :: Plug.Conn.t()
   def version(conn, _params) do
-    version = %{:version => Schema.version()}
-    send_json_resp(conn, version)
+    send_json_resp(conn, current_version_response(base_url(conn), Schema.version()))
   end
 
   @doc """
-  Get available OASF schema versions.
+  Get available OASF schema versions with server and API metadata.
   """
   swagger_path :versions do
     get("/api/versions")
     summary("Versions")
-    description("Get available OASF schema versions.")
+    description("Get available OASF schema versions with server and API metadata.")
     produces("application/json")
     tag("Schema")
     response(200, "Success")
@@ -54,24 +53,11 @@ defmodule SchemaWeb.SchemaController do
 
   @spec versions(Plug.Conn.t(), any) :: Plug.Conn.t()
   def versions(conn, _params) do
-    url = Application.get_env(:schema_server, SchemaWeb.Endpoint)[:url]
+    base_url = base_url(conn)
 
-    # The :url key is meant to be set for production, but isn't set for local development
-    base_url =
-      if url == nil do
-        "#{conn.scheme}://#{conn.host}:#{conn.port}"
-      else
-        "#{conn.scheme}://#{Keyword.fetch!(url, :host)}:#{Keyword.fetch!(url, :port)}"
-      end
+    available_versions = Schemas.versions()
 
-    available_versions =
-      Schemas.versions()
-      |> Enum.map(fn {version, _} -> version end)
-
-    default_version = %{
-      :version => Schema.version(),
-      :url => "#{base_url}/api/#{Schema.version()}"
-    }
+    default_version = current_version_response(base_url, Schema.version())
 
     versions_response =
       case available_versions do
@@ -82,8 +68,8 @@ defmodule SchemaWeb.SchemaController do
         [_head | _tail] ->
           available_versions_objects =
             available_versions
-            |> Enum.map(fn version ->
-              %{:version => version, :url => "#{base_url}/#{version}/api"}
+            |> Enum.map(fn {schema_version, metadata} ->
+              version_response(base_url, schema_version, metadata)
             end)
 
           %{:versions => available_versions_objects, :default => default_version}
@@ -1921,4 +1907,58 @@ defmodule SchemaWeb.SchemaController do
   defp parse_java_package(nil), do: []
   defp parse_java_package(""), do: []
   defp parse_java_package(name), do: [package_name: name]
+
+  defp version_response(base_url, schema_version, metadata) do
+    %{
+      :schema_version => schema_version,
+      :server_version => version_metadata(metadata, :server_version, schema_version),
+      :api_version => version_metadata(metadata, :api_version, schema_version),
+      :url => "#{base_url}/#{schema_version}",
+      :api_url => "#{base_url}/api/#{schema_version}"
+    }
+  end
+
+  defp current_version_response(base_url, version) do
+    %{
+      :schema_version => version,
+      :server_version => server_version(),
+      :api_version => api_version(),
+      :url => base_url,
+      :api_url => "#{base_url}/api"
+    }
+  end
+
+  defp base_url(conn) do
+    url = Application.get_env(:schema_server, SchemaWeb.Endpoint)[:url]
+
+    # The :url key is meant to be set for production, but isn't set for local development
+    if url == nil do
+      "#{conn.scheme}://#{conn.host}:#{conn.port}"
+    else
+      "#{conn.scheme}://#{Keyword.fetch!(url, :host)}:#{Keyword.fetch!(url, :port)}"
+    end
+  end
+
+  defp server_version do
+    Schema.build_version()
+  end
+
+  defp api_version do
+    SchemaWeb.Router.swagger_info()[:info][:version]
+  end
+
+  defp version_metadata(metadata, key, schema_version) do
+    case Map.get(metadata, key) do
+      nil -> fallback_version_metadata(key, schema_version)
+      value -> to_string(value)
+    end
+  end
+
+  defp fallback_version_metadata(:server_version, schema_version) do
+    if schema_version == Schema.version(), do: server_version(), else: nil
+  end
+
+  defp fallback_version_metadata(:api_version, schema_version) do
+    if schema_version == Schema.version(), do: api_version(), else: nil
+  end
 end
