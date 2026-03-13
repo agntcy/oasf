@@ -57,7 +57,7 @@ defmodule SchemaWeb.SchemaController do
 
     available_versions = Schemas.versions()
 
-    default_version = current_version_response(base_url, Schema.version())
+    default_version = default_version_response(base_url, available_versions)
 
     versions_response =
       case available_versions do
@@ -1926,6 +1926,24 @@ defmodule SchemaWeb.SchemaController do
       :url => base_url,
       :api_url => "#{base_url}/api"
     }
+  end
+
+  defp default_version_response(base_url, available_versions) do
+    case Enum.find(available_versions, fn {_schema_version, metadata} ->
+           Map.get(metadata, :default) == true
+         end) do
+      {schema_version, metadata} ->
+        %{
+          :schema_version => schema_version,
+          :server_version => version_metadata(metadata, :server_version, schema_version),
+          :api_version => version_metadata(metadata, :api_version, schema_version),
+          :url => base_url,
+          :api_url => "#{base_url}/api"
+        }
+
+      nil ->
+        current_version_response(base_url, Schema.version())
+    end
   end
 
   defp base_url(conn) do

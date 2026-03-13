@@ -88,7 +88,8 @@ defmodule Schemas do
         {schema_version, parsed,
          %{
            server_version: entry["server_version"],
-           api_version: entry["api_version"]
+           api_version: entry["api_version"],
+           default: entry["default"] == true
          }}
 
       _error ->
