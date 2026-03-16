@@ -14,10 +14,13 @@ image:
   versions: []
     # - server: v0.7.5
     #   schema: 0.7.0
+    #   api: 0.5.2
     # - server: v0.8.4
     #   schema: 0.8.0
+    #   api: 0.5.2
     # - server: v1.0.0
     #   schema: 1.0.0
+    #   api: 0.5.2
   pullPolicy: IfNotPresent
   pullSecrets: []
 
