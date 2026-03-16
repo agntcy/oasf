@@ -495,6 +495,52 @@ defmodule Schema.Utils do
     end)
   end
 
+  @doc """
+  Recursively sort taxonomy trees by numeric class/category ID.
+
+  Accepts a taxonomy map or list of `{key, node}` tuples and returns
+  a sorted list of tuples, with nested `:classes` sorted recursively.
+  """
+  @spec sort_taxonomy_tree(map() | list()) :: list()
+  def sort_taxonomy_tree(tree) when is_map(tree) do
+    tree
+    |> Enum.to_list()
+    |> sort_taxonomy_tree()
+  end
+
+  def sort_taxonomy_tree(tree) when is_list(tree) do
+    tree
+    |> Enum.sort_by(fn {_key, node} ->
+      normalize_taxonomy_id(Map.get(node, :id, Map.get(node, :uid, 0)))
+    end)
+    |> Enum.map(fn {key, node} -> {key, sort_taxonomy_node(node)} end)
+  end
+
+  def sort_taxonomy_tree(_), do: []
+
+  defp sort_taxonomy_node(node) when is_map(node) do
+    case Map.get(node, :classes) do
+      nil ->
+        node
+
+      classes ->
+        Map.put(node, :classes, sort_taxonomy_tree(classes))
+    end
+  end
+
+  defp sort_taxonomy_node(other), do: other
+
+  defp normalize_taxonomy_id(id) when is_integer(id), do: id
+
+  defp normalize_taxonomy_id(id) when is_binary(id) do
+    case Integer.parse(id) do
+      {parsed, ""} -> parsed
+      _ -> 0
+    end
+  end
+
+  defp normalize_taxonomy_id(_), do: 0
+
   @spec add_sibling_of_to_attributes(list() | map() | nil) :: list() | nil
   def add_sibling_of_to_attributes(nil), do: nil
 

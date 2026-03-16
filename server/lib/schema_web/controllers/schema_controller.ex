@@ -277,13 +277,13 @@ defmodule SchemaWeb.SchemaController do
       conn,
       params,
       :modules,
-      fn -> Schema.taxonomy_modules(extensions_opt, nil) |> sort_taxonomy_for_api() end,
+      fn -> Schema.taxonomy_modules(extensions_opt, nil) |> Schema.Utils.sort_taxonomy_tree() end,
       fn id_or_name ->
         result = Schema.taxonomy_modules(extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
-          else: sort_taxonomy_for_api(result)
+          else: Schema.Utils.sort_taxonomy_tree(result)
       end
     )
   end
@@ -344,13 +344,13 @@ defmodule SchemaWeb.SchemaController do
       conn,
       params,
       :skills,
-      fn -> Schema.taxonomy_skills(extensions_opt, nil) |> sort_taxonomy_for_api() end,
+      fn -> Schema.taxonomy_skills(extensions_opt, nil) |> Schema.Utils.sort_taxonomy_tree() end,
       fn id_or_name ->
         result = Schema.taxonomy_skills(extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
-          else: sort_taxonomy_for_api(result)
+          else: Schema.Utils.sort_taxonomy_tree(result)
       end
     )
   end
@@ -411,13 +411,13 @@ defmodule SchemaWeb.SchemaController do
       conn,
       params,
       :domains,
-      fn -> Schema.taxonomy_domains(extensions_opt, nil) |> sort_taxonomy_for_api() end,
+      fn -> Schema.taxonomy_domains(extensions_opt, nil) |> Schema.Utils.sort_taxonomy_tree() end,
       fn id_or_name ->
         result = Schema.taxonomy_domains(extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
-          else: sort_taxonomy_for_api(result)
+          else: Schema.Utils.sort_taxonomy_tree(result)
       end
     )
   end
@@ -1916,45 +1916,6 @@ defmodule SchemaWeb.SchemaController do
   defp parse_java_package(nil), do: []
   defp parse_java_package(""), do: []
   defp parse_java_package(name), do: [package_name: name]
-
-  # Sort taxonomy responses recursively by numeric id/uid and preserve order in JSON output.
-  # Using keyword lists keeps object-like JSON while preserving traversal order.
-  defp sort_taxonomy_for_api(tree) when is_map(tree) do
-    tree
-    |> Enum.to_list()
-    |> sort_taxonomy_for_api()
-  end
-
-  defp sort_taxonomy_for_api(tree) when is_list(tree) do
-    tree
-    |> Enum.sort_by(fn {_key, node} ->
-      normalize_taxonomy_id(Map.get(node, :id, Map.get(node, :uid, 0)))
-    end)
-    |> Enum.map(fn {key, node} -> {key, sort_taxonomy_node(node)} end)
-  end
-
-  defp sort_taxonomy_for_api(other), do: other
-
-  defp sort_taxonomy_node(node) when is_map(node) do
-    if Map.has_key?(node, :classes) do
-      Map.put(node, :classes, sort_taxonomy_for_api(Map.get(node, :classes, %{})))
-    else
-      node
-    end
-  end
-
-  defp sort_taxonomy_node(other), do: other
-
-  defp normalize_taxonomy_id(id) when is_integer(id), do: id
-
-  defp normalize_taxonomy_id(id) when is_binary(id) do
-    case Integer.parse(id) do
-      {parsed, ""} -> parsed
-      _ -> 0
-    end
-  end
-
-  defp normalize_taxonomy_id(_), do: 0
 
   defp version_response(base_url, schema_version, metadata) do
     %{

@@ -503,49 +503,8 @@ defmodule SchemaWeb.PageController do
   end
 
   defp sort_classes(categories) do
-    Map.update!(categories, :attributes, fn attributes ->
-      Enum.map(attributes, fn {name, category} ->
-        {name, sort_classes_recursive(category)}
-      end)
-    end)
+    Map.update!(categories, :attributes, &Schema.Utils.sort_taxonomy_tree/1)
   end
-
-  defp sort_classes_recursive(category) when is_map(category) do
-    sorted_classes =
-      category
-      |> Map.get(:classes, %{})
-      |> sort_by_class_id()
-      |> Enum.map(fn {key, class} -> {key, sort_classes_recursive(class)} end)
-
-    Map.put(category, :classes, sorted_classes)
-  end
-
-  defp sort_classes_recursive(other), do: other
-
-  defp sort_by_class_id(classes) when is_map(classes) do
-    classes
-    |> Enum.to_list()
-    |> sort_by_class_id()
-  end
-
-  defp sort_by_class_id(classes) when is_list(classes) do
-    Enum.sort_by(classes, fn {_, class} ->
-      normalize_class_id(Map.get(class, :id, Map.get(class, :uid, 0)))
-    end)
-  end
-
-  defp sort_by_class_id(_), do: []
-
-  defp normalize_class_id(id) when is_integer(id), do: id
-
-  defp normalize_class_id(id) when is_binary(id) do
-    case Integer.parse(id) do
-      {parsed, ""} -> parsed
-      _ -> 0
-    end
-  end
-
-  defp normalize_class_id(_), do: 0
 
   defp sort_attributes(map, key) do
     Map.update!(map, :attributes, &sort_by(&1, key))
