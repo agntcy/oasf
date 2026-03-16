@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
     <h3>
       <%= @data[:caption] %>
     </h3>
-    <div class="text-secondary">
+    <div class="text-secondary description-content">
       <%= raw @data[:description] %>
     </div>
   </div>

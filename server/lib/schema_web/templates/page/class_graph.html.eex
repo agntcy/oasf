@@ -9,17 +9,23 @@ SPDX-License-Identifier: Apache-2.0
 
 <div class="row">
   <div class="col-md move-up">
-    <% path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> category) %>
+    <% path = if category != nil do
+      Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> category)
+    else
+      ""
+    end %>
     <h3 class="extensions">
-      <%= class[:caption] %>
-      <span class="text-secondary">[<a href="<%= class_path(@conn, class)  %>"><%= class[:uid] %></a>]<%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
+      <a href="<%= class_path(@conn, class)  %>"><%= class[:caption] %></a>
+      <span class="text-secondary">[<%= class[:uid] %>]<%= if extension && extension != "" do %><span class="extension-badge"><%= extension %></span><% end %>
         Class
       </span>
     </h3>
 
+    <%= if category != nil && class[:category_name] != nil do %>
     <h4 class="extensions">
       <a href="<%= path %>"><%= class[:category_name] %> Category</a>
     </h4>
+    <% end %>
 
     <div class="text-secondary">
       <%= raw class[:description] %>
@@ -40,7 +46,6 @@ SPDX-License-Identifier: Apache-2.0
      font: {face: 'mono'}
    },
    nodes: {
-     "color": "#e3e9fb",
      shape: 'box',
      font: {face: 'mono'}
    },

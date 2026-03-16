@@ -4,11 +4,28 @@
  */
 
 function get_selected_profiles() {
+  // First check URL parameters, then fall back to localStorage
+  const urlParams = new URLSearchParams(window.location.search);
+  const profilesParam = urlParams.get("profiles");
+
+  if (profilesParam !== null) {
+    return profilesParam === ""
+      ? []
+      : profilesParam.split(",").map((p) => p.trim());
+  }
+
   return JSON.parse(localStorage.getItem("schema_profiles")) || [];
 }
 
 function set_selected_profiles(profiles) {
   localStorage.setItem("schema_profiles", JSON.stringify(profiles));
+}
+
+function select_profiles(selected) {
+  if (selected && selected.length > 0) {
+    return "&profiles=" + selected.join(",");
+  }
+  return "";
 }
 
 function init_selected_profiles(profiles) {
@@ -46,8 +63,13 @@ function init_class_profiles() {
     });
 
     set_selected_profiles(selected_profiles);
-    init_selected_profiles(selected_profiles);
-    refresh_selected_profiles();
+
+    // Update URL with both extensions and profiles using the unified function
+    const selected_extensions = get_selected_extensions();
+    const params = build_url_params(selected_extensions, selected_profiles);
+
+    // Update the URL
+    window.location.search = params;
   });
 }
 

@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
   <div class="col-md move-up">
     <h3><%= @data[:caption] %>
       <span class="text-secondary">
-        [<%= @data[:uid] %>]<%= if @data[:extension] && @data[:extension] != "" do %><span class="extension-badge"><%= @data[:extension] %></span><% end %>
+        [<%= @data[:id] || @data[:uid] || 0 %>]<%= if @data[:extension] && @data[:extension] != "" do %><span class="extension-badge"><%= @data[:extension] %></span><% end %>
         <%= @data[:class_type] %> category
       </span>
     </h3>
@@ -24,37 +24,37 @@ SPDX-License-Identifier: Apache-2.0
   </div>
 </div>
 
-<div class="mt-4">
-  <table class="table table-bordered sortable">
-    <thead>
-      <tr class="thead-color">
-        <th class="col-caption">Caption</th>
-        <th class="col-name">Name</th>
-        <th class="col-id">ID</th>
-        <th class="col-description">Description</th>
-      </tr>
-    </thead>
-    <tbody class="searchable">
-      <%= for {id, class} <- @data[:classes] do %>
-      <% name = Atom.to_string(id) %>
-      <% path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> name) %>
-      <tr class="oasf-class" <%= raw format_profiles(class[:profiles])%>>
-        <td class="name"><%= raw format_caption(name, class) %></td>
-        <td class="extensions">
-          <a href="<%= path %>"><%= name %></a>
-        </td>
-        <% uid = class[:uid] %>
-        <%= if uid != nil do %>
-          <td><%= uid %></td>
-        <% else %>
-          <td></td>
+<%!-- Process classes map: separate regular classes from categories --%>
+<% classes_map = Map.get(@data, :classes, %{}) %>
+<% {regular_rows, category_sections} = render_category_classes_table(@conn, classes_map, @data) %>
+
+<%!-- Render main table with regular classes --%>
+<%= if length(regular_rows) > 0 do %>
+  <div class="mt-4">
+    <table class="table table-bordered sortable">
+      <thead>
+        <tr class="thead-color">
+          <th class="col-caption">Caption</th>
+          <th class="col-name">Name</th>
+          <th class="col-id">ID</th>
+          <th class="col-description">Description</th>
+        </tr>
+      </thead>
+      <tbody class="searchable">
+        <%= for row <- regular_rows do %>
+          <%= raw row %>
         <% end %>
-        <td><%= raw description(class) %></td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
-</div>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<%!-- Render category sections (subcategories with their own tables) --%>
+<%= if length(category_sections) > 0 do %>
+  <%= for section <- category_sections do %>
+    <%= raw section %>
+  <% end %>
+<% end %>
 
 <script>
   init_class_profiles();

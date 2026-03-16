@@ -8,6 +8,53 @@
   <meta name="description" content="Open Agentic Schema Framework">
   <title>Open Agentic Schema Framework</title>
 
+  <% ga_tracking_id = Application.get_env(:schema_server, :google_analytics)[:tracking_id] %>
+  <%= if ga_tracking_id do %>
+    <script>
+      // GA Loading Logic
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      function loadGA() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = "https://www.googletagmanager.com/gtag/js?id=<%= ga_tracking_id %>";
+        document.head.appendChild(script);
+
+        gtag('js', new Date());
+        gtag('config', '<%= ga_tracking_id %>');
+      }
+
+      document.addEventListener("DOMContentLoaded", function() {
+        var consent = localStorage.getItem('ga_consent');
+        var banner = document.getElementById('cookie-consent-banner');
+
+        if (consent === 'granted') {
+          loadGA();
+        } else if (consent === null) {
+          if (banner) banner.style.display = 'block';
+        }
+
+        var acceptBtn = document.getElementById('accept-cookies');
+        if (acceptBtn) {
+          acceptBtn.addEventListener('click', function() {
+            localStorage.setItem('ga_consent', 'granted');
+            if (banner) banner.style.display = 'none';
+            loadGA();
+          });
+        }
+
+        var declineBtn = document.getElementById('decline-cookies');
+        if (declineBtn) {
+          declineBtn.addEventListener('click', function() {
+            localStorage.setItem('ga_consent', 'denied');
+            if (banner) banner.style.display = 'none';
+          });
+        }
+      });
+    </script>
+  <% end %>
+
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap-4.6.2.min.css") %>'/>
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/bootstrap.select-1.13.18.min.css") %>'/>
   <link rel="stylesheet" href='<%= Routes.static_path(@conn, "/css/fontawesome-6.4.0.min.css") %>'/>
@@ -26,13 +73,20 @@
       if (document.readyState === 'interactive')
       {
         let selected_extensions = get_selected_extensions();
+        let selected_profiles = get_selected_profiles();
+
         $.each(selected_extensions, function(key, value) {
           $("#" + key).prop('checked', value);
         });
 
-        // update the links with the selected extensions
-        const params = select_extensions(selected_extensions);
+        // update the links with the selected extensions and profiles
+        const params = build_url_params(selected_extensions, selected_profiles);
         $(".sidebar-section a").each(function() {
+          this.href = this.href + params;
+        });
+
+        // Also update main navigation links
+        $(".top-navbar-nav a.nav-link").each(function() {
           this.href = this.href + params;
         });
 
@@ -53,11 +107,11 @@
         });
         set_selected_extensions(selected_extensions);
 
-        const params = select_extensions(selected_extensions);
+        // Get current profiles and build complete URL
+        const selected_profiles = get_selected_profiles();
+        const params = build_url_params(selected_extensions, selected_profiles);
+
         window.location.search = params;
-        $(".sidebar-section a").each(function() {
-          this.href = this.href + params;
-        });
       });
 
       // init the attributes dropdown filters
@@ -69,15 +123,15 @@
         case '/':
           $('#home_id a.nav-link').addClass("active");
           break;
-        case '/main_skills':
+        case '/skill_categories':
           $('#skills_id a.nav-link').addClass("active");
           $('#classes_id a.nav-link').addClass("active");
           break;
-        case '/main_domains':
+        case '/domain_categories':
           $('#domains_id a.nav-link').addClass("active");
           $('#classes_id a.nav-link').addClass("active");
           break;
-        case '/main_modules':
+        case '/module_categories':
           $('#modules_id a.nav-link').addClass("active");
           $('#classes_id a.nav-link').addClass("active");
           break;
@@ -184,6 +238,24 @@
         </div>
       </div>
       <% end %>
+
+      <!-- Display Options Section -->
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">
+          <i class="fas fa-cog"></i> Options
+          <hr class="divider"/>
+        </div>
+        <div class="sidebar-section-content">
+          <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+              <label>
+                <input type="checkbox" id="show-deprecated-global" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
+                Show deprecated items
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -192,19 +264,19 @@
       <li id="classes_id" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button">Classes</a>
         <div class="dropdown-content">
-          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
-          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
-          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/main_modules") %>'>Modules</a>
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/skill_categories") %>'>Skills</a>
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/domain_categories") %>'>Domains</a>
+          <a class="dropdown-link" href='<%= Routes.static_path(@conn, "/module_categories") %>'>Modules</a>
         </div>
       </li>
       <li id="skills_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_skills") %>'>Skills</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/skill_categories") %>'>Skills</a>
       </li>
       <li id="domains_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_domains") %>'>Domains</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/domain_categories") %>'>Domains</a>
       </li>
       <li id="modules_id" class="nav-item">
-        <a class="nav-link" href='<%= Routes.static_path(@conn, "/main_modules") %>'>Modules</a>
+        <a class="nav-link" href='<%= Routes.static_path(@conn, "/module_categories") %>'>Modules</a>
       </li>
       <li id="record_id" class="nav-item">
         <a class="nav-link" href='<%= Routes.static_path(@conn, "/objects/record") %>'>Record</a>
@@ -225,7 +297,7 @@
         <a class="nav-link dropdown-toggle" href="#" role="button">Resources</a>
         <div class="dropdown-content">
           <a class="dropdown-link" target="_blank" href='https://docs.agntcy.org/oasf/open-agentic-schema-framework/'> Documentation</a>
-          <a class="dropdown-link" target="_blank" href='<%= Routes.static_path(@conn, "/doc") %>'>API Documentation</a>
+          <a class="dropdown-link" target="_blank" href='<%= doc_path(@conn) %>'>API Documentation</a>
           <a class="dropdown-link" target="_blank" href="https://github.com/agntcy/oasf">Fork Me on GitHub</a>
           <a class="dropdown-link" target="_blank" href="https://github.com/agntcy/oasf/blob/main/CONTRIBUTING.md">Contributing to OASF</a>
         </div>
@@ -288,6 +360,21 @@
     $('.profile-item').removeClass('profile-applicable profile-not-applicable');
   };
 </script>
+
+<% ga_tracking_id = Application.get_env(:schema_server, :google_analytics)[:tracking_id] %>
+<%= if ga_tracking_id do %>
+<div id="cookie-consent-banner" class="fixed-bottom bg-dark text-white p-3" style="display: none; z-index: 9999;">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div>
+      <p class="mb-0">We use cookies to improve your experience. By clicking "Accept", you agree to our use of cookies.</p>
+    </div>
+    <div>
+      <button id="decline-cookies" class="btn btn-outline-light btn-sm mr-2">Decline</button>
+      <button id="accept-cookies" class="btn btn-primary btn-sm">Accept</button>
+    </div>
+  </div>
+</div>
+<% end %>
 
 </body>
 </html>

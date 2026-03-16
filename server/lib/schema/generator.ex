@@ -293,6 +293,20 @@ defmodule Schema.Generator do
     end
   end
 
+  defp generate_field(name, %{type: "typed_map_t"} = field, map) do
+    value_type = field[:value_type] || "string_t"
+
+    random_typed_map =
+      Enum.reduce(1..random(@max_array_size), %{}, fn _, acc ->
+        key = generate_data(:key, "string_t", %{})
+        value = generate_data(:value, value_type, %{})
+        Map.put_new(acc, key, value)
+      end)
+
+    Map.put_new(map, name, random_typed_map)
+  end
+
+  # Legacy v0.7.x support: string->string map type.
   defp generate_field(name, %{type: "string_map_t"} = _field, map) do
     random_string_map =
       Enum.reduce(1..random(@max_array_size), %{}, fn _, acc ->
@@ -549,7 +563,20 @@ defmodule Schema.Generator do
 
   defp generate_data(:type, _type, _field), do: word()
   defp generate_data(:name, _type, _field), do: String.capitalize(word())
-  defp generate_data(_name, _, _), do: word()
+
+  defp generate_data(_name, type, _field) do
+    # Check if the type exists as an object in the cache
+    case Schema.object(type) do
+      nil ->
+        # Type not found in objects, generate a word as fallback
+        word()
+
+      object ->
+        # Type found as object, generate a sample object
+        profiles = Process.get(:profiles)
+        generate_sample_object(object, profiles)
+    end
+  end
 
   def name() do
     Agent.get(__MODULE__, fn %Generator{names: {len, names}} -> random_word(len, names) end)
@@ -877,11 +904,23 @@ defmodule Schema.Generator do
 
     if field[:is_enum] do
       Utils.find_children(all_classes_fn, field[:class_type])
-      |> Enum.reject(& &1[:hidden?])
-      |> Enum.map(&class_fn.(&1.name))
-      |> Enum.filter(& &1)
+      |> Enum.reject(fn child -> Map.get(child, :category) == true end)
+      |> Enum.reject(& &1[:deprecated?])
+      |> Enum.map(fn child ->
+        Enum.find_value(all_classes_fn, fn {key, value} ->
+          if value == child, do: key, else: nil
+        end)
+        |> case do
+          nil -> nil
+          key -> class_fn.(key)
+        end
+      end)
+      |> Enum.reject(&is_nil/1)
+      |> Enum.reject(&Map.has_key?(&1, :"@deprecated"))
     else
-      class_fn.(field[:class_type]) |> List.wrap()
+      class_fn.(field[:class_type])
+      |> List.wrap()
+      |> Enum.reject(&Map.has_key?(&1, :"@deprecated"))
     end
   end
 
@@ -889,12 +928,17 @@ defmodule Schema.Generator do
     valid_objects =
       if field[:is_enum] do
         Utils.find_children(Schema.all_objects(), field[:object_type])
-        |> Enum.reject(fn item -> item[:hidden?] == true end)
+        |> Enum.reject(& &1[:hidden?])
         |> Enum.map(fn descendant ->
-          descendant[:name]
-          |> String.to_atom()
-          |> Schema.object()
+          Enum.find_value(Schema.all_objects(), fn {key, value} ->
+            if value == descendant, do: key, else: nil
+          end)
+          |> case do
+            nil -> nil
+            key -> Schema.object(key)
+          end
         end)
+        |> Enum.reject(&is_nil/1)
       else
         field[:object_type]
         |> String.to_atom()

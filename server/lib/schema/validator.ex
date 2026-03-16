@@ -7,8 +7,8 @@ defmodule Schema.Validator do
   """
 
   # Implementation note:
-  # The validate_* and add_* functions (other than the top level validate/1 and validate_bundle/1
-  # functions) take a response and return one, possibly updated.
+  # The validate_* and add_* functions (other than the top level validate/1 function) take a
+  # response and return one, possibly updated.
   # The overall flow is to examine the class/object or list of classes/objects, and return a validation response.
 
   require Logger
@@ -18,117 +18,6 @@ defmodule Schema.Validator do
     validate_input(data, options, Schema.dictionary(), type)
   end
 
-  @spec validate_bundle(map(), list(), atom()) :: map()
-  def validate_bundle(bundle, options, type) when is_map(bundle) do
-    bundle_structure = get_bundle_structure()
-
-    # First validate the bundle itself
-    response =
-      Enum.reduce(
-        bundle_structure,
-        %{},
-        fn attribute_tuple, response ->
-          validate_bundle_attribute(response, bundle, attribute_tuple)
-        end
-      )
-
-    # Check that there are no extra keys in the bundle
-    response =
-      Enum.reduce(
-        bundle,
-        response,
-        fn {key, _}, response ->
-          if Map.has_key?(bundle_structure, key) do
-            response
-          else
-            add_error(
-              response,
-              "attribute_unknown",
-              "Unknown attribute \"#{key}\" in input bundle.",
-              %{attribute_path: key, attribute: key}
-            )
-          end
-        end
-      )
-
-    # TODO: validate the bundle times and count against inputs
-
-    # Next validate the inputs in the bundle
-    response =
-      validate_bundle_inputs(
-        response,
-        bundle,
-        options,
-        Schema.dictionary(),
-        type
-      )
-
-    finalize_response(response)
-  end
-
-  # Returns structure of an input bundle.
-  # See "Bundling" here: https://github.com/OASF/examples/blob/main/encodings/json/README.md
-  @spec get_bundle_structure() :: map()
-  defp get_bundle_structure() do
-    %{
-      "inputs" => {:required, "array", &is_list/1},
-      "count" => {:optional, "integer_t", &is_integer_t/1}
-    }
-  end
-
-  @spec validate_bundle_attribute(map(), map(), tuple()) :: map()
-  defp validate_bundle_attribute(
-         response,
-         bundle,
-         {attribute_name, {requirement, type_name, is_type_fn}}
-       ) do
-    if Map.has_key?(bundle, attribute_name) do
-      value = bundle[attribute_name]
-
-      if is_type_fn.(value) do
-        response
-      else
-        add_error_wrong_type(response, attribute_name, attribute_name, value, type_name)
-      end
-    else
-      if requirement == :required do
-        add_error_required_attribute_missing(response, attribute_name, attribute_name)
-      else
-        response
-      end
-    end
-  end
-
-  @spec validate_bundle_inputs(map(), map(), list(), map(), atom()) :: map()
-  defp validate_bundle_inputs(response, bundle, options, dictionary, class_type) do
-    inputs = bundle["inputs"]
-
-    if is_list(inputs) do
-      Map.put(
-        response,
-        :input_validations,
-        Enum.map(
-          inputs,
-          fn input ->
-            if is_map(input) do
-              validate_input(input, options, dictionary, class_type)
-            else
-              {type, type_extra} = type_of(input)
-
-              %{
-                error: "input has wrong type; expected object, got #{type}#{type_extra}.",
-                type: type,
-                expected_type: "object"
-              }
-            end
-          end
-        )
-      )
-    else
-      response
-    end
-  end
-
   @spec validate_input(map(), list(), map(), atom()) :: map()
   defp validate_input(input, options, dictionary, type) do
     response = new_response(input)
@@ -136,16 +25,16 @@ defmodule Schema.Validator do
     {response, class} =
       case type do
         :skill ->
-          validate_class_id_or_name(response, input, &Schema.find_skill/1, &Schema.skill/1)
+          validate_class_id_or_name(response, input, "", &Schema.find_skill/1, &Schema.skill/1)
 
         :domain ->
-          validate_class_id_or_name(response, input, &Schema.find_domain/1, &Schema.domain/1)
+          validate_class_id_or_name(response, input, "", &Schema.find_domain/1, &Schema.domain/1)
 
         :module ->
-          validate_class_id_or_name(response, input, &Schema.find_module/1, &Schema.module/1)
+          validate_class_id_or_name(response, input, "", &Schema.find_module/1, &Schema.module/1)
 
         :object ->
-          validate_object_name_and_return_object(response, options)
+          validate_object_name_and_return_object(response, options, "")
 
         _ ->
           # Unknown type; return error
@@ -178,11 +67,11 @@ defmodule Schema.Validator do
     finalize_response(response)
   end
 
-  defp validate_class_id_or_name(response, input, find_by_id, find_by_name) do
+  defp validate_class_id_or_name(response, input, attribute_path, find_by_id, find_by_name) do
     # Validate ID if present
     {id_response, class_by_id} =
       if Map.has_key?(input, "id") do
-        validate_class_id_and_return_class(find_by_id, response, input)
+        validate_class_id_and_return_class(find_by_id, response, input, attribute_path)
       else
         {response, nil}
       end
@@ -190,7 +79,7 @@ defmodule Schema.Validator do
     # Validate name if present (using updated response to accumulate errors)
     {final_response, class_by_name} =
       if Map.has_key?(input, "name") do
-        validate_class_name_and_return_class(find_by_name, id_response, input)
+        validate_class_name_and_return_class(find_by_name, id_response, input, attribute_path)
       else
         {id_response, nil}
       end
@@ -199,7 +88,7 @@ defmodule Schema.Validator do
     cond do
       # Both missing
       !Map.has_key?(input, "id") && !Map.has_key?(input, "name") ->
-        {add_error_required_attribute_missing(final_response, "id or name", "id or name"), nil}
+        {add_error_required_attribute_missing(final_response, attribute_path, "id or name"), nil}
 
       # ID present but invalid OR name present but invalid
       (Map.has_key?(input, "id") && is_nil(class_by_id)) ||
@@ -227,14 +116,20 @@ defmodule Schema.Validator do
              final_response,
              "id_name_mismatch",
              error_msg,
-             %{attribute_path: "id/name", attribute: "id/name"}
+             %{attribute_path: attribute_path, attribute: "id or name"}
            ), nil}
         end
     end
   end
 
-  @spec validate_class_id_and_return_class((any -> any), map(), map()) :: {map(), nil | map()}
-  defp validate_class_id_and_return_class(find_class_function, response, input) do
+  @spec validate_class_id_and_return_class((any -> any), map(), map(), String.t()) ::
+          {map(), nil | map()}
+  defp validate_class_id_and_return_class(
+         find_class_function,
+         response,
+         input,
+         attribute_path
+       ) do
     if Map.has_key?(input, "id") do
       class_uid = input["id"]
 
@@ -247,7 +142,7 @@ defmodule Schema.Validator do
                   response,
                   "id_unknown",
                   "Unknown \"id\" value; no class is defined for #{class_uid}.",
-                  %{attribute_path: "id", attribute: "id", value: class_uid}
+                  %{attribute_path: attribute_path, attribute: "id", value: class_uid}
                 ),
                 nil
               }
@@ -259,22 +154,23 @@ defmodule Schema.Validator do
         true ->
           {
             # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "id", "id", class_uid, "integer_t"),
+            add_error_wrong_type(response, attribute_path, "id", class_uid, "integer_t"),
             nil
           }
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "id", "id"), nil}
+      {add_error_required_attribute_missing(response, attribute_path, "id"), nil}
     end
   end
 
-  @spec validate_class_name_and_return_class((any -> any), map(), map()) ::
+  @spec validate_class_name_and_return_class((any -> any), map(), map(), String.t()) ::
           {map(), nil | map()}
   defp validate_class_name_and_return_class(
          find_class_function,
          response,
-         input
+         input,
+         attribute_path
        ) do
     if Map.has_key?(input, "name") do
       class_name = Schema.Utils.descope(input["name"])
@@ -288,7 +184,7 @@ defmodule Schema.Validator do
                   response,
                   "name_unknown",
                   "Unknown \"name\" value; no class is defined for #{class_name}.",
-                  %{attribute_path: "name", attribute: "name", value: class_name}
+                  %{attribute_path: attribute_path, attribute: "name", value: class_name}
                 ),
                 nil
               }
@@ -300,18 +196,18 @@ defmodule Schema.Validator do
         true ->
           {
             # We need to add error here; no further validation will occur (nil returned for class).
-            add_error_wrong_type(response, "name", "name", class_name, "string_t"),
+            add_error_wrong_type(response, attribute_path, "name", class_name, "string_t"),
             nil
           }
       end
     else
       # We need to add error here; no further validation will occur (nil returned for class).
-      {add_error_required_attribute_missing(response, "name", "name"), nil}
+      {add_error_required_attribute_missing(response, attribute_path, "name"), nil}
     end
   end
 
-  @spec validate_object_name_and_return_object(map(), list()) :: {map(), nil | map()}
-  defp validate_object_name_and_return_object(response, options) do
+  @spec validate_object_name_and_return_object(map(), list(), String.t()) :: {map(), nil | map()}
+  defp validate_object_name_and_return_object(response, options, attribute_path) do
     if Keyword.has_key?(options, :name) do
       object_name = Keyword.get(options, :name)
 
@@ -324,7 +220,7 @@ defmodule Schema.Validator do
                   response,
                   "name_unknown",
                   "Unknown \"name\" value; no object is defined for #{object_name}.",
-                  %{attribute_path: "name", attribute: "name", value: object_name}
+                  %{attribute_path: attribute_path, attribute: "name", value: object_name}
                 ),
                 nil
               }
@@ -1509,14 +1405,6 @@ defmodule Schema.Validator do
           attribute_details
         )
 
-      # Check for duplicate types in locators array
-      response =
-        if attribute_name == "locators" do
-          check_locators_duplicate_types(response, value, attribute_path, attribute_name)
-        else
-          response
-        end
-
       {response, _} =
         Enum.reduce(
           value,
@@ -1581,15 +1469,28 @@ defmodule Schema.Validator do
         {response, class} =
           case attribute_details[:family] do
             "skill" ->
-              validate_class_id_or_name(response, value, &Schema.find_skill/1, &Schema.skill/1)
+              validate_class_id_or_name(
+                response,
+                value,
+                attribute_path,
+                &Schema.find_skill/1,
+                &Schema.skill/1
+              )
 
             "domain" ->
-              validate_class_id_or_name(response, value, &Schema.find_domain/1, &Schema.domain/1)
+              validate_class_id_or_name(
+                response,
+                value,
+                attribute_path,
+                &Schema.find_domain/1,
+                &Schema.domain/1
+              )
 
             "module" ->
               validate_class_id_or_name(
                 response,
                 value,
+                attribute_path,
                 &Schema.find_module/1,
                 &Schema.module/1
               )
@@ -1829,6 +1730,46 @@ defmodule Schema.Validator do
       :json_t ->
         response
 
+      :typed_map_t ->
+        if is_map(value) do
+          response
+          |> validate_typed_map(
+            value,
+            attribute_path,
+            attribute_name,
+            attribute_details,
+            dictionary
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            expected_type,
+            expected_type_extra
+          )
+        end
+
+      :string_map_t ->
+        if is_map(value) do
+          response
+          |> validate_string_map(
+            value,
+            attribute_path,
+            attribute_name
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            expected_type,
+            expected_type_extra
+          )
+        end
+
       :long_t ->
         if is_long_t(value) do
           response
@@ -1880,25 +1821,6 @@ defmodule Schema.Validator do
             attribute_name,
             attribute_type_key,
             dictionary_types
-          )
-        else
-          add_error_wrong_type(
-            response,
-            attribute_path,
-            attribute_name,
-            value,
-            expected_type,
-            expected_type_extra
-          )
-        end
-
-      :string_map_t ->
-        if is_map(value) do
-          response
-          |> validate_string_map(
-            value,
-            attribute_path,
-            attribute_name
           )
         else
           add_error_wrong_type(
@@ -2292,7 +2214,98 @@ defmodule Schema.Validator do
     end
   end
 
-  # Validate a map with string keys and string values.
+  # Validate a map with string key and configurable value types.
+  @spec validate_typed_map(
+          map(),
+          map(),
+          String.t(),
+          String.t(),
+          map(),
+          map()
+        ) :: map()
+  defp validate_typed_map(
+         response,
+         json_object,
+         attribute_path,
+         attribute_name,
+         attribute_details,
+         dictionary
+       ) do
+    value_type = Map.get(attribute_details, :value_type, "string_t")
+
+    Enum.reduce(json_object, response, fn {key, value}, acc_response ->
+      if is_binary(key) do
+        validate_typed_value(
+          value,
+          value_type,
+          dictionary,
+          acc_response,
+          attribute_path,
+          attribute_name,
+          key
+        )
+      else
+        add_error_wrong_type(
+          response,
+          attribute_path,
+          attribute_name,
+          value,
+          "string",
+          ""
+        )
+      end
+    end)
+  end
+
+  defp validate_typed_value(
+         value,
+         type_string,
+         dictionary,
+         response,
+         attribute_path,
+         attribute_name,
+         key
+       ) do
+    case Schema.object(type_string) do
+      nil ->
+        attribute_details = %{type: type_string}
+
+        validate_value_against_dictionary_type(
+          response,
+          value,
+          "#{attribute_path}.#{key}",
+          attribute_name,
+          attribute_details,
+          dictionary
+        )
+
+      object ->
+        if is_map(value) do
+          validate_map_against_object(
+            response,
+            value,
+            "#{attribute_path}.#{key}",
+            attribute_name,
+            object,
+            [],
+            [],
+            dictionary,
+            false
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            "#{type_string} (object)",
+            ""
+          )
+        end
+    end
+  end
+
+  # Legacy v0.7.x support: validate a map with string keys and string values.
   @spec validate_string_map(
           map(),
           map(),
@@ -2799,43 +2812,4 @@ defmodule Schema.Validator do
   end
 
   defp values_equal?(a, b), do: a == b
-
-  # Check for duplicate types in locators array
-  @spec check_locators_duplicate_types(map(), list(), String.t(), String.t()) :: map()
-  defp check_locators_duplicate_types(response, array, attribute_path, attribute_name) do
-    {response, _} =
-      Enum.reduce(array, {response, {%{}, 0}}, fn element, {response, {seen_types, index}} ->
-        if is_map(element) and Map.has_key?(element, "type") do
-          locator_type = element["type"]
-
-          if Map.has_key?(seen_types, locator_type) do
-            first_index = seen_types[locator_type]
-            duplicate_path = make_attribute_path_array_element(attribute_path, index)
-
-            response =
-              add_error(
-                response,
-                "attribute_locators_duplicate_type",
-                "Duplicate locator type \"#{locator_type}\" found in array \"#{attribute_path}\" at index #{index}." <>
-                  " First occurrence at index #{first_index}. Duplicate types are not allowed in the locators array.",
-                %{
-                  attribute_path: duplicate_path,
-                  attribute: attribute_name,
-                  duplicate_index: index,
-                  first_index: first_index,
-                  locator_type: locator_type
-                }
-              )
-
-            {response, {seen_types, index + 1}}
-          else
-            {response, {Map.put(seen_types, locator_type, index), index + 1}}
-          end
-        else
-          {response, {seen_types, index + 1}}
-        end
-      end)
-
-    response
-  end
 end

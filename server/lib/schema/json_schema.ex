@@ -7,6 +7,7 @@ defmodule Schema.JsonSchema do
   """
 
   alias Schema.Utils
+  alias Schema.Types
 
   @schema_base_uri "https://schema.oasf.outshift.com/schema"
   @schema_version "http://json-schema.org/draft-07/schema#"
@@ -29,6 +30,8 @@ defmodule Schema.JsonSchema do
   end
 
   @spec encode_entity(map(), boolean) :: map()
+  def encode_entity(nil, _top_level), do: %{}
+
   def encode_entity(type, top_level) do
     name = type[:name]
     ext = type[:extension]
@@ -195,29 +198,53 @@ defmodule Schema.JsonSchema do
 
           children =
             Utils.find_children(all_entities, Atom.to_string(name))
-            |> Enum.reject(fn item -> item[:hidden?] == true end)
-            |> Enum.map(& &1[:name])
-            |> Enum.map(&to_string/1)
+            |> Enum.reject(fn child ->
+              # Filter out category classes (category: true) for skills/domains/modules
+              # Filter out hidden objects (hidden?: true) for objects
+              case family do
+                "skill" -> Map.get(child, :category) == true
+                "domain" -> Map.get(child, :category) == true
+                "module" -> Map.get(child, :category) == true
+                _ -> Map.get(child, :hidden?) == true
+              end
+            end)
+            |> Enum.map(fn child ->
+              Enum.find_value(all_entities, fn {key, value} ->
+                if value == child, do: to_string(key), else: nil
+              end)
+            end)
+            |> Enum.reject(&is_nil/1)
 
           Enum.reduce(children, {skills, domains, modules, objects}, fn child_name,
-                                                                         {skills, domains,
-                                                                          modules, objects} ->
-            item =
-              case family do
-                "skill" -> Schema.entity_ex(:skill, child_name)
-                "domain" -> Schema.entity_ex(:domain, child_name)
-                "module" -> Schema.entity_ex(:module, child_name)
-                _ -> Schema.entity_ex(:object, child_name)
+                                                                        {skills, domains, modules,
+                                                                         objects} ->
+            {ext, name} =
+              case String.split(child_name, "/") do
+                [ext, name] -> {ext, name}
+                [name] -> {nil, name}
               end
 
-            key = String.replace(child_name, "/", "_")
-            value = encode_entity(item, false)
+            item =
+              case family do
+                "skill" -> Schema.entity_ex(ext, :skill, name)
+                "domain" -> Schema.entity_ex(ext, :domain, name)
+                "module" -> Schema.entity_ex(ext, :module, name)
+                _ -> Schema.entity_ex(ext, :object, name)
+              end
 
-            case item[:family] do
-              "skill" -> {Map.put(skills, key, value), domains, modules, objects}
-              "domain" -> {skills, Map.put(domains, key, value), modules, objects}
-              "module" -> {skills, domains, Map.put(modules, key, value), objects}
-              _ -> {skills, domains, modules, Map.put(objects, key, value)}
+            # Skip if item is nil (category classes are filtered out)
+            if item == nil do
+              {skills, domains, modules, objects}
+            else
+              key = String.replace(child_name, "/", "_")
+              value = encode_entity(item, false)
+
+              case item[:family] do
+                "skill" -> {Map.put(skills, key, value), domains, modules, objects}
+                "domain" -> {skills, Map.put(domains, key, value), modules, objects}
+                "module" -> {skills, domains, Map.put(modules, key, value), objects}
+                _ -> {skills, domains, modules, Map.put(objects, key, value)}
+              end
             end
           end)
         else
@@ -244,12 +271,15 @@ defmodule Schema.JsonSchema do
   end
 
   defp map_reduce(type_name, type) do
+    attributes = type[:attributes] || %{}
+    constraints = type[:constraints] || %{}
+
     {properties, {required, just_one, at_least_one}} =
-      Enum.map_reduce(type[:attributes], {[], [], []}, fn {key, attribute},
-                                                          {required, just_one, at_least_one} ->
+      Enum.map_reduce(attributes, {[], [], []}, fn {key, attribute},
+                                                   {required, just_one, at_least_one} ->
         name = Atom.to_string(key)
-        just_one_list = List.wrap(type[:constraints][:just_one])
-        at_least_one_list = List.wrap(type[:constraints][:at_least_one])
+        just_one_list = List.wrap(constraints[:just_one])
+        at_least_one_list = List.wrap(constraints[:at_least_one])
 
         cond do
           name in just_one_list ->
@@ -276,6 +306,30 @@ defmodule Schema.JsonSchema do
     {Map.new(properties), required, just_one, at_least_one}
   end
 
+  defp encode_attribute(_name, "typed_map_t", attr) do
+    value_type = Map.get(attr, :value_type, "string_t")
+
+    # Check if value_type is an OASF object
+    case Schema.object(value_type) do
+      nil ->
+        # Not an object, use primitive type
+        new_schema(attr)
+        |> Map.put("type", "object")
+        |> Map.put("additionalProperties", %{"type" => Types.encode_type(value_type)})
+
+      object ->
+        # It's an object, use $ref and include the object definition
+        object_key = String.replace(value_type, "/", "_")
+        object_schema = encode_entity(object, false)
+
+        new_schema(attr)
+        |> Map.put("type", "object")
+        |> Map.put("additionalProperties", %{"$ref" => make_object_ref(value_type)})
+        |> Map.put("$defs", %{"objects" => %{object_key => object_schema}})
+    end
+  end
+
+  # Legacy v0.7.x support: string->string map type.
   defp encode_attribute(_name, "string_map_t", attr) do
     new_schema(attr)
     |> Map.put("type", "object")
@@ -321,7 +375,7 @@ defmodule Schema.JsonSchema do
 
         schema =
           schema
-          |> Map.put("type", encode_type(base_type))
+          |> Map.put("type", Types.encode_type(base_type))
 
         # add range from the type if available
         case data[:range] do
@@ -333,17 +387,6 @@ defmodule Schema.JsonSchema do
           _ ->
             schema
         end
-    end
-  end
-
-  defp encode_type(type) do
-    case type do
-      "string_t" -> "string"
-      "integer_t" -> "integer"
-      "long_t" -> "integer"
-      "float_t" -> "number"
-      "boolean_t" -> "boolean"
-      _ -> type
     end
   end
 
@@ -379,11 +422,11 @@ defmodule Schema.JsonSchema do
 
       children_classes =
         Utils.find_children(all_classes_fn, type)
-        |> Enum.reject(fn item -> item[:hidden?] == true end)
+        |> Enum.reject(fn item -> Map.get(item, :category) == true end)
 
       refs =
         Enum.map(children_classes, fn item ->
-          %{"$ref" => make_class_ref(family, item[:name])}
+          %{"$ref" => make_class_ref(family, Utils.class_name_with_extension(item))}
         end)
 
       Map.put(schema, "oneOf", refs)

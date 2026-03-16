@@ -6,20 +6,12 @@ SPDX-License-Identifier: Apache-2.0
 <div class="row">
   <div class="col-md move-up">
     <h3><%= @data[:title] %></h3>
-    <div class="text-secondary">
+    <div class="text-secondary description-content">
       <%= @data[:description] %>
     </div>
   </div>
   <div class="navbar-nav col-md-auto fixed-right mt-2">
     <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
-    <div class="mt-1">
-      <div class="show-deprecated-container">
-        <input type="checkbox" id="show-deprecated" class="show-deprecated-checkbox" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)">
-        <label for="show-deprecated" class="show-deprecated-label">
-          <span class="show-deprecated-text">Show deprecated</span>
-        </label>
-      </div>
-    </div>
   </div>
 </div>
 

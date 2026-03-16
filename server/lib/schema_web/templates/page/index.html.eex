@@ -6,38 +6,48 @@ SPDX-License-Identifier: Apache-2.0
 <div class="row fade-in">
   <div class="col-md move-up">
     <h3><%= @data[:caption] %></h3>
-    <div class="page-description">
+    <div class="text-secondary description-content">
       <%= raw @data[:description] %>
     </div>
   </div>
   <div class="navbar-nav col-md-auto fixed-right mt-2">
     <input type="text" id="tableSearch" onkeyup="searchInTable()" class="form-control border-dark" placeholder="Search" autofocus>
-    <div class="mt-1">
-      <div class="show-deprecated-container">
-        <input type="checkbox" id="show-deprecated" data-toggle="collapse" data-target=".deprecated" onclick="on_click_show_deprecated(this)" class="show-deprecated-checkbox">
-        <label for="show-deprecated" class="show-deprecated-label">
-          <span class="show-deprecated-text">Show deprecated</span>
-        </label>
+    <div class="mt-3">
+      <div class="btn-group d-flex" role="group" aria-label="View actions">
+        <button type="button" class="btn btn-sm btn-outline-primary view-toggle-btn" data-view="card">Card view</button>
+        <button type="button" class="btn btn-sm btn-outline-primary view-toggle-btn active" data-view="taxonomy">Taxonomy view</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="mt-3 multi-col">
-  <%= for {category_key, category} <- @data[:attributes] do %>
-  <% category_key_str = Atom.to_string(category_key) %>
-  <% category_path = Routes.static_path(@conn, "/"<> @data[:categories_path] <> "/" <> category_key_str) %>
-  <section class="category">
-    <header><a href="<%= category_path %>"><%= raw format_caption(category_key_str, category) %></a></header>
-    <%= for {class_key, class} <- category[:classes] do %>
-    <% class_key_str = Atom.to_string(class_key) %>
-    <% class_path = Routes.static_path(@conn, "/" <> @data[:classes_path] <> "/" <> class_key_str) %>
-    <div class="<%= show_deprecated_css_classes(class, "oasf-class") %> <%= indent_class(class) %>" <%= raw format_profiles(class[:profiles])%>>
-      <%= raw format_linked_class_caption(class_path, class_key_str, class) %>
-    </div>
+<div id="taxonomy-view">
+  <div class="mt-3 multi-col">
+    <% attributes_list = if is_map(@data[:attributes]), do: Enum.to_list(@data[:attributes]), else: @data[:attributes] %>
+    <%= for {category_key, category} <- attributes_list do %>
+      <% category_key_str = Atom.to_string(category_key) %>
+      <% category_path = Routes.static_path(@conn, "/" <> @data[:categories_path] <> "/" <> category_key_str) %>
+      <section class="category">
+        <header><a href="<%= category_path %>"><%= raw format_caption(category_key_str, category) %></a></header>
+        <% classes_map = Map.get(category, :classes, %{}) %>
+        <%= raw render_classes_recursive(@conn, classes_map, @data, 0) %>
+      </section>
     <% end %>
-  </section>
-  <% end %>
+  </div>
+</div>
+
+<div id="card-view" style="display:none">
+  <div class="mt-3 multi-col">
+    <% attributes_list = if is_map(@data[:attributes]), do: Enum.to_list(@data[:attributes]), else: @data[:attributes] %>
+    <% cards = Enum.reduce(attributes_list, [], fn {_category_key, category}, acc ->
+         classes_map = Map.get(category, :classes, %{})
+         category_cards = render_cards_recursive(@conn, classes_map, @data)
+         acc ++ category_cards
+       end) %>
+    <%= for card <- cards do %>
+      <%= raw card %>
+    <% end %>
+  </div>
 </div>
 
 <script>
