@@ -277,13 +277,17 @@ defmodule SchemaWeb.SchemaController do
       conn,
       params,
       :modules,
-      fn -> Schema.taxonomy_modules(extensions_opt, nil) |> Schema.Utils.sort_taxonomy_tree() end,
+      fn ->
+        Schema.taxonomy_modules(extensions_opt, nil)
+        |> Schema.Utils.sort_taxonomy_tree()
+        |> taxonomy_ordered_object()
+      end,
       fn id_or_name ->
         result = Schema.taxonomy_modules(extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
-          else: Schema.Utils.sort_taxonomy_tree(result)
+          else: result |> Schema.Utils.sort_taxonomy_tree() |> taxonomy_ordered_object()
       end
     )
   end
@@ -344,13 +348,17 @@ defmodule SchemaWeb.SchemaController do
       conn,
       params,
       :skills,
-      fn -> Schema.taxonomy_skills(extensions_opt, nil) |> Schema.Utils.sort_taxonomy_tree() end,
+      fn ->
+        Schema.taxonomy_skills(extensions_opt, nil)
+        |> Schema.Utils.sort_taxonomy_tree()
+        |> taxonomy_ordered_object()
+      end,
       fn id_or_name ->
         result = Schema.taxonomy_skills(extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
-          else: Schema.Utils.sort_taxonomy_tree(result)
+          else: result |> Schema.Utils.sort_taxonomy_tree() |> taxonomy_ordered_object()
       end
     )
   end
@@ -411,13 +419,17 @@ defmodule SchemaWeb.SchemaController do
       conn,
       params,
       :domains,
-      fn -> Schema.taxonomy_domains(extensions_opt, nil) |> Schema.Utils.sort_taxonomy_tree() end,
+      fn ->
+        Schema.taxonomy_domains(extensions_opt, nil)
+        |> Schema.Utils.sort_taxonomy_tree()
+        |> taxonomy_ordered_object()
+      end,
       fn id_or_name ->
         result = Schema.taxonomy_domains(extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
-          else: Schema.Utils.sort_taxonomy_tree(result)
+          else: result |> Schema.Utils.sort_taxonomy_tree() |> taxonomy_ordered_object()
       end
     )
   end
@@ -1916,6 +1928,36 @@ defmodule SchemaWeb.SchemaController do
   defp parse_java_package(nil), do: []
   defp parse_java_package(""), do: []
   defp parse_java_package(name), do: [package_name: name]
+
+  # Convert sorted taxonomy tuple lists into JSON objects while preserving order.
+  defp taxonomy_ordered_object(tree) when is_list(tree) do
+    values =
+      Enum.map(tree, fn {key, node} ->
+        {to_string(key), taxonomy_ordered_node(node)}
+      end)
+
+    %Jason.OrderedObject{values: values}
+  end
+
+  defp taxonomy_ordered_object(tree) when is_map(tree) do
+    tree
+    |> Schema.Utils.sort_taxonomy_tree()
+    |> taxonomy_ordered_object()
+  end
+
+  defp taxonomy_ordered_object(_), do: %Jason.OrderedObject{values: []}
+
+  defp taxonomy_ordered_node(node) when is_map(node) do
+    case Map.get(node, :classes) do
+      nil ->
+        node
+
+      classes ->
+        Map.put(node, :classes, taxonomy_ordered_object(classes))
+    end
+  end
+
+  defp taxonomy_ordered_node(other), do: other
 
   defp version_response(base_url, schema_version, metadata) do
     %{
