@@ -1,8 +1,9 @@
 {
+  "uid": 4,
   "caption": "Identity",
-  "description": "Identity feature set",
+  "description": "Identity module set.",
   "extends": "base_module",
   "name": "identity",
-  "category": "identity",
+  "category": true,
   "attributes": {}
 }

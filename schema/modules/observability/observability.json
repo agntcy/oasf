@@ -1,16 +1,9 @@
 {
   "uid": 1,
   "caption": "Observability",
-  "description": "A module describing how the agent can be observed.",
-  "category": "observability",
+  "description": "Observability module set.",
   "extends": "base_module",
   "name": "observability",
-  "attributes": {
-    "data": {
-      "reference": "observability_data",
-      "caption": "Data",
-      "description": "Data supported by the agent for observability.",
-      "requirement": "required"
-    }
-  }
+  "category": true,
+  "attributes": {}
 }

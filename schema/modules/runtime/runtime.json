@@ -1,8 +1,9 @@
 {
+  "uid": 3,
   "caption": "Runtime",
-  "description": "Runtime feature set",
+  "description": "Runtime module set.",
   "extends": "base_module",
   "name": "runtime",
-  "category": "runtime",
+  "category": true,
   "attributes": {}
 }
