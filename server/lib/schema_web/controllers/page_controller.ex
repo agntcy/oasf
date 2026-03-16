@@ -505,52 +505,47 @@ defmodule SchemaWeb.PageController do
   defp sort_classes(categories) do
     Map.update!(categories, :attributes, fn attributes ->
       Enum.map(attributes, fn {name, category} ->
-        category =
-          category
-          |> Map.update(:classes, [], &sort_by_float_id(&1))
-          |> sort_subcategories()
-
-        {name, category}
+        {name, sort_classes_recursive(category)}
       end)
     end)
   end
 
-  defp sort_subcategories(category) do
-    subcategories = category[:subcategories] || %{}
-
-    if map_size(subcategories) > 0 do
-      sorted_subcategories =
-        subcategories
-        |> Enum.map(fn {key, subcategory} ->
-          sorted_subcategory =
-            subcategory
-            |> Map.update(:classes, [], &sort_by_float_id(&1))
-            |> sort_subcategories()
-
-          {key, sorted_subcategory}
-        end)
-        |> Enum.into(%{})
-
-      Map.put(category, :subcategories, sorted_subcategories)
-    else
+  defp sort_classes_recursive(category) when is_map(category) do
+    sorted_classes =
       category
-    end
+      |> Map.get(:classes, %{})
+      |> sort_by_class_id()
+      |> Enum.map(fn {key, class} -> {key, sort_classes_recursive(class)} end)
+
+    Map.put(category, :classes, sorted_classes)
   end
 
-  defp sort_by_float_id(classes) do
+  defp sort_classes_recursive(other), do: other
+
+  defp sort_by_class_id(classes) when is_map(classes) do
+    classes
+    |> Enum.to_list()
+    |> sort_by_class_id()
+  end
+
+  defp sort_by_class_id(classes) when is_list(classes) do
     Enum.sort_by(classes, fn {_, class} ->
-      id_to_float(Map.get(class, :id, Map.get(class, :uid, 0)))
+      normalize_class_id(Map.get(class, :id, Map.get(class, :uid, 0)))
     end)
   end
 
-  # Convert the id/uid into a float with a leading "0."
-  defp id_to_float(id) when is_integer(id) do
-    id_string = Integer.to_string(id)
-    float_string = "0." <> String.slice(id_string, 0..-1//1)
-    String.to_float(float_string)
+  defp sort_by_class_id(_), do: []
+
+  defp normalize_class_id(id) when is_integer(id), do: id
+
+  defp normalize_class_id(id) when is_binary(id) do
+    case Integer.parse(id) do
+      {parsed, ""} -> parsed
+      _ -> 0
+    end
   end
 
-  defp id_to_float(_), do: 0.0
+  defp normalize_class_id(_), do: 0
 
   defp sort_attributes(map, key) do
     Map.update!(map, :attributes, &sort_by(&1, key))
