@@ -1,5 +1,5 @@
 {
-  "$id": "https://schema.oasf.outshift.com/attribute.schema.json",
+  "$id": "attribute.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Attribute",
   "type": "object",
@@ -21,7 +21,12 @@
     "group": {
       "type": "string",
       "description": "The group that the attribute is a part of.",
-      "enum": ["context", "classification", "occurrence", "primary"]
+      "enum": [
+        "context",
+        "classification",
+        "occurrence",
+        "primary"
+      ]
     },
     "reference": {
       "type": "string",
@@ -44,22 +49,33 @@
     }
   },
   "if": {
-    "required": ["group"],
+    "required": [
+      "group"
+    ],
     "properties": {
-      "group": { "const": "primary" }
+      "group": {
+        "const": "primary"
+      }
     }
   },
   "then": {
     "properties": {
       "requirement": {
-        "enum": ["recommended", "required"]
+        "enum": [
+          "recommended",
+          "required"
+        ]
       }
     }
   },
   "else": {
     "properties": {
       "requirement": {
-        "enum": ["optional", "recommended", "required"]
+        "enum": [
+          "optional",
+          "recommended",
+          "required"
+        ]
       }
     }
   }
