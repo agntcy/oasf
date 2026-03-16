@@ -1097,7 +1097,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :translate_module do
     post("/api/translate/module")
-    summary("Translate module Class")
+    summary("Translate module class")
 
     description(
       "The purpose of this API is to translate the provided module class data using the OASF schema." <>
@@ -1318,7 +1318,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_domain do
     post("/api/validate/domain")
-    summary("Validate domain Class")
+    summary("Validate domain class")
 
     description(
       "This API validates the provided domain class data against the OASF schema, returning a response" <>
@@ -1367,7 +1367,7 @@ defmodule SchemaWeb.SchemaController do
   """
   swagger_path :validate_module do
     post("/api/validate/module")
-    summary("Validate module Class")
+    summary("Validate module class")
 
     description(
       "This API validates the provided module class data against the OASF schema, returning a response" <>
