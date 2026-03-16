@@ -46,5 +46,10 @@ defmodule SchemaWeb.Endpoint do
     key: "_schema_key",
     signing_salt: "5V6q/2La"
 
+  # Strip version prefixes from API paths before routing
+  # This allows local development to work with versioned paths
+  # In production, ingress handles this rewriting
+  plug SchemaWeb.VersionPrefixPlug
+
   plug SchemaWeb.Router
 end
