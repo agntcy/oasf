@@ -503,54 +503,8 @@ defmodule SchemaWeb.PageController do
   end
 
   defp sort_classes(categories) do
-    Map.update!(categories, :attributes, fn attributes ->
-      Enum.map(attributes, fn {name, category} ->
-        category =
-          category
-          |> Map.update(:classes, [], &sort_by_float_id(&1))
-          |> sort_subcategories()
-
-        {name, category}
-      end)
-    end)
+    Map.update!(categories, :attributes, &Schema.Utils.sort_taxonomy_tree/1)
   end
-
-  defp sort_subcategories(category) do
-    subcategories = category[:subcategories] || %{}
-
-    if map_size(subcategories) > 0 do
-      sorted_subcategories =
-        subcategories
-        |> Enum.map(fn {key, subcategory} ->
-          sorted_subcategory =
-            subcategory
-            |> Map.update(:classes, [], &sort_by_float_id(&1))
-            |> sort_subcategories()
-
-          {key, sorted_subcategory}
-        end)
-        |> Enum.into(%{})
-
-      Map.put(category, :subcategories, sorted_subcategories)
-    else
-      category
-    end
-  end
-
-  defp sort_by_float_id(classes) do
-    Enum.sort_by(classes, fn {_, class} ->
-      id_to_float(Map.get(class, :id, Map.get(class, :uid, 0)))
-    end)
-  end
-
-  # Convert the id/uid into a float with a leading "0."
-  defp id_to_float(id) when is_integer(id) do
-    id_string = Integer.to_string(id)
-    float_string = "0." <> String.slice(id_string, 0..-1//1)
-    String.to_float(float_string)
-  end
-
-  defp id_to_float(_), do: 0.0
 
   defp sort_attributes(map, key) do
     Map.update!(map, :attributes, &sort_by(&1, key))
