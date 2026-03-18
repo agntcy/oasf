@@ -165,24 +165,204 @@ defmodule SchemaWeb.PageView do
   end
 
   def indent_class(class) do
-    digits = Integer.to_string(class[:uid]) |> String.length()
+    id = Map.get(class, :id, Map.get(class, :uid, 0))
 
-    # Calculate level based on uid length
-    level =
-      if class[:extension_id] != nil do
-        div(digits - 3, 2) - 1
+    if id == 0 or id == nil do
+      "indent-level-0"
+    else
+      digits = Integer.to_string(id) |> String.length()
+
+      # Calculate level based on id length
+      level =
+        if class[:extension_id] != nil do
+          div(digits - 3, 2) - 1
+        else
+          div(digits - 3, 2)
+        end
+
+      "indent-level-#{level}"
+    end
+  end
+
+  # Render category classes table - separates regular classes from categories
+  # Returns {regular_classes_rows, category_sections} where each is a list of iodata strings
+  def render_category_classes_table(conn, classes_map, data) when is_map(classes_map) do
+    if map_size(classes_map) == 0 do
+      {[], []}
+    else
+      classes_list = Enum.to_list(classes_map)
+      render_category_classes_table(conn, classes_list, data)
+    end
+  end
+
+  def render_category_classes_table(conn, classes_list, data) when is_list(classes_list) do
+    # Separate categories from regular classes using explicit filtering
+    # Categories have category: true, regular classes don't
+    regular_classes =
+      classes_list
+      |> Enum.filter(fn {_key, item} ->
+        category_atom = Map.get(item, :category)
+        category_string = Map.get(item, "category")
+        # Regular class = NOT a category (category is not true)
+        category_atom != true && category_string != true
+      end)
+
+    categories =
+      classes_list
+      |> Enum.filter(fn {_key, item} ->
+        category_atom = Map.get(item, :category)
+        category_string = Map.get(item, "category")
+        # Category = has category: true
+        category_atom == true || category_string == true
+      end)
+
+    # Sort regular classes by id
+    sorted_regular_classes =
+      Enum.sort_by(regular_classes, fn {_key, class} -> Map.get(class, :id, 0) end)
+
+    # Sort categories by id
+    sorted_categories =
+      Enum.sort_by(categories, fn {_key, category} -> Map.get(category, :id, 0) end)
+
+    # Render regular classes as table rows (each row is iodata string)
+    regular_rows =
+      Enum.map(sorted_regular_classes, fn {key, class} ->
+        render_class_table_row(conn, key, class, data)
+      end)
+
+    # Render categories as subcategory sections (each section is iodata string)
+    category_sections =
+      Enum.map(sorted_categories, fn {key, category} ->
+        render_category_section(conn, key, category, data)
+      end)
+
+    # Return both as tuple
+    {regular_rows, category_sections}
+  end
+
+  def render_category_classes_table(_conn, _other, _data), do: {[], []}
+
+  # Render a single class as a table row (returns iodata string)
+  defp render_class_table_row(conn, key, class, data) do
+    name = Atom.to_string(key)
+    path = Routes.static_path(conn, "/" <> data[:classes_path] <> "/" <> name)
+    uid = Map.get(class, :id, Map.get(class, :uid))
+    profiles = format_profiles(Map.get(class, :profiles, []))
+    caption_html = format_caption(name, class)
+    desc_html = description(class)
+
+    # Build iodata list and convert to string
+    iodata = [
+      "<tr class=\"oasf-class\" ",
+      profiles,
+      ">",
+      "<td class=\"name\">",
+      caption_html,
+      "</td>",
+      "<td class=\"extensions\">",
+      "<a href=\"",
+      path,
+      "\">",
+      name,
+      "</a>",
+      "</td>",
+      if uid != nil do
+        ["<td>", Integer.to_string(uid), "</td>"]
       else
-        div(digits - 3, 2)
+        "<td></td>"
+      end,
+      "<td>",
+      desc_html,
+      "</td>",
+      "</tr>"
+    ]
+
+    # Convert iodata to string for template
+    IO.iodata_to_binary(iodata)
+  end
+
+  # Render a category as a subcategory section with its own table (returns iodata string)
+  defp render_category_section(conn, key, category, data) do
+    category_name = Atom.to_string(key)
+
+    category_path =
+      Routes.static_path(conn, "/" <> data[:categories_path] <> "/" <> category_name)
+
+    category_id = Map.get(category, :id, Map.get(category, :uid, 0))
+    nested_classes = Map.get(category, :classes, %{})
+
+    # Recursively get nested content
+    {nested_regular_rows, nested_category_sections} =
+      render_category_classes_table(conn, nested_classes, data)
+
+    # Build the subcategory section as iodata
+    nested_rows_html = Enum.join(nested_regular_rows, "")
+    nested_sections_html = Enum.join(nested_category_sections, "")
+
+    desc_html =
+      if Map.get(category, :description) do
+        desc = description(category)
+        ["<div class=\"text-secondary mb-3\">", desc, "</div>"]
+      else
+        []
       end
 
-    "indent-level-#{level}"
+    table_html =
+      if length(nested_regular_rows) > 0 do
+        [
+          "<table class=\"table table-bordered sortable\">",
+          "<thead>",
+          "<tr class=\"thead-color\">",
+          "<th class=\"col-caption\">Caption</th>",
+          "<th class=\"col-name\">Name</th>",
+          "<th class=\"col-id\">ID</th>",
+          "<th class=\"col-description\">Description</th>",
+          "</tr>",
+          "</thead>",
+          "<tbody class=\"searchable\">",
+          nested_rows_html,
+          "</tbody>",
+          "</table>"
+        ]
+      else
+        []
+      end
+
+    iodata = [
+      "<div class=\"mt-5\">",
+      "<h4>",
+      "<a href=\"",
+      category_path,
+      "\">",
+      Map.get(category, :caption, category_name),
+      "</a>",
+      "<span class=\"text-secondary\">",
+      " [",
+      Integer.to_string(category_id),
+      "] ",
+      data[:class_type],
+      " subcategory",
+      "</span>",
+      "</h4>",
+      desc_html,
+      table_html,
+      nested_sections_html,
+      "</div>"
+    ]
+
+    # Convert iodata to string for template
+    IO.iodata_to_binary(iodata)
   end
 
   @spec format_linked_class_caption(String.t(), String.t(), map()) :: any()
   def format_linked_class_caption(path, class_name, class) do
     name = format_caption(class_name, class)
 
-    if Map.has_key?(class, :"@deprecated") do
+    # Check for deprecated: true (new format) or @deprecated (old format)
+    is_deprecated =
+      Map.get(class, :deprecated, false) == true || Map.has_key?(class, :"@deprecated")
+
+    if is_deprecated do
       [
         "<a href=\"",
         path,
@@ -199,10 +379,13 @@ defmodule SchemaWeb.PageView do
   def format_caption(name, field) do
     name = field[:caption] || name
 
+    # Use id (new format) or uid (old format)
+    id = Map.get(field, :id, Map.get(field, :uid))
+
     name =
-      case field[:uid] do
+      case id do
         nil -> name
-        uid -> name <> "<span class='uid'> [#{uid}]</span>"
+        id -> name <> "<span class='uid'> [#{id}]</span>"
       end
 
     case field[:extension] do
@@ -343,7 +526,15 @@ defmodule SchemaWeb.PageView do
       fn item_key ->
         item_info = all_items[item_key]
 
-        if item_info[:hidden?] do
+        # For classes (skill/domain/module), check category == true
+        # For objects, check hidden? == true
+        is_hidden =
+          case kind do
+            "object" -> Map.get(item_info, :hidden?) == true
+            _ -> Map.get(item_info, :category) == true
+          end
+
+        if is_hidden do
           [all_items[item_key][:caption], " (hidden #{kind})"]
         else
           all_items[item_key][:caption]
@@ -1575,7 +1766,10 @@ defmodule SchemaWeb.PageView do
 
   @spec show_deprecated_css_classes(map(), String.t()) :: String.t()
   def show_deprecated_css_classes(item, initial) do
-    if item[:"@deprecated"] != nil do
+    # Check for deprecated: true (new format) or @deprecated (old format)
+    is_deprecated = Map.get(item, :deprecated, false) == true || item[:"@deprecated"] != nil
+
+    if is_deprecated do
       initial <> " collapse deprecated"
     else
       initial
@@ -1585,5 +1779,192 @@ defmodule SchemaWeb.PageView do
   @spec show_deprecated_css_classes(map()) :: String.t()
   def show_deprecated_css_classes(item) do
     show_deprecated_css_classes(item, "")
+  end
+
+  # Check if a class is a category (has category: true)
+  def is_category?(class) when is_map(class) do
+    Map.get(class, :category) == true
+  end
+
+  def is_category?(_), do: false
+
+  # Recursively render classes and categories
+  # This function handles the nested structure intelligently:
+  # - If a class is a category, it creates a section with header
+  # - Otherwise, it renders as a regular class div
+  # - Recursively processes children in the `classes` field
+  # Note: classes_map should already be sorted by the controller
+  def render_classes_recursive(conn, classes_data, data, level \\ 0)
+
+  def render_classes_recursive(conn, classes_data, data, level) when is_list(classes_data) do
+    # Handle list format (keyword list or list of tuples)
+    if length(classes_data) == 0 do
+      ""
+    else
+      classes_data
+      |> Enum.reduce([], fn {class_key, class}, acc ->
+        class_key_str = Atom.to_string(class_key)
+        is_cat = is_category?(class)
+        nested_classes = Map.get(class, :classes, %{})
+
+        has_children =
+          if is_map(nested_classes),
+            do: map_size(nested_classes) > 0,
+            else: length(nested_classes) > 0
+
+        # Render the current class/category
+        html = render_class_item(conn, class_key_str, class, data, level, is_cat)
+
+        # Recursively render nested classes (if any)
+        nested_html =
+          if has_children do
+            if is_cat do
+              # If it's a category, render children inside the section (as subcategories)
+              render_classes_recursive(conn, nested_classes, data, 0)
+            else
+              # If it's a regular class, render children with increased indentation
+              render_classes_recursive(conn, nested_classes, data, level + 1)
+            end
+          else
+            []
+          end
+
+        # Close category div if needed (categories are always divs when rendered recursively)
+        closing_tag = if is_cat, do: ["</div>"], else: []
+
+        # Build the HTML structure: previous items, then current item, then nested items, then closing tag
+        # html, nested_html, and closing_tag are all iodata lists, so we concatenate them directly
+        acc ++ html ++ nested_html ++ closing_tag
+      end)
+    end
+  end
+
+  def render_classes_recursive(conn, classes_map, data, level) when is_map(classes_map) do
+    # Handle map format - convert to list and process
+    if map_size(classes_map) == 0 do
+      []
+    else
+      # Convert map to list and recursively call with correct arguments
+      classes_list = Enum.to_list(classes_map)
+      render_classes_recursive(conn, classes_list, data, level)
+    end
+  end
+
+  def render_classes_recursive(_conn, _other, _data, _level), do: []
+
+  # Render a single class item (category or regular class)
+  # level: 0 = top-level (inside a category section), >0 = nested
+  defp render_class_item(conn, class_key_str, class, data, level, is_category) do
+    if is_category do
+      # Category: render as a div with subcategory header (never as section, since we're already inside one)
+      category_path =
+        Routes.static_path(conn, "/" <> data[:categories_path] <> "/" <> class_key_str)
+
+      indent_level = if level > 0, do: "indent-level-#{level}", else: "indent-level-1"
+      css_classes = show_deprecated_css_classes(class, "oasf-class") <> " " <> indent_level
+      profiles = format_profiles(Map.get(class, :profiles, []))
+
+      [
+        "<div class=\"",
+        css_classes,
+        "\" ",
+        profiles,
+        ">",
+        "<header class=\"subcategory-header\"><a href=\"",
+        category_path,
+        "\">",
+        format_caption(class_key_str, class),
+        "</a></header>"
+      ]
+    else
+      # Regular class: render as a div
+      class_path = Routes.static_path(conn, "/" <> data[:classes_path] <> "/" <> class_key_str)
+      # Calculate indent level - use explicit level if > 0, otherwise use indent_class helper
+      indent_class_name =
+        if level > 0 do
+          "indent-level-#{level}"
+        else
+          indent_class(class)
+        end
+
+      css_classes = show_deprecated_css_classes(class, "oasf-class") <> " " <> indent_class_name
+      profiles = format_profiles(Map.get(class, :profiles, []))
+
+      [
+        "<div class=\"",
+        css_classes,
+        "\" ",
+        profiles,
+        ">",
+        format_linked_class_caption(class_path, class_key_str, class),
+        "</div>"
+      ]
+    end
+  end
+
+  # Recursively collect and render cards for non-category items only
+  # Categories are skipped, but their children are recursively processed
+  def render_cards_recursive(conn, classes_data, data)
+
+  def render_cards_recursive(conn, classes_data, data) when is_list(classes_data) do
+    if length(classes_data) == 0 do
+      []
+    else
+      classes_data
+      |> Enum.reduce([], fn {class_key, class}, acc ->
+        class_key_str = Atom.to_string(class_key)
+        is_cat = is_category?(class)
+        nested_classes = Map.get(class, :classes, %{})
+
+        # If it's a category, skip it but recursively process its children
+        if is_cat do
+          # Recursively process children
+          nested_cards = render_cards_recursive(conn, nested_classes, data)
+          acc ++ nested_cards
+        else
+          # It's a regular class - render as a card
+          class_path =
+            Routes.static_path(conn, "/" <> data[:classes_path] <> "/" <> class_key_str)
+
+          card_html = render_card(conn, class_key_str, class, class_path)
+
+          # Also recursively process any nested classes (in case there are nested non-category items)
+          nested_cards = render_cards_recursive(conn, nested_classes, data)
+          acc ++ [card_html] ++ nested_cards
+        end
+      end)
+    end
+  end
+
+  def render_cards_recursive(conn, classes_map, data) when is_map(classes_map) do
+    if map_size(classes_map) == 0 do
+      []
+    else
+      classes_list = Enum.to_list(classes_map)
+      render_cards_recursive(conn, classes_list, data)
+    end
+  end
+
+  def render_cards_recursive(_conn, _other, _data), do: []
+
+  # Render a single card for a non-category class
+  defp render_card(_conn, class_key_str, class, class_path) do
+    css_classes = show_deprecated_css_classes(class, "category card-category")
+
+    [
+      "<section class=\"",
+      css_classes,
+      "\">",
+      "<header class=\"d-flex justify-content-between align-items-center\">",
+      "<span>",
+      format_linked_class_caption(class_path, class_key_str, class),
+      "</span>",
+      "</header>",
+      "<div class=\"description-content\">",
+      Map.get(class, :description, ""),
+      "</div>",
+      "</section>"
+    ]
+    |> IO.iodata_to_binary()
   end
 end

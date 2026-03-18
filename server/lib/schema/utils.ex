@@ -5,6 +5,10 @@ defmodule Schema.Utils do
   @moduledoc """
   Defines map helper functions.
   """
+
+  @base_classes [:base_module, :base_skill, :base_domain]
+  def base_classes, do: @base_classes
+
   @type link_t() :: %{
           :group => :skill | :domain | :module | :object,
           :type => String.t(),
@@ -158,7 +162,12 @@ defmodule Schema.Utils do
 
   defp link_classes(dictionary, family, classes) do
     Enum.reduce(classes, dictionary, fn class, acc ->
-      add_class_links(acc, class, family)
+      # Skip category classes (category: true) - they shouldn't appear in _links
+      if Map.get(elem(class, 1), :category) != true do
+        add_class_links(acc, class, family)
+      else
+        acc
+      end
     end)
   end
 
@@ -486,6 +495,52 @@ defmodule Schema.Utils do
     end)
   end
 
+  @doc """
+  Recursively sort taxonomy trees by numeric class/category ID.
+
+  Accepts a taxonomy map or list of `{key, node}` tuples and returns
+  a sorted list of tuples, with nested `:classes` sorted recursively.
+  """
+  @spec sort_taxonomy_tree(map() | list()) :: list()
+  def sort_taxonomy_tree(tree) when is_map(tree) do
+    tree
+    |> Enum.to_list()
+    |> sort_taxonomy_tree()
+  end
+
+  def sort_taxonomy_tree(tree) when is_list(tree) do
+    tree
+    |> Enum.sort_by(fn {_key, node} ->
+      normalize_taxonomy_id(Map.get(node, :id, Map.get(node, :uid, 0)))
+    end)
+    |> Enum.map(fn {key, node} -> {key, sort_taxonomy_node(node)} end)
+  end
+
+  def sort_taxonomy_tree(_), do: []
+
+  defp sort_taxonomy_node(node) when is_map(node) do
+    case Map.get(node, :classes) do
+      nil ->
+        node
+
+      classes ->
+        Map.put(node, :classes, sort_taxonomy_tree(classes))
+    end
+  end
+
+  defp sort_taxonomy_node(other), do: other
+
+  defp normalize_taxonomy_id(id) when is_integer(id), do: id
+
+  defp normalize_taxonomy_id(id) when is_binary(id) do
+    case Integer.parse(id) do
+      {parsed, ""} -> parsed
+      _ -> 0
+    end
+  end
+
+  defp normalize_taxonomy_id(_), do: 0
+
   @spec add_sibling_of_to_attributes(list() | map() | nil) :: list() | nil
   def add_sibling_of_to_attributes(nil), do: nil
 
@@ -640,7 +695,7 @@ defmodule Schema.Utils do
   excluding base classes.
   """
   def class_name_with_hierarchy(name, all_classes) do
-    base_items = ["base_skill", "base_domain", "base_module"]
+    base_items = Enum.map(@base_classes, &Atom.to_string/1)
     hierarchy = build_hierarchy(name, all_classes, [])
     filtered = Enum.reject(hierarchy, &(&1 in base_items))
     name_str = if is_atom(name), do: Atom.to_string(name), else: name
@@ -673,18 +728,6 @@ defmodule Schema.Utils do
       "#{item[:extension]}/#{item[:name]}"
     else
       item[:name]
-    end
-  end
-
-  @spec is_oasf_class?(atom, String.t()) :: boolean
-  def is_oasf_class?(family, name) do
-    class_name = Schema.Utils.descope(name) |> String.to_atom()
-
-    case family do
-      :skill -> Map.has_key?(Schema.all_skills(), class_name)
-      :domain -> Map.has_key?(Schema.all_domains(), class_name)
-      :module -> Map.has_key?(Schema.all_modules(), class_name)
-      _ -> false
     end
   end
 end

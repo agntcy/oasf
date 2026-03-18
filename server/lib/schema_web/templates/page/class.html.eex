@@ -11,15 +11,19 @@ SPDX-License-Identifier: Apache-2.0
 <%
 class_type = @data[:family]
 
-path = case class_type do
-  "skill" ->
-    Routes.static_path(@conn, "/skill_categories/" <> category)
-  "module" ->
-    Routes.static_path(@conn, "/module_categories/" <> category)
-  "domain" ->
-    Routes.static_path(@conn, "/domain_categories/" <> category)
-  _ ->
-    ""
+path = if category != nil do
+  case class_type do
+    "skill" ->
+      Routes.static_path(@conn, "/skill_categories/" <> category)
+    "module" ->
+      Routes.static_path(@conn, "/module_categories/" <> category)
+    "domain" ->
+      Routes.static_path(@conn, "/domain_categories/" <> category)
+    _ ->
+      ""
+  end
+else
+  ""
 end
 %>
 

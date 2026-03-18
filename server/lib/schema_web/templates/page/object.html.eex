@@ -95,7 +95,7 @@ SPDX-License-Identifier: Apache-2.0
 <% end %>
 
 <% links = @data[:_links] %>
-<%= if Enum.empty?(links) do %>
+<%= if links == nil or Enum.empty?(links) do %>
   <div></div>
 <% else %>
   <div class="referenced-by-section">
