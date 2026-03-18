@@ -1,7 +1,9 @@
 {
-  "caption": "Analytical Skills",
-  "category": "analytical_skills",
+  "uid": 5,
+  "caption": "Analytical skills",
+  "description": "Analytical skills encompass a range of capabilities that involve logical reasoning, problem-solving, and the ability to process and interpret complex data.",
   "extends": "base_skill",
   "name": "analytical_skills",
+  "category": true,
   "attributes": {}
 }

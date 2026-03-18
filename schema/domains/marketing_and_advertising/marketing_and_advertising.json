@@ -1,8 +1,9 @@
 {
+  "uid": 24,
   "caption": "Marketing and Advertising",
-  "description": "Domain covering digital marketing, advertising campaigns, brand management, market research, and marketing automation",
+  "description": "Brand management, customer engagement, digital marketing, advertising campaigns, and market research. Subdomains: Digital Marketing, Brand Management, Market Research, Advertising Technology, Content Marketing, and Customer Analytics.",
   "extends": "base_domain",
   "name": "marketing_and_advertising",
-  "category": "marketing_and_advertising",
+  "category": true,
   "attributes": {}
 }

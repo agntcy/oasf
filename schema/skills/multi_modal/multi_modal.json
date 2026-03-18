@@ -1,8 +1,9 @@
 {
-  "caption": "Multi Modal",
-  "category": "multi_modal",
-  "description": "Capabilities for transforming content between different modalities (text, image, audio, video, or 3D).",
+  "uid": 7,
+  "caption": "Multi-modal",
+  "description": "Multi-modal tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities.",
   "extends": "base_skill",
   "name": "multi_modal",
+  "category": true,
   "attributes": {}
 }

@@ -1,6 +1,5 @@
 {
   "caption": "Module",
-  "category": "other",
   "description": "The base module is a generic module defining a set of attributes for module classes; not meant to be used as an actual module.",
   "name": "base_module",
   "attributes": {

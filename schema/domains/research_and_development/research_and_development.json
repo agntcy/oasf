@@ -1,8 +1,9 @@
 {
+  "uid": 19,
   "caption": "Research and Development",
-  "description": "Domain covering scientific research, innovation, R&D management, laboratory operations, and experimental design",
+  "description": "Scientific research, innovation, experimental development, and knowledge creation across disciplines. Subdomains: Scientific Research, Innovation Management, Laboratory Operations, Patent Development, Experimental Design, and Research Analytics.",
   "extends": "base_domain",
   "name": "research_and_development",
-  "category": "research_and_development",
+  "category": true,
   "attributes": {}
 }

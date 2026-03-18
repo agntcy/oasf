@@ -1,7 +1,9 @@
 {
+  "uid": 13,
   "caption": "Governance & Compliance",
-  "category": "governance_compliance",
+  "description": "Skills addressing regulatory alignment, policy mapping, auditing, risk classification, and ensuring responsible operations.",
   "extends": "base_skill",
   "name": "governance_compliance",
+  "category": true,
   "attributes": {}
 }

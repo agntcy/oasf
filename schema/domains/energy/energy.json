@@ -1,8 +1,9 @@
 {
+  "uid": 12,
   "caption": "Energy",
-  "description": "Production, distribution, and management of energy resources including renewable energy, power grids, and energy efficiency.",
+  "description": "Production, distribution, and management of energy resources including renewable energy, power grids, and energy efficiency. Subdomains: Renewable Energy, Oil and Gas, Power Generation, Energy Storage, Smart Grids, and Energy Management.",
   "extends": "base_domain",
   "name": "energy",
-  "category": "energy",
+  "category": true,
   "attributes": {}
 }

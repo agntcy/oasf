@@ -1,7 +1,9 @@
 {
+  "uid": 9,
   "caption": "Data Engineering",
-  "category": "data_engineering",
+  "description": "Skills for preparing, transforming, validating, and structuring data assets including cleaning, schema inference, and feature engineering.",
   "extends": "base_skill",
   "name": "data_engineering",
+  "category": true,
   "attributes": {}
 }

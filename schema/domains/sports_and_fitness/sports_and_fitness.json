@@ -1,8 +1,9 @@
 {
+  "uid": 22,
   "caption": "Sports and Fitness",
-  "description": "Domain covering sports management, fitness programs, athletic training, sports analytics, and wellness",
+  "description": "Athletic performance, fitness management, sports analytics, and recreational activities. Subdomains: Sports Analytics, Fitness Training, Sports Medicine, Event Management, Recreational Programs, and Performance Tracking.",
   "extends": "base_domain",
   "name": "sports_and_fitness",
-  "category": "sports_and_fitness",
+  "category": true,
   "attributes": {}
 }

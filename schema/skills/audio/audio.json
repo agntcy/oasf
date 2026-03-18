@@ -1,7 +1,9 @@
 {
-  "caption": "Audio Processing",
-  "category": "audio",
+  "uid": 3,
+  "caption": "Audio",
+  "description": "Audio tasks are the application of computational techniques to the analysis and synthesis of audio data.",
   "extends": "base_skill",
   "name": "audio",
+  "category": true,
   "attributes": {}
 }
