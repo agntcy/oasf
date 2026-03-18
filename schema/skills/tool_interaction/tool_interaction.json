@@ -1,7 +1,9 @@
 {
+  "uid": 14,
   "caption": "Tool Interaction",
-  "category": "tool_interaction",
+  "description": "Skills for understanding APIs, integrating tools, orchestrating workflows, and using external systems effectively.",
   "extends": "base_skill",
   "name": "tool_interaction",
+  "category": true,
   "attributes": {}
 }

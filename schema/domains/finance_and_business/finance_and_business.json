@@ -1,8 +1,9 @@
 {
+  "uid": 2,
   "caption": "Finance and Business",
-  "description": "Management of money, investments, and business operations, alongside the development and delivery of products and services in various industries.",
+  "description": "Managing money, investments, and financial risks within businesses or for individuals. Subdomains: Corporate Finance, Personal Finance, Risk Management, Accounting, and Financial Analysis.",
   "extends": "base_domain",
   "name": "finance_and_business",
-  "category": "finance_and_business",
+  "category": true,
   "attributes": {}
 }

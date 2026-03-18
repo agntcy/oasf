@@ -1,8 +1,9 @@
 {
+  "uid": 17,
   "caption": "Environmental Science",
-  "description": "Domain covering climate science, environmental monitoring, sustainability, conservation, and ecological research",
+  "description": "Study and management of environmental systems, climate change, conservation, and sustainability practices. Subdomains: Climate Science, Conservation, Environmental Monitoring, Sustainability, Waste Management, and Pollution Control.",
   "extends": "base_domain",
   "name": "environmental_science",
-  "category": "environmental_science",
+  "category": true,
   "attributes": {}
 }

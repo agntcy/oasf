@@ -1,7 +1,9 @@
 {
+  "uid": 6,
   "caption": "Retrieval Augmented Generation",
-  "category": "retrieval_augmented_generation",
+  "description": "Retrieval Augmented Generation tasks are the application of computational techniques to the analysis and synthesis of data from multiple modalities.",
   "extends": "base_skill",
   "name": "retrieval_augmented_generation",
+  "category": true,
   "attributes": {}
 }

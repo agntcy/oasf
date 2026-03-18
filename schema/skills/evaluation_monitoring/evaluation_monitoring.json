@@ -1,7 +1,9 @@
 {
+  "uid": 11,
   "caption": "Evaluation & Monitoring",
-  "category": "evaluation_monitoring",
+  "description": "Skills for assessing performance, generating tests, executing benchmarks, detecting anomalies, and tracking output quality over time.",
   "extends": "base_skill",
   "name": "evaluation_monitoring",
+  "category": true,
   "attributes": {}
 }

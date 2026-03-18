@@ -1,7 +1,9 @@
 {
+  "uid": 15,
   "caption": "Advanced Reasoning & Planning",
-  "category": "advanced_reasoning_planning",
+  "description": "Skills for multi-step strategic reasoning, long-horizon planning, hypothesis formation, and structured thought processes.",
   "extends": "base_skill",
   "name": "advanced_reasoning_planning",
+  "category": true,
   "attributes": {}
 }

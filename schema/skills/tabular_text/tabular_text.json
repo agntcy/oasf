@@ -1,7 +1,9 @@
 {
+  "uid": 4,
   "caption": "Tabular / Text",
-  "category": "tabular_text",
+  "description": "Tabular / Text tasks are the application of computational techniques to the analysis and synthesis of tabular data and text.",
   "extends": "base_skill",
   "name": "tabular_text",
+  "category": true,
   "attributes": {}
 }
