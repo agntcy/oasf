@@ -278,6 +278,11 @@ section.category div.oasf-class:hover {
   border-radius: var(--radius-sm);
 }
 
+section.category div.oasf-class:hover header.subcategory-header {
+  background: var(--primary-color);
+  padding-left: var(--spacing-md);
+}
+
 section.category div.oasf-class a {
   color: var(--primary-color);
   text-decoration: none;
@@ -285,6 +290,14 @@ section.category div.oasf-class a {
 
 section.category div.oasf-class a:hover {
   color: var(--accent-color);
+}
+
+section.category div.oasf-class header.subcategory-header a {
+  color: var(--text-inverse) !important;
+}
+
+section.category div.oasf-class header.subcategory-header a:hover {
+  color: var(--text-inverse) !important;
 }
 
 section.category div.indent-level-0 {
@@ -310,6 +323,38 @@ section.category div.indent-level-2 {
 
 section.category div.indent-level-2:hover {
   padding-left: var(--spacing-xxxl);
+}
+
+section.category header.subcategory-header {
+  font-weight: 600;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-top: var(--spacing-xs);
+  margin-bottom: var(--spacing-xs);
+  border: 1px solid var(--primary-color);
+  background: var(--primary-color);
+  color: var(--text-inverse);
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+section.category header.subcategory-header a {
+  color: var(--text-inverse) !important;
+  text-decoration: none;
+}
+
+section.category header.subcategory-header a:hover {
+  color: var(--text-inverse) !important;
+  text-decoration: underline;
+}
+
+section.category div.indent-level-1,
+section.category div.indent-level-2 {
+  padding-left: var(--spacing-md);
+}
+
+section.category div.indent-level-1:hover,
+section.category div.indent-level-2:hover {
+  padding-left: var(--spacing-md);
 }
 
 /* Responsive improvements */

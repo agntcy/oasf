@@ -72,95 +72,7 @@ defmodule Schema do
 
   @doc """
     Returns skill categories.
-  """
-  @spec skill_categories :: map()
-  def skill_categories(), do: Repo.skill_categories()
-
-  @doc """
-    Returns skill categories defined in the given extension set.
-  """
-  def skill_categories(extensions) do
-    Map.update(Repo.skill_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_skill} ->
-        {name, main_skill(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single skill category with its classes.
-  """
-  @spec main_skill(atom | String.t()) :: nil | Cache.category_t()
-  def main_skill(id), do: get_main_skill(Utils.to_uid(id))
-
-  @spec main_skill(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_skill(extensions, id), do: get_main_skill(extensions, Utils.to_uid(id))
-
-  @spec main_skill(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_skill(extensions, extension, id),
-    do: get_main_skill(extensions, Utils.to_uid(extension, id))
-
-  @doc """
-    Returns the main domains.
-  """
-  @spec domain_categories :: map()
-  def domain_categories(), do: Repo.domain_categories()
-
-  @doc """
-    Returns domain categories defined in the given extension set.
-  """
-  def domain_categories(extensions) do
-    Map.update(Repo.domain_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_domain} ->
-        {name, main_domain(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single domain category with its classes.
-  """
-  @spec main_domain(atom | String.t()) :: nil | Cache.category_t()
-  def main_domain(id), do: get_main_domain(Utils.to_uid(id))
-
-  @spec main_domain(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_domain(extensions, id), do: get_main_domain(extensions, Utils.to_uid(id))
-
-  @spec main_domain(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_domain(extensions, extension, id),
-    do: get_main_domain(extensions, Utils.to_uid(extension, id))
-
-  @doc """
-    Returns module categories.
-  """
-  @spec module_categories :: map()
-  def module_categories(), do: Repo.module_categories()
-
-  @doc """
-    Returns module categories defined in the given extension set.
-  """
-  def module_categories(extensions) do
-    Map.update(Repo.module_categories(extensions), :attributes, %{}, fn attributes ->
-      Enum.into(attributes, %{}, fn {name, _main_module} ->
-        {name, main_module(extensions, name)}
-      end)
-    end)
-  end
-
-  @doc """
-    Returns a single module category with its classes.
-  """
-  @spec main_module(atom | String.t()) :: nil | Cache.category_t()
-  def main_module(id), do: get_main_module(Utils.to_uid(id))
-
-  @spec main_module(Repo.extensions_t(), String.t()) :: nil | Cache.category_t()
-  def main_module(extensions, id), do: get_main_module(extensions, Utils.to_uid(id))
-
-  @spec main_module(Repo.extensions_t(), String.t(), String.t()) :: nil | Cache.category_t()
-  def main_module(extensions, extension, id),
-    do: get_main_module(extensions, Utils.to_uid(extension, id))
-
-  @doc """
+  @doc \"""
     Returns the attribute dictionary.
   """
   @spec dictionary() :: Cache.dictionary_t()
@@ -183,22 +95,6 @@ defmodule Schema do
 
   @spec all_objects() :: map()
   def all_objects(), do: Repo.all_objects()
-
-  @doc """
-    Returns all skill classes.
-  """
-  @spec skills() :: map()
-  def skills(), do: Repo.skills()
-
-  @spec skills(Repo.extensions_t()) :: map()
-  def skills(extensions), do: Repo.skills(extensions)
-
-  @spec skills(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def skills(extensions, profiles) do
-    extensions
-    |> Repo.skills()
-    |> apply_profiles(profiles, MapSet.size(profiles))
-  end
 
   @spec all_skills() :: map()
   def all_skills(), do: Repo.all_skills()
@@ -234,22 +130,6 @@ defmodule Schema do
   @spec find_skill(integer()) :: nil | Cache.class_t()
   def find_skill(uid) when is_integer(uid), do: Repo.find_skill(uid)
 
-  @doc """
-    Returns all domains.
-  """
-  @spec domains() :: map()
-  def domains(), do: Repo.domains()
-
-  @spec domains(Repo.extensions_t()) :: map()
-  def domains(extensions), do: Repo.domains(extensions)
-
-  @spec domains(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def domains(extensions, profiles) do
-    extensions
-    |> Repo.domains()
-    |> apply_profiles(profiles, MapSet.size(profiles))
-  end
-
   @spec all_domains() :: map()
   def all_domains(), do: Repo.all_domains()
 
@@ -283,22 +163,6 @@ defmodule Schema do
   """
   @spec find_domain(integer()) :: nil | Cache.class_t()
   def find_domain(uid) when is_integer(uid), do: Repo.find_domain(uid)
-
-  @doc """
-    Returns all modules.
-  """
-  @spec modules() :: map()
-  def modules(), do: Repo.modules()
-
-  @spec modules(Repo.extensions_t()) :: map()
-  def modules(extensions), do: Repo.modules(extensions)
-
-  @spec modules(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def modules(extensions, profiles) do
-    extensions
-    |> Repo.modules()
-    |> apply_profiles(profiles, MapSet.size(profiles))
-  end
 
   @spec all_modules() :: map()
   def all_modules(), do: Repo.all_modules()
@@ -335,20 +199,40 @@ defmodule Schema do
   def find_module(uid) when is_integer(uid), do: Repo.find_module(uid)
 
   @doc """
-    Returns all objects.
+    Returns the taxonomy tree for modules.
   """
-  @spec objects() :: map()
-  def objects(), do: Repo.objects()
+  @spec taxonomy_modules :: map()
+  def taxonomy_modules(), do: Repo.taxonomy_modules()
 
-  @spec objects(Repo.extensions_t()) :: map()
-  def objects(extensions), do: Repo.objects(extensions)
+  @spec taxonomy_modules(Repo.extensions_t()) :: map()
+  def taxonomy_modules(extensions), do: Repo.taxonomy_modules(extensions, nil)
 
-  @spec objects(Repo.extensions_t(), Repo.profiles_t()) :: map()
-  def objects(extensions, profiles) do
-    extensions
-    |> Repo.objects()
-    |> apply_profiles(profiles, MapSet.size(profiles))
-  end
+  @spec taxonomy_modules(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_modules(extensions, parent), do: Repo.taxonomy_modules(extensions, parent)
+
+  @doc """
+    Returns the taxonomy tree for skills.
+  """
+  @spec taxonomy_skills :: map()
+  def taxonomy_skills(), do: Repo.taxonomy_skills()
+
+  @spec taxonomy_skills(Repo.extensions_t()) :: map()
+  def taxonomy_skills(extensions), do: Repo.taxonomy_skills(extensions, nil)
+
+  @spec taxonomy_skills(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_skills(extensions, parent), do: Repo.taxonomy_skills(extensions, parent)
+
+  @doc """
+    Returns the taxonomy tree for domains.
+  """
+  @spec taxonomy_domains :: map()
+  def taxonomy_domains(), do: Repo.taxonomy_domains()
+
+  @spec taxonomy_domains(Repo.extensions_t()) :: map()
+  def taxonomy_domains(extensions), do: Repo.taxonomy_domains(extensions, nil)
+
+  @spec taxonomy_domains(Repo.extensions_t(), String.t() | nil) :: map()
+  def taxonomy_domains(extensions, parent), do: Repo.taxonomy_domains(extensions, parent)
 
   @doc """
     Returns a single object.
@@ -473,9 +357,9 @@ defmodule Schema do
   end
 
   @doc """
-    Exports the schema, including data types, objects, and classes.
+    Returns the complete schema, including data types, objects, and classes.
   """
-  @spec export_schema() :: %{
+  @spec schema() :: %{
           skills: map(),
           domains: map(),
           modules: map(),
@@ -484,19 +368,19 @@ defmodule Schema do
           dictionary_attributes: map(),
           version: String.t()
         }
-  def export_schema() do
+  def schema() do
     %{
-      skills: Schema.export_skills(),
-      domains: Schema.export_domains(),
-      modules: Schema.export_modules(),
-      objects: Schema.export_objects(),
-      types: Schema.export_data_types(),
+      skills: Schema.skills(),
+      domains: Schema.domains(),
+      modules: Schema.modules(),
+      objects: Schema.objects(),
+      types: Schema.data_types_attributes(),
       dictionary_attributes: export_dictionary_attributes(),
       version: Schema.version()
     }
   end
 
-  @spec export_schema(Repo.extensions_t()) :: %{
+  @spec schema(Repo.extensions_t()) :: %{
           skills: map(),
           domains: map(),
           modules: map(),
@@ -505,19 +389,19 @@ defmodule Schema do
           dictionary_attributes: map(),
           version: String.t()
         }
-  def export_schema(extensions) do
+  def schema(extensions) do
     %{
-      skills: Schema.export_skills(extensions),
-      domains: Schema.export_domains(extensions),
-      modules: Schema.export_modules(extensions),
-      objects: Schema.export_objects(extensions),
-      types: Schema.export_data_types(),
+      skills: Schema.skills(extensions),
+      domains: Schema.domains(extensions),
+      modules: Schema.modules(extensions),
+      objects: Schema.objects(extensions),
+      types: Schema.data_types_attributes(),
       dictionary_attributes: export_dictionary_attributes(extensions),
       version: Schema.version()
     }
   end
 
-  @spec export_schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
+  @spec schema(Repo.extensions_t(), Repo.profiles_t() | nil) :: %{
           skills: map(),
           domains: map(),
           modules: map(),
@@ -526,96 +410,96 @@ defmodule Schema do
           dictionary_attributes: map(),
           version: String.t()
         }
-  def export_schema(extensions, nil) do
-    export_schema(extensions)
+  def schema(extensions, nil) do
+    schema(extensions)
   end
 
-  def export_schema(extensions, profiles) do
+  def schema(extensions, profiles) do
     %{
-      skills: Schema.export_skills(extensions, profiles),
-      domains: Schema.export_domains(extensions, profiles),
-      modules: Schema.export_modules(extensions, profiles),
-      objects: Schema.export_objects(extensions, profiles),
-      types: Schema.export_data_types(),
+      skills: Schema.skills(extensions, profiles),
+      domains: Schema.domains(extensions, profiles),
+      modules: Schema.modules(extensions, profiles),
+      objects: Schema.objects(extensions, profiles),
+      types: Schema.data_types_attributes(),
       dictionary_attributes: export_dictionary_attributes(extensions),
       version: Schema.version()
     }
   end
 
   @doc """
-    Exports the data types.
+    Returns the data types attributes.
   """
-  @spec export_data_types :: any
-  def export_data_types() do
+  @spec data_types_attributes :: any
+  def data_types_attributes() do
     Map.get(data_types(), :attributes)
   end
 
   @doc """
-    Exports the skill classes.
+    Returns all skill classes.
   """
-  @spec export_skills() :: map()
-  def export_skills(), do: Repo.export_skills() |> reduce_objects()
+  @spec skills() :: map()
+  def skills(), do: Repo.skills() |> reduce_objects()
 
-  @spec export_skills(Repo.extensions_t()) :: map()
-  def export_skills(extensions), do: Repo.export_skills(extensions) |> reduce_objects()
+  @spec skills(Repo.extensions_t()) :: map()
+  def skills(extensions), do: Repo.skills(extensions) |> reduce_objects()
 
-  @spec export_skills(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_skills(extensions, nil), do: export_skills(extensions)
+  @spec skills(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def skills(extensions, nil), do: skills(extensions)
 
-  def export_skills(extensions, profiles) do
-    Repo.export_skills(extensions) |> update_exported_classes(profiles)
+  def skills(extensions, profiles) do
+    Repo.skills(extensions) |> apply_profiles_and_reduce(profiles)
   end
 
   @doc """
-    Exports the domain classes.
+    Returns all domains.
   """
-  @spec export_domains() :: map()
-  def export_domains(), do: Repo.export_domains() |> reduce_objects()
+  @spec domains() :: map()
+  def domains(), do: Repo.domains() |> reduce_objects()
 
-  @spec export_domains(Repo.extensions_t()) :: map()
-  def export_domains(extensions), do: Repo.export_domains(extensions) |> reduce_objects()
+  @spec domains(Repo.extensions_t()) :: map()
+  def domains(extensions), do: Repo.domains(extensions) |> reduce_objects()
 
-  @spec export_domains(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_domains(extensions, nil), do: export_domains(extensions)
+  @spec domains(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def domains(extensions, nil), do: domains(extensions)
 
-  def export_domains(extensions, profiles) do
-    Repo.export_domains(extensions) |> update_exported_classes(profiles)
+  def domains(extensions, profiles) do
+    Repo.domains(extensions) |> apply_profiles_and_reduce(profiles)
   end
 
   @doc """
-    Exports the module classes.
+    Returns all modules.
   """
-  @spec export_modules() :: map()
-  def export_modules(), do: Repo.export_modules() |> reduce_objects()
+  @spec modules() :: map()
+  def modules(), do: Repo.modules() |> reduce_objects()
 
-  @spec export_modules(Repo.extensions_t()) :: map()
-  def export_modules(extensions), do: Repo.export_modules(extensions) |> reduce_objects()
+  @spec modules(Repo.extensions_t()) :: map()
+  def modules(extensions), do: Repo.modules(extensions) |> reduce_objects()
 
-  @spec export_modules(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_modules(extensions, nil), do: export_modules(extensions)
+  @spec modules(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def modules(extensions, nil), do: modules(extensions)
 
-  def export_modules(extensions, profiles) do
-    Repo.export_modules(extensions) |> update_exported_classes(profiles)
+  def modules(extensions, profiles) do
+    Repo.modules(extensions) |> apply_profiles_and_reduce(profiles)
   end
 
-  defp update_exported_classes(classes, profiles) do
+  defp apply_profiles_and_reduce(classes, profiles) do
     apply_profiles(classes, profiles, MapSet.size(profiles)) |> reduce_objects()
   end
 
   @doc """
-    Exports the objects.
+    Returns all objects.
   """
-  @spec export_objects() :: map()
-  def export_objects(), do: Repo.export_objects() |> reduce_objects()
+  @spec objects() :: map()
+  def objects(), do: Repo.objects() |> reduce_objects()
 
-  @spec export_objects(Repo.extensions_t()) :: map()
-  def export_objects(extensions), do: Repo.export_objects(extensions) |> reduce_objects()
+  @spec objects(Repo.extensions_t()) :: map()
+  def objects(extensions), do: Repo.objects(extensions) |> reduce_objects()
 
-  @spec export_objects(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
-  def export_objects(extensions, nil), do: export_objects(extensions)
+  @spec objects(Repo.extensions_t(), Repo.profiles_t() | nil) :: map()
+  def objects(extensions, nil), do: objects(extensions)
 
-  def export_objects(extensions, profiles) do
-    Repo.export_objects(extensions)
+  def objects(extensions, profiles) do
+    Repo.objects(extensions)
     |> apply_profiles(profiles, MapSet.size(profiles))
     |> reduce_objects()
   end
@@ -658,42 +542,6 @@ defmodule Schema do
   @spec generate_object(Cache.object_t(), Repo.profiles_t() | nil) :: map()
   def generate_object(type, profiles) when is_map(type) do
     Schema.Generator.generate_sample_object(type, profiles)
-  end
-
-  defp get_main_skill(id) do
-    Repo.main_skill(id) |> reduce_category()
-  end
-
-  defp get_main_skill(extensions, id) do
-    Repo.main_skill(extensions, id) |> reduce_category()
-  end
-
-  defp get_main_domain(id) do
-    Repo.main_domain(id) |> reduce_category()
-  end
-
-  defp get_main_domain(extensions, id) do
-    Repo.main_domain(extensions, id) |> reduce_category()
-  end
-
-  defp get_main_module(id) do
-    Repo.main_module(id) |> reduce_category()
-  end
-
-  defp get_main_module(extensions, id) do
-    Repo.main_module(extensions, id) |> reduce_category()
-  end
-
-  defp reduce_category(nil) do
-    nil
-  end
-
-  defp reduce_category(data) do
-    Map.update(data, :classes, [], fn classes ->
-      Enum.into(classes, %{}, fn {name, class} ->
-        {name, reduce_class(class)}
-      end)
-    end)
   end
 
   defp reduce_objects(objects) do
