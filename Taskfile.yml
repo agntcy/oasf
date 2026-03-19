@@ -5,22 +5,26 @@ version: "3"
 
 ## Load config from dotenv file
 dotenv:
-  - '{{ .ROOT_DIR }}/.env'
+  - "{{ .ROOT_DIR }}/.env"
 
 ## Collection of config params
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
-  IMAGE_TAG: '{{ .IMAGE_TAG }}'
+  IMAGE_TAG: "{{ .IMAGE_TAG }}"
 
   ## Dependency config
-  BIN_DIR: '{{ .ROOT_DIR }}/bin'
-  HELM_VERSION: '3.16.3'
-  HELM_BIN: '{{ .BIN_DIR }}/helm-{{.HELM_VERSION}}'
-  KUBECTL_VERSION: '1.31.3'
-  KUBECTL_BIN: '{{ .BIN_DIR }}/kubectl-{{.KUBECTL_VERSION}}'
-  KIND_VERSION: '0.25.0'
-  KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
+  BIN_DIR: "{{ .ROOT_DIR }}/bin"
+  HELM_VERSION: "3.16.3"
+  HELM_BIN: "{{ .BIN_DIR }}/helm-{{.HELM_VERSION}}"
+  KUBECTL_VERSION: "1.31.3"
+  KUBECTL_BIN: "{{ .BIN_DIR }}/kubectl-{{.KUBECTL_VERSION}}"
+  KIND_VERSION: "0.25.0"
+  KIND_BIN: "{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}"
+  PROTOC_VERSION: "27.1"
+  PROTOC_BIN: "{{ .BIN_DIR }}/protoc-{{.PROTOC_VERSION}}"
+  BUFBUILD_VERSION: "1.50.1"
+  BUFBUILD_BIN: "{{ .BIN_DIR }}/bufbuild-{{.BUFBUILD_VERSION}}"
 
 ## Set refresh interval for observable tasks like hot-reload
 interval: 500ms
@@ -48,12 +52,12 @@ tasks:
         sh: find . -name Chart.yaml -exec dirname {} \;
     cmds:
       - for: { var: HELM_ALL_CHART_PATHS }
-        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
+        cmd: "cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update"
 
   build:images:
     desc: Build container images
     vars:
-      BAKE_OPTS: '--set *.platform=linux/{{ARCH}}'
+      BAKE_OPTS: "--set *.platform=linux/{{ARCH}}"
     cmds:
       - docker buildx bake {{.BAKE_OPTS}}
 
@@ -89,13 +93,13 @@ tasks:
     vars:
       # Kind args
       KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
-      KIND_CREATE_OPTS:  '{{ .KIND_CREATE_OPTS | default "" }}'
-      KIND_CONFIG_PATH:  '/tmp/{{.KIND_CLUSTER_NAME}}'
+      KIND_CREATE_OPTS: '{{ .KIND_CREATE_OPTS | default "" }}'
+      KIND_CONFIG_PATH: "/tmp/{{.KIND_CLUSTER_NAME}}"
       # Deployment args
-      HELM_NAMESPACE:   '{{ .HELM_NAMESPACE | default "default" }}'
-      HELM_CHART_PATH:  '{{ .ROOT_DIR }}/install/charts/oasf'
+      HELM_NAMESPACE: '{{ .HELM_NAMESPACE | default "default" }}'
+      HELM_CHART_PATH: "{{ .ROOT_DIR }}/install/charts/oasf"
       HELM_VALUES_PATH: '{{ .HELM_VALUES_PATH | default (printf "%s/install/charts/oasf/values-test.yaml" .ROOT_DIR) }}'
-      RELEASE_NAME:     'oasf'
+      RELEASE_NAME: "oasf"
     cmds:
       # Clean up previous deployment
       - task: down
@@ -123,11 +127,11 @@ tasks:
         EOF
 
       # Create ephemeral cluster
-      - '{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }} --config {{.KIND_CONFIG_PATH}}'
-      - '{{ .KIND_BIN }} export kubeconfig --name {{ .KIND_CLUSTER_NAME }}'
+      - "{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }} --config {{.KIND_CONFIG_PATH}}"
+      - "{{ .KIND_BIN }} export kubeconfig --name {{ .KIND_CLUSTER_NAME }}"
 
       # Check cluster status
-      - '{{ .KUBECTL_BIN }} cluster-info'
+      - "{{ .KUBECTL_BIN }} cluster-info"
 
       # Extract images from values-test.yaml and load them into kind
       - |
@@ -176,27 +180,17 @@ tasks:
     deps:
       - deps:kubectl
     sources:
-      - 'schema/**/*'
+      - "schema/**/*"
     vars:
-      LABEL_SELECTOR: 'default-schema=true'
+      LABEL_SELECTOR: "default-schema=true"
     preconditions:
-      - '{{ .KUBECTL_BIN }} get po -l {{.LABEL_SELECTOR}}'
+      - "{{ .KUBECTL_BIN }} get po -l {{.LABEL_SELECTOR}}"
     cmds:
       - |
         POD_NAME=$({{ .KUBECTL_BIN }} get pods -l {{.LABEL_SELECTOR}} -o jsonpath="{.items[0].metadata.name}")
         {{.KUBECTL_BIN}} exec $POD_NAME -- ./bin/schema_server rpc "Schema.reload()"
 
       - echo "Reloaded schema! Use CTRL + C to exit."
-
-  fmt:
-    desc: Format schema files
-    preconditions:
-      - which jq
-    dir: ./schema
-    cmd: |
-      ## Format dictionary file
-      jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
-      mv sorted.dictionary.json dictionary.json
 
   down:
     desc: Stop services and remove ephemeral kind cluster
@@ -206,16 +200,124 @@ tasks:
       # Kind args
       KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
     cmds:
-      - '{{ .KIND_BIN }} delete cluster --name {{ .KIND_CLUSTER_NAME }}'
+      - "{{ .KIND_BIN }} delete cluster --name {{ .KIND_CLUSTER_NAME }}"
 
   test:
+    desc: Run all test suites
+    cmds:
+      - task: test:e2e
+      - task: test:schema
+
+  test:e2e:
     desc: Run end-to-end test suite
     cmds:
       - defer: { task: down }
       - task: up
-      # NOTE: For now, we are only interested to know if the
-      # chart can be deployed or not.
-      # TODO: add test cases here
+      - task: test:api
+
+  test:api:
+    desc: Run only API tests
+    preconditions:
+      - which go
+      - which curl
+      - "curl --fail --silent http://localhost:8080/ > /dev/null"
+    dir: "{{ .ROOT_DIR }}/test/api"
+    cmds:
+      - cmd: go clean -testcache
+      - cmd: echo "Running API test suite..."
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
+
+  test:schema:
+    desc: Validate OASF schema
+    preconditions:
+      - which go
+    dir: "{{ .ROOT_DIR }}/test/schema"
+    cmds:
+      - cmd: go clean -testcache
+      - cmd: echo "Running OASF schema test suite..."
+      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
+
+  test:server:
+    desc: Test server code
+    preconditions:
+      - which mix
+    dir: "{{ .ROOT_DIR }}/server"
+    cmds:
+      - cmd: echo "Running OASF server test suite..."
+      - cmd: mix test
+
+  lint:
+    desc: Run all linters
+    cmds:
+      - task: lint:proto
+      - task: lint:charts
+
+  lint:proto:
+    desc: Run Proto linters
+    deps:
+      - task: deps:protoc
+      - task: deps:bufbuild
+    dir: ./proto
+    cmds:
+      - "{{.BUFBUILD_BIN}} dep update"
+      - "{{.BUFBUILD_BIN}} format --diff --exit-code"
+      - "{{.BUFBUILD_BIN}} lint"
+
+  lint:charts:
+    desc: Run Helm linters
+    deps:
+      - deps:helm
+    vars:
+      HELM_ALL_CHART_PATHS:
+        sh: find . -name Chart.yaml -exec dirname {} \;
+    cmds:
+      - for: { var: HELM_ALL_CHART_PATHS }
+        cmd: "cd {{ .ITEM }} && {{ .HELM_BIN }} lint"
+
+  fmt:
+    desc: Run formatters
+    cmds:
+      - task: fmt:proto
+      - task: fmt:schema
+      - task: fmt:elixir
+
+  fmt:proto:
+    desc: Run Proto formatters
+    deps:
+      - task: deps:protoc
+      - task: deps:bufbuild
+    dir: ./proto
+    cmds:
+      - "{{.BUFBUILD_BIN}} dep update"
+      - "{{.BUFBUILD_BIN}} format --output ./"
+
+  fmt:schema:
+    desc: Run Schema formatters
+    preconditions:
+      - which jq
+    dir: ./schema
+    cmds:
+      - cmd: echo "Formatting all JSON files with jq..."
+      - cmd: |
+          find . -name "*.json" -type f | while read file; do
+            echo "Formatting $file..."
+            jq --indent 2 . "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+          done
+      - cmd: echo "Formatting dictionary file with custom jq rules..."
+      - cmd: |
+          jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
+          mv sorted.dictionary.json dictionary.json
+
+  fmt:elixir:
+    desc: Run Elixir formatter on server/
+    dir: ./server
+    cmds:
+      - |
+        if ! command -v mix >/dev/null 2>&1; then
+          echo "mix not found, skipping Elixir formatting."
+          exit 0
+        fi
+        mix format
 
   ##
   ## Dependencies
@@ -226,6 +328,8 @@ tasks:
       - task: deps:helm
       - task: deps:kubectl
       - task: deps:kind
+      - task: deps:protoc
+      - task: deps:bufbuild
 
   deps:bin-dir:
     desc: Create bin directory
@@ -277,3 +381,47 @@ tasks:
       - cmd: mv {{.BIN_DIR}}/kind {{.KIND_BIN}}
     status:
       - test -x {{.KIND_BIN}}
+
+  deps:protoc:
+    desc: Ensure supported Protoc version and plugins are installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which go
+      - which curl
+      - which unzip
+    vars:
+      ARCH_TYPE: '{{ if eq ARCH "arm64" }}aarch_64{{ else if eq ARCH "amd64" }}x86_64{{else if eq ARCH "s390x"}}x390_64{{ else }}{{ARCH}}{{ end }}'
+      OS_VARIANT: '{{ if eq OS "darwin" }}osx-universal_binary{{ else if eq OS "windows" }}win64{{else}}linux-{{.ARCH_TYPE}}{{ end }}'
+    cmds:
+      - cmd: echo "Downloading Protoc v{{.PROTOC_VERSION}}..."
+      - cmd: |
+          curl -sL https://github.com/protocolbuffers/protobuf/releases/download/v{{.PROTOC_VERSION}}/protoc-{{.PROTOC_VERSION}}-{{.OS_VARIANT}}.zip -o {{.BIN_DIR}}/tmp.zip
+          unzip -j {{.BIN_DIR}}/tmp.zip "bin/protoc" -d {{.BIN_DIR}}
+          mv {{.BIN_DIR}}/protoc {{.PROTOC_BIN}}
+          rm {{.BIN_DIR}}/tmp.zip
+      - cmd: chmod +x {{.PROTOC_BIN}}
+      - cmd: echo "Downloading go plugins for protoc..."
+      - cmd: go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+      - cmd: go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+      - cmd: go install github.com/NathanBaulch/protoc-gen-cobra@latest
+    status:
+      - test -x {{.PROTOC_BIN}}
+
+  deps:bufbuild:
+    desc: Ensure supported bufbuild version is installed
+    internal: true
+    deps:
+      - deps:bin-dir
+    preconditions:
+      - which curl
+    vars:
+      ARCH_TYPE: '{{ if eq ARCH "amd64" }}x86_64{{ else }}{{ARCH}}{{ end }}'
+    cmds:
+      - cmd: echo "Downloading BufBuild v{{.BUFBUILD_VERSION}}..."
+      - cmd: |
+          curl -L "https://github.com/bufbuild/buf/releases/download/v{{.BUFBUILD_VERSION}}/buf-{{OS}}-{{.ARCH_TYPE}}" -o {{.BUFBUILD_BIN}}
+      - cmd: chmod +x {{.BUFBUILD_BIN}}
+    status:
+      - test -x {{.BUFBUILD_BIN}}
