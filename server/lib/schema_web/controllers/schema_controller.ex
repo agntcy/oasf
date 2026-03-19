@@ -996,7 +996,9 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The skill class data to be translated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The skill class data to be translated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1080,7 +1082,9 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The domain class data to be translated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The domain class data to be translated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1164,7 +1168,9 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The module class data to be translated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The module class data to be translated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1250,7 +1256,9 @@ defmodule SchemaWeb.SchemaController do
         allowEmptyValue: true
       )
 
-      data(:body, :object, "The object data to be translated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The object data to be translated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1310,7 +1318,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The skill class to be validated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The skill class to be validated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1359,7 +1369,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The domain class to be validated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The domain class to be validated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1408,7 +1420,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The module class to be validated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The module class to be validated",
+        required: true
+      )
     end
 
     response(200, "Success")
@@ -1459,7 +1473,9 @@ defmodule SchemaWeb.SchemaController do
         default: false
       )
 
-      data(:body, :object, "The object to be validated", required: true)
+      data(:body, %PhoenixSwagger.Schema{type: :object}, "The object to be validated",
+        required: true
+      )
     end
 
     response(200, "Success")
