@@ -57,7 +57,7 @@ spec:
                 port:
                   number: {{ $svcPort }}
             {{- if $version.default }}
-          - path: /api(/|$)(.*)
+          - path: /api(?!/[\d]+\.[\d]+\.[\d]+(?:-[\w.-]+)?(?:/|$))(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
               service:
