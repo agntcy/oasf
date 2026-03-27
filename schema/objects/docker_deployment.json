@@ -3,6 +3,10 @@
   "description": "Describes the docker deployment for this agent.",
   "extends": "acp_deployment_option",
   "name": "docker_deployment",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "type": {
       "caption": "Type",

@@ -3,6 +3,10 @@
   "description": "Agent manifest data",
   "extends": "module_data",
   "name": "acp_manifest_data",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "acp": {
       "reference": "acp_agent",
