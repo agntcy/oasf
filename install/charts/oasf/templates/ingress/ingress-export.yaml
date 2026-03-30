@@ -57,7 +57,7 @@ spec:
                 port:
                   number: {{ $svcPort }}
             {{- if $version.default }}
-          - path: /export(?!/[\d]+\.[\d]+\.[\d]+(?:-[\w.-]+)?(?:/|$))(/|$)(.*)
+          - path: {{ include "chart.ingress.defaultPrefixedPathRegex" (dict "root" $ "prefix" "export") }}
             pathType: ImplementationSpecific
             backend:
               service:
