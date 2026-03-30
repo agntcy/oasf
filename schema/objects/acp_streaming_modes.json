@@ -3,6 +3,10 @@
   "description": "Supported streaming modes. If missing, streaming is not supported.  If no mode is supported attempts to stream output will result in an error.",
   "extends": "object",
   "name": "acp_streaming_modes",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "result_streaming": {
       "reference": "acp_result_streaming",

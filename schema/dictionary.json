@@ -26,52 +26,92 @@
     "acp_agent": {
       "caption": "Agent Connect Protocol Specs",
       "description": "Specification of agent capabilities, config, input, output, and interrupts.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "agent_connect_protocol"
     },
     "acp_agent_dependencies": {
       "caption": "Agent Dependencies",
       "description": "List of all other agents this agent depends on.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_agent_dependency",
       "is_array": true
     },
     "acp_agent_id": {
       "caption": "Agent Identifier",
       "description": "Agent identifier",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "uuid_t"
     },
     "acp_agent_reference": {
       "caption": "Agent Reference",
       "description": "Reference to the agent in the agent directory.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_agent_reference"
     },
     "acp_callbacks": {
       "caption": "Callback Support",
       "description": "This is `true` if the agent supports a webhook to report run results. If this is `false`, providing a `webhook` at run creation has no effect. If missing, it means `false`.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "boolean_t"
     },
     "acp_capabilities": {
       "caption": "ACP Capabilities",
       "description": "Declares what invocation features the agent is capable of.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_capabilities"
     },
     "acp_custom_objects_streaming": {
       "caption": "Custom Objects Streaming",
       "description": "This is `true` if the agent supports custom objects streaming. If `false` or missing, custom streaming is not supported. Custom Objects streaming consists of a stream of object whose schema is specified by the agent in its manifest under `specs.custom_streaming_update`.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "boolean_t"
     },
     "acp_deployment": {
       "caption": "Agent Workflow Server Deployment Manifest",
       "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_deployment"
     },
     "acp_deployment_option": {
       "caption": "Deployment Option",
       "description": "Name of the method to instantiate or consume the agent.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "string_t"
     },
     "acp_deployment_options": {
       "caption": "Deployment Options",
       "description": "List of possible methods to instantiate or consume the agent. Any of the available option could be used. Every option could be associated with a unique name within this agent. If present, when another manifest refers to this manifest, it can also select the preferred deployment option.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_deployment_option",
       "is_enum": true,
       "is_array": true
@@ -79,37 +119,65 @@
     "acp_interrupt_support": {
       "caption": "Interrupt Support",
       "description": "This is `true` if the agent runs can interrupt to request additional input and can be subsequently resumed. If missing, it means `false`.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "boolean_t"
     },
     "acp_interrupt_type": {
       "caption": "Interrupt Type",
       "description": "Name of this interrupt type. Needs to be unique in the list of interrupts.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "string_t"
     },
     "acp_interrupts": {
       "caption": "Interrupts",
       "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_interrupts",
       "is_array": true
     },
     "acp_manifest_data": {
       "caption": "Data",
       "description": "Data supported by the agent for runtime manifest.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_manifest_data"
     },
     "acp_result_streaming": {
       "caption": "Result Streaming",
       "description": "This is `true` if the agent supports result streaming. If `false` or missing, result streaming is not supported. Result streaming consists of a stream of objects of type `RunResult`, where each one sent over the stream fully replace the previous one.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "boolean_t"
     },
     "acp_streaming_modes": {
       "caption": "Streaming Modes",
       "description": "Supported streaming modes. If missing, streaming is not supported. If no mode is supported attempts to stream output will result in an error.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_streaming_modes"
     },
     "acp_threads": {
       "caption": "Threads",
       "description": "This is `true` if the agent supports run threads. If this is `false`, then the threads tagged with `Threads` are not available. If missing, it means `false`.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "boolean_t"
     },
     "agentskills_allowed_tools": {
@@ -662,6 +730,10 @@
     "protocol": {
       "caption": "ACP Endpoint",
       "description": "ACP endpoint description.",
+      "@deprecated": {
+        "message": "ACP is deprecated, please use A2A instead.",
+        "since": "0.8.0"
+      },
       "type": "acp_endpoint"
     },
     "provider": {

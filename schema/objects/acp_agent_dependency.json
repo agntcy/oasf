@@ -3,6 +3,10 @@
   "description": "Reference to an Agent Manifest, it includes name, version and a locator.",
   "extends": "object",
   "name": "acp_agent_dependency",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "name": {
       "caption": "Name",
