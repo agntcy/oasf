@@ -3,5 +3,9 @@
   "description": "Describes a deployment option for an agent.",
   "extends": "object",
   "name": "acp_deployment_option",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {}
 }

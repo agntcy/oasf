@@ -3,6 +3,10 @@
   "description": "List of possible interrupts that can be provided by the agent. If `interrupts` capability is true, this needs to have at least one item.",
   "extends": "object",
   "name": "acp_interrupts",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "interrupt_type": {
       "reference": "acp_interrupt_type",

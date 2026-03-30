@@ -3,6 +3,10 @@
   "description": "Specification of agent capabilities, config, input, output, and interrupts.",
   "extends": "object",
   "name": "agent_connect_protocol",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "capabilities": {
       "reference": "acp_capabilities",

@@ -219,6 +219,42 @@ sup.bg-warning {
   margin-bottom: 0 !important;
 }
 
+/* Table rows need different handling to preserve cell borders */
+table tr.deprecated {
+  overflow: visible;
+  transform: none;
+  max-height: none;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+table tr.deprecated-hidden {
+  display: none;
+  opacity: 0;
+  transform: none;
+  max-height: none;
+}
+
+table tr.deprecated-hiding {
+  display: table-row;
+  opacity: 0;
+  transform: none;
+  max-height: none;
+}
+
+table tr.deprecated-showing {
+  display: table-row;
+  opacity: 0;
+  transform: none;
+  max-height: none;
+}
+
+table tr.deprecated-visible {
+  display: table-row;
+  opacity: 1;
+  transform: none;
+  max-height: none;
+}
+
 /* Collapsible Elements */
 [data-toggle="collapse"].collapsed .if-not-collapsed {
   display: none;
