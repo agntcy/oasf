@@ -55,6 +55,7 @@ volumeMounts: []
 env: {}
   # GA_TRACKING_ID: "G-XXXXXXXX-X"
   # SCHEMA_DIR: /app/schema/reload
+  # LOG_LEVEL: warning
 
 podAnnotations: {}
 
