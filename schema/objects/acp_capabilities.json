@@ -3,6 +3,10 @@
   "description": "Declares what invocation features this agent is capable of.",
   "extends": "object",
   "name": "acp_capabilities",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "threads": {
       "reference": "acp_threads",

@@ -3,6 +3,10 @@
   "description": "ACP endpoint description",
   "extends": "object",
   "name": "acp_endpoint",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "type": {
       "caption": "Type",

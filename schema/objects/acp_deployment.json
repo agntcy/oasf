@@ -3,6 +3,10 @@
   "description": "Describe all the details needed to deploy an agent by the Agent Workflow Server.",
   "extends": "object",
   "name": "acp_deployment",
+  "@deprecated": {
+    "message": "ACP is deprecated, please use A2A instead.",
+    "since": "0.8.0"
+  },
   "attributes": {
     "deployment_options": {
       "reference": "acp_deployment_options",
