@@ -14,10 +14,6 @@ on:
         required: true
         type: string
         description: "Image tag to use."
-      release_tag:
-        required: true
-        type: string
-        description: "Release tag for all components."
       artifact_path:
         required: true
         type: string
@@ -60,13 +56,12 @@ jobs:
           username: notused
           password: ${{ secrets.GITHUB_TOKEN  }}
 
-      - name: Release images
+      - name: Tag server image as latest
         env:
           IMAGE_REPO: ${{ inputs.image_repo }}
           IMAGE_TAG: ${{ inputs.image_tag }}
-          RELEASE_TAG: ${{ inputs.release_tag }}
         run: |
-          task release -y
+          task release:server -y
 
   release:
     name: Release
@@ -82,7 +77,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
         with:
-          tag_name: ${{ inputs.release_tag }}
-          release_name: Release ${{ inputs.release_tag }}
+          tag_name: ${{ inputs.image_tag }}
+          release_name: Release ${{ inputs.image_tag }}
           draft: true
           prerelease: false

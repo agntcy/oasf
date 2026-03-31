@@ -44,9 +44,7 @@ jobs:
       - name: Load images to local Docker registry
         run: |
           ls -la artifacts
-          for image_archive in artifacts/*.tar; do
-            docker load --input "$image_archive"
-          done
+          docker load --input artifacts/oasf-server-amd64.tar
           docker images
 
       - name: Run e2e tests
