@@ -60,3 +60,29 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Regex for a schema semantic version path segment (e.g. 1.2.3 or 1.2.3-beta.1).
+*/}}
+{{- define "chart.ingress.semverSegmentRegex" -}}
+[\d]+\.[\d]+\.[\d]+(?:-[\w.-]+)?
+{{- end }}
+
+{{/*
+Default API-like ingress path that excludes versioned prefixes.
+Example: /api(?!/<semver>(?:/|$))(/|$)(.*)
+Usage: include with dict {"root": $, "prefix": "api"}
+*/}}
+{{- define "chart.ingress.defaultPrefixedPathRegex" -}}
+{{- $root := .root -}}
+{{- $prefix := .prefix -}}
+/{{ $prefix }}(?!/{{ include "chart.ingress.semverSegmentRegex" $root | trim }}(?:/|$))(/|$)(.*)
+{{- end }}
+
+{{/*
+Default root ingress path that excludes reserved prefixes and versioned prefixes.
+*/}}
+{{- define "chart.ingress.defaultRootPathRegex" -}}
+{{- $root := . -}}
+/(?!api(?:/|$)|schema(?:/|$)|export(?:/|$)|sample(?:/|$)|{{ include "chart.ingress.semverSegmentRegex" $root | trim }}(?:/|$))(.*)
+{{- end }}
