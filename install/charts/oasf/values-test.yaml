@@ -27,6 +27,7 @@ env:
   HOST: localhost
   URL_PORT: 8080
   SCHEMA_DIR: /schema
+  LOG_LEVEL: info
 
 volumes:
   - name: schema

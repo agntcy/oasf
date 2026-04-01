@@ -50,7 +50,9 @@ volumeMounts: []
 #    mountPath: /app/schema/reload
 
 env: {}
-#  SCHEMA_DIR: /app/schema/reload
+  # GA_TRACKING_ID: "G-XXXXXXXX-X"
+  # SCHEMA_DIR: /app/schema/reload
+  # LOG_LEVEL: warning
 
 podAnnotations: {}
 
