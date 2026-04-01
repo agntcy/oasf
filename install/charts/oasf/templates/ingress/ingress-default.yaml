@@ -50,7 +50,7 @@ spec:
         paths:
           {{- range $index, $version := $.Values.image.versions }}
             {{- if $version.default }}
-          - path: /(.*)
+          - path: {{ include "chart.ingress.defaultRootPathRegex" $ }}
             pathType: ImplementationSpecific
             backend:
               service:

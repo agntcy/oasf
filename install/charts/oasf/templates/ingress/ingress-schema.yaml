@@ -57,7 +57,7 @@ spec:
                 port:
                   number: {{ $svcPort }}
             {{- if $version.default }}
-          - path: /schema(/|$)(.*)
+          - path: {{ include "chart.ingress.defaultPrefixedPathRegex" (dict "root" $ "prefix" "schema") }}
             pathType: ImplementationSpecific
             backend:
               service:
