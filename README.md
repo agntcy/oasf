@@ -129,8 +129,13 @@ task up
 To access the schema server, open [`localhost:8080`](http://localhost:8080) in
 your browser.
 
-**Note:** Any changes made to the server backend itself will require running
-`task up` again.
+To increase log verbosity for a run, set `LOG_LEVEL` (supported values: `debug`, `info`, `warning`, `error`):
+
+```shell
+LOG_LEVEL=debug task up
+```
+
+**Note:** Any changes made to the server backend itself will require running `task up` again.
 
 To set your own local OASF server using Elixir tooling, follow
 [these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
@@ -157,8 +162,17 @@ the `install/charts/oasf/values-test-versions.yaml` file with the required
 versions and deploying OASF services on the ephemeral Kind cluster with those
 values.
 
-```
+Set `env.LOG_LEVEL` in that values file (for example `debug` or `info`) to control runtime logging verbosity for the
+dockerized server, or pass `LOG_LEVEL` directly when running `task up`.
+
+```shell
 HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
+```
+
+You can combine both:
+
+```shell
+LOG_LEVEL=debug HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
 ```
 
 ### Cleanup

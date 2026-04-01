@@ -99,7 +99,8 @@ tasks:
       HELM_NAMESPACE: '{{ .HELM_NAMESPACE | default "default" }}'
       HELM_CHART_PATH: "{{ .ROOT_DIR }}/install/charts/oasf"
       HELM_VALUES_PATH: '{{ .HELM_VALUES_PATH | default (printf "%s/install/charts/oasf/values-test.yaml" .ROOT_DIR) }}'
-      RELEASE_NAME: "oasf"
+      LOG_LEVEL: '{{ .LOG_LEVEL | default "" }}'
+      RELEASE_NAME: 'oasf'
     cmds:
       # Clean up previous deployment
       - task: down
@@ -151,6 +152,9 @@ tasks:
           {{ .HELM_CHART_PATH }} \
           -f {{ .HELM_VALUES_PATH }} \
           --set image.repository="{{ .IMAGE_REPO }}/oasf-server" \
+          {{- if .LOG_LEVEL }}
+          --set env.LOG_LEVEL={{.LOG_LEVEL}} \
+          {{- end }}
           {{- if .IMAGE_TAG }}
           --set image.versions[0].server={{.IMAGE_TAG}} \
           {{- end }}

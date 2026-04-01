@@ -35,6 +35,7 @@ service:
 env:
   HOST: localhost
   URL_PORT: 8080
+  LOG_LEVEL: info
 
 serviceAccount:
   create: false
