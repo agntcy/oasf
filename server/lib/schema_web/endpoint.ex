@@ -27,7 +27,7 @@ defmodule SchemaWeb.Endpoint do
   end
 
   plug Plug.RequestId
-  plug Plug.Logger
+  plug SchemaWeb.RequestLoggerPlug
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],

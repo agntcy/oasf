@@ -3,6 +3,15 @@
 
 import Config
 
+log_level =
+  case System.get_env("LOG_LEVEL", "warning") |> String.downcase() do
+    "debug" -> :debug
+    "info" -> :info
+    "warning" -> :warning
+    "error" -> :error
+    _ -> :warning
+  end
+
 # For production, don't forget to configure the url host
 # to something meaningful, Phoenix uses this information
 # when generating URLs.
@@ -26,3 +35,5 @@ config :schema_server, Schema.Application, extension: System.get_env("SCHEMA_EXT
 config :schema_server, Schema.Application, schema_versions: System.get_env("SCHEMA_VERSIONS")
 
 config :schema_server, :google_analytics, tracking_id: System.get_env("GA_TRACKING_ID")
+
+config :logger, level: log_level

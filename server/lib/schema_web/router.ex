@@ -16,6 +16,15 @@ defmodule SchemaWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :health do
+  end
+
+  scope "/", SchemaWeb do
+    pipe_through :health
+
+    get "/healthz", HealthController, :check
+  end
+
   scope "/", SchemaWeb do
     pipe_through :browser
 
