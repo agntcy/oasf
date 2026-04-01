@@ -36,7 +36,7 @@ jobs:
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
       - name: Set up Elixir
-        uses: erlef/setup-beam@v1
+        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
         with:
           elixir-version: '1.19'
           otp-version: '28'
@@ -160,14 +160,14 @@ jobs:
         run: mkdir -p /tmp/.buildx-cache
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: notused
           password: ${{ secrets.GITHUB_TOKEN  }}
 
       - name: Build amd64 image artifact
-        uses: docker/bake-action@v6.10.0
+        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
         with:
           source: .
           files: ./docker-bake.hcl
@@ -184,7 +184,7 @@ jobs:
 
       - name: Build arm64 image artifact
         if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        uses: docker/bake-action@v6.10.0
+        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
         with:
           source: .
           files: ./docker-bake.hcl
@@ -283,7 +283,7 @@ jobs:
           docker images
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: notused
@@ -298,7 +298,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
         with:
@@ -321,7 +321,7 @@ jobs:
           fetch-depth: 0
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: notused
