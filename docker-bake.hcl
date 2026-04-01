@@ -20,11 +20,7 @@ group "default" {
 
 target "_common" {
   output = [
-    "type=image",
-  ]
-  platforms = [
-    "linux/arm64",
-    "linux/amd64",
+    "type=docker",
   ]
 }
 
