@@ -35,6 +35,16 @@ jobs:
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
+      - name: Set up Elixir
+        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
+        with:
+          elixir-version: '1.19'
+          otp-version: '28'
+
+      - name: Fetch Elixir deps
+        run: mix deps.get
+        working-directory: server
+
       - name: Build code
         run: |
           # NOTE: We are only interested in codebase, don't build images here
@@ -52,9 +62,7 @@ jobs:
     needs:
       - verify
     outputs:
-      targets: ${{ steps.targets.outputs.targets }}
       image_tag: ${{ steps.resolve.outputs.image_tag }}
-      release_tag: ${{ steps.resolve.outputs.release_tag }}
       helm_release_tag: ${{ steps.resolve.outputs.helm_release_tag }}
     runs-on: ubuntu-latest
     steps:
@@ -69,52 +77,140 @@ jobs:
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
             # For push from PR, resolve to <PR number>-<commit sha>
             image_tag="${{ format('pr{0}-{1}', github.event.pull_request.number, github.sha) }}"
+          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            # For server release tags, use the tag itself as image tag.
+            image_tag="${GITHUB_REF#refs/tags/}"
           else
             # For push, resolve to <commit sha>
             image_tag="${{ format('{0}', github.sha) }}"
           fi
 
-          # Original release_tag
-          RAW_RELEASE_TAG="${GITHUB_REF#refs/tags/}"
-
           # Calculate helm_release_tag using bash parameter expansion
           # This removes the "helm/" prefix if it exists
-          HELM_RELEASE_TAG="${RAW_RELEASE_TAG#helm/}"
+          HELM_RELEASE_TAG="${GITHUB_REF#refs/tags/}"
+          HELM_RELEASE_TAG="${HELM_RELEASE_TAG#helm/}"
 
           # Export vars
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
-          echo "release_tag=$RAW_RELEASE_TAG" >> "$GITHUB_OUTPUT"
           echo "helm_release_tag=$HELM_RELEASE_TAG" >> "$GITHUB_OUTPUT"
 
-      - name: List targets
-        id: targets
-        uses: docker/bake-action/subaction/list-targets@v6.10.0
-
   build:
-    name: ${{ matrix.targets }}
+    name: Build
+    if: ${{ !startsWith(github.ref, 'refs/tags/helm/') }}
     needs:
       - prepare
-    strategy:
-      fail-fast: false
-      matrix:
-        targets: ${{ fromJson(needs.prepare.outputs.targets) }}
-    uses: ./.github/workflows/reusable-build.yaml
-    with:
-      bake_target: ${{ matrix.targets }}
-      image_repo: ghcr.io/agntcy
-      image_tag: ${{ needs.prepare.outputs.image_tag }}
-      artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
+
+      - name: Cache Docker layers
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-oasf-server-buildx-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-oasf-server-buildx-
+
+      - name: Create cache directory
+        run: mkdir -p /tmp/.buildx-cache
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: notused
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Build amd64 image artifact
+        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
+        with:
+          source: .
+          files: ./docker-bake.hcl
+          targets: oasf-server
+          provenance: false
+          allow: fs.write=/tmp
+          set: |
+            *.platform=linux/amd64
+            *.cache-to=type=local,dest=/tmp/.buildx-cache
+            *.cache-from=type=local,src=/tmp/.buildx-cache
+            *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
+            *.tags=ghcr.io/agntcy/oasf-server:${{ needs.prepare.outputs.image_tag }}
+            *.output=type=docker,dest=/tmp/oasf-server-amd64.tar
+
+      - name: Build arm64 image artifact
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
+        with:
+          source: .
+          files: ./docker-bake.hcl
+          targets: oasf-server
+          provenance: false
+          allow: fs.write=/tmp
+          set: |
+            *.platform=linux/arm64
+            *.cache-to=type=local,dest=/tmp/.buildx-cache
+            *.cache-from=type=local,src=/tmp/.buildx-cache
+            *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
+            *.tags=ghcr.io/agntcy/oasf-server:${{ needs.prepare.outputs.image_tag }}-arm64
+            *.output=type=docker,dest=/tmp/oasf-server-arm64.tar
+
+      - name: Upload image artifact
+        id: upload-artifacts
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+        with:
+          name: artifacts-${{ needs.prepare.outputs.image_tag }}
+          path: /tmp/oasf-server-*.tar
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+          overwrite: true
 
   test:
     name: Test
+    if: ${{ !startsWith(github.ref, 'refs/tags/helm/') }}
     needs:
       - prepare
       - build
-    uses: ./.github/workflows/reusable-test.yaml
-    with:
-      image_repo: ghcr.io/agntcy
-      image_tag: ${{ needs.prepare.outputs.image_tag }}
-      artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Download artifacts
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
+        with:
+          name: artifacts-${{ needs.prepare.outputs.image_tag }}
+          path: artifacts
+          pattern: "*.tar"
+          merge-multiple: true
+
+      - name: Load images to local Docker registry
+        run: |
+          ls -la artifacts
+          docker load --input artifacts/oasf-server-amd64.tar
+          docker images
+
+      - name: Run e2e tests
+        env:
+          IMAGE_REPO: ghcr.io/agntcy
+          IMAGE_TAG: ${{ needs.prepare.outputs.image_tag }}
+        run: |
+          task test:e2e
 
   release:
     name: Server Release
@@ -123,12 +219,57 @@ jobs:
       - prepare
       - build
       - test
-    uses: ./.github/workflows/reusable-release.yaml
-    with:
-      image_repo: ghcr.io/agntcy
-      image_tag: ${{ needs.prepare.outputs.image_tag }}
-      release_tag: ${{ needs.prepare.outputs.release_tag }}
-      artifact_path: artifacts-${{ needs.prepare.outputs.image_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup Taskfile
+        shell: bash
+        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+
+      - name: Download artifacts
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806  # v4.1.9
+        with:
+          name: artifacts-${{ needs.prepare.outputs.image_tag }}
+          path: artifacts
+          pattern: "*.tar"
+          merge-multiple: true
+
+      - name: Load images to local Docker registry
+        run: |
+          ls -la artifacts
+          for image_archive in artifacts/*.tar; do
+            docker load --input "$image_archive"
+          done
+          docker images
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: notused
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Tag server image as latest
+        env:
+          IMAGE_REPO: ghcr.io/agntcy
+          IMAGE_TAG: ${{ needs.prepare.outputs.image_tag }}
+        run: |
+          task release:server -y
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+        with:
+          tag_name: ${{ needs.prepare.outputs.image_tag }}
+          release_name: Release ${{ needs.prepare.outputs.image_tag }}
+          draft: true
+          prerelease: false
 
   helm_release:
     name: Helm Chart Release
@@ -136,10 +277,48 @@ jobs:
     needs:
       - prepare
       - verify
-    uses: ./.github/workflows/reusable-helm-release.yaml
-    with:
-      image_repo: ghcr.io/agntcy
-      release_tag: ${{ needs.prepare.outputs.helm_release_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
+        with:
+          fetch-depth: 0
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
+        with:
+          registry: ghcr.io
+          username: notused
+          password: ${{ secrets.GITHUB_TOKEN  }}
+
+      - name: Setup Helm
+        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814  # v4.2.0
+        with:
+          version: "3.12.1"
+
+      - name: Helm update dependencies
+        shell: bash
+        run: helm dependency update install/charts/oasf
+
+      - name: Helm lint
+        shell: bash
+        run: helm lint install/charts/oasf --with-subcharts
+
+      - name: Set chart name
+        id: chart-name
+        shell: bash
+        run: echo "value=${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
+
+      - name: Helm package
+        shell: bash
+        run: |
+          helm package install/charts/oasf --dependency-update --version ${{ needs.prepare.outputs.helm_release_tag }}
+
+      - name: Helm push to GHCR OCI registry
+        shell: bash
+        run: |
+          echo "🚧 Pushing ${{ needs.prepare.outputs.helm_release_tag }} to GHCR OCI registry"
+          helm push ${{ steps.chart-name.outputs.value }}-${{ needs.prepare.outputs.helm_release_tag }}.tgz oci://ghcr.io/agntcy/oasf/helm-charts
 
   success:
     name: Success

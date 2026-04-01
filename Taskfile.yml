@@ -41,7 +41,7 @@ tasks:
     desc: Build project artifacts
     cmds:
       - task: build:charts
-      - task: build:images
+      - task: build:server
 
   build:charts:
     desc: Build helm charts
@@ -54,33 +54,33 @@ tasks:
       - for: { var: HELM_ALL_CHART_PATHS }
         cmd: "cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update"
 
-  build:images:
-    desc: Build container images
+  build:server:
+    desc: Build OASF server container image
     vars:
-      BAKE_OPTS: "--set *.platform=linux/{{ARCH}}"
+      BAKE_OPTS: '{{ .BAKE_OPTS | default (printf "--set *.platform=linux/%s" ARCH) }}'
     cmds:
-      - docker buildx bake {{.BAKE_OPTS}}
+      - docker buildx bake -f docker-bake.hcl oasf-server {{.BAKE_OPTS}}
 
-  release:
-    desc: Release images for all components with a release tag
+  release:server:
+    desc: Push multi-arch OASF server image and latest tag
     prompt:
       - Are you sure you want to push the images to remote registry?
     vars:
-      RELEASE_TAG: '{{ .RELEASE_TAG | default "latest" }}'
+      IMAGE_REF: '{{ .IMAGE_REPO }}/oasf-server'
+      IMAGE_TAG: '{{ .IMAGE_TAG | default "latest" }}'
+    preconditions:
+      - sh: 'docker image inspect {{.IMAGE_REF}}:{{.IMAGE_TAG}} > /dev/null 2>&1'
+        msg: 'Missing local image {{.IMAGE_REF}}:{{.IMAGE_TAG}}. Load/build amd64 image first.'
+      - sh: 'docker image inspect {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64 > /dev/null 2>&1'
+        msg: 'Missing local image {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64. Load/build arm64 image first.'
     cmds:
-      # TODO: use buildx to simplify
-      - |
-        images=$(docker buildx bake default --print | jq -r '.target | with_entries(.value |= .tags[0]) | to_entries[] | .value')
-        echo "$images" | while read image; do
-          target_name="${image%%:*}"
-          echo "Releasing images for $target_name"
-
-          docker tag $image $target_name:latest
-          docker tag $image $target_name:{{.RELEASE_TAG}}
-          docker image rm $image
-
-          docker push --all-tags $target_name
-        done
+      - docker tag {{.IMAGE_REF}}:{{.IMAGE_TAG}} {{.IMAGE_REF}}:{{.IMAGE_TAG}}-amd64
+      - docker push {{.IMAGE_REF}}:{{.IMAGE_TAG}}-amd64
+      - docker push {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64
+      - docker manifest create {{.IMAGE_REF}}:{{.IMAGE_TAG}} --amend {{.IMAGE_REF}}:{{.IMAGE_TAG}}-amd64 --amend {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64
+      - docker manifest push {{.IMAGE_REF}}:{{.IMAGE_TAG}}
+      - docker manifest create {{.IMAGE_REF}}:latest --amend {{.IMAGE_REF}}:{{.IMAGE_TAG}}
+      - docker manifest push {{.IMAGE_REF}}:latest
 
   up:
     desc: Deploy services in an ephemeral kind cluster
