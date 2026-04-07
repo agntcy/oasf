@@ -22,10 +22,10 @@ metadata:
   labels:
     {{- include "chart.labels" . | nindent 4 }}
   annotations:
-  {{- if or (eq .Values.ingress.className "nginx") (eq .Values.ingress.className "nginx-internal") }}
     nginx.ingress.kubernetes.io/rewrite-target: /$1
     nginx.ingress.kubernetes.io/use-regex: "true"
-  {{- end }}
+    nginx.org/path-regex: "case_sensitive"
+    nginx.org/rewrite-target: /$1
   {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
