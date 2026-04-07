@@ -73,6 +73,7 @@ securityContext: {}
 ingress:
   enabled: false
   className: ""
+  annotationMode: both # community | f5 | both
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"

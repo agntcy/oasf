@@ -86,3 +86,42 @@ Default root ingress path that excludes reserved prefixes and versioned prefixes
 {{- $root := . -}}
 /(?!api(?:/|$)|schema(?:/|$)|export(?:/|$)|sample(?:/|$)|{{ include "chart.ingress.semverSegmentRegex" $root | trim }}(?:/|$))(.*)
 {{- end }}
+
+{{/*
+Build ingress annotations for rewrite-based ingresses.
+Modes:
+- community: ingress-nginx annotations only
+- f5: F5 NGINX Ingress Controller annotations only
+- both: emit both annotation families
+User-provided ingress.annotations override chart defaults.
+*/}}
+{{- define "chart.ingress.annotations.rewrite" -}}
+{{- $root := .root -}}
+{{- $target := .target -}}
+{{- $mode := default "both" $root.Values.ingress.annotationMode -}}
+{{- $defaults := dict -}}
+{{- if or (eq $mode "community") (eq $mode "both") -}}
+{{- $_ := set $defaults "nginx.ingress.kubernetes.io/rewrite-target" $target -}}
+{{- $_ := set $defaults "nginx.ingress.kubernetes.io/use-regex" "true" -}}
+{{- end -}}
+{{- if or (eq $mode "f5") (eq $mode "both") -}}
+{{- $_ := set $defaults "nginx.org/path-regex" "case_sensitive" -}}
+{{- $_ := set $defaults "nginx.org/rewrite-target" $target -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite (dict) $defaults ($root.Values.ingress.annotations | default dict)) -}}
+{{- end }}
+
+{{/*
+Build ingress annotations for doc ingress.
+Only ingress-nginx needs an explicit use-regex=false default.
+User-provided ingress.annotations override chart defaults.
+*/}}
+{{- define "chart.ingress.annotations.doc" -}}
+{{- $root := . -}}
+{{- $mode := default "both" $root.Values.ingress.annotationMode -}}
+{{- $defaults := dict -}}
+{{- if or (eq $mode "community") (eq $mode "both") -}}
+{{- $_ := set $defaults "nginx.ingress.kubernetes.io/use-regex" "false" -}}
+{{- end -}}
+{{- toYaml (mergeOverwrite (dict) $defaults ($root.Values.ingress.annotations | default dict)) -}}
+{{- end }}
