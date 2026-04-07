@@ -61,27 +61,6 @@ tasks:
     cmds:
       - docker buildx bake -f docker-bake.hcl oasf-server {{.BAKE_OPTS}}
 
-  release:server:
-    desc: Push multi-arch OASF server image and latest tag
-    prompt:
-      - Are you sure you want to push the images to remote registry?
-    vars:
-      IMAGE_REF: '{{ .IMAGE_REPO }}/oasf-server'
-      IMAGE_TAG: '{{ .IMAGE_TAG | default "latest" }}'
-    preconditions:
-      - sh: 'docker image inspect {{.IMAGE_REF}}:{{.IMAGE_TAG}} > /dev/null 2>&1'
-        msg: 'Missing local image {{.IMAGE_REF}}:{{.IMAGE_TAG}}. Load/build amd64 image first.'
-      - sh: 'docker image inspect {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64 > /dev/null 2>&1'
-        msg: 'Missing local image {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64. Load/build arm64 image first.'
-    cmds:
-      - docker tag {{.IMAGE_REF}}:{{.IMAGE_TAG}} {{.IMAGE_REF}}:{{.IMAGE_TAG}}-amd64
-      - docker push {{.IMAGE_REF}}:{{.IMAGE_TAG}}-amd64
-      - docker push {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64
-      - docker manifest create {{.IMAGE_REF}}:{{.IMAGE_TAG}} --amend {{.IMAGE_REF}}:{{.IMAGE_TAG}}-amd64 --amend {{.IMAGE_REF}}:{{.IMAGE_TAG}}-arm64
-      - docker manifest push {{.IMAGE_REF}}:{{.IMAGE_TAG}}
-      - docker manifest create {{.IMAGE_REF}}:latest --amend {{.IMAGE_REF}}:{{.IMAGE_TAG}}
-      - docker manifest push {{.IMAGE_REF}}:latest
-
   up:
     desc: Deploy services in an ephemeral kind cluster
     preconditions:
