@@ -258,18 +258,29 @@ jobs:
           username: notused
           password: ${{ secrets.GITHUB_TOKEN  }}
 
+      - name: Docker metadata
+        id: metadata
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
+        with:
+          images: |
+            ghcr.io/agntcy/oasf-server,enable=true
+          tags: |
+            type=raw,value=${{ needs.prepare.outputs.image_tag }}
+            type=raw,value=latest
+
       - name: Build and push multi-arch image
         uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
         with:
           source: .
-          files: ./docker-bake.hcl
+          files: |
+            ./docker-bake.hcl
+            ${{ steps.metadata.outputs.bake-file }}
           targets: oasf-server
           provenance: false
           push: true
           set: |
             *.platform=linux/amd64,linux/arm64
             *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
-            *.tags=ghcr.io/agntcy/oasf-server:${{ needs.prepare.outputs.image_tag }},ghcr.io/agntcy/oasf-server:latest
 
       - name: Create Release
         id: create_release
