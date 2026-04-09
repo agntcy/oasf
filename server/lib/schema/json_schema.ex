@@ -281,19 +281,28 @@ defmodule Schema.JsonSchema do
         just_one_list = List.wrap(constraints[:just_one])
         at_least_one_list = List.wrap(constraints[:at_least_one])
 
-        cond do
-          name in just_one_list ->
-            {required, [name | just_one], at_least_one}
+        required =
+          if attribute[:requirement] == "required" do
+            [name | required]
+          else
+            required
+          end
 
-          name in at_least_one_list ->
-            {required, just_one, [name | at_least_one]}
+        just_one =
+          if name in just_one_list do
+            [name | just_one]
+          else
+            just_one
+          end
 
-          attribute[:requirement] == "required" ->
-            {[name | required], just_one, at_least_one}
+        at_least_one =
+          if name in at_least_one_list do
+            [name | at_least_one]
+          else
+            at_least_one
+          end
 
-          true ->
-            {required, just_one, at_least_one}
-        end
+        {required, just_one, at_least_one}
         |> (fn {required, just_one, at_least_one} ->
               schema =
                 encode_attribute(type_name, attribute[:type], attribute)
