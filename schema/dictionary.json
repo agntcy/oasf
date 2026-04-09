@@ -6,6 +6,10 @@
     "a2a_card_data": {
       "caption": "A2A Agent Card Data",
       "description": "Content of the A2A card in JSON format.",
+      "@deprecated": {
+        "message": "Inline A2A card payload is deprecated, please use module.artifact instead.",
+        "since": "1.0.0"
+      },
       "type": "json_t"
     },
     "a2a_card_schema_version": {
@@ -408,6 +412,16 @@
       "type": "string_t",
       "is_array": true
     },
+    "artifact": {
+      "caption": "Artifact",
+      "description": "Descriptor for a module artifact payload.",
+      "type": "descriptor"
+    },
+    "artifact_type": {
+      "caption": "Artifact Type",
+      "description": "Optional artifact media type as defined by RFC 6838.",
+      "type": "mime_t"
+    },
     "audience": {
       "caption": "Audience",
       "description": "Intended audience(s) for an entity. See specific usage.",
@@ -455,6 +469,11 @@
       "description": "The time when the object was created. See specific usage.",
       "type": "datetime_t"
     },
+    "data": {
+      "caption": "Data",
+      "description": "Base64 encoded payload data.",
+      "type": "bytestring_t"
+    },
     "data_platform_integrations": {
       "caption": "Data Platform Integrations",
       "description": "Data platforms supported by the agent for observability.",
@@ -476,6 +495,11 @@
       "caption": "Description",
       "description": "The description of the entity. See specific usage.",
       "type": "long_string_t"
+    },
+    "digest": {
+      "caption": "Digest",
+      "description": "Digest of an artifact payload.",
+      "type": "string_t"
     },
     "domains": {
       "caption": "Domains",
@@ -562,6 +586,11 @@
       "description": "A location",
       "type": "string_t"
     },
+    "json": {
+      "caption": "JSON",
+      "description": "Embedded JSON payload.",
+      "type": "json_t"
+    },
     "language_model_data": {
       "caption": "Data",
       "description": "Data supported by the agent for Language Model.",
@@ -603,6 +632,10 @@
     "mcp_original_data": {
       "caption": "Original MCP Data",
       "description": "The complete original MCP server JSON data structure for full fidelity storage.",
+      "@deprecated": {
+        "message": "Inline original MCP payload is deprecated, please use module.artifact instead.",
+        "since": "1.0.0"
+      },
       "type": "json_t"
     },
     "mcp_original_server_data": {
@@ -633,6 +666,11 @@
       "description": "Describes the configuration for an MCP server tools.",
       "type": "mcp_server_tool",
       "is_array": true
+    },
+    "media_type": {
+      "caption": "Media Type",
+      "description": "Artifact media type as defined by RFC 6838.",
+      "type": "mime_t"
     },
     "metadata": {
       "caption": "Metadata",
@@ -855,8 +893,7 @@
       "bytestring_t": {
         "caption": "Byte String",
         "description": "Base64 encoded immutable byte sequence.",
-        "type": "string_t",
-        "type_name": "String"
+        "regex": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
       },
       "cid_t": {
         "caption": "Content Identifier",

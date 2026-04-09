@@ -1,0 +1,54 @@
+{
+  "caption": "Descriptor",
+  "description": "OCI-like descriptor for module artifacts, including metadata and optional embedded payload.",
+  "extends": "object",
+  "name": "descriptor",
+  "constraints": {
+    "at_least_one": [
+      "urls",
+      "data",
+      "json"
+    ],
+    "just_one": [
+      "data",
+      "json"
+    ]
+  },
+  "attributes": {
+    "media_type": {
+      "caption": "Media Type",
+      "description": "Media type for the artifact payload.",
+      "requirement": "required"
+    },
+    "artifact_type": {
+      "caption": "Artifact Type",
+      "description": "Optional media type identifying the artifact kind.",
+      "requirement": "optional"
+    },
+    "size": {
+      "caption": "Size",
+      "description": "Size of the decoded artifact payload in bytes.",
+      "requirement": "required"
+    },
+    "digest": {
+      "caption": "Digest",
+      "description": "Digest of the decoded artifact payload.",
+      "requirement": "required"
+    },
+    "urls": {
+      "caption": "URLs",
+      "description": "Optional list of locations where the artifact can be downloaded from.",
+      "requirement": "optional"
+    },
+    "data": {
+      "caption": "Data",
+      "description": "Optional base64-encoded artifact payload.",
+      "requirement": "optional"
+    },
+    "json": {
+      "caption": "JSON Data",
+      "description": "Optional JSON payload for local tooling use.",
+      "requirement": "optional"
+    }
+  }
+}

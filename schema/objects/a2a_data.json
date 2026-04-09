@@ -8,6 +8,10 @@
       "reference": "a2a_card_data",
       "caption": "A2A Card Data",
       "description": "The A2A card data structure itself that contains information about the agent's capabilities and communication details.",
+      "@deprecated": {
+        "message": "Inline A2A card payload is deprecated, please use module.artifact instead.",
+        "since": "1.0.0"
+      },
       "requirement": "required",
       "references": [
         {

@@ -5,6 +5,7 @@ syntax = "proto3";
 
 package agntcy.oasf.types.v1;
 
+import "agntcy/oasf/types/v1/descriptor.proto";
 import "google/protobuf/struct.proto";
 
 // Modules provide a generic way to attach additional information
@@ -25,4 +26,7 @@ message Module {
   // Data attached to the module.
   // Usually a JSON-embedded object.
   google.protobuf.Struct data = 4;
+
+  // Optional descriptor for an external or inline module artifact.
+  Descriptor artifact = 5;
 }
