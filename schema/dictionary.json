@@ -474,11 +474,6 @@
       "description": "Base64 encoded payload data.",
       "type": "bytestring_t"
     },
-    "json": {
-      "caption": "JSON",
-      "description": "Embedded JSON payload.",
-      "type": "json_t"
-    },
     "data_platform_integrations": {
       "caption": "Data Platform Integrations",
       "description": "Data platforms supported by the agent for observability.",
@@ -590,6 +585,11 @@
       "caption": "In",
       "description": "A location",
       "type": "string_t"
+    },
+    "json": {
+      "caption": "JSON",
+      "description": "Embedded JSON payload.",
+      "type": "json_t"
     },
     "language_model_data": {
       "caption": "Data",
