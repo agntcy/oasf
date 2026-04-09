@@ -21,6 +21,11 @@
       "caption": "Data",
       "description": "The data associated with the module.",
       "requirement": "required"
+    },
+    "artifact": {
+      "caption": "Artifact",
+      "description": "Optional OCI-like descriptor for module artifact payloads.",
+      "requirement": "optional"
     }
   }
 }
