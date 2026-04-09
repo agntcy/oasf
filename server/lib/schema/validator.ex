@@ -1738,6 +1738,41 @@ defmodule Schema.Validator do
       :json_t ->
         response
 
+      :bytestring_t ->
+        if is_binary(value) do
+          response
+          |> validate_string_max_len(
+            value,
+            attribute_path,
+            attribute_name,
+            attribute_type_key,
+            dictionary_types
+          )
+          |> validate_string_regex(
+            value,
+            attribute_path,
+            attribute_name,
+            attribute_type_key,
+            dictionary_types
+          )
+          |> validate_type_values(
+            value,
+            attribute_path,
+            attribute_name,
+            attribute_type_key,
+            dictionary_types
+          )
+        else
+          add_error_wrong_type(
+            response,
+            attribute_path,
+            attribute_name,
+            value,
+            expected_type,
+            expected_type_extra
+          )
+        end
+
       :typed_map_t ->
         if is_map(value) do
           response

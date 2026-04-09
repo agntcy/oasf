@@ -62,6 +62,7 @@ defmodule Schema.Types do
       "mime_t" -> "string"
       "subnet_t" -> "string"
       "file_hash_t" -> "string"
+      "bytestring_t" -> "string"
       "unit_interval_t" -> "number"
       _ -> "object"
     end
