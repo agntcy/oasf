@@ -6,6 +6,10 @@
     "a2a_card_data": {
       "caption": "A2A Agent Card Data",
       "description": "Content of the A2A card in JSON format.",
+      "@deprecated": {
+        "message": "Inline A2A card payload is deprecated, please use module.artifact instead.",
+        "since": "1.0.0"
+      },
       "type": "json_t"
     },
     "a2a_card_schema_version": {
@@ -628,6 +632,10 @@
     "mcp_original_data": {
       "caption": "Original MCP Data",
       "description": "The complete original MCP server JSON data structure for full fidelity storage.",
+      "@deprecated": {
+        "message": "Inline original MCP payload is deprecated, please use module.artifact instead.",
+        "since": "1.0.0"
+      },
       "type": "json_t"
     },
     "mcp_original_server_data": {
