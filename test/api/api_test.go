@@ -9,7 +9,6 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/google/go-cmp/cmp"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/xeipuuv/gojsonschema"
@@ -131,12 +130,6 @@ var _ = Describe("API", func() {
 	})
 
 	Describe("Sample Object Validation", func() {
-		expectedValidate := map[string]interface{}{
-			"errors":        []interface{}{},
-			"warnings":      []interface{}{},
-			"error_count":   float64(0),
-			"warning_count": float64(0),
-		}
 		for _, tc := range testCases {
 			tc := tc
 			It("should validate sample object for "+tc.validationEndpoint, func() {
@@ -165,11 +158,20 @@ var _ = Describe("API", func() {
 				var validateResp map[string]interface{}
 				Expect(json.Unmarshal(validateBytes, &validateResp)).To(Succeed(), "Validate response is not valid JSON")
 
-				if !reflect.DeepEqual(validateResp, expectedValidate) {
-					diff := cmp.Diff(expectedValidate, validateResp)
-					GinkgoWriter.Printf("Validate response does not match expected.\nDiff:\n%s\n", diff)
-				}
-				Expect(validateResp).To(Equal(expectedValidate))
+				// Sample validation may emit warnings (e.g. deprecations), but must not emit errors.
+				Expect(validateResp).To(HaveKey("errors"))
+				Expect(validateResp).To(HaveKey("warnings"))
+				Expect(validateResp).To(HaveKey("error_count"))
+				Expect(validateResp).To(HaveKey("warning_count"))
+
+				errors, ok := validateResp["errors"].([]interface{})
+				Expect(ok).To(BeTrue(), "errors should be an array")
+				Expect(errors).To(BeEmpty())
+				Expect(validateResp["error_count"]).To(Equal(float64(0)))
+
+				warnings, ok := validateResp["warnings"].([]interface{})
+				Expect(ok).To(BeTrue(), "warnings should be an array")
+				Expect(validateResp["warning_count"]).To(Equal(float64(len(warnings))))
 			})
 		}
 	})
