@@ -197,23 +197,38 @@ defmodule Schema.Generator do
 
   defp apply_constraints(attributes, constraints, type) do
     attributes
-    |> apply_just_one(constraints[:just_one])
+    |> apply_just_one(constraints[:just_one], type)
     |> apply_at_least_one(constraints[:at_least_one], type)
   end
 
-  defp apply_just_one(attributes, nil), do: attributes
+  defp apply_just_one(attributes, nil, _type), do: attributes
+  defp apply_just_one(attributes, [], _type), do: attributes
 
-  defp apply_just_one(attributes, just_one_list) do
-    valid_keys = Enum.filter(just_one_list, &Map.has_key?(attributes, String.to_atom(&1)))
+  defp apply_just_one(attributes, just_one_list, type) do
+    valid_keys = Enum.filter(just_one_list, &has_attribute_key?(attributes, &1))
 
-    if valid_keys != [] do
-      chosen_key = Enum.random(valid_keys)
+    case valid_keys do
+      [] ->
+        key_to_add_string = Enum.random(just_one_list)
 
-      Enum.reduce(valid_keys, attributes, fn key, acc ->
-        if key == chosen_key, do: acc, else: Map.delete(acc, String.to_atom(key))
-      end)
-    else
-      attributes
+        case find_attribute_by_constraint_key(type, key_to_add_string) do
+          nil ->
+            Logger.warning(
+              "Could not find attribute '#{key_to_add_string}' to satisfy just_one constraint."
+            )
+
+            attributes
+
+          {name, field} ->
+            put_constraint_field(attributes, name, field)
+        end
+
+      _ ->
+        chosen_key = Enum.random(valid_keys)
+
+        Enum.reduce(valid_keys, attributes, fn key, acc ->
+          if key == chosen_key, do: acc, else: drop_attribute_key(acc, key)
+        end)
     end
   end
 
@@ -223,16 +238,15 @@ defmodule Schema.Generator do
   defp apply_at_least_one(attributes, at_least_one_list, type) do
     is_satisfied =
       Enum.any?(at_least_one_list, fn key ->
-        Map.has_key?(attributes, String.to_atom(key))
+        has_attribute_key?(attributes, key)
       end)
 
     if is_satisfied do
       attributes
     else
       key_to_add_string = Enum.random(at_least_one_list)
-      key_to_add_atom = String.to_atom(key_to_add_string)
 
-      case Enum.find(type[:attributes], fn {name, _field} -> name == key_to_add_atom end) do
+      case find_attribute_by_constraint_key(type, key_to_add_string) do
         nil ->
           Logger.warning(
             "Could not find attribute '#{key_to_add_string}' to satisfy at_least_one constraint."
@@ -241,9 +255,44 @@ defmodule Schema.Generator do
           attributes
 
         {name, field} ->
-          generate_field(name, field, attributes)
+          put_constraint_field(attributes, name, field)
       end
     end
+  end
+
+  defp put_constraint_field(map, name, field) do
+    cond do
+      field[:is_array] == true ->
+        Map.put(map, name, generate_array({name, field}))
+
+      field[:type] == "object_t" ->
+        Map.put(map, name, generate_object({name, field}))
+
+      field[:type] == "class_t" ->
+        generated =
+          get_valid_classes(field)
+          |> Enum.random()
+          |> generate_sample_class(Process.get(:profiles))
+
+        Map.put(map, name, generated)
+
+      true ->
+        generate_field(name, field, map)
+    end
+  end
+
+  defp has_attribute_key?(attributes, key_string) do
+    Enum.any?(Map.keys(attributes), fn key -> Atom.to_string(key) == key_string end)
+  end
+
+  defp drop_attribute_key(attributes, key_string) do
+    Enum.reduce(Map.keys(attributes), attributes, fn key, acc ->
+      if Atom.to_string(key) == key_string, do: Map.delete(acc, key), else: acc
+    end)
+  end
+
+  defp find_attribute_by_constraint_key(type, key_string) do
+    Enum.find(type[:attributes], fn {name, _field} -> Atom.to_string(name) == key_string end)
   end
 
   defp generate({name, field}, map) do
@@ -547,6 +596,7 @@ defmodule Schema.Generator do
   defp generate_data(_name, "long_t", _field), do: random(65_536 * 65_536)
   defp generate_data(_name, "boolean_t", _field), do: random_boolean()
   defp generate_data(_name, "float_t", _field), do: random_float(100, 100)
+  defp generate_data(_name, "bytestring_t", _field), do: Base.encode64(sentence(20))
   defp generate_data(_name, "file_name_t", _field), do: file_name(0)
   defp generate_data(_name, "path_t", _field), do: root_dir(5)
   defp generate_data(_name, "mime_t", _field), do: path_name(2)
