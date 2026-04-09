@@ -86,7 +86,7 @@ defmodule SchemaWeb.SwaggerController do
 
   defp update_paths_with_version(paths, version) when is_map(paths) do
     Enum.reduce(paths, %{}, fn {path_key, path_value}, acc ->
-      # Prepend version to path if it starts with /api/, /schema/, /export/, or /sample/
+      # Prepend version to path if it starts with /api/, /schema/, or /sample/
       updated_path =
         cond do
           String.starts_with?(path_key, "/api/") ->
@@ -103,14 +103,6 @@ defmodule SchemaWeb.SwaggerController do
               path_key
             else
               "/schema/#{version}" <> String.trim_leading(path_key, "/schema")
-            end
-
-          String.starts_with?(path_key, "/export/") ->
-            # Don't add version if it's already there
-            if String.starts_with?(path_key, "/export/#{version}/") do
-              path_key
-            else
-              "/export/#{version}" <> String.trim_leading(path_key, "/export")
             end
 
           String.starts_with?(path_key, "/sample/") ->
@@ -137,12 +129,11 @@ defmodule SchemaWeb.SwaggerController do
         |> Enum.map(fn server ->
           if is_map(server) and Map.has_key?(server, "url") do
             url = server["url"]
-            # Update URL to include version for /api, /schema, /export, /sample paths
+            # Update URL to include version for /api, /schema, and /sample paths
             updated_url =
               url
               |> update_url_with_version("/api", version)
               |> update_url_with_version("/schema", version)
-              |> update_url_with_version("/export", version)
               |> update_url_with_version("/sample", version)
 
             Map.put(server, "url", updated_url)
@@ -161,7 +152,6 @@ defmodule SchemaWeb.SwaggerController do
           base_path
           |> update_url_with_version("/api", version)
           |> update_url_with_version("/schema", version)
-          |> update_url_with_version("/export", version)
           |> update_url_with_version("/sample", version)
 
         Map.put(swagger, "basePath", updated_base_path)
