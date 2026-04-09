@@ -1,0 +1,36 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v1;
+
+import "google/protobuf/struct.proto";
+
+// Descriptor contains OCI-like metadata and optional inline payload
+// for a module artifact.
+message Descriptor {
+  // Media type of the descriptor payload.
+  // Specs: https://www.rfc-editor.org/rfc/rfc6838
+  string media_type = 1;
+
+  // Optional media type describing the artifact kind.
+  // Specs: https://www.rfc-editor.org/rfc/rfc6838
+  string artifact_type = 2;
+
+  // Size of the decoded payload in bytes.
+  uint64 size = 3;
+
+  // Digest of the decoded payload.
+  string digest = 4;
+
+  // Optional locations where the payload can be retrieved from.
+  repeated string urls = 5;
+
+  // Optional inline payload encoded as raw bytes.
+  // This field is represented as base64 in JSON.
+  bytes data = 6;
+
+  // Optional inline JSON payload for local tooling.
+  google.protobuf.Struct json = 7;
+}

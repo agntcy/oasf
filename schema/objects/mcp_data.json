@@ -42,6 +42,10 @@
       "reference": "mcp_original_data",
       "caption": "Original MCP Data",
       "description": "The complete original MCP server JSON data structure for full fidelity storage.",
+      "@deprecated": {
+        "message": "Inline original MCP payload is deprecated, please use module.artifact instead.",
+        "since": "1.0.0"
+      },
       "requirement": "optional",
       "references": [
         {
