@@ -11,14 +11,13 @@ defmodule SchemaWeb.VersionPrefixPlug do
   Handles patterns like:
   - /api/VERSION/path -> /api/path
   - /schema/VERSION/path -> /schema/path
-  - /export/VERSION/path -> /export/path
   - /sample/VERSION/path -> /sample/path
   """
 
   import Plug.Conn
   @behaviour Plug
 
-  @version_pattern ~r{^/(api|schema|export|sample)/([\d]+\.[\d]+\.[\d]+(?:-[\w.-]+)?)(/.*|)$}
+  @version_pattern ~r{^/(api|schema|sample)/([\d]+\.[\d]+\.[\d]+(?:-[\w.-]+)?)(/.*|)$}
 
   def init(opts), do: opts
 
