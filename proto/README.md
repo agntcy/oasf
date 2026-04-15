@@ -10,5 +10,5 @@ This repository contains the protocol definitions and language stubs for the
 | -------------- | -------------- |
 | v0.7.0         | types/v1alpha1 |
 | v0.8.0         | types/v1alpha2 |
-| v1.0.0-rc.1    | types/v1       |
+| v1.0.0         | types/v1       |
 ```
