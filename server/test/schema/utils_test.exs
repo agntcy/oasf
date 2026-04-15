@@ -340,4 +340,166 @@ defmodule Schema.UtilsTest do
       assert Utils.put_non_nil(%{a: 1}, :b, nil) == %{a: 1}
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # descope/1
+  # ---------------------------------------------------------------------------
+
+  describe "descope/1" do
+    test "returns the basename of a plain name string" do
+      assert Utils.descope("contextual_comprehension") == "contextual_comprehension"
+    end
+
+    test "strips leading path components from a scoped name" do
+      assert Utils.descope("natural_language_processing/contextual_comprehension") ==
+               "contextual_comprehension"
+    end
+
+    test "works with atom input" do
+      result = Utils.descope(:contextual_comprehension)
+      assert is_binary(result)
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # descope_to_uid/1
+  # ---------------------------------------------------------------------------
+
+  describe "descope_to_uid/1" do
+    test "returns atom of basename for binary path" do
+      assert Utils.descope_to_uid("a/b/c") == :c
+    end
+
+    test "returns atom of basename for atom path" do
+      assert Utils.descope_to_uid(:"a/b/c") == :c
+    end
+
+    test "plain name returns itself as atom" do
+      assert Utils.descope_to_uid("foo") == :foo
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # find_parent/3
+  # ---------------------------------------------------------------------------
+
+  describe "find_parent/3" do
+    test "returns {nil, nil} when extends is nil" do
+      assert Utils.find_parent(%{}, nil, nil) == {nil, nil}
+    end
+
+    test "finds parent by extends key when present" do
+      items = %{base: %{name: "base", caption: "Base"}}
+      {key, parent} = Utils.find_parent(items, "base", nil)
+      assert key == :base
+      assert parent[:name] == "base"
+    end
+
+    test "returns {key, nil} when extends not found and no extension" do
+      {key, val} = Utils.find_parent(%{}, "missing", nil)
+      assert key == :missing
+      assert val == nil
+    end
+
+    test "falls back to extension-scoped key when plain key not found" do
+      ext_key = Utils.to_uid("myext", "base")
+      items = %{ext_key => %{name: "base"}}
+      {found_key, found_val} = Utils.find_parent(items, "base", "myext")
+      assert found_key == ext_key
+      assert found_val[:name] == "base"
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # find_direct_children/2
+  # ---------------------------------------------------------------------------
+
+  describe "find_direct_children/2" do
+    test "returns direct children only" do
+      map = %{
+        root: %{name: "root", extends: nil},
+        child: %{name: "child", extends: "root"},
+        grandchild: %{name: "grandchild", extends: "child"}
+      }
+
+      result = Utils.find_direct_children(map, "root")
+      names = Enum.map(result, & &1[:name])
+      assert "child" in names
+      refute "grandchild" in names
+    end
+
+    test "returns empty list when no children" do
+      map = %{leaf: %{name: "leaf", extends: "something_else"}}
+      assert Utils.find_direct_children(map, "root") == []
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # find_children/2
+  # ---------------------------------------------------------------------------
+
+  describe "find_children/2" do
+    test "returns all descendants recursively" do
+      map = %{
+        root: %{name: "root", extends: nil},
+        child: %{name: "child", extends: "root"},
+        grandchild: %{name: "grandchild", extends: "child"}
+      }
+
+      result = Utils.find_children(map, "root")
+      names = Enum.map(result, & &1[:name])
+      assert "child" in names
+      assert "grandchild" in names
+    end
+
+    test "returns empty list for leaf node" do
+      map = %{leaf: %{name: "leaf", extends: "root"}}
+      assert Utils.find_children(map, "leaf") == []
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # class_name_with_hierarchy/2
+  # ---------------------------------------------------------------------------
+
+  describe "class_name_with_hierarchy/2" do
+    test "returns just the name for a root class (no extends)" do
+      classes = %{root: %{name: "root", extends: nil}}
+      assert Utils.class_name_with_hierarchy(:root, classes) == "root"
+    end
+
+    test "builds hierarchical path excluding base classes" do
+      classes = %{
+        parent: %{name: "parent", extends: nil},
+        child: %{name: "child", extends: "parent"}
+      }
+
+      result = Utils.class_name_with_hierarchy(:child, classes)
+      # parent/child — both non-base
+      assert String.contains?(result, "child")
+    end
+
+    test "handles atom and binary name equally" do
+      classes = %{leaf: %{name: "leaf", extends: nil}}
+
+      assert Utils.class_name_with_hierarchy(:leaf, classes) ==
+               Utils.class_name_with_hierarchy("leaf", classes)
+    end
+  end
+
+  # ---------------------------------------------------------------------------
+  # class_name_with_extension/1
+  # ---------------------------------------------------------------------------
+
+  describe "class_name_with_extension/1" do
+    test "returns name when extension is nil" do
+      item = %{name: "my_skill", extension: nil}
+      assert Utils.class_name_with_extension(item) == "my_skill"
+    end
+
+    test "prefixes name with extension when present" do
+      item = %{name: "my_skill", extension: "my_ext"}
+      assert Utils.class_name_with_extension(item) == "my_ext/my_skill"
+    end
+  end
 end

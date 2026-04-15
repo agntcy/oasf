@@ -12,16 +12,64 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   use SchemaWeb.ConnCase
 
-  # Known-valid names taken from the schema; discovered at module load time
-  # so the tests stay robust against future schema changes.
-  @test_skill_name "contextual_comprehension"
-  @test_domain_name "internet_of_things"
-  @test_module_name "observability"
-  @test_skill_category_name "natural_language_processing"
-  @test_domain_category_name "healthcare"
-  @test_module_category_name "core"
-  @test_object_name "record"
   @nonexistent_name "non_existent_name_12345"
+
+  # Names are derived at runtime from the live schema so the tests remain
+  # robust against future taxonomy changes.  Each helper picks the first
+  # suitable entry from the loaded schema rather than hard-coding a name.
+
+  defp test_skill_name do
+    {name, _} =
+      Schema.all_skills()
+      |> Enum.find(fn {_k, v} -> v[:category] != true end)
+
+    Atom.to_string(name)
+  end
+
+  defp test_domain_name do
+    {name, _} =
+      Schema.all_domains()
+      |> Enum.find(fn {_k, v} -> v[:category] != true end)
+
+    Atom.to_string(name)
+  end
+
+  defp test_module_name do
+    {name, _} =
+      Schema.all_modules()
+      |> Enum.find(fn {_k, v} -> v[:category] != true end)
+
+    Atom.to_string(name)
+  end
+
+  defp test_skill_category_name do
+    {name, _} =
+      Schema.all_skills()
+      |> Enum.find(fn {_k, v} -> v[:category] == true end)
+
+    Atom.to_string(name)
+  end
+
+  defp test_domain_category_name do
+    {name, _} =
+      Schema.all_domains()
+      |> Enum.find(fn {_k, v} -> v[:category] == true end)
+
+    Atom.to_string(name)
+  end
+
+  defp test_module_category_name do
+    {name, _} =
+      Schema.all_modules()
+      |> Enum.find(fn {_k, v} -> v[:category] == true end)
+
+    Atom.to_string(name)
+  end
+
+  defp test_object_name do
+    {name, _} = Schema.all_objects() |> Enum.find(fn {_k, _v} -> true end)
+    Atom.to_string(name)
+  end
 
   # ---------------------------------------------------------------------------
   # Helpers
@@ -86,7 +134,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/skills?name=#{@test_skill_name}")
+      conn = json_get(conn, "/api/skills?name=#{test_skill_name()}")
       assert conn.status == 200
     end
 
@@ -122,7 +170,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/skills?id=601&name=#{@test_skill_name}")
+      conn = json_get(conn, "/api/skills?id=601&name=#{test_skill_name()}")
       assert conn.status == 400
       body = json_response_body(conn)
       assert Map.has_key?(body, "error")
@@ -136,7 +184,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/domains?name=#{@test_domain_name}")
+      conn = json_get(conn, "/api/domains?name=#{test_domain_name()}")
       assert conn.status == 200
     end
 
@@ -166,7 +214,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/domains?id=2005&name=#{@test_domain_name}")
+      conn = json_get(conn, "/api/domains?id=2005&name=#{test_domain_name()}")
       assert conn.status == 400
     end
   end
@@ -178,7 +226,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/modules?name=#{@test_module_name}")
+      conn = json_get(conn, "/api/modules?name=#{test_module_name()}")
       assert conn.status == 200
     end
 
@@ -208,7 +256,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/modules?id=103&name=#{@test_module_name}")
+      conn = json_get(conn, "/api/modules?id=103&name=#{test_module_name()}")
       assert conn.status == 400
     end
   end
@@ -220,7 +268,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/objects?name=#{@test_object_name}")
+      conn = json_get(conn, "/api/objects?name=#{test_object_name()}")
       assert conn.status == 200
     end
 
@@ -243,12 +291,14 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/skill_categories?name=#{@test_skill_category_name}")
+      conn = json_get(conn, "/api/skill_categories?name=#{test_skill_category_name()}")
       assert conn.status == 200
     end
 
     test "returns 200 for hierarchical category name", %{conn: conn} do
-      conn = json_get(conn, "/api/skill_categories?name=natural_language_processing/personalization")
+      conn =
+        json_get(conn, "/api/skill_categories?name=natural_language_processing/personalization")
+
       assert conn.status == 200
     end
 
@@ -272,7 +322,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/domain_categories?name=#{@test_domain_category_name}")
+      conn = json_get(conn, "/api/domain_categories?name=#{test_domain_category_name()}")
       assert conn.status == 200
     end
 
@@ -289,7 +339,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/module_categories?name=#{@test_module_category_name}")
+      conn = json_get(conn, "/api/module_categories?name=#{test_module_category_name()}")
       assert conn.status == 200
     end
 
@@ -344,7 +394,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /schema/skills/:name" do
     test "returns 200 for known skill", %{conn: conn} do
-      conn = json_get(conn, "/schema/skills/#{@test_skill_name}")
+      conn = json_get(conn, "/schema/skills/#{test_skill_name()}")
       assert conn.status == 200
     end
 
@@ -356,7 +406,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /schema/domains/:name" do
     test "returns 200 for known domain", %{conn: conn} do
-      conn = json_get(conn, "/schema/domains/#{@test_domain_name}")
+      conn = json_get(conn, "/schema/domains/#{test_domain_name()}")
       assert conn.status == 200
     end
 
@@ -368,7 +418,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /schema/modules/:name" do
     test "returns 200 for known module", %{conn: conn} do
-      conn = json_get(conn, "/schema/modules/#{@test_module_name}")
+      conn = json_get(conn, "/schema/modules/#{test_module_name()}")
       assert conn.status == 200
     end
 
@@ -380,7 +430,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /schema/objects/:name" do
     test "returns 200 for known object", %{conn: conn} do
-      conn = json_get(conn, "/schema/objects/#{@test_object_name}")
+      conn = json_get(conn, "/schema/objects/#{test_object_name()}")
       assert conn.status == 200
     end
 
@@ -396,7 +446,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /sample/skills/:name" do
     test "returns 200 for known skill", %{conn: conn} do
-      conn = json_get(conn, "/sample/skills/#{@test_skill_name}")
+      conn = json_get(conn, "/sample/skills/#{test_skill_name()}")
       assert conn.status == 200
     end
 
@@ -408,7 +458,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /sample/domains/:name" do
     test "returns 200 for known domain", %{conn: conn} do
-      conn = json_get(conn, "/sample/domains/#{@test_domain_name}")
+      conn = json_get(conn, "/sample/domains/#{test_domain_name()}")
       assert conn.status == 200
     end
 
@@ -420,7 +470,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /sample/modules/:name" do
     test "returns 200 for known module", %{conn: conn} do
-      conn = json_get(conn, "/sample/modules/#{@test_module_name}")
+      conn = json_get(conn, "/sample/modules/#{test_module_name()}")
       assert conn.status == 200
     end
 
@@ -432,7 +482,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "GET /sample/objects/:name" do
     test "returns 200 for known object", %{conn: conn} do
-      conn = json_get(conn, "/sample/objects/#{@test_object_name}")
+      conn = json_get(conn, "/sample/objects/#{test_object_name()}")
       assert conn.status == 200
     end
 
@@ -448,12 +498,12 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "sample → validate round-trip" do
     test "sample object validates with zero errors (record)", %{conn: conn} do
-      sample_conn = json_get(conn, "/sample/objects/#{@test_object_name}")
+      sample_conn = json_get(conn, "/sample/objects/#{test_object_name()}")
       assert sample_conn.status == 200
       sample_body = sample_conn.resp_body
 
       validate_conn =
-        json_post(build_conn(), "/api/validate/object/#{@test_object_name}", sample_body)
+        json_post(build_conn(), "/api/validate/object/#{test_object_name()}", sample_body)
 
       assert validate_conn.status == 200
       result = json_response_body(validate_conn)
@@ -461,7 +511,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "sample skill validates with zero errors (contextual_comprehension)", %{conn: conn} do
-      sample_conn = json_get(conn, "/sample/skills/#{@test_skill_name}")
+      sample_conn = json_get(conn, "/sample/skills/#{test_skill_name()}")
       assert sample_conn.status == 200
       sample_body = sample_conn.resp_body
 
@@ -472,7 +522,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "sample domain validates with zero errors (internet_of_things)", %{conn: conn} do
-      sample_conn = json_get(conn, "/sample/domains/#{@test_domain_name}")
+      sample_conn = json_get(conn, "/sample/domains/#{test_domain_name()}")
       assert sample_conn.status == 200
       sample_body = sample_conn.resp_body
 
@@ -483,7 +533,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "sample module validates with zero errors (observability)", %{conn: conn} do
-      sample_conn = json_get(conn, "/sample/modules/#{@test_module_name}")
+      sample_conn = json_get(conn, "/sample/modules/#{test_module_name()}")
       assert sample_conn.status == 200
       sample_body = sample_conn.resp_body
 
@@ -538,12 +588,12 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "POST /api/translate/object/:name" do
     test "returns 2xx for valid JSON object body", %{conn: conn} do
-      conn = json_post(conn, "/api/translate/object/#{@test_object_name}", ~s({"name": "test"}))
+      conn = json_post(conn, "/api/translate/object/#{test_object_name()}", ~s({"name": "test"}))
       assert conn.status in 200..299
     end
 
     test "returns 400 for non-object body", %{conn: conn} do
-      conn = json_post(conn, "/api/translate/object/#{@test_object_name}", ~s("just a string"))
+      conn = json_post(conn, "/api/translate/object/#{test_object_name()}", ~s("just a string"))
       assert conn.status == 400
       body = json_response_body(conn)
       assert Map.has_key?(body, "error")
@@ -599,12 +649,12 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "POST /api/validate/object/:name" do
     test "returns 200 for valid JSON object body", %{conn: conn} do
-      conn = json_post(conn, "/api/validate/object/#{@test_object_name}", ~s({"name": "test"}))
+      conn = json_post(conn, "/api/validate/object/#{test_object_name()}", ~s({"name": "test"}))
       assert conn.status == 200
     end
 
     test "returns 400 for non-object body", %{conn: conn} do
-      conn = json_post(conn, "/api/validate/object/#{@test_object_name}", ~s("just a string"))
+      conn = json_post(conn, "/api/validate/object/#{test_object_name()}", ~s("just a string"))
       assert conn.status == 400
       body = json_response_body(conn)
       assert Map.has_key?(body, "error")
@@ -622,7 +672,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   describe "validate response structure" do
     test "validate response includes required fields", %{conn: conn} do
-      skill_name = @test_skill_name
+      skill_name = test_skill_name()
 
       conn =
         json_post(conn, "/api/validate/skill", Jason.encode!(%{"name" => skill_name}))
@@ -682,7 +732,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /skills/:name returns 200 for known skill", %{conn: conn} do
-      conn = get(conn, "/skills/#{@test_skill_name}")
+      conn = get(conn, "/skills/#{test_skill_name()}")
       assert conn.status == 200
     end
 
@@ -697,7 +747,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /domains/:name returns 200 for known domain", %{conn: conn} do
-      conn = get(conn, "/domains/#{@test_domain_name}")
+      conn = get(conn, "/domains/#{test_domain_name()}")
       assert conn.status == 200
     end
 
@@ -712,7 +762,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /modules/:name returns 200 for known module", %{conn: conn} do
-      conn = get(conn, "/modules/#{@test_module_name}")
+      conn = get(conn, "/modules/#{test_module_name()}")
       assert conn.status == 200
     end
 
@@ -727,7 +777,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /objects/:name returns 200 for known object", %{conn: conn} do
-      conn = get(conn, "/objects/#{@test_object_name}")
+      conn = get(conn, "/objects/#{test_object_name()}")
       assert conn.status == 200
     end
 
@@ -752,7 +802,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /skill_categories/:name returns 200", %{conn: conn} do
-      conn = get(conn, "/skill_categories/#{@test_skill_category_name}")
+      conn = get(conn, "/skill_categories/#{test_skill_category_name()}")
       assert conn.status == 200
     end
 
@@ -782,7 +832,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /skill/graph/:name returns 200 for known skill", %{conn: conn} do
-      conn = get(conn, "/skill/graph/#{@test_skill_name}")
+      conn = get(conn, "/skill/graph/#{test_skill_name()}")
       assert conn.status == 200
     end
 
@@ -792,7 +842,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /domain/graph/:name returns 200 for known domain", %{conn: conn} do
-      conn = get(conn, "/domain/graph/#{@test_domain_name}")
+      conn = get(conn, "/domain/graph/#{test_domain_name()}")
       assert conn.status == 200
     end
 
@@ -802,7 +852,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /module/graph/:name returns 200 for known module", %{conn: conn} do
-      conn = get(conn, "/module/graph/#{@test_module_name}")
+      conn = get(conn, "/module/graph/#{test_module_name()}")
       assert conn.status == 200
     end
 
@@ -812,7 +862,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "GET /object/graph/:name returns 200 for known object", %{conn: conn} do
-      conn = get(conn, "/object/graph/#{@test_object_name}")
+      conn = get(conn, "/object/graph/#{test_object_name()}")
       assert conn.status == 200
     end
 

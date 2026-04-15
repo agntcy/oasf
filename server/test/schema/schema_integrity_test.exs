@@ -5,13 +5,16 @@ defmodule Schema.SchemaIntegrityTest do
   @moduledoc """
   Validates the integrity of the loaded schema data.
 
-  These tests replace the Go test/schema/ suite. They operate on the in-memory
-  schema loaded at startup rather than raw JSON files. The checks cover:
+  These tests operate on the in-memory schema loaded at startup and cover:
     - Unique names within each entity type
     - Valid `extends` references (all parents exist)
     - No inheritance cycles
     - Attribute dictionary consistency (all attributes used in classes/objects
       must be defined in the dictionary)
+
+  Raw JSON metaschema validation (verifying each .json file in schema/ against
+  schema/metaschema/*.schema.json) is handled separately by
+  `schema/check_metaschema.py`, which runs as `task test:schema` in CI.
   """
 
   use ExUnit.Case, async: false
@@ -103,6 +106,7 @@ defmodule Schema.SchemaIntegrityTest do
 
               parent_name ->
                 parent_key = String.to_atom(parent_name)
+
                 not Map.has_key?(items, parent_key) and
                   not MapSet.member?(base_names, parent_name)
             end
@@ -288,6 +292,7 @@ defmodule Schema.SchemaIntegrityTest do
     test "schema version is parseable semver" do
       version = Schema.version()
       parsed = Schema.Utils.parse_version(version)
+
       assert is_map(parsed),
              "Schema version #{inspect(version)} is not valid semver: #{inspect(parsed)}"
     end

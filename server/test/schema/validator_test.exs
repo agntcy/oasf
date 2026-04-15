@@ -31,6 +31,7 @@ defmodule Schema.ValidatorTest do
     # Return the full hierarchical name as stored in the name attribute enum
     skill = Schema.skill(@test_skill_name)
     name_enum = get_in(skill, [:attributes, :name, :enum]) || %{}
+
     case Map.keys(name_enum) do
       [key | _] -> to_string(key)
       _ -> @test_skill_name
@@ -42,6 +43,7 @@ defmodule Schema.ValidatorTest do
   defp first_domain_name do
     domain = Schema.domain(@test_domain_name)
     name_enum = get_in(domain, [:attributes, :name, :enum]) || %{}
+
     case Map.keys(name_enum) do
       [key | _] -> to_string(key)
       _ -> @test_domain_name
@@ -56,6 +58,7 @@ defmodule Schema.ValidatorTest do
     test "valid skill by name has no errors" do
       name = first_skill_name()
       result = validate(%{"name" => name}, :skill)
+
       assert result[:error_count] == 0,
              "Expected 0 errors, got: #{inspect(result[:errors])}"
     end
@@ -63,6 +66,7 @@ defmodule Schema.ValidatorTest do
     test "valid skill by id has no errors" do
       uid = first_skill_uid()
       result = validate(%{"id" => uid}, :skill)
+
       assert result[:error_count] == 0,
              "Expected 0 errors, got: #{inspect(result[:errors])}"
     end
@@ -70,6 +74,7 @@ defmodule Schema.ValidatorTest do
     test "valid skill by both id and name has no errors" do
       canonical_name = first_skill_name()
       result = validate(%{"id" => @test_skill_uid, "name" => canonical_name}, :skill)
+
       assert result[:error_count] == 0,
              "Expected 0 errors, got: #{inspect(result[:errors])}"
     end
@@ -101,23 +106,26 @@ defmodule Schema.ValidatorTest do
     end
 
     test "mismatched id and name returns id_name_mismatch error" do
-      # Find two different skills
-      non_base_skills =
-        Schema.skills()
-        |> Enum.reject(fn {_k, v} -> Map.get(v, :category) == true end)
-        |> Enum.reject(fn {k, _v} -> k == :base_skill end)
+      # Schema.skills() already excludes base classes and categories, and always
+      # includes a :uid, so both preconditions are guaranteed by the schema itself.
+      non_base_skills = Schema.skills() |> Enum.to_list()
 
-      if length(non_base_skills) >= 2 do
-        [{_k1, v1}, {k2, _v2}] = Enum.take(non_base_skills, 2)
+      assert length(non_base_skills) >= 2,
+             "Expected at least 2 non-base skills in the schema, got #{length(non_base_skills)}"
 
-        if v1[:uid] != nil do
-          result =
-            validate(%{"id" => v1[:uid], "name" => Atom.to_string(k2)}, :skill)
+      [{_k1, v1}, {k2, _v2}] = Enum.take(non_base_skills, 2)
 
-          assert "id_name_mismatch" in error_types(result) or
-                   result[:error_count] > 0
-        end
-      end
+      assert v1[:uid] != nil,
+             "Expected skill #{inspect(_k1)} to have a uid, but it was nil"
+
+      # Build the canonical hierarchical name for the second skill so the name
+      # itself is individually valid — only the id/name pair is mismatched.
+      name2 = Schema.Utils.class_name_with_hierarchy(k2, Schema.all_skills())
+
+      result = validate(%{"id" => v1[:uid], "name" => name2}, :skill)
+
+      assert "id_name_mismatch" in error_types(result),
+             "Expected id_name_mismatch error, got: #{inspect(result[:errors])}"
     end
   end
 
@@ -129,6 +137,7 @@ defmodule Schema.ValidatorTest do
     test "valid domain by name has no errors" do
       name = first_domain_name()
       result = validate(%{"name" => name}, :domain)
+
       assert result[:error_count] == 0,
              "Expected 0 errors, got: #{inspect(result[:errors])}"
     end
@@ -424,7 +433,9 @@ defmodule Schema.ValidatorTest do
 
   describe "warn_on_missing_recommended option" do
     test "missing recommended attribute triggers warning when option is set" do
-      result_with = validate(%{"id" => @test_skill_uid}, [warn_on_missing_recommended: true], :skill)
+      result_with =
+        validate(%{"id" => @test_skill_uid}, [warn_on_missing_recommended: true], :skill)
+
       result_without = validate(%{"id" => @test_skill_uid}, [], :skill)
 
       recommended_warnings =
@@ -434,7 +445,10 @@ defmodule Schema.ValidatorTest do
         )
 
       # Without option, no recommended warnings
-      assert Enum.filter(warnings(result_without), &(&1[:warning] == "attribute_recommended_missing")) == []
+      assert Enum.filter(
+               warnings(result_without),
+               &(&1[:warning] == "attribute_recommended_missing")
+             ) == []
 
       # With option, should have at least one (skill has "name" as recommended attribute)
       assert length(recommended_warnings) > 0
