@@ -343,7 +343,7 @@ defmodule Schema.JsonSchema do
   end
 
   defp encode_attribute(_name, "string_t", attr) do
-    new_schema(attr) |> encode_string(attr)
+    new_schema(attr) |> encode_string(attr) |> put_string_constraints("string_t")
   end
 
   defp encode_attribute(name, "object_t", attr) do
@@ -366,8 +366,9 @@ defmodule Schema.JsonSchema do
 
   defp put_type(schema, type) do
     types = Map.get(Schema.data_types(), :attributes)
+    type_key = String.to_atom(type)
 
-    case Map.get(types, String.to_atom(type)) do
+    case Map.get(types, type_key) do
       nil ->
         schema
 
@@ -380,14 +381,48 @@ defmodule Schema.JsonSchema do
           |> Map.put("type", Types.encode_type(base_type))
 
         # add range from the type if available
-        case data[:range] do
-          [min, max | _] ->
-            schema
-            |> Map.put("minimum", min)
-            |> Map.put("maximum", max)
+        schema =
+          case data[:range] do
+            [min, max | _] ->
+              schema
+              |> Map.put("minimum", min)
+              |> Map.put("maximum", max)
 
-          _ ->
-            schema
+            _ ->
+              schema
+          end
+
+        put_string_constraints(schema, type)
+    end
+  end
+
+  # Applies max_len -> maxLength and regex -> pattern from the dictionary type
+  # (or its supertype) onto the given schema map.  Called for both string_t
+  # attributes and subtype string-like attributes resolved through put_type/2.
+  defp put_string_constraints(schema, type) do
+    types = Map.get(Schema.data_types(), :attributes)
+    type_key = String.to_atom(type)
+
+    case Map.get(types, type_key) do
+      nil ->
+        schema
+
+      data ->
+        super_data =
+          case data[:type] do
+            nil -> %{}
+            super_type -> Map.get(types, String.to_atom(super_type), %{})
+          end
+
+        schema =
+          case data[:max_len] || super_data[:max_len] do
+            nil -> schema
+            max_len -> Map.put(schema, "maxLength", max_len)
+          end
+
+        case data[:regex] || super_data[:regex] do
+          nil -> schema
+          regex -> Map.put(schema, "pattern", regex)
         end
     end
   end
