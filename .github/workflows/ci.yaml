@@ -72,7 +72,7 @@ jobs:
       - name: Linting
         run: task lint
 
-      - name: OASF schema validation
+      - name: Validate schema files against metaschemas
         run: task test:schema
 
       - name: Checking consistency between json and proto files

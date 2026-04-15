@@ -188,51 +188,37 @@ tasks:
   test:
     desc: Run all test suites
     cmds:
-      - task: test:e2e
-      - task: test:proto
       - task: test:schema
+      - task: test:proto
+      - task: test:server
 
   test:e2e:
-    desc: Run end-to-end test suite
+    desc: Deploy to an ephemeral kind cluster and verify the server starts healthy
     cmds:
       - defer: {task: down}
       - task: up
-      - task: test:api
+      - cmd: curl --retry 10 --retry-delay 3 --retry-connrefused --fail --silent http://localhost:8080/ > /dev/null
 
-  test:api:
-    desc: Run only API tests
+  test:schema:
+    desc: Validate schema JSON files against their metaschemas
     preconditions:
       - which go
-      - which curl
-      - 'curl --fail --silent http://localhost:8080/ > /dev/null'
-    dir: '{{ .ROOT_DIR }}/test/api'
+    dir: '{{ .ROOT_DIR }}/schema/test'
     cmds:
-      - cmd: go clean -testcache
-      - cmd: echo "Running API test suite..."
-      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
+      - cmd: echo "Validating schema files against metaschemas..."
+      - cmd: go test -v -count=1 ./...
 
   test:proto:
     desc: Test if protobuf files are in sync with the JSON schema
     preconditions:
       - which go
-    dir: '{{ .ROOT_DIR }}/test/proto'
+    dir: '{{ .ROOT_DIR }}/proto/test'
     cmds:
-      - cmd: go clean -testcache
-      - cmd: echo "Running proto checker test suite..."
-      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
-
-  test:schema:
-    desc: Validate OASF schema
-    preconditions:
-      - which go
-    dir: '{{ .ROOT_DIR }}/test/schema'
-    cmds:
-      - cmd: go clean -testcache
-      - cmd: echo "Running OASF schema test suite..."
-      - cmd: go test -v -failfast -test.v -test.paniconexit0 -ginkgo.timeout 2h -timeout 2h -ginkgo.v .
+      - cmd: echo "Checking proto ↔ JSON schema sync..."
+      - cmd: go test -v -count=1 ./...
 
   test:server:
-    desc: Test server code
+    desc: Test server code (includes schema integrity, API, and unit tests)
     preconditions:
       - which mix
     dir: '{{ .ROOT_DIR }}/server'
