@@ -35,16 +35,6 @@ jobs:
         shell: bash
         run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
 
-      - name: Set up Elixir
-        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
-        with:
-          elixir-version: '1.19'
-          otp-version: '28'
-
-      - name: Fetch Elixir deps
-        run: mix deps.get
-        working-directory: server
-
       - name: Build code
         run: |
           # NOTE: We are only interested in codebase, don't build images here
@@ -71,27 +61,6 @@ jobs:
 
       - name: Linting
         run: task lint
-
-      - name: OASF schema validation
-        run: task test:schema
-
-      - name: Checking consistency between json and proto files
-        run: task test:proto
-
-      - name: OASF Server Validation
-        run: task test:server
-
-      - name: Generate OASF server coverage report
-        working-directory: server
-        run: mix coveralls.json
-
-      - name: Upload OASF server coverage to Codecov
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
-        with:
-          files: server/cover/excoveralls.json
-          flags: server
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
 
   prepare:
     name: Prepare
@@ -219,6 +188,37 @@ jobs:
           IMAGE_TAG: ${{ needs.prepare.outputs.image_tag }}
         run: |
           task test:e2e
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
+        with:
+          elixir-version: '1.19'
+          otp-version: '28'
+
+      - name: Fetch Elixir deps
+        run: mix deps.get
+        working-directory: server
+
+      - name: Validate schema files against metaschemas
+        run: task test:schema
+
+      - name: Checking consistency between json and proto files
+        run: task test:proto
+
+      - name: OASF Server Validation
+        run: task test:server
+
+      - name: Generate OASF server coverage report
+        working-directory: server
+        run: mix coveralls.json
+
+      - name: Upload OASF server coverage to Codecov
+        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+        with:
+          files: server/cover/excoveralls.json
+          flags: server
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   server_release:
     name: Server Release

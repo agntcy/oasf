@@ -12,7 +12,7 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
-const schemaDir = "../../schema"
+const schemaDir = ".."
 
 type SchemaFile struct {
 	Path string
