@@ -16,18 +16,18 @@ ingress:
 image:
   repository: ghcr.io/agntcy/oasf-server
   versions:
-    - server: v0.7.6
+    - server: v0.7.8
       schema: 0.7.0
-      api: v0.4.0
-    - server: v0.8.5
+      api: v0.6.0
+    - server: v0.8.7
       schema: 0.8.0
-      api: v0.5.0
-    - server: v1.0.1
+      api: v0.6.0
+    - server: v1.0.4
       schema: 1.0.0
-      api: v0.5.1
+      api: v0.6.0
     - server: latest
       schema: 1.1.0-dev
-      api: v0.5.2
+      api: v0.6.0
       default: true
   pullPolicy: IfNotPresent
 
