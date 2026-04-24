@@ -1,0 +1,47 @@
+# Trivy vulnerability ignore list for oasf-server container image scans.
+#
+# Format: one CVE per line (optionally followed by an inline comment).
+# Use sparingly and only with a documented justification below.
+# Review entries periodically - remove when a fresh base image or rebuilt
+# :latest tag eliminates the finding.
+#
+# ---------------------------------------------------------------------------
+# CVE-2026-31789  libcrypto3 (OpenSSL)  -- suppressed
+# ---------------------------------------------------------------------------
+# Heap buffer overflow when converting excessively large OCTET STRING values
+# (e.g. SKID/AKID X.509 extensions) to hex. Upstream OpenSSL severity: LOW.
+# Only exploitable on 32-bit platforms and only when parsing untrusted X.509
+# certificates larger than ~1 GB.
+#
+# Applicability to oasf-server:
+#   - Containers run on 64-bit platforms (linux/amd64, linux/arm64).
+#   - oasf-server does not parse untrusted X.509 certificates at runtime.
+#
+# Fix availability:
+#   - libcrypto3 3.5.6-r0 is available in Alpine 3.23 main (published
+#     2026-04-09 22:06:32 UTC), a few hours after the current :latest image
+#     was built. The Dockerfile already runs `apk upgrade --no-cache`, so the
+#     next rebuild of :latest (via a new vX.Y.Z release tag) will pick up the
+#     fix automatically and this entry can be removed.
+#
+# Reference: https://security.alpinelinux.org/vuln/CVE-2026-31789
+CVE-2026-31789
+#
+# ---------------------------------------------------------------------------
+# CVE-2026-22184  zlib  -- suppressed (false positive on Alpine)
+# ---------------------------------------------------------------------------
+# Global buffer overflow in the standalone `untgz` demo utility shipped under
+# zlib's contrib/ directory. The core libz compression library is NOT
+# affected.
+#
+# Applicability to oasf-server:
+#   - Alpine does not package or ship the `untgz` demo utility, so neither
+#     the base image nor oasf-server contains the vulnerable binary.
+#   - Trivy flags this purely from the NVD CPE range (zlib <= 1.3.1.2),
+#     which makes it a vendor-level false positive for Alpine-based images.
+#
+# Upstream Alpine position: aports issue #17901 was resolved with the
+# clarification that Alpine Docker images are not affected.
+#
+# Reference: https://security.alpinelinux.org/vuln/CVE-2026-22184
+CVE-2026-22184
