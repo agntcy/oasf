@@ -270,33 +270,17 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec module_categories(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def module_categories(conn, params) do
-    extensions_opt = parse_options(extensions(params))
+  def module_categories(conn, params), do: categories_action(:module, conn, params)
 
-    handle_with_optional_id_and_name(
-      conn,
-      params,
-      :module,
-      fn ->
-        Schema.taxonomy(:module, extensions_opt, nil)
-        |> Schema.Utils.sort_taxonomy_tree()
-        |> taxonomy_ordered_object()
-      end,
-      fn id_or_name ->
-        result = Schema.taxonomy(:module, extensions_opt, id_or_name)
-
-        if map_size(result) == 0,
-          do: nil,
-          else: result |> Schema.Utils.sort_taxonomy_tree() |> taxonomy_ordered_object()
-      end
-    )
-  end
-
-  @spec taxonomy_modules(map()) :: map()
-  def taxonomy_modules(params) do
+  @doc """
+  Builds the taxonomy tree for the given `family`, optionally scoped by an
+  `id` or `name` query parameter.
+  """
+  @spec taxonomy(Schema.class_family(), map()) :: map()
+  def taxonomy(family, params) do
     extensions = parse_options(extensions(params))
     parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
-    Schema.taxonomy(:module, extensions, parent)
+    Schema.taxonomy(family, extensions, parent)
   end
 
   @doc """
@@ -341,34 +325,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec skill_categories(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def skill_categories(conn, params) do
-    extensions_opt = parse_options(extensions(params))
-
-    handle_with_optional_id_and_name(
-      conn,
-      params,
-      :skill,
-      fn ->
-        Schema.taxonomy(:skill, extensions_opt, nil)
-        |> Schema.Utils.sort_taxonomy_tree()
-        |> taxonomy_ordered_object()
-      end,
-      fn id_or_name ->
-        result = Schema.taxonomy(:skill, extensions_opt, id_or_name)
-
-        if map_size(result) == 0,
-          do: nil,
-          else: result |> Schema.Utils.sort_taxonomy_tree() |> taxonomy_ordered_object()
-      end
-    )
-  end
-
-  @spec taxonomy_skills(map()) :: map()
-  def taxonomy_skills(params) do
-    extensions = parse_options(extensions(params))
-    parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
-    Schema.taxonomy(:skill, extensions, parent)
-  end
+  def skill_categories(conn, params), do: categories_action(:skill, conn, params)
 
   @doc """
   Get the taxonomy tree for domains.
@@ -412,33 +369,29 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec domain_categories(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def domain_categories(conn, params) do
+  def domain_categories(conn, params), do: categories_action(:domain, conn, params)
+
+  # Shared body for skill_categories/2, domain_categories/2, module_categories/2.
+  defp categories_action(family, conn, params) do
     extensions_opt = parse_options(extensions(params))
 
     handle_with_optional_id_and_name(
       conn,
       params,
-      :domain,
+      family,
       fn ->
-        Schema.taxonomy(:domain, extensions_opt, nil)
+        Schema.taxonomy(family, extensions_opt, nil)
         |> Schema.Utils.sort_taxonomy_tree()
         |> taxonomy_ordered_object()
       end,
       fn id_or_name ->
-        result = Schema.taxonomy(:domain, extensions_opt, id_or_name)
+        result = Schema.taxonomy(family, extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
           else: result |> Schema.Utils.sort_taxonomy_tree() |> taxonomy_ordered_object()
       end
     )
-  end
-
-  @spec taxonomy_domains(map()) :: map()
-  def taxonomy_domains(params) do
-    extensions = parse_options(extensions(params))
-    parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
-    Schema.taxonomy(:domain, extensions, parent)
   end
 
   @doc """
@@ -486,32 +439,17 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec modules(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def modules(conn, params) do
-    profiles_opt = parse_options(profiles(params))
-
-    handle_with_optional_id_and_name(
-      conn,
-      params,
-      :module,
-      fn -> modules(params) end,
-      fn id_or_name ->
-        case find_class(:module, id_or_name, profiles_opt) do
-          nil -> nil
-          data -> add_objects(data, params)
-        end
-      end
-    )
-  end
+  def modules(conn, params), do: classes_action(:module, conn, params)
 
   @doc """
-  Returns the list of modules.
+  Returns the list of classes of the given `family`, cleaned for response.
   """
-  @spec modules(map) :: map
-  def modules(params) do
+  @spec classes(Schema.class_family(), map()) :: map()
+  def classes(family, params) do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
 
-    Schema.classes(:module, extensions, profiles)
+    Schema.classes(family, extensions, profiles)
     |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
@@ -560,34 +498,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec skills(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def skills(conn, params) do
-    profiles_opt = parse_options(profiles(params))
-
-    handle_with_optional_id_and_name(
-      conn,
-      params,
-      :skill,
-      fn -> skills(params) end,
-      fn id_or_name ->
-        case find_class(:skill, id_or_name, profiles_opt) do
-          nil -> nil
-          data -> add_objects(data, params)
-        end
-      end
-    )
-  end
-
-  @doc """
-  Returns the list of skills.
-  """
-  @spec skills(map) :: map
-  def skills(params) do
-    extensions = parse_options(extensions(params))
-    profiles = parse_options(profiles(params))
-
-    Schema.classes(:skill, extensions, profiles)
-    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
-  end
+  def skills(conn, params), do: classes_action(:skill, conn, params)
 
   @doc """
   Get the schema domains.
@@ -634,33 +545,24 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec domains(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def domains(conn, params) do
+  def domains(conn, params), do: classes_action(:domain, conn, params)
+
+  # Shared body for skills/2, domains/2, modules/2 Phoenix actions.
+  defp classes_action(family, conn, params) do
     profiles_opt = parse_options(profiles(params))
 
     handle_with_optional_id_and_name(
       conn,
       params,
-      :domain,
-      fn -> domains(params) end,
+      family,
+      fn -> classes(family, params) end,
       fn id_or_name ->
-        case find_class(:domain, id_or_name, profiles_opt) do
+        case find_class(family, id_or_name, profiles_opt) do
           nil -> nil
           data -> add_objects(data, params)
         end
       end
     )
-  end
-
-  @doc """
-  Returns the list of domains.
-  """
-  @spec domains(map) :: map
-  def domains(params) do
-    extensions = parse_options(extensions(params))
-    profiles = parse_options(profiles(params))
-
-    Schema.classes(:domain, extensions, profiles)
-    |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
   @doc """
@@ -785,22 +687,17 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_skill_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_skill_class(conn, %{"name" => name} = params) do
-    options = Map.get(params, "package_name") |> parse_java_package()
+  def json_skill_class(conn, %{"name" => name} = params),
+    do: json_class(:skill, conn, name, params)
 
-    case skill_ex(name, params) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Skill class #{name} not found"})
-
-      data ->
-        class = Schema.JsonSchema.encode(data, options)
-        send_json_resp(conn, class)
-    end
-  end
-
-  def skill_ex(name, params) do
+  @doc """
+  Internal helper that fetches a single fully-expanded class (with related
+  entities) for the given `family`, used by JSON-schema and graph endpoints.
+  """
+  @spec class_ex(Schema.class_family(), String.t(), map()) :: nil | map()
+  def class_ex(family, name, params) do
     extension = extension(params)
-    Schema.entity_ex(extension, :skill, name, parse_options(profiles(params)))
+    Schema.entity_ex(extension, family, name, parse_options(profiles(params)))
   end
 
   @doc """
@@ -830,23 +727,8 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_domain_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_domain_class(conn, %{"name" => name} = params) do
-    options = Map.get(params, "package_name") |> parse_java_package()
-
-    case domain_ex(name, params) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Domain class #{name} not found"})
-
-      data ->
-        class = Schema.JsonSchema.encode(data, options)
-        send_json_resp(conn, class)
-    end
-  end
-
-  def domain_ex(name, params) do
-    extension = extension(params)
-    Schema.entity_ex(extension, :domain, name, parse_options(profiles(params)))
-  end
+  def json_domain_class(conn, %{"name" => name} = params),
+    do: json_class(:domain, conn, name, params)
 
   @doc """
   Get JSON schema definitions for a given module class.
@@ -875,22 +757,22 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec json_module_class(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def json_module_class(conn, %{"name" => name} = params) do
+  def json_module_class(conn, %{"name" => name} = params),
+    do: json_class(:module, conn, name, params)
+
+  # Shared body for json_skill_class / json_domain_class / json_module_class.
+  defp json_class(family, conn, name, params) do
     options = Map.get(params, "package_name") |> parse_java_package()
 
-    case module_ex(name, params) do
+    case class_ex(family, name, params) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Module class #{name} not found"})
+        label = class_family_label(family) |> String.capitalize()
+        send_json_resp(conn, 404, %{error: "#{label} class #{name} not found"})
 
       data ->
         class = Schema.JsonSchema.encode(data, options)
         send_json_resp(conn, class)
     end
-  end
-
-  def module_ex(name, params) do
-    extension = extension(params)
-    Schema.entity_ex(extension, :module, name, parse_options(profiles(params)))
   end
 
   @doc """
@@ -1538,25 +1420,8 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_skill(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_skill(conn, %{"name" => name} = params) do
-    sample_skill(conn, name, params)
-  end
-
-  defp sample_skill(conn, name, options) do
-    extension = extension(options)
-    profiles = profiles(options) |> parse_options()
-
-    case Schema.class(:skill, extension, name) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Skill class #{name} not found"})
-
-      class ->
-        class =
-          Schema.generate_class(class, profiles)
-
-        send_json_resp(conn, class)
-    end
-  end
+  def sample_skill(conn, %{"name" => name} = params),
+    do: sample_class(:skill, conn, name, params)
 
   @doc """
   Returns randomly generated domain class sample data for the given name.
@@ -1585,25 +1450,8 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_domain(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_domain(conn, %{"name" => name} = params) do
-    sample_domain(conn, name, params)
-  end
-
-  defp sample_domain(conn, name, options) do
-    extension = extension(options)
-    profiles = profiles(options) |> parse_options()
-
-    case Schema.class(:domain, extension, name) do
-      nil ->
-        send_json_resp(conn, 404, %{error: "Domain class #{name} not found"})
-
-      class ->
-        class =
-          Schema.generate_class(class, profiles)
-
-        send_json_resp(conn, class)
-    end
-  end
+  def sample_domain(conn, %{"name" => name} = params),
+    do: sample_class(:domain, conn, name, params)
 
   @doc """
   Returns randomly generated module class sample data for the given name.
@@ -1632,23 +1480,24 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec sample_module(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def sample_module(conn, %{"name" => name} = params) do
-    sample_module(conn, name, params)
-  end
+  def sample_module(conn, %{"name" => name} = params),
+    do: sample_class(:module, conn, name, params)
 
-  defp sample_module(conn, name, options) do
+  # Shared body for sample_skill/2, sample_domain/2, sample_module/2.
+  defp sample_class(family, conn, name, options) do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.class(:module, extension, name) do
+    case Schema.class(family, extension, name) do
       nil ->
-        send_json_resp(conn, 404, %{error: "Module class #{name} not found"})
+        label = class_family_label(family) |> String.capitalize()
+        send_json_resp(conn, 404, %{error: "#{label} class #{name} not found"})
 
       class ->
-        class =
+        sample =
           Schema.generate_class(class, profiles)
 
-        send_json_resp(conn, class)
+        send_json_resp(conn, sample)
     end
   end
 

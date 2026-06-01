@@ -1133,14 +1133,9 @@ defmodule SchemaWeb.PageView do
 
     {classes, all_classes} =
       case family do
-        "skill" ->
-          {SchemaController.skills(params_without_profiles), Schema.all_classes(:skill)}
-
-        "domain" ->
-          {SchemaController.domains(params_without_profiles), Schema.all_classes(:domain)}
-
-        "module" ->
-          {SchemaController.modules(params_without_profiles), Schema.all_classes(:module)}
+        f when f in ["skill", "domain", "module"] ->
+          fam = String.to_atom(f)
+          {SchemaController.classes(fam, params_without_profiles), Schema.all_classes(fam)}
 
         _ ->
           Logger.error("Unexpected family value: #{inspect(family)}")

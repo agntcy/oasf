@@ -3,60 +3,37 @@
 
 defmodule SchemaWeb.PageController do
   @moduledoc """
-  The schema server web pages
+  The schema server web pages.
+
+  All skill/domain/module pages share the same render logic — each Phoenix
+  action is a one-line delegate to a family-parameterized helper.
   """
   use SchemaWeb, :controller
 
   alias SchemaWeb.SchemaController
 
+  # ----------------------------------------------------------------------------
+  # Class graphs — /skill/graph/:name, /domain/graph/:name, /module/graph/:name
+  # ----------------------------------------------------------------------------
+
   @spec skill_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def skill_graph(conn, %{"name" => name} = params) do
-    case SchemaController.skill_ex(name, params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
-
-      class ->
-        data =
-          Schema.Graph.build(class)
-          |> Map.put(:categories_path, "skill_categories")
-
-        render(conn, "class_graph.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
-    end
-  end
+  def skill_graph(conn, %{"name" => name} = params), do: class_graph(:skill, conn, name, params)
 
   @spec domain_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def domain_graph(conn, %{"name" => name} = params) do
-    case SchemaController.domain_ex(name, params) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
-
-      class ->
-        data =
-          Schema.Graph.build(class)
-          |> Map.put(:categories_path, "domain_categories")
-
-        render(conn, "class_graph.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
-    end
-  end
+  def domain_graph(conn, %{"name" => name} = params), do: class_graph(:domain, conn, name, params)
 
   @spec module_graph(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def module_graph(conn, %{"name" => name} = params) do
-    case SchemaController.module_ex(name, params) do
+  def module_graph(conn, %{"name" => name} = params), do: class_graph(:module, conn, name, params)
+
+  defp class_graph(family, conn, name, params) do
+    case SchemaController.class_ex(family, name, params) do
       nil ->
         send_resp(conn, 404, "Not Found: #{name}")
 
       class ->
         data =
           Schema.Graph.build(class)
-          |> Map.put(:categories_path, "module_categories")
+          |> Map.put(:categories_path, "#{family}_categories")
 
         render(conn, "class_graph.html",
           extensions: Schema.extensions(),
@@ -82,6 +59,10 @@ defmodule SchemaWeb.PageController do
         )
     end
   end
+
+  # ----------------------------------------------------------------------------
+  # Data types / profiles / dictionary
+  # ----------------------------------------------------------------------------
 
   @doc """
   Renders the data types.
@@ -135,150 +116,6 @@ defmodule SchemaWeb.PageController do
   end
 
   @doc """
-  Renders main skills or the skills in a given main skill.
-  """
-  @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def skill_categories(conn, %{"name" => name} = params) do
-    # Use name parameter directly for taxonomy function
-    taxonomy_params = Map.put(params, "name", name)
-    taxonomy = SchemaController.taxonomy_skills(taxonomy_params)
-
-    if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{name}")
-    else
-      # Extract the category data from the taxonomy map (which has the category name as key)
-      {_category_key, category_data} = Enum.at(taxonomy, 0)
-
-      data =
-        category_data
-        |> Map.merge(%{
-          class_type: "skill",
-          classes_path: "skills",
-          categories_path: "skill_categories"
-        })
-
-      render(conn, "category.html",
-        extensions: Schema.extensions(),
-        profiles: SchemaController.get_profiles(params),
-        data: data
-      )
-    end
-  end
-
-  def skill_categories(conn, params) do
-    data =
-      Map.put_new(params, "extensions", "")
-      |> SchemaController.taxonomy_skills()
-      |> (fn taxonomy -> %{attributes: taxonomy} end).()
-      |> sort_attributes(:id)
-      |> sort_classes()
-      |> Map.put(:categories_path, "skill_categories")
-      |> Map.put(:classes_path, "skills")
-
-    render(conn, "index.html",
-      extensions: Schema.extensions(),
-      profiles: SchemaController.get_profiles(params),
-      data: data
-    )
-  end
-
-  @doc """
-  Renders main domains or the domains in a given main domain.
-  """
-  @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def domain_categories(conn, %{"name" => name} = params) do
-    # Use name parameter directly for taxonomy function
-    taxonomy_params = Map.put(params, "name", name)
-    taxonomy = SchemaController.taxonomy_domains(taxonomy_params)
-
-    if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{name}")
-    else
-      # Extract the category data from the taxonomy map (which has the category name as key)
-      {_category_key, category_data} = Enum.at(taxonomy, 0)
-
-      data =
-        category_data
-        |> Map.merge(%{
-          class_type: "domain",
-          classes_path: "domains",
-          categories_path: "domain_categories"
-        })
-
-      render(conn, "category.html",
-        extensions: Schema.extensions(),
-        profiles: SchemaController.get_profiles(params),
-        data: data
-      )
-    end
-  end
-
-  def domain_categories(conn, params) do
-    data =
-      Map.put_new(params, "extensions", "")
-      |> SchemaController.taxonomy_domains()
-      |> (fn taxonomy -> %{attributes: taxonomy} end).()
-      |> sort_attributes(:id)
-      |> sort_classes()
-      |> Map.put(:categories_path, "domain_categories")
-      |> Map.put(:classes_path, "domains")
-
-    render(conn, "index.html",
-      extensions: Schema.extensions(),
-      profiles: SchemaController.get_profiles(params),
-      data: data
-    )
-  end
-
-  @doc """
-  Renders main modules or the modules in a given main module.
-  """
-  @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def module_categories(conn, %{"name" => name} = params) do
-    # Use name parameter directly for taxonomy function
-    taxonomy_params = Map.put(params, "name", name)
-    taxonomy = SchemaController.taxonomy_modules(taxonomy_params)
-
-    if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{name}")
-    else
-      # Extract the category data from the taxonomy map (which has the category name as key)
-      {_category_key, category_data} = Enum.at(taxonomy, 0)
-
-      data =
-        category_data
-        |> Map.merge(%{
-          class_type: "module",
-          classes_path: "modules",
-          categories_path: "module_categories"
-        })
-
-      render(conn, "category.html",
-        extensions: Schema.extensions(),
-        profiles: SchemaController.get_profiles(params),
-        data: data
-      )
-    end
-  end
-
-  def module_categories(conn, params) do
-    data =
-      Map.put_new(params, "extensions", "")
-      |> SchemaController.taxonomy_modules()
-      |> (fn taxonomy -> %{attributes: taxonomy} end).()
-      |> sort_attributes(:id)
-      |> sort_classes()
-      |> Map.put(:categories_path, "module_categories")
-      |> Map.put(:classes_path, "modules")
-
-    render(conn, "index.html",
-      extensions: Schema.extensions(),
-      profiles: SchemaController.get_profiles(params),
-      data: data
-    )
-  end
-
-  @doc """
   Renders the attribute dictionary.
   """
   @spec dictionary(Plug.Conn.t(), any) :: Plug.Conn.t()
@@ -292,117 +129,103 @@ defmodule SchemaWeb.PageController do
     )
   end
 
+  # ----------------------------------------------------------------------------
+  # Category pages — /skill_categories[/:name], same for domain/module
+  # ----------------------------------------------------------------------------
+
   @doc """
-  Renders skills.
+  Renders main skills or the skills in a given main skill.
   """
-  @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def skills(conn, %{"name" => name} = params) do
-    extension = params["extension"]
-    profiles = parse_profiles_from_params(params)
+  @spec skill_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def skill_categories(conn, params), do: class_categories(:skill, conn, params)
 
-    case SchemaController.class(:skill, extension, name, profiles) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
+  @doc """
+  Renders main domains or the domains in a given main domain.
+  """
+  @spec domain_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def domain_categories(conn, params), do: class_categories(:domain, conn, params)
 
-      data ->
-        children =
-          Schema.Utils.find_children(Schema.all_classes(:skill), data[:name])
-          |> Enum.reject(fn item -> item[:hidden?] == true end)
+  @doc """
+  Renders main modules or the modules in a given main module.
+  """
+  @spec module_categories(Plug.Conn.t(), map) :: Plug.Conn.t()
+  def module_categories(conn, params), do: class_categories(:module, conn, params)
 
-        data =
-          data
-          |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, name))
-          |> Map.put(:subclasses, children)
+  defp class_categories(family, conn, %{"name" => name} = params) do
+    taxonomy_params = Map.put(params, "name", name)
+    taxonomy = SchemaController.taxonomy(family, taxonomy_params)
 
-        render(conn, "class.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
+    if map_size(taxonomy) == 0 do
+      send_resp(conn, 404, "Not Found: #{name}")
+    else
+      {_category_key, category_data} = Enum.at(taxonomy, 0)
+
+      data =
+        category_data
+        |> Map.merge(%{
+          class_type: to_string(family),
+          classes_path: "#{family}s",
+          categories_path: "#{family}_categories"
+        })
+
+      render(conn, "category.html",
+        extensions: Schema.extensions(),
+        profiles: SchemaController.get_profiles(params),
+        data: data
+      )
     end
   end
 
-  def skills(conn, params) do
-    data = %{
-      classes:
-        SchemaController.skills(params)
-        |> sort_by(:uid),
-      title: "Skills",
-      description: "The OASF skills",
-      classes_path: "skills"
-    }
+  defp class_categories(family, conn, params) do
+    data =
+      Map.put_new(params, "extensions", "")
+      |> then(&SchemaController.taxonomy(family, &1))
+      |> (fn taxonomy -> %{attributes: taxonomy} end).()
+      |> sort_attributes(:id)
+      |> sort_classes()
+      |> Map.put(:categories_path, "#{family}_categories")
+      |> Map.put(:classes_path, "#{family}s")
 
-    render(conn, "classes.html",
+    render(conn, "index.html",
       extensions: Schema.extensions(),
       profiles: SchemaController.get_profiles(params),
       data: data
     )
   end
+
+  # ----------------------------------------------------------------------------
+  # Class pages — /skills[/:name], same for domain/module
+  # ----------------------------------------------------------------------------
+
+  @doc """
+  Renders skills.
+  """
+  @spec skills(Plug.Conn.t(), any) :: Plug.Conn.t()
+  def skills(conn, params), do: classes(:skill, conn, params)
 
   @doc """
   Renders domains.
   """
   @spec domains(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def domains(conn, %{"name" => name} = params) do
-    extension = params["extension"]
-    profiles = parse_profiles_from_params(params)
-
-    case SchemaController.class(:domain, extension, name, profiles) do
-      nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
-
-      data ->
-        children =
-          Schema.Utils.find_children(Schema.all_classes(:domain), data[:name])
-          |> Enum.reject(fn item -> item[:hidden?] == true end)
-
-        data =
-          data
-          |> sort_attributes_by_key()
-          |> Map.put(:key, Schema.Utils.to_uid(extension, name))
-          |> Map.put(:subclasses, children)
-
-        render(conn, "class.html",
-          extensions: Schema.extensions(),
-          profiles: SchemaController.get_profiles(params),
-          data: data
-        )
-    end
-  end
-
-  def domains(conn, params) do
-    data = %{
-      classes:
-        SchemaController.domains(params)
-        |> sort_by(:uid),
-      title: "Domains",
-      description: "The OASF domains",
-      classes_path: "domains"
-    }
-
-    render(conn, "classes.html",
-      extensions: Schema.extensions(),
-      profiles: SchemaController.get_profiles(params),
-      data: data
-    )
-  end
+  def domains(conn, params), do: classes(:domain, conn, params)
 
   @doc """
   Renders modules.
   """
   @spec modules(Plug.Conn.t(), any) :: Plug.Conn.t()
-  def modules(conn, %{"name" => name} = params) do
+  def modules(conn, params), do: classes(:module, conn, params)
+
+  defp classes(family, conn, %{"name" => name} = params) do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:module, extension, name, profiles) do
+    case SchemaController.class(family, extension, name, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
-          Schema.Utils.find_children(Schema.all_classes(:module), data[:name])
+          Schema.Utils.find_children(Schema.all_classes(family), data[:name])
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         data =
@@ -419,14 +242,16 @@ defmodule SchemaWeb.PageController do
     end
   end
 
-  def modules(conn, params) do
+  defp classes(family, conn, params) do
+    plural = "#{family}s"
+
     data = %{
       classes:
-        SchemaController.modules(params)
+        SchemaController.classes(family, params)
         |> sort_by(:uid),
-      title: "Modules",
-      description: "The OASF modules",
-      classes_path: "modules"
+      title: String.capitalize(plural),
+      description: "The OASF #{plural}",
+      classes_path: plural
     }
 
     render(conn, "classes.html",
@@ -435,6 +260,10 @@ defmodule SchemaWeb.PageController do
       data: data
     )
   end
+
+  # ----------------------------------------------------------------------------
+  # Objects
+  # ----------------------------------------------------------------------------
 
   @doc """
   Renders objects.
@@ -477,6 +306,10 @@ defmodule SchemaWeb.PageController do
       data: data
     )
   end
+
+  # ----------------------------------------------------------------------------
+  # Helpers
+  # ----------------------------------------------------------------------------
 
   defp parse_extensions_from_params(params) do
     case params["extensions"] do
