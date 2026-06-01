@@ -105,12 +105,12 @@ defmodule Schema.Utils do
     end
   end
 
-  @spec update_dictionary(map, map, map, map, map) :: map
-  def update_dictionary(dictionary, skills, domains, modules, objects) do
-    dictionary
-    |> link_classes(:skill, skills)
-    |> link_classes(:domain, domains)
-    |> link_classes(:module, modules)
+  @spec update_dictionary(map(), %{atom() => map()}, map()) :: map()
+  def update_dictionary(dictionary, classes_by_family, objects) do
+    classes_by_family
+    |> Enum.reduce(dictionary, fn {family, classes}, acc ->
+      link_classes(acc, family, classes)
+    end)
     |> link_objects(objects)
     |> update_data_types(objects)
     |> define_datetime_attributes()
