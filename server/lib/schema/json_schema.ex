@@ -190,9 +190,7 @@ defmodule Schema.JsonSchema do
 
           all_entities =
             case family do
-              "skill" -> Schema.all_skills()
-              "domain" -> Schema.all_domains()
-              "module" -> Schema.all_modules()
+              f when f in ["skill", "domain", "module"] -> Schema.all_classes(String.to_atom(f))
               _ -> Schema.all_objects()
             end
 
@@ -202,9 +200,7 @@ defmodule Schema.JsonSchema do
               # Filter out category classes (category: true) for skills/domains/modules
               # Filter out hidden objects (hidden?: true) for objects
               case family do
-                "skill" -> Map.get(child, :category) == true
-                "domain" -> Map.get(child, :category) == true
-                "module" -> Map.get(child, :category) == true
+                f when f in ["skill", "domain", "module"] -> Map.get(child, :category) == true
                 _ -> Map.get(child, :hidden?) == true
               end
             end)
@@ -451,9 +447,7 @@ defmodule Schema.JsonSchema do
     if attr[:is_enum] do
       all_classes_fn =
         case family do
-          "skill" -> Schema.all_skills()
-          "domain" -> Schema.all_domains()
-          "module" -> Schema.all_modules()
+          f when f in ["skill", "domain", "module"] -> Schema.all_classes(String.to_atom(f))
           _ -> schema
         end
 

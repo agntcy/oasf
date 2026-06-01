@@ -300,13 +300,13 @@ defmodule SchemaWeb.PageController do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:skills, extension, name, profiles) do
+    case SchemaController.class(:skill, extension, name, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
-          Schema.Utils.find_children(Schema.all_skills(), data[:name])
+          Schema.Utils.find_children(Schema.all_classes(:skill), data[:name])
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         data =
@@ -348,13 +348,13 @@ defmodule SchemaWeb.PageController do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:domains, extension, name, profiles) do
+    case SchemaController.class(:domain, extension, name, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
-          Schema.Utils.find_children(Schema.all_domains(), data[:name])
+          Schema.Utils.find_children(Schema.all_classes(:domain), data[:name])
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         data =
@@ -396,13 +396,13 @@ defmodule SchemaWeb.PageController do
     extension = params["extension"]
     profiles = parse_profiles_from_params(params)
 
-    case SchemaController.class(:modules, extension, name, profiles) do
+    case SchemaController.class(:module, extension, name, profiles) do
       nil ->
         send_resp(conn, 404, "Not Found: #{name}")
 
       data ->
         children =
-          Schema.Utils.find_children(Schema.all_modules(), data[:name])
+          Schema.Utils.find_children(Schema.all_classes(:module), data[:name])
           |> Enum.reject(fn item -> item[:hidden?] == true end)
 
         data =

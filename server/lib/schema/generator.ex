@@ -936,10 +936,12 @@ defmodule Schema.Generator do
   defp get_valid_classes(field) do
     {all_classes_fn, class_fn} =
       case field[:family] do
-        "skill" -> {Schema.all_skills(), &Schema.skill/1}
-        "domain" -> {Schema.all_domains(), &Schema.domain/1}
-        "module" -> {Schema.all_modules(), &Schema.module/1}
-        _ -> {[], fn _ -> nil end}
+        f when f in ["skill", "domain", "module"] ->
+          fam_atom = String.to_atom(f)
+          {Schema.all_classes(fam_atom), &Schema.class(fam_atom, &1)}
+
+        _ ->
+          {[], fn _ -> nil end}
       end
 
     if field[:is_enum] do

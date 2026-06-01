@@ -157,7 +157,7 @@ defmodule Schema.GraphTest do
   describe "build/1 with real schema objects" do
     test "builds graph for a known domain class" do
       # Use a domain that is known to have a proper entities map
-      domain = Schema.domain("internet_of_things")
+      domain = Schema.class(:domain, "internet_of_things")
 
       if domain && is_map(domain[:entities]) do
         result = Graph.build(domain)

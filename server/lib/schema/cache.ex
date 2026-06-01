@@ -171,86 +171,51 @@ defmodule Schema.Cache do
   @spec all_objects(__MODULE__.t()) :: map()
   def all_objects(%__MODULE__{all_objects: all_objects}), do: all_objects
 
-  @spec skills(__MODULE__.t()) :: map()
-  def skills(%__MODULE__{skills: skills}), do: skills
+  @typedoc """
+  The supported class families.  Each family is backed by its own field on the
+  cache struct but shares identical lookup and export semantics.
+  """
+  @type class_family() :: :skill | :domain | :module
 
-  @spec export_skills(__MODULE__.t()) :: map()
-  def export_skills(%__MODULE__{skills: skills, dictionary: dictionary}) do
-    Enum.into(skills, Map.new(), fn {name, skill} ->
-      {name, enrich(skill, dictionary[:attributes])}
+  @doc """
+  Returns the raw map of classes for the given `family` (not enriched).
+  """
+  @spec classes(__MODULE__.t(), class_family()) :: map()
+  def classes(%__MODULE__{skills: classes}, :skill), do: classes
+  def classes(%__MODULE__{domains: classes}, :domain), do: classes
+  def classes(%__MODULE__{modules: classes}, :module), do: classes
+
+  @doc """
+  Returns the map of classes for the given `family`, with attributes enriched
+  from the dictionary.
+  """
+  @spec export_classes(__MODULE__.t(), class_family()) :: map()
+  def export_classes(%__MODULE__{dictionary: dictionary} = cache, family) do
+    cache
+    |> classes(family)
+    |> Enum.into(Map.new(), fn {name, class} ->
+      {name, enrich(class, dictionary[:attributes])}
     end)
   end
 
-  def skill(%__MODULE__{dictionary: dictionary, skills: skills}, id) do
-    case Map.get(skills, id) do
-      nil ->
-        nil
-
-      skill ->
-        enrich(skill, dictionary[:attributes])
-    end
-  end
-
-  @spec find_skill(Schema.Cache.t(), any) :: nil | map
-  def find_skill(%__MODULE__{dictionary: dictionary, skills: skills}, uid) do
-    case Enum.find(skills, fn {_, skill} -> skill[:uid] == uid end) do
-      {_, skill} -> enrich(skill, dictionary[:attributes])
+  @doc """
+  Returns a single enriched class of the given `family` by key, or `nil`.
+  """
+  @spec class(__MODULE__.t(), class_family(), atom()) :: nil | class_t()
+  def class(%__MODULE__{dictionary: dictionary} = cache, family, id) do
+    case Map.get(classes(cache, family), id) do
       nil -> nil
+      class -> enrich(class, dictionary[:attributes])
     end
   end
 
-  @spec domains(__MODULE__.t()) :: map()
-  def domains(%__MODULE__{domains: domains}), do: domains
-
-  @spec export_domains(__MODULE__.t()) :: map()
-  def export_domains(%__MODULE__{domains: domains, dictionary: dictionary}) do
-    Enum.into(domains, Map.new(), fn {name, domain} ->
-      {name, enrich(domain, dictionary[:attributes])}
-    end)
-  end
-
-  def domain(%__MODULE__{dictionary: dictionary, domains: domains}, id) do
-    case Map.get(domains, id) do
-      nil ->
-        nil
-
-      domain ->
-        enrich(domain, dictionary[:attributes])
-    end
-  end
-
-  @spec find_domain(Schema.Cache.t(), any) :: nil | map
-  def find_domain(%__MODULE__{dictionary: dictionary, domains: domains}, uid) do
-    case Enum.find(domains, fn {_, domain} -> domain[:uid] == uid end) do
-      {_, domain} -> enrich(domain, dictionary[:attributes])
-      nil -> nil
-    end
-  end
-
-  @spec modules(__MODULE__.t()) :: map()
-  def modules(%__MODULE__{modules: modules}), do: modules
-
-  @spec export_modules(__MODULE__.t()) :: map()
-  def export_modules(%__MODULE__{modules: modules, dictionary: dictionary}) do
-    Enum.into(modules, Map.new(), fn {name, module} ->
-      {name, enrich(module, dictionary[:attributes])}
-    end)
-  end
-
-  def module(%__MODULE__{dictionary: dictionary, modules: modules}, id) do
-    case Map.get(modules, id) do
-      nil ->
-        nil
-
-      module ->
-        enrich(module, dictionary[:attributes])
-    end
-  end
-
-  @spec find_module(Schema.Cache.t(), any) :: nil | map
-  def find_module(%__MODULE__{dictionary: dictionary, modules: modules}, uid) do
-    case Enum.find(modules, fn {_, module} -> module[:uid] == uid end) do
-      {_, module} -> enrich(module, dictionary[:attributes])
+  @doc """
+  Finds a single enriched class of the given `family` by its `uid`, or `nil`.
+  """
+  @spec find_class(__MODULE__.t(), class_family(), any) :: nil | map()
+  def find_class(%__MODULE__{dictionary: dictionary} = cache, family, uid) do
+    case Enum.find(classes(cache, family), fn {_, class} -> class[:uid] == uid end) do
+      {_, class} -> enrich(class, dictionary[:attributes])
       nil -> nil
     end
   end
@@ -276,7 +241,7 @@ defmodule Schema.Cache do
     end
   end
 
-  @spec entity_ex(__MODULE__.t(), atom(), atom()) :: nil | map()
+  @spec entity_ex(__MODULE__.t(), :object | class_family(), atom()) :: nil | map()
   def entity_ex(
         %__MODULE__{
           dictionary: dictionary,
@@ -284,16 +249,14 @@ defmodule Schema.Cache do
           skills: skills,
           domains: domains,
           modules: modules
-        },
+        } = cache,
         type,
         id
       ) do
     entities =
       case type do
         :object -> objects
-        :skill -> skills
-        :domain -> domains
-        :module -> modules
+        family when family in [:skill, :domain, :module] -> classes(cache, family)
         _ -> %{}
       end
 

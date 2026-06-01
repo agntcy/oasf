@@ -276,14 +276,14 @@ defmodule SchemaWeb.SchemaController do
     handle_with_optional_id_and_name(
       conn,
       params,
-      :modules,
+      :module,
       fn ->
-        Schema.taxonomy_modules(extensions_opt, nil)
+        Schema.taxonomy(:module, extensions_opt, nil)
         |> Schema.Utils.sort_taxonomy_tree()
         |> taxonomy_ordered_object()
       end,
       fn id_or_name ->
-        result = Schema.taxonomy_modules(extensions_opt, id_or_name)
+        result = Schema.taxonomy(:module, extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
@@ -296,7 +296,7 @@ defmodule SchemaWeb.SchemaController do
   def taxonomy_modules(params) do
     extensions = parse_options(extensions(params))
     parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
-    Schema.taxonomy_modules(extensions, parent)
+    Schema.taxonomy(:module, extensions, parent)
   end
 
   @doc """
@@ -347,14 +347,14 @@ defmodule SchemaWeb.SchemaController do
     handle_with_optional_id_and_name(
       conn,
       params,
-      :skills,
+      :skill,
       fn ->
-        Schema.taxonomy_skills(extensions_opt, nil)
+        Schema.taxonomy(:skill, extensions_opt, nil)
         |> Schema.Utils.sort_taxonomy_tree()
         |> taxonomy_ordered_object()
       end,
       fn id_or_name ->
-        result = Schema.taxonomy_skills(extensions_opt, id_or_name)
+        result = Schema.taxonomy(:skill, extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
@@ -367,7 +367,7 @@ defmodule SchemaWeb.SchemaController do
   def taxonomy_skills(params) do
     extensions = parse_options(extensions(params))
     parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
-    Schema.taxonomy_skills(extensions, parent)
+    Schema.taxonomy(:skill, extensions, parent)
   end
 
   @doc """
@@ -418,14 +418,14 @@ defmodule SchemaWeb.SchemaController do
     handle_with_optional_id_and_name(
       conn,
       params,
-      :domains,
+      :domain,
       fn ->
-        Schema.taxonomy_domains(extensions_opt, nil)
+        Schema.taxonomy(:domain, extensions_opt, nil)
         |> Schema.Utils.sort_taxonomy_tree()
         |> taxonomy_ordered_object()
       end,
       fn id_or_name ->
-        result = Schema.taxonomy_domains(extensions_opt, id_or_name)
+        result = Schema.taxonomy(:domain, extensions_opt, id_or_name)
 
         if map_size(result) == 0,
           do: nil,
@@ -438,7 +438,7 @@ defmodule SchemaWeb.SchemaController do
   def taxonomy_domains(params) do
     extensions = parse_options(extensions(params))
     parent = parse_integer_param(Map.get(params, "id")) || Map.get(params, "name")
-    Schema.taxonomy_domains(extensions, parent)
+    Schema.taxonomy(:domain, extensions, parent)
   end
 
   @doc """
@@ -492,10 +492,10 @@ defmodule SchemaWeb.SchemaController do
     handle_with_optional_id_and_name(
       conn,
       params,
-      :modules,
+      :module,
       fn -> modules(params) end,
       fn id_or_name ->
-        case find_class(:modules, id_or_name, profiles_opt) do
+        case find_class(:module, id_or_name, profiles_opt) do
           nil -> nil
           data -> add_objects(data, params)
         end
@@ -511,7 +511,7 @@ defmodule SchemaWeb.SchemaController do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
 
-    Schema.modules(extensions, profiles)
+    Schema.classes(:module, extensions, profiles)
     |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
@@ -566,10 +566,10 @@ defmodule SchemaWeb.SchemaController do
     handle_with_optional_id_and_name(
       conn,
       params,
-      :skills,
+      :skill,
       fn -> skills(params) end,
       fn id_or_name ->
-        case find_class(:skills, id_or_name, profiles_opt) do
+        case find_class(:skill, id_or_name, profiles_opt) do
           nil -> nil
           data -> add_objects(data, params)
         end
@@ -585,7 +585,7 @@ defmodule SchemaWeb.SchemaController do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
 
-    Schema.skills(extensions, profiles)
+    Schema.classes(:skill, extensions, profiles)
     |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
@@ -640,10 +640,10 @@ defmodule SchemaWeb.SchemaController do
     handle_with_optional_id_and_name(
       conn,
       params,
-      :domains,
+      :domain,
       fn -> domains(params) end,
       fn id_or_name ->
-        case find_class(:domains, id_or_name, profiles_opt) do
+        case find_class(:domain, id_or_name, profiles_opt) do
           nil -> nil
           data -> add_objects(data, params)
         end
@@ -659,7 +659,7 @@ defmodule SchemaWeb.SchemaController do
     extensions = parse_options(extensions(params))
     profiles = parse_options(profiles(params))
 
-    Schema.domains(extensions, profiles)
+    Schema.classes(:domain, extensions, profiles)
     |> Enum.into(%{}, fn {k, v} -> {k, Schema.deep_clean(v)} end)
   end
 
@@ -1546,7 +1546,7 @@ defmodule SchemaWeb.SchemaController do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.skill(extension, name) do
+    case Schema.class(:skill, extension, name) do
       nil ->
         send_json_resp(conn, 404, %{error: "Skill class #{name} not found"})
 
@@ -1593,7 +1593,7 @@ defmodule SchemaWeb.SchemaController do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.domain(extension, name) do
+    case Schema.class(:domain, extension, name) do
       nil ->
         send_json_resp(conn, 404, %{error: "Domain class #{name} not found"})
 
@@ -1640,7 +1640,7 @@ defmodule SchemaWeb.SchemaController do
     extension = extension(options)
     profiles = profiles(options) |> parse_options()
 
-    case Schema.module(extension, name) do
+    case Schema.class(:module, extension, name) do
       nil ->
         send_json_resp(conn, 404, %{error: "Module class #{name} not found"})
 
@@ -1773,9 +1773,9 @@ defmodule SchemaWeb.SchemaController do
     |> MapSet.new()
   end
 
-  defp class_family_label(:skills), do: "skill"
-  defp class_family_label(:domains), do: "domain"
-  defp class_family_label(:modules), do: "module"
+  defp class_family_label(:skill), do: "skill"
+  defp class_family_label(:domain), do: "domain"
+  defp class_family_label(:module), do: "module"
 
   # Shared handler for endpoints with optional id and name query parameters.
   # list_fn: zero-arity function returning all items when no filter is given.
@@ -1850,7 +1850,7 @@ defmodule SchemaWeb.SchemaController do
   Look up a single class by name (with optional extension prefix) and return
   cleaned data (internal fields stripped).  Returns nil when not found.
   """
-  @spec class(atom(), String.t() | nil, String.t(), map() | nil) :: map() | nil
+  @spec class(Schema.class_family(), String.t() | nil, String.t(), map() | nil) :: map() | nil
   def class(class_family, extension, name, profiles) do
     full_name = Schema.Utils.make_path(extension, name)
 
@@ -1861,14 +1861,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp find_class(class_family, uid, profiles) when is_integer(uid) do
-    class =
-      case class_family do
-        :skills -> Schema.find_skill(uid)
-        :domains -> Schema.find_domain(uid)
-        :modules -> Schema.find_module(uid)
-      end
-
-    case class do
+    case Schema.find_class(class_family, uid) do
       nil ->
         nil
 
@@ -1882,14 +1875,7 @@ defmodule SchemaWeb.SchemaController do
   end
 
   defp find_class(class_family, name, profiles) when is_binary(name) do
-    direct =
-      case class_family do
-        :skills -> Schema.skill(nil, name, profiles)
-        :domains -> Schema.domain(nil, name, profiles)
-        :modules -> Schema.module(nil, name, profiles)
-      end
-
-    case direct do
+    case Schema.class(class_family, nil, name, profiles) do
       nil ->
         resolve_class_via_taxonomy(class_family, name, profiles)
 
@@ -1901,14 +1887,7 @@ defmodule SchemaWeb.SchemaController do
   # Resolve a class name through the taxonomy tree.  Handles hierarchical names
   # like "core/language_model/prompt" that don't match simple cache keys.
   defp resolve_class_via_taxonomy(class_family, name, profiles) do
-    taxonomy =
-      case class_family do
-        :skills -> Schema.taxonomy_skills(nil, name)
-        :domains -> Schema.taxonomy_domains(nil, name)
-        :modules -> Schema.taxonomy_modules(nil, name)
-      end
-
-    case Enum.to_list(taxonomy) do
+    case Schema.taxonomy(class_family, nil, name) |> Enum.to_list() do
       [{_key, %{id: uid}}] when is_integer(uid) and uid > 0 ->
         find_class(class_family, uid, profiles)
 

@@ -24,9 +24,9 @@ defmodule Schema.SchemaIntegrityTest do
   # ---------------------------------------------------------------------------
 
   # Returns a flat map of all entities of a given type (including base/category)
-  defp all_items(:skill), do: Schema.all_skills()
-  defp all_items(:domain), do: Schema.all_domains()
-  defp all_items(:module), do: Schema.all_modules()
+  defp all_items(family) when family in [:skill, :domain, :module],
+    do: Schema.all_classes(family)
+
   defp all_items(:object), do: Schema.all_objects()
 
   defp base_class_names do
@@ -247,34 +247,19 @@ defmodule Schema.SchemaIntegrityTest do
   # ---------------------------------------------------------------------------
 
   describe "category class filtering" do
-    test "Schema.skills() does not include category-only skills" do
-      flat_skills = Schema.skills()
+    for family <- [:skill, :domain, :module] do
+      @family family
 
-      categories =
-        Enum.filter(flat_skills, fn {_k, v} -> Map.get(v, :category) == true end)
+      test "Schema.classes(:#{@family}) does not include category-only #{@family}s" do
+        flat = Schema.classes(@family)
 
-      assert categories == [],
-             "Category skills present in Schema.skills(): #{Enum.map(categories, fn {k, _} -> k end) |> inspect()}"
-    end
+        categories =
+          Enum.filter(flat, fn {_k, v} -> Map.get(v, :category) == true end)
 
-    test "Schema.domains() does not include category-only domains" do
-      flat_domains = Schema.domains()
-
-      categories =
-        Enum.filter(flat_domains, fn {_k, v} -> Map.get(v, :category) == true end)
-
-      assert categories == [],
-             "Category domains present in Schema.domains(): #{Enum.map(categories, fn {k, _} -> k end) |> inspect()}"
-    end
-
-    test "Schema.modules() does not include category-only modules" do
-      flat_modules = Schema.modules()
-
-      categories =
-        Enum.filter(flat_modules, fn {_k, v} -> Map.get(v, :category) == true end)
-
-      assert categories == [],
-             "Category modules present in Schema.modules(): #{Enum.map(categories, fn {k, _} -> k end) |> inspect()}"
+        assert categories == [],
+               "Category #{@family}s present in Schema.classes(:#{@family}): " <>
+                 inspect(Enum.map(categories, fn {k, _} -> k end))
+      end
     end
   end
 
@@ -303,32 +288,19 @@ defmodule Schema.SchemaIntegrityTest do
   # ---------------------------------------------------------------------------
 
   describe "non-base class UIDs" do
-    test "non-base, non-category skills have a uid" do
-      # Schema.skills() returns the fully processed/exported data (includes uid, filters categories)
-      skills_without_uid =
-        Schema.skills()
-        |> Enum.filter(fn {_k, v} -> is_nil(v[:uid]) end)
+    for family <- [:skill, :domain, :module] do
+      @family family
 
-      assert skills_without_uid == [],
-             "Skills without uid: #{Enum.map(skills_without_uid, fn {k, _} -> k end) |> inspect()}"
-    end
+      test "non-base, non-category #{@family}s have a uid" do
+        # Schema.classes/1 returns the fully processed/exported data (includes uid, filters categories)
+        without_uid =
+          Schema.classes(@family)
+          |> Enum.filter(fn {_k, v} -> is_nil(v[:uid]) end)
 
-    test "non-base, non-category domains have a uid" do
-      domains_without_uid =
-        Schema.domains()
-        |> Enum.filter(fn {_k, v} -> is_nil(v[:uid]) end)
-
-      assert domains_without_uid == [],
-             "Domains without uid: #{Enum.map(domains_without_uid, fn {k, _} -> k end) |> inspect()}"
-    end
-
-    test "non-base, non-category modules have a uid" do
-      modules_without_uid =
-        Schema.modules()
-        |> Enum.filter(fn {_k, v} -> is_nil(v[:uid]) end)
-
-      assert modules_without_uid == [],
-             "Modules without uid: #{Enum.map(modules_without_uid, fn {k, _} -> k end) |> inspect()}"
+        assert without_uid == [],
+               "#{@family}s without uid: " <>
+                 inspect(Enum.map(without_uid, fn {k, _} -> k end))
+      end
     end
   end
 
@@ -337,16 +309,12 @@ defmodule Schema.SchemaIntegrityTest do
   # ---------------------------------------------------------------------------
 
   describe "schema loaded" do
-    test "schema has at least one skill" do
-      assert map_size(Schema.all_skills()) > 0
-    end
+    for family <- [:skill, :domain, :module] do
+      @family family
 
-    test "schema has at least one domain" do
-      assert map_size(Schema.all_domains()) > 0
-    end
-
-    test "schema has at least one module" do
-      assert map_size(Schema.all_modules()) > 0
+      test "schema has at least one #{@family}" do
+        assert map_size(Schema.all_classes(@family)) > 0
+      end
     end
 
     test "schema has at least one object" do

@@ -24,14 +24,14 @@ defmodule Schema.Validator do
 
     {response, class} =
       case type do
-        :skill ->
-          validate_class_id_or_name(response, input, "", &Schema.find_skill/1, &Schema.skill/1)
-
-        :domain ->
-          validate_class_id_or_name(response, input, "", &Schema.find_domain/1, &Schema.domain/1)
-
-        :module ->
-          validate_class_id_or_name(response, input, "", &Schema.find_module/1, &Schema.module/1)
+        family when family in [:skill, :domain, :module] ->
+          validate_class_id_or_name(
+            response,
+            input,
+            "",
+            &Schema.find_class(family, &1),
+            &Schema.class(family, &1)
+          )
 
         :object ->
           validate_object_name_and_return_object(response, options, "")
@@ -1476,31 +1476,15 @@ defmodule Schema.Validator do
         # data dictionary type)
         {response, class} =
           case attribute_details[:family] do
-            "skill" ->
-              validate_class_id_or_name(
-                response,
-                value,
-                attribute_path,
-                &Schema.find_skill/1,
-                &Schema.skill/1
-              )
+            family when family in ["skill", "domain", "module"] ->
+              fam_atom = String.to_atom(family)
 
-            "domain" ->
               validate_class_id_or_name(
                 response,
                 value,
                 attribute_path,
-                &Schema.find_domain/1,
-                &Schema.domain/1
-              )
-
-            "module" ->
-              validate_class_id_or_name(
-                response,
-                value,
-                attribute_path,
-                &Schema.find_module/1,
-                &Schema.module/1
+                &Schema.find_class(fam_atom, &1),
+                &Schema.class(fam_atom, &1)
               )
 
             _ ->
@@ -2714,10 +2698,12 @@ defmodule Schema.Validator do
     # Determine the find functions based on family
     {find_by_id_fn, find_by_name_fn} =
       case family do
-        "skill" -> {&Schema.find_skill/1, &Schema.skill/1}
-        "domain" -> {&Schema.find_domain/1, &Schema.domain/1}
-        "module" -> {&Schema.find_module/1, &Schema.module/1}
-        _ -> {nil, nil}
+        f when f in ["skill", "domain", "module"] ->
+          fam_atom = String.to_atom(f)
+          {&Schema.find_class(fam_atom, &1), &Schema.class(fam_atom, &1)}
+
+        _ ->
+          {nil, nil}
       end
 
     if find_by_id_fn && find_by_name_fn do
