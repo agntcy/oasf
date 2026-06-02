@@ -452,12 +452,7 @@ defmodule SchemaWeb.PageView do
 
   @spec format_class_attribute_source(atom(), map(), String.t()) :: String.t()
   def format_class_attribute_source(class_key, field, class_type) do
-    all_classes =
-      case class_type do
-        "skill" -> Schema.all_skills()
-        "domain" -> Schema.all_domains()
-        "module" -> Schema.all_modules()
-      end
+    all_classes = Schema.all_classes(String.to_atom(class_type))
 
     source = get_hierarchy_source(field)
     {ok, path} = build_hierarchy(Schema.Utils.to_uid(class_key), source, all_classes)
@@ -1138,14 +1133,9 @@ defmodule SchemaWeb.PageView do
 
     {classes, all_classes} =
       case family do
-        "skill" ->
-          {SchemaController.skills(params_without_profiles), Schema.all_skills()}
-
-        "domain" ->
-          {SchemaController.domains(params_without_profiles), Schema.all_domains()}
-
-        "module" ->
-          {SchemaController.modules(params_without_profiles), Schema.all_modules()}
+        f when f in ["skill", "domain", "module"] ->
+          fam = String.to_atom(f)
+          {SchemaController.classes(fam, params_without_profiles), Schema.all_classes(fam)}
 
         _ ->
           Logger.error("Unexpected family value: #{inspect(family)}")

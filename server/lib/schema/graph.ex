@@ -364,10 +364,11 @@ defmodule Schema.Graph do
 
   defp get_collection_by_family(entity) do
     case entity[:family] do
-      "skill" -> {Schema.all_skills(), entity[:name] || entity[:class_type]}
-      "domain" -> {Schema.all_domains(), entity[:name] || entity[:class_type]}
-      "module" -> {Schema.all_modules(), entity[:name] || entity[:class_type]}
-      _ -> {Schema.all_objects(), entity[:name] || entity[:object_type]}
+      f when f in ["skill", "domain", "module"] ->
+        {Schema.all_classes(String.to_atom(f)), entity[:name] || entity[:class_type]}
+
+      _ ->
+        {Schema.all_objects(), entity[:name] || entity[:object_type]}
     end
   end
 end

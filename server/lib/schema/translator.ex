@@ -21,43 +21,17 @@ defmodule Schema.Translator do
   defp translate_entity(data, options, type) do
     entity_def =
       case type do
-        :skill ->
+        family when family in [:skill, :domain, :module] ->
           case Map.get(data, "id") do
             nil ->
               if name = Map.get(data, "name") do
-                Logger.debug("translate skill class: #{name}")
-                Schema.skill(Schema.Utils.descope(name))
+                Logger.debug("translate #{family} class: #{name}")
+                Schema.class(family, Schema.Utils.descope(name))
               end
 
             class_uid ->
-              Logger.debug("translate skill class: #{class_uid}")
-              Schema.find_skill(class_uid)
-          end
-
-        :domain ->
-          case Map.get(data, "id") do
-            nil ->
-              if name = Map.get(data, "name") do
-                Logger.debug("translate domain class: #{name}")
-                Schema.domain(Schema.Utils.descope(name))
-              end
-
-            class_uid ->
-              Logger.debug("translate domain class: #{class_uid}")
-              Schema.find_domain(class_uid)
-          end
-
-        :module ->
-          case Map.get(data, "id") do
-            nil ->
-              if name = Map.get(data, "name") do
-                Logger.debug("translate module class: #{name}")
-                Schema.module(Schema.Utils.descope(name))
-              end
-
-            class_uid ->
-              Logger.debug("translate module class: #{class_uid}")
-              Schema.find_module(class_uid)
+              Logger.debug("translate #{family} class: #{class_uid}")
+              Schema.find_class(family, class_uid)
           end
 
         :object ->
@@ -324,8 +298,8 @@ defmodule Schema.Translator do
   end
 
   # Get all classes map based on type
-  defp get_all_classes_for_type(:skill), do: Schema.all_skills()
-  defp get_all_classes_for_type(:domain), do: Schema.all_domains()
-  defp get_all_classes_for_type(:module), do: Schema.all_modules()
+  defp get_all_classes_for_type(family) when family in [:skill, :domain, :module],
+    do: Schema.all_classes(family)
+
   defp get_all_classes_for_type(_), do: nil
 end

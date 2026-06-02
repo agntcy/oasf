@@ -23,13 +23,13 @@ defmodule Schema.ValidatorTest do
   @test_domain_uid 101
   @test_module_uid 101
 
-  # Short names used for lookups via Schema.skill/1 etc. (accepted by Repo lookups)
+  # Short names used for lookups via Schema.class(family, name) (accepted by Repo lookups)
   @test_skill_name "contextual_comprehension"
   @test_domain_name "internet_of_things"
 
   defp first_skill_name do
     # Return the full hierarchical name as stored in the name attribute enum
-    skill = Schema.skill(@test_skill_name)
+    skill = Schema.class(:skill, @test_skill_name)
     name_enum = get_in(skill, [:attributes, :name, :enum]) || %{}
 
     case Map.keys(name_enum) do
@@ -41,7 +41,7 @@ defmodule Schema.ValidatorTest do
   defp first_skill_uid, do: @test_skill_uid
 
   defp first_domain_name do
-    domain = Schema.domain(@test_domain_name)
+    domain = Schema.class(:domain, @test_domain_name)
     name_enum = get_in(domain, [:attributes, :name, :enum]) || %{}
 
     case Map.keys(name_enum) do
@@ -106,21 +106,21 @@ defmodule Schema.ValidatorTest do
     end
 
     test "mismatched id and name returns id_name_mismatch error" do
-      # Schema.skills() already excludes base classes and categories, and always
+      # Schema.classes(:skill) already excludes base classes and categories, and always
       # includes a :uid, so both preconditions are guaranteed by the schema itself.
-      non_base_skills = Schema.skills() |> Enum.to_list()
+      non_base_skills = Schema.classes(:skill) |> Enum.to_list()
 
       assert length(non_base_skills) >= 2,
              "Expected at least 2 non-base skills in the schema, got #{length(non_base_skills)}"
 
-      [{_k1, v1}, {k2, _v2}] = Enum.take(non_base_skills, 2)
+      [{k1, v1}, {k2, _v2}] = Enum.take(non_base_skills, 2)
 
       assert v1[:uid] != nil,
-             "Expected skill #{inspect(_k1)} to have a uid, but it was nil"
+             "Expected skill #{inspect(k1)} to have a uid, but it was nil"
 
       # Build the canonical hierarchical name for the second skill so the name
       # itself is individually valid — only the id/name pair is mismatched.
-      name2 = Schema.Utils.class_name_with_hierarchy(k2, Schema.all_skills())
+      name2 = Schema.Utils.class_name_with_hierarchy(k2, Schema.all_classes(:skill))
 
       result = validate(%{"id" => v1[:uid], "name" => name2}, :skill)
 

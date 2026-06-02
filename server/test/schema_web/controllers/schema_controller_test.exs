@@ -18,53 +18,29 @@ defmodule SchemaWeb.SchemaControllerTest do
   # robust against future taxonomy changes.  Each helper picks the first
   # suitable entry from the loaded schema rather than hard-coding a name.
 
-  defp test_skill_name do
+  defp test_class_name(family) do
     {name, _} =
-      Schema.all_skills()
+      Schema.all_classes(family)
       |> Enum.find(fn {_k, v} -> v[:category] != true end)
 
     Atom.to_string(name)
   end
 
-  defp test_domain_name do
+  defp test_class_category_name(family) do
     {name, _} =
-      Schema.all_domains()
-      |> Enum.find(fn {_k, v} -> v[:category] != true end)
-
-    Atom.to_string(name)
-  end
-
-  defp test_module_name do
-    {name, _} =
-      Schema.all_modules()
-      |> Enum.find(fn {_k, v} -> v[:category] != true end)
-
-    Atom.to_string(name)
-  end
-
-  defp test_skill_category_name do
-    {name, _} =
-      Schema.all_skills()
+      Schema.all_classes(family)
       |> Enum.find(fn {_k, v} -> v[:category] == true end)
 
     Atom.to_string(name)
   end
 
-  defp test_domain_category_name do
-    {name, _} =
-      Schema.all_domains()
-      |> Enum.find(fn {_k, v} -> v[:category] == true end)
+  defp test_skill_name, do: test_class_name(:skill)
+  defp test_domain_name, do: test_class_name(:domain)
+  defp test_module_name, do: test_class_name(:module)
 
-    Atom.to_string(name)
-  end
-
-  defp test_module_category_name do
-    {name, _} =
-      Schema.all_modules()
-      |> Enum.find(fn {_k, v} -> v[:category] == true end)
-
-    Atom.to_string(name)
-  end
+  defp test_skill_category_name, do: test_class_category_name(:skill)
+  defp test_domain_category_name, do: test_class_category_name(:domain)
+  defp test_module_category_name, do: test_class_category_name(:module)
 
   defp test_object_name do
     {name, _} = Schema.all_objects() |> Enum.find(fn {_k, _v} -> true end)

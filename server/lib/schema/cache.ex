@@ -42,14 +42,10 @@ defmodule Schema.Cache do
   @type category_t() :: map()
   @type dictionary_t() :: map()
 
-  @skills_dir "skills"
-  @skill_family "skill"
-
-  @domains_dir "domains"
-  @domain_family "domain"
-
-  @modules_dir "modules"
-  @module_family "module"
+  # Maps each class family atom to the directory under priv/schema where its
+  # JSON definitions live.  The map's key order also defines the canonical
+  # iteration order during cache initialization.
+  @class_family_dirs %{skill: "skills", domain: "domains", module: "modules"}
 
   @doc """
   Load the schema files and initialize the cache.
@@ -66,28 +62,28 @@ defmodule Schema.Cache do
 
     dictionary = JsonReader.read_dictionary() |> update_dictionary()
 
-    skills = read_classes(@skills_dir, @skill_family, version[:version])
+    classes_by_family =
+      Map.new(@class_family_dirs, fn {family, dir} ->
+        {family, read_classes(dir, Atom.to_string(family), version[:version])}
+      end)
 
-    domains = read_classes(@domains_dir, @domain_family, version[:version])
+    {objects, all_objects} = read_objects(version[:version])
 
-    modules = read_classes(@modules_dir, @module_family, version[:version])
-
-    {objects, all_objects} =
-      read_objects(version[:version])
-
-    dictionary = Utils.update_dictionary(dictionary, skills, domains, modules, objects)
+    dictionary = Utils.update_dictionary(dictionary, classes_by_family, objects)
     dictionary_attributes = dictionary[:attributes]
 
     # Read and update profiles
     profiles = JsonReader.read_profiles() |> update_profiles(dictionary_attributes)
     # clean up the cached files
     JsonReader.cleanup()
-    # Check profiles used in objects, adding objects to profile's _links
+
+    # Check profiles used in objects and classes, adding them to profile's _links
     profiles = Profiles.sanity_check(:object, objects, profiles)
-    # Check profiles used in classes, adding classes to profile's _links
-    profiles = Profiles.sanity_check(:skill, skills, profiles)
-    profiles = Profiles.sanity_check(:domain, domains, profiles)
-    profiles = Profiles.sanity_check(:module, modules, profiles)
+
+    profiles =
+      Enum.reduce(classes_by_family, profiles, fn {family, classes}, acc ->
+        Profiles.sanity_check(family, classes, acc)
+      end)
 
     # Missing description warnings, datetime attributes, and profiles
     objects =
@@ -96,28 +92,22 @@ defmodule Schema.Cache do
       |> update_objects()
       |> final_check(dictionary_attributes)
 
-    skills =
-      skills
-      |> update_classes(objects)
-      |> final_check(dictionary_attributes)
-
-    domains =
-      domains
-      |> update_classes(objects)
-      |> final_check(dictionary_attributes)
-
-    modules =
-      modules
-      |> update_classes(objects)
-      |> final_check(dictionary_attributes)
+    classes_by_family =
+      Map.new(classes_by_family, fn {family, classes} ->
+        {family, classes |> update_classes(objects) |> final_check(dictionary_attributes)}
+      end)
 
     # Check for each attribute in the schema if it has a requirement field.
     no_req_set = MapSet.new()
     {profiles, no_req_set} = fix_entities(profiles, no_req_set, "profile")
-    {skills, no_req_set} = fix_entities(skills, no_req_set, "skill")
-    {domains, no_req_set} = fix_entities(domains, no_req_set, "domain")
-    {modules, no_req_set} = fix_entities(modules, no_req_set, "module")
     {objects, no_req_set} = fix_entities(objects, no_req_set, "object")
+
+    {classes_by_family, no_req_set} =
+      Enum.reduce(classes_by_family, {%{}, no_req_set}, fn {family, classes},
+                                                           {acc_map, acc_no_req} ->
+        {fixed, new_no_req} = fix_entities(classes, acc_no_req, Atom.to_string(family))
+        {Map.put(acc_map, family, fixed), new_no_req}
+      end)
 
     if MapSet.size(no_req_set) > 0 do
       no_reqs = no_req_set |> Enum.sort() |> Enum.join(", ")
@@ -135,9 +125,9 @@ defmodule Schema.Cache do
       dictionary: dictionary,
       objects: objects,
       all_objects: all_objects,
-      skills: skills,
-      domains: domains,
-      modules: modules
+      skills: classes_by_family.skill,
+      domains: classes_by_family.domain,
+      modules: classes_by_family.module
     }
   end
 
@@ -171,86 +161,51 @@ defmodule Schema.Cache do
   @spec all_objects(__MODULE__.t()) :: map()
   def all_objects(%__MODULE__{all_objects: all_objects}), do: all_objects
 
-  @spec skills(__MODULE__.t()) :: map()
-  def skills(%__MODULE__{skills: skills}), do: skills
+  @typedoc """
+  The supported class families.  Each family is backed by its own field on the
+  cache struct but shares identical lookup and export semantics.
+  """
+  @type class_family() :: :skill | :domain | :module
 
-  @spec export_skills(__MODULE__.t()) :: map()
-  def export_skills(%__MODULE__{skills: skills, dictionary: dictionary}) do
-    Enum.into(skills, Map.new(), fn {name, skill} ->
-      {name, enrich(skill, dictionary[:attributes])}
+  @doc """
+  Returns the raw map of classes for the given `family` (not enriched).
+  """
+  @spec classes(__MODULE__.t(), class_family()) :: map()
+  def classes(%__MODULE__{skills: classes}, :skill), do: classes
+  def classes(%__MODULE__{domains: classes}, :domain), do: classes
+  def classes(%__MODULE__{modules: classes}, :module), do: classes
+
+  @doc """
+  Returns the map of classes for the given `family`, with attributes enriched
+  from the dictionary.
+  """
+  @spec export_classes(__MODULE__.t(), class_family()) :: map()
+  def export_classes(%__MODULE__{dictionary: dictionary} = cache, family) do
+    cache
+    |> classes(family)
+    |> Enum.into(Map.new(), fn {name, class} ->
+      {name, enrich(class, dictionary[:attributes])}
     end)
   end
 
-  def skill(%__MODULE__{dictionary: dictionary, skills: skills}, id) do
-    case Map.get(skills, id) do
-      nil ->
-        nil
-
-      skill ->
-        enrich(skill, dictionary[:attributes])
-    end
-  end
-
-  @spec find_skill(Schema.Cache.t(), any) :: nil | map
-  def find_skill(%__MODULE__{dictionary: dictionary, skills: skills}, uid) do
-    case Enum.find(skills, fn {_, skill} -> skill[:uid] == uid end) do
-      {_, skill} -> enrich(skill, dictionary[:attributes])
+  @doc """
+  Returns a single enriched class of the given `family` by key, or `nil`.
+  """
+  @spec class(__MODULE__.t(), class_family(), atom()) :: nil | class_t()
+  def class(%__MODULE__{dictionary: dictionary} = cache, family, id) do
+    case Map.get(classes(cache, family), id) do
       nil -> nil
+      class -> enrich(class, dictionary[:attributes])
     end
   end
 
-  @spec domains(__MODULE__.t()) :: map()
-  def domains(%__MODULE__{domains: domains}), do: domains
-
-  @spec export_domains(__MODULE__.t()) :: map()
-  def export_domains(%__MODULE__{domains: domains, dictionary: dictionary}) do
-    Enum.into(domains, Map.new(), fn {name, domain} ->
-      {name, enrich(domain, dictionary[:attributes])}
-    end)
-  end
-
-  def domain(%__MODULE__{dictionary: dictionary, domains: domains}, id) do
-    case Map.get(domains, id) do
-      nil ->
-        nil
-
-      domain ->
-        enrich(domain, dictionary[:attributes])
-    end
-  end
-
-  @spec find_domain(Schema.Cache.t(), any) :: nil | map
-  def find_domain(%__MODULE__{dictionary: dictionary, domains: domains}, uid) do
-    case Enum.find(domains, fn {_, domain} -> domain[:uid] == uid end) do
-      {_, domain} -> enrich(domain, dictionary[:attributes])
-      nil -> nil
-    end
-  end
-
-  @spec modules(__MODULE__.t()) :: map()
-  def modules(%__MODULE__{modules: modules}), do: modules
-
-  @spec export_modules(__MODULE__.t()) :: map()
-  def export_modules(%__MODULE__{modules: modules, dictionary: dictionary}) do
-    Enum.into(modules, Map.new(), fn {name, module} ->
-      {name, enrich(module, dictionary[:attributes])}
-    end)
-  end
-
-  def module(%__MODULE__{dictionary: dictionary, modules: modules}, id) do
-    case Map.get(modules, id) do
-      nil ->
-        nil
-
-      module ->
-        enrich(module, dictionary[:attributes])
-    end
-  end
-
-  @spec find_module(Schema.Cache.t(), any) :: nil | map
-  def find_module(%__MODULE__{dictionary: dictionary, modules: modules}, uid) do
-    case Enum.find(modules, fn {_, module} -> module[:uid] == uid end) do
-      {_, module} -> enrich(module, dictionary[:attributes])
+  @doc """
+  Finds a single enriched class of the given `family` by its `uid`, or `nil`.
+  """
+  @spec find_class(__MODULE__.t(), class_family(), any) :: nil | map()
+  def find_class(%__MODULE__{dictionary: dictionary} = cache, family, uid) do
+    case Enum.find(classes(cache, family), fn {_, class} -> class[:uid] == uid end) do
+      {_, class} -> enrich(class, dictionary[:attributes])
       nil -> nil
     end
   end
@@ -276,28 +231,16 @@ defmodule Schema.Cache do
     end
   end
 
-  @spec entity_ex(__MODULE__.t(), atom(), atom()) :: nil | map()
+  @spec entity_ex(__MODULE__.t(), :object | class_family(), atom()) :: nil | map()
   def entity_ex(
-        %__MODULE__{
-          dictionary: dictionary,
-          objects: objects,
-          skills: skills,
-          domains: domains,
-          modules: modules
-        },
+        %__MODULE__{dictionary: dictionary} = cache,
         type,
         id
       ) do
-    entities =
-      case type do
-        :object -> objects
-        :skill -> skills
-        :domain -> domains
-        :module -> modules
-        _ -> %{}
-      end
+    entities = all_entities(cache)
+    pool = Map.get(entities, type, %{})
 
-    case Map.get(entities, id) do
+    case Map.get(pool, id) do
       nil ->
         nil
 
@@ -306,16 +249,24 @@ defmodule Schema.Cache do
           enrich_ex(
             entity,
             dictionary[:attributes],
-            objects,
-            skills,
-            domains,
-            modules,
+            entities,
             Map.new(),
             entity[:is_enum] || false
           )
 
         Map.put(entity_ex, :entities, Map.to_list(ref_entities))
     end
+  end
+
+  # Builds the `%{object: ..., skill: ..., domain: ..., module: ...}` lookup
+  # used by `enrich_ex/5` to resolve `class_t`/`object_t` references.
+  defp all_entities(%__MODULE__{
+         objects: objects,
+         skills: skills,
+         domains: domains,
+         modules: modules
+       }) do
+    %{object: objects, skill: skills, domain: domains, module: modules}
   end
 
   defp enrich(type, dictionary_attributes) do
@@ -345,26 +296,9 @@ defmodule Schema.Cache do
     |> Utils.add_sibling_of_to_attributes()
   end
 
-  defp enrich_ex(
-         type,
-         dictionary_attributes,
-         objects,
-         skills,
-         domains,
-         modules,
-         ref_entities,
-         is_enum
-       ) do
+  defp enrich_ex(type, dictionary_attributes, entities, ref_entities, is_enum) do
     {attributes, ref_entities} =
-      update_attributes_ex(
-        type[:attributes],
-        dictionary_attributes,
-        objects,
-        skills,
-        domains,
-        modules,
-        ref_entities
-      )
+      update_attributes_ex(type[:attributes], dictionary_attributes, entities, ref_entities)
 
     enriched_type =
       type
@@ -374,15 +308,7 @@ defmodule Schema.Cache do
     {enriched_type, ref_entities}
   end
 
-  defp update_attributes_ex(
-         attributes,
-         dictionary_attributes,
-         objects,
-         skills,
-         domains,
-         modules,
-         ref_entities
-       ) do
+  defp update_attributes_ex(attributes, dictionary_attributes, entities, ref_entities) do
     Enum.map_reduce(attributes, ref_entities, fn {name, attribute}, acc ->
       reference =
         if Map.has_key?(attribute, :reference) do
@@ -401,25 +327,7 @@ defmodule Schema.Cache do
             Utils.deep_merge(base, attribute)
             |> Map.delete(:_links)
 
-          {type, entities} =
-            case attribute[:type] do
-              "object_t" ->
-                {attribute[:object_type], objects}
-
-              "class_t" ->
-                family =
-                  case attribute[:family] do
-                    "skill" -> skills
-                    "domain" -> domains
-                    "module" -> modules
-                    _ -> %{}
-                  end
-
-                {attribute[:class_type], family}
-
-              _ ->
-                {nil, objects}
-            end
+          {type, pool} = resolve_attribute_pool(attribute, entities)
 
           update_attributes_ex(
             type,
@@ -427,12 +335,9 @@ defmodule Schema.Cache do
             attribute,
             fn entity_name ->
               enrich_ex(
-                entities[entity_name],
+                pool[entity_name],
                 dictionary_attributes,
-                objects,
-                skills,
-                domains,
-                modules,
+                entities,
                 Map.put(acc, entity_name, nil),
                 attribute[:is_enum] || false
               )
@@ -442,6 +347,27 @@ defmodule Schema.Cache do
       end
     end)
   end
+
+  # Selects the type-key and entity pool to look up an attribute's reference in.
+  # Returns `{nil, _}` for attributes that aren't class or object references.
+  defp resolve_attribute_pool(attribute, entities) do
+    case attribute[:type] do
+      "object_t" ->
+        {attribute[:object_type], entities[:object]}
+
+      "class_t" ->
+        family_atom = family_to_atom(attribute[:family])
+        {attribute[:class_type], Map.get(entities, family_atom, %{})}
+
+      _ ->
+        {nil, entities[:object]}
+    end
+  end
+
+  defp family_to_atom("skill"), do: :skill
+  defp family_to_atom("domain"), do: :domain
+  defp family_to_atom("module"), do: :module
+  defp family_to_atom(_), do: nil
 
   defp update_attributes_ex(nil, name, attribute, _enrich, acc) do
     {{name, attribute}, acc}

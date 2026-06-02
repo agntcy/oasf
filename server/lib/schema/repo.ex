@@ -67,84 +67,38 @@ defmodule Schema.Repo do
     end)
   end
 
-  @spec skills() :: map()
-  def skills() do
+  @typedoc """
+  The supported class families.
+  """
+  @type class_family() :: Cache.class_family()
+
+  @doc """
+  Returns all classes of the given `family`, optionally filtered by `extensions`.
+  Category classes are excluded.
+  """
+  @spec classes(class_family(), extensions_t() | nil) :: map()
+  def classes(family, extensions \\ nil)
+
+  def classes(family, nil) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter_category_classes()
+      Cache.export_classes(schema, family) |> filter_category_classes()
     end)
   end
 
-  @spec skills(extensions_t() | nil) :: map()
-  def skills(nil) do
+  def classes(family, extensions) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter_category_classes()
+      Cache.export_classes(schema, family) |> filter_category_classes() |> filter(extensions)
     end)
   end
 
-  def skills(extensions) do
+  @doc """
+  Returns the simplified map of all classes (including categories) of the given `family`,
+  with only `name`, `extends`, `caption`, and `category` fields.
+  """
+  @spec all_classes(class_family()) :: map()
+  def all_classes(family) do
     Agent.get(__MODULE__, fn schema ->
-      Cache.export_skills(schema) |> filter_category_classes() |> filter(extensions)
-    end)
-  end
-
-  @spec all_skills() :: map()
-  def all_skills() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.skills(schema) |> build_all_classes()
-    end)
-  end
-
-  @spec domains() :: map()
-  def domains() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter_category_classes()
-    end)
-  end
-
-  @spec domains(extensions_t() | nil) :: map()
-  def domains(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter_category_classes()
-    end)
-  end
-
-  def domains(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_domains(schema) |> filter_category_classes() |> filter(extensions)
-    end)
-  end
-
-  @spec all_domains() :: map()
-  def all_domains() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.domains(schema) |> build_all_classes()
-    end)
-  end
-
-  @spec modules() :: map()
-  def modules() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter_category_classes()
-    end)
-  end
-
-  @spec modules(extensions_t() | nil) :: map()
-  def modules(nil) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter_category_classes()
-    end)
-  end
-
-  def modules(extensions) do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.export_modules(schema) |> filter_category_classes() |> filter(extensions)
-    end)
-  end
-
-  @spec all_modules() :: map()
-  def all_modules() do
-    Agent.get(__MODULE__, fn schema ->
-      Cache.modules(schema) |> build_all_classes()
+      Cache.classes(schema, family) |> build_all_classes()
     end)
   end
 
@@ -153,67 +107,32 @@ defmodule Schema.Repo do
     Agent.get(__MODULE__, fn schema -> Cache.all_objects(schema) end)
   end
 
-  @spec skill(atom) :: nil | Cache.class_t()
-  def skill(id) do
-    case Agent.get(__MODULE__, fn schema -> Cache.skill(schema, id) end) do
+  @doc """
+  Returns a single class of the given `family` by key, excluding category classes.
+  """
+  @spec class(class_family(), atom()) :: nil | Cache.class_t()
+  def class(family, id) do
+    case Agent.get(__MODULE__, fn schema -> Cache.class(schema, family, id) end) do
       nil ->
         nil
 
-      skill ->
+      class ->
         # Don't return category classes - they should be accessed via category endpoints
-        if Map.get(skill, :category) == true do
+        if Map.get(class, :category) == true do
           nil
         else
-          skill
+          class
         end
     end
   end
 
-  @spec find_skill(any) :: nil | map
-  def find_skill(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_skill(schema, uid) end)
-  end
-
-  @spec domain(atom) :: nil | Cache.class_t()
-  def domain(id) do
-    case Agent.get(__MODULE__, fn schema -> Cache.domain(schema, id) end) do
-      nil ->
-        nil
-
-      domain ->
-        # Don't return category classes - they should be accessed via category endpoints
-        if Map.get(domain, :category) == true do
-          nil
-        else
-          domain
-        end
-    end
-  end
-
-  @spec find_domain(any) :: nil | map
-  def find_domain(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_domain(schema, uid) end)
-  end
-
-  @spec module(atom) :: nil | Cache.class_t()
-  def module(id) do
-    case Agent.get(__MODULE__, fn schema -> Cache.module(schema, id) end) do
-      nil ->
-        nil
-
-      module ->
-        # Don't return category classes - they should be accessed via category endpoints
-        if Map.get(module, :category) == true do
-          nil
-        else
-          module
-        end
-    end
-  end
-
-  @spec find_module(any) :: nil | map
-  def find_module(uid) do
-    Agent.get(__MODULE__, fn schema -> Cache.find_module(schema, uid) end)
+  @doc """
+  Finds a single class of the given `family` by its `uid`.  Unlike `class/2`,
+  category classes are returned.
+  """
+  @spec find_class(class_family(), any) :: nil | map()
+  def find_class(family, uid) do
+    Agent.get(__MODULE__, fn schema -> Cache.find_class(schema, family, uid) end)
   end
 
   @spec objects() :: map()
@@ -351,62 +270,22 @@ defmodule Schema.Repo do
     |> Enum.into(%{})
   end
 
-  @spec taxonomy_modules :: map()
-  def taxonomy_modules() do
-    taxonomy_modules(nil, nil)
-  end
-
-  @spec taxonomy_modules(extensions_t() | nil) :: map()
-  def taxonomy_modules(extensions) do
-    taxonomy_modules(extensions, nil)
-  end
-
-  @spec taxonomy_modules(extensions_t() | nil, String.t() | integer() | nil) :: map()
-  def taxonomy_modules(extensions, parent) do
+  @doc """
+  Returns the taxonomy tree for the given `family`, optionally filtered by
+  `extensions` and `parent`.
+  """
+  @spec taxonomy(class_family(), extensions_t() | nil, String.t() | integer() | nil) :: map()
+  def taxonomy(family, extensions \\ nil, parent \\ nil) do
     Agent.get(__MODULE__, fn schema ->
-      all_classes = Cache.modules(schema)
-      tree = build_taxonomy_tree(extensions, all_classes, :base_module)
+      all_classes = Cache.classes(schema, family)
+      tree = build_taxonomy_tree(extensions, all_classes, base_class_key(family))
       filter_by_parent(tree, parent)
     end)
   end
 
-  @spec taxonomy_skills :: map()
-  def taxonomy_skills() do
-    taxonomy_skills(nil, nil)
-  end
-
-  @spec taxonomy_skills(extensions_t() | nil) :: map()
-  def taxonomy_skills(extensions) do
-    taxonomy_skills(extensions, nil)
-  end
-
-  @spec taxonomy_skills(extensions_t() | nil, String.t() | integer() | nil) :: map()
-  def taxonomy_skills(extensions, parent) do
-    Agent.get(__MODULE__, fn schema ->
-      all_classes = Cache.skills(schema)
-      tree = build_taxonomy_tree(extensions, all_classes, :base_skill)
-      filter_by_parent(tree, parent)
-    end)
-  end
-
-  @spec taxonomy_domains :: map()
-  def taxonomy_domains() do
-    taxonomy_domains(nil, nil)
-  end
-
-  @spec taxonomy_domains(extensions_t() | nil) :: map()
-  def taxonomy_domains(extensions) do
-    taxonomy_domains(extensions, nil)
-  end
-
-  @spec taxonomy_domains(extensions_t() | nil, String.t() | integer() | nil) :: map()
-  def taxonomy_domains(extensions, parent) do
-    Agent.get(__MODULE__, fn schema ->
-      all_classes = Cache.domains(schema)
-      tree = build_taxonomy_tree(extensions, all_classes, :base_domain)
-      filter_by_parent(tree, parent)
-    end)
-  end
+  defp base_class_key(:skill), do: :base_skill
+  defp base_class_key(:domain), do: :base_domain
+  defp base_class_key(:module), do: :base_module
 
   # Build a complete taxonomy tree with categories, subcategories, classes, and subclasses
   defp build_taxonomy_tree(extensions, all_classes, base_class_key) do

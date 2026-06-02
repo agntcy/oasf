@@ -162,10 +162,10 @@ defmodule Schema.TranslatorTest do
     end
 
     test "translating with both id and name keeps both" do
-      skill = Schema.find_skill(@skill_uid)
+      skill = Schema.find_class(:skill, @skill_uid)
 
       if skill do
-        name = Schema.Utils.class_name_with_hierarchy(skill[:name], Schema.all_skills())
+        name = Schema.Utils.class_name_with_hierarchy(skill[:name], Schema.all_classes(:skill))
         result = Translator.translate(%{"id" => @skill_uid, "name" => name}, [], :skill)
         assert Map.has_key?(result, "id")
         assert Map.has_key?(result, "name")
