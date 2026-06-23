@@ -1,0 +1,8 @@
+{
+  "uid": 12,
+  "caption": "GitOps",
+  "description": "Managing deployments declaratively from Git as the source of truth using tools such as Flux and Argo CD.",
+  "extends": "devops_mlops",
+  "name": "gitops",
+  "attributes": {}
+}

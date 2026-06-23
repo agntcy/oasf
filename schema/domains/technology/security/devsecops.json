@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "DevSecOps",
+  "description": "Integrating security practices and controls into development and delivery pipelines.",
+  "extends": "security",
+  "name": "devsecops",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Query Generation",
+  "description": "Translating natural language into SQL or database queries across warehouses and databases.",
+  "extends": "data_engineering",
+  "name": "query_generation",
+  "attributes": {}
+}

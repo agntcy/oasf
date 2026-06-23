@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Generative AI",
+  "description": "Technologies that generate text, images, audio, video, and other content.",
+  "extends": "artificial_intelligence",
+  "name": "generative_ai",
+  "attributes": {}
+}

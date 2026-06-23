@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "AI Agent Development",
+  "description": "Building autonomous and agentic AI applications, including their tools, workflows, and orchestration logic.",
+  "extends": "ai_engineering",
+  "name": "agent_development",
+  "attributes": {}
+}

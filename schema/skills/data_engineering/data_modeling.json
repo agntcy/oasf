@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Data Modeling",
+  "description": "Designing schemas and data models for relational, NoSQL, and semantic data stores.",
+  "extends": "data_engineering",
+  "name": "data_modeling",
+  "attributes": {}
+}

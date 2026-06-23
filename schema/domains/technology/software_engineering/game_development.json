@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Game Development",
+  "description": "Building interactive games and game engines.",
+  "extends": "software_engineering",
+  "name": "game_development",
+  "attributes": {}
+}

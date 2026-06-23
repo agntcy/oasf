@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Natural Language Processing",
+  "description": "Processing and understanding human language with computational methods.",
+  "extends": "artificial_intelligence",
+  "name": "natural_language_processing",
+  "attributes": {}
+}

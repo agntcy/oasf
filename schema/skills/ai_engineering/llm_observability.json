@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "LLM Observability",
+  "description": "Tracing, monitoring, and debugging LLM and agentic applications in development and production.",
+  "extends": "ai_engineering",
+  "name": "llm_observability",
+  "attributes": {}
+}

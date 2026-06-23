@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "Static Analysis and Linting",
+  "description": "Detecting code-quality issues, style violations, and defects through static analysis and linting.",
+  "extends": "coding_skills",
+  "name": "static_analysis",
+  "attributes": {}
+}

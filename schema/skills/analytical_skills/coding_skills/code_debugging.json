@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Code Debugging",
+  "description": "Diagnosing and resolving errors, test failures, and unexpected runtime behavior in software.",
+  "extends": "coding_skills",
+  "name": "code_debugging",
+  "attributes": {}
+}

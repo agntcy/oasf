@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Communication Platforms",
+  "description": "Messaging, meetings, and video-conferencing platforms.",
+  "extends": "productivity_collaboration",
+  "name": "communication_platforms",
+  "attributes": {}
+}

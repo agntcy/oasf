@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Containerization",
+  "description": "Packaging applications into container images and authoring Dockerfiles and build configurations.",
+  "extends": "devops_mlops",
+  "name": "containerization",
+  "attributes": {}
+}

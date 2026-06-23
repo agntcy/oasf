@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Cloud Security",
+  "description": "Securing cloud platforms, workloads, and configurations.",
+  "extends": "security",
+  "name": "cloud_security",
+  "attributes": {}
+}

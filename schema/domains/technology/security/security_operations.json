@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Security Operations",
+  "description": "Detecting, investigating, and responding to threats, including SOC and SIEM workflows.",
+  "extends": "security",
+  "name": "security_operations",
+  "attributes": {}
+}

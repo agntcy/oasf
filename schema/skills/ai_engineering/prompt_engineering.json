@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Prompt Engineering",
+  "description": "Designing, refining, and optimizing prompts for large language models and AI systems.",
+  "extends": "ai_engineering",
+  "name": "prompt_engineering",
+  "attributes": {}
+}

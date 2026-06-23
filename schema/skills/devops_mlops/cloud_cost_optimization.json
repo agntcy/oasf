@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "Cloud Cost Optimization",
+  "description": "Analyzing and reducing cloud spend through rightsizing, forecasting, and resource optimization.",
+  "extends": "devops_mlops",
+  "name": "cloud_cost_optimization",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Code Comprehension",
+  "description": "Analyzing, mapping, and explaining the structure and behavior of existing codebases.",
+  "extends": "coding_skills",
+  "name": "code_comprehension",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Container Orchestration",
+  "description": "Deploying and operating containerized workloads on platforms such as Kubernetes and Helm.",
+  "extends": "devops_mlops",
+  "name": "container_orchestration",
+  "attributes": {}
+}

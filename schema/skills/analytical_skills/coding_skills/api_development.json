@@ -1,0 +1,8 @@
+{
+  "uid": 12,
+  "caption": "API Development",
+  "description": "Designing and implementing application programming interfaces such as REST, GraphQL, and gRPC.",
+  "extends": "coding_skills",
+  "name": "api_development",
+  "attributes": {}
+}

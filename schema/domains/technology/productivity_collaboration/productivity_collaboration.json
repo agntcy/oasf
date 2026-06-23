@@ -1,0 +1,8 @@
+{
+  "uid": 12,
+  "caption": "Productivity and Collaboration",
+  "description": "Software for office productivity, team collaboration, and workplace communication.",
+  "extends": "technology",
+  "name": "productivity_collaboration",
+  "attributes": {}
+}

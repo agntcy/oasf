@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "Threat Intelligence",
+  "description": "Collecting and analyzing information about threats and threat actors.",
+  "extends": "security",
+  "name": "threat_intelligence",
+  "attributes": {}
+}

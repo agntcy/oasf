@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Model Fine-Tuning",
+  "description": "Training and fine-tuning machine learning and language models for specific tasks or domains.",
+  "extends": "ai_engineering",
+  "name": "model_fine_tuning",
+  "attributes": {}
+}

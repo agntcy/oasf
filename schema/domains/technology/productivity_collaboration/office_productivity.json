@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Office Productivity",
+  "description": "Documents, spreadsheets, presentations, email, and calendaring tools and suites.",
+  "extends": "productivity_collaboration",
+  "name": "office_productivity",
+  "attributes": {}
+}

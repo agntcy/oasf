@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Deep Learning",
+  "description": "Machine learning using deep neural network architectures.",
+  "extends": "artificial_intelligence",
+  "name": "deep_learning",
+  "attributes": {}
+}

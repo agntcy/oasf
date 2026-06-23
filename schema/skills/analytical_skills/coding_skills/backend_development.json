@@ -1,0 +1,8 @@
+{
+  "uid": 14,
+  "caption": "Backend Development",
+  "description": "Building server-side application logic, services, and data layers.",
+  "extends": "coding_skills",
+  "name": "backend_development",
+  "attributes": {}
+}

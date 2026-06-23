@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Synthetic Data Generation",
+  "description": "Generating synthetic or sample datasets for testing, training, and demonstration.",
+  "extends": "data_engineering",
+  "name": "synthetic_data_generation",
+  "attributes": {}
+}

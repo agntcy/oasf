@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Project Management",
+  "description": "Planning and tracking work, tasks, sprints, and roadmaps.",
+  "extends": "productivity_collaboration",
+  "name": "project_management",
+  "attributes": {}
+}

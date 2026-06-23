@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Team Collaboration",
+  "description": "Shared workspaces and tooling that let teams work together, such as chat and shared content.",
+  "extends": "productivity_collaboration",
+  "name": "team_collaboration",
+  "attributes": {}
+}

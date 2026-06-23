@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "IT Operations",
+  "description": "Operating and maintaining IT systems, infrastructure, and services.",
+  "extends": "information_technology",
+  "name": "it_operations",
+  "attributes": {}
+}

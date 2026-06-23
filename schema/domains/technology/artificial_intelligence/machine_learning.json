@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Machine Learning",
+  "description": "The development and application of algorithms that learn patterns from data.",
+  "extends": "artificial_intelligence",
+  "name": "machine_learning",
+  "attributes": {}
+}

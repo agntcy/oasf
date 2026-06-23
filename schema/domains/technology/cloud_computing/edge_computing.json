@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Edge Computing",
+  "description": "Running compute and delivery close to users at the network edge, including CDNs and edge functions.",
+  "extends": "cloud_computing",
+  "name": "edge_computing",
+  "attributes": {}
+}

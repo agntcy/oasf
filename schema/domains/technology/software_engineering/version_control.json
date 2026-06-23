@@ -1,0 +1,8 @@
+{
+  "uid": 10,
+  "caption": "Version Control",
+  "description": "Managing source code change history and collaboration with systems such as Git.",
+  "extends": "software_engineering",
+  "name": "version_control",
+  "attributes": {}
+}

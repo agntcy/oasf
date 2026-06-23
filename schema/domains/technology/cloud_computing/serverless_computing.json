@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Serverless Computing",
+  "description": "Event-driven compute that abstracts server management, such as functions-as-a-service.",
+  "extends": "cloud_computing",
+  "name": "serverless_computing",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 16,
+  "caption": "AI Engineering",
+  "category": true,
+  "extends": "base_skill",
+  "name": "ai_engineering",
+  "attributes": {}
+}

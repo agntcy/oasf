@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Infrastructure as Code",
+  "description": "Defining and managing infrastructure declaratively with tools such as Terraform, Bicep, and CloudFormation.",
+  "extends": "devops_mlops",
+  "name": "infrastructure_as_code",
+  "attributes": {}
+}

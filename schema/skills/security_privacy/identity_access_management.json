@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Identity and Access Management",
+  "description": "Implementing authentication, authorization, and access control such as OAuth, RBAC, and SSO.",
+  "extends": "security_privacy",
+  "name": "identity_access_management",
+  "attributes": {}
+}
