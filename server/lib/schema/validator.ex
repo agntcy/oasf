@@ -1520,6 +1520,15 @@ defmodule Schema.Validator do
               attribute_details[:family]
             )
 
+          response =
+            check_class_scope_error(
+              response,
+              class,
+              attribute_details,
+              attribute_path,
+              attribute_name
+            )
+
           {response, profiles} = validate_and_return_profiles(response, value)
 
           validate_input_against_class(
@@ -2510,6 +2519,44 @@ defmodule Schema.Validator do
       )
     else
       response
+    end
+  end
+
+  # Verify the resolved class is within the attribute's class_type taxonomy
+  # scope: the class_type node and its descendants, excluding abstract
+  # (category: true) classes. A class from another branch — or a category
+  # class used as a concrete value — is rejected.
+  @spec check_class_scope_error(map(), map(), map(), String.t(), String.t()) :: map()
+  defp check_class_scope_error(response, class, attribute_details, attribute_path, attribute_name) do
+    case attribute_details[:family] do
+      family when family in ["skill", "domain", "module"] ->
+        # Match by :name — unique within a family and present on both the
+        # find_children entries and the resolved (enriched) class, whereas
+        # :uid is only populated after enrichment.
+        valid_names =
+          Schema.all_classes(String.to_atom(family))
+          |> Schema.Utils.find_children(attribute_details[:class_type])
+          |> Enum.reject(&(Map.get(&1, :category) == true))
+          |> MapSet.new(& &1[:name])
+
+        if MapSet.member?(valid_names, class[:name]) do
+          response
+        else
+          add_error(
+            response,
+            "class_out_of_scope",
+            "\"#{class[:name]}\" is not a valid option at \"#{attribute_path}\"; " <>
+              "please specify a concrete #{family} within the \"#{attribute_details[:class_type]}\" taxonomy.",
+            %{
+              attribute_path: attribute_path,
+              attribute: attribute_name,
+              value: class[:name]
+            }
+          )
+        end
+
+      _ ->
+        response
     end
   end
 

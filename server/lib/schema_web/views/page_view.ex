@@ -752,7 +752,7 @@ defmodule SchemaWeb.PageView do
 
         "class_t" ->
           family = Map.get(field, :family)
-          class_path = SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s")
+          class_path = class_t_path(conn, family, Map.get(field, :class_type))
 
           case Map.get(field, :caption) do
             nil ->
@@ -794,6 +794,38 @@ defmodule SchemaWeb.PageView do
       type_str <> " Array"
     else
       type_str
+    end
+  end
+
+  @doc """
+  Builds the link path for a `class_t` attribute's type, based on its
+  `class_type` scope.
+
+  - the family root (e.g. `base_module`) or an unknown value links to the
+    family index (e.g. `/modules`)
+  - a `category: true` class links to the category page (e.g.
+    `/module_categories/integration`)
+  - a concrete leaf class links to that class's page (e.g. `/modules/mcp`)
+  """
+  @spec class_t_path(any(), String.t(), String.t() | nil) :: String.t()
+  def class_t_path(conn, family, class_type) do
+    klass =
+      try do
+        Schema.all_classes(String.to_existing_atom(family))[String.to_existing_atom(class_type)]
+      rescue
+        ArgumentError -> nil
+      end
+
+    cond do
+      klass && Map.get(klass, :category) == true ->
+        SchemaWeb.Router.Helpers.static_path(conn, "/#{family}_categories/#{class_type}")
+
+      # Family root (no :extends) or unknown class_type -> the family index.
+      is_nil(klass) || is_nil(Map.get(klass, :extends)) ->
+        SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s")
+
+      true ->
+        SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s/#{class_type}")
     end
   end
 

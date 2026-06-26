@@ -150,4 +150,30 @@ defmodule SchemaWeb.PageViewTest do
       refute String.contains?(flat, "Deprecated")
     end
   end
+
+  # ---------------------------------------------------------------------------
+  # class_t_path/3
+  # ---------------------------------------------------------------------------
+
+  describe "class_t_path/3" do
+    @endpoint SchemaWeb.Endpoint
+
+    test "the family root links to the family index" do
+      assert PageView.class_t_path(@endpoint, "module", "base_module") == "/modules"
+      assert PageView.class_t_path(@endpoint, "skill", "base_skill") == "/skills"
+    end
+
+    test "a category class links to the category page" do
+      assert PageView.class_t_path(@endpoint, "module", "integration") ==
+               "/module_categories/integration"
+    end
+
+    test "a concrete leaf class links to the class page" do
+      assert PageView.class_t_path(@endpoint, "module", "mcp") == "/modules/mcp"
+    end
+
+    test "an unknown class_type falls back to the family index" do
+      assert PageView.class_t_path(@endpoint, "module", "does_not_exist_xyz") == "/modules"
+    end
+  end
 end

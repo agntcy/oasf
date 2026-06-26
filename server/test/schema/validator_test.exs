@@ -233,6 +233,35 @@ defmodule Schema.ValidatorTest do
       assert "name_unknown" in error_types(result)
     end
 
+    test "out-of-scope class as a class_t value yields class_out_of_scope" do
+      # `modules` is scoped to the `base_module` taxonomy; uid 1 is the abstract
+      # "core" category, which is not a valid concrete choice. A concrete module
+      # from the wrong branch is rejected the same way once an attribute is
+      # scoped to a category.
+      result =
+        Schema.Validator.validate(
+          %{
+            "name" => "test_agent",
+            "version" => "1.0.0",
+            "description" => "test",
+            "authors" => ["author@example.com"],
+            "created_at" => "2024-01-01T00:00:00Z",
+            "schema_version" => "1.0.0",
+            "skills" => [%{"id" => @test_skill_uid}],
+            "domains" => [%{"id" => @test_domain_uid}],
+            "modules" => [%{"id" => 1}]
+          },
+          [name: "record"],
+          :object
+        )
+
+      assert "class_out_of_scope" in error_types(result),
+             "Expected class_out_of_scope, got: #{inspect(error_types(result))}"
+
+      scope_error = Enum.find(errors(result), &(&1[:error] == "class_out_of_scope"))
+      assert scope_error[:attribute] == "modules"
+    end
+
     test "missing required attribute returns attribute_required_missing" do
       result =
         Schema.Validator.validate(
