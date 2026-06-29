@@ -801,13 +801,17 @@ defmodule SchemaWeb.PageView do
   Builds the link path for a `class_t` attribute's type, based on its
   `class_type` scope.
 
-  - the family root (e.g. `base_module`) or an unknown value links to the
-    family index (e.g. `/modules`)
+  - a blank `class_type` (`nil`/`""`), the family root (e.g. `base_module`),
+    or an unknown value links to the family index (e.g. `/modules`)
   - a `category: true` class links to the category page (e.g.
     `/module_categories/integration`)
   - a concrete leaf class links to that class's page (e.g. `/modules/mcp`)
   """
   @spec class_t_path(any(), String.t(), String.t() | nil) :: String.t()
+  def class_t_path(conn, family, class_type) when class_type in [nil, ""] do
+    SchemaWeb.Router.Helpers.static_path(conn, "/#{family}s")
+  end
+
   def class_t_path(conn, family, class_type) do
     klass =
       try do

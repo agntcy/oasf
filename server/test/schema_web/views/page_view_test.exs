@@ -175,5 +175,10 @@ defmodule SchemaWeb.PageViewTest do
     test "an unknown class_type falls back to the family index" do
       assert PageView.class_t_path(@endpoint, "module", "does_not_exist_xyz") == "/modules"
     end
+
+    test "a nil or empty class_type falls back to the family index" do
+      assert PageView.class_t_path(@endpoint, "module", nil) == "/modules"
+      assert PageView.class_t_path(@endpoint, "module", "") == "/modules"
+    end
   end
 end
