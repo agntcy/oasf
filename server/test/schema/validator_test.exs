@@ -262,6 +262,31 @@ defmodule Schema.ValidatorTest do
       assert scope_error[:attribute] == "modules"
     end
 
+    test "base class is reported once as base_class_used, not also class_out_of_scope" do
+      # uid 0 is the abstract base module. base_class_used already covers it;
+      # the scope check must not add a duplicate class_out_of_scope for the
+      # same value.
+      result =
+        Schema.Validator.validate(
+          %{
+            "name" => "test_agent",
+            "version" => "1.0.0",
+            "description" => "test",
+            "authors" => ["author@example.com"],
+            "created_at" => "2024-01-01T00:00:00Z",
+            "schema_version" => "1.0.0",
+            "skills" => [%{"id" => @test_skill_uid}],
+            "domains" => [%{"id" => @test_domain_uid}],
+            "modules" => [%{"id" => 0}]
+          },
+          [name: "record"],
+          :object
+        )
+
+      assert "base_class_used" in error_types(result)
+      refute "class_out_of_scope" in error_types(result)
+    end
+
     test "missing required attribute returns attribute_required_missing" do
       result =
         Schema.Validator.validate(
