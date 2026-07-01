@@ -1,0 +1,242 @@
+{
+  "schema_version": "1.0.0",
+  "name": "org.agntcy/local-models",
+  "annotations": {
+    "org.agntcy/logo_url": "https://agntcy.org/logo.png",
+    "org.agntcy/status_page": "https://agntcy.org/status",
+    "org.agntcy/terms_of_service": "https://agntcy.org/terms",
+    "org.agntcy/privacy_policy": "https://agntcy.org/privacy",
+    "org.agntcy/usage_policy": "https://agntcy.org/policies/local-models",
+    "org.agntcy/support": "https://agntcy.org/support",
+    "org.agntcy/contact_email": "info@agntcy.org",
+    "org.agntcy/collection_type": "local-models"
+  },
+  "version": "v1.0.0",
+  "description": "Curated collection of open-weight language models packaged for local execution (on-device or self-hosted). Every member ships verifiable weights and a common OpenAI-compatible endpoint so tools can consume any model interchangeably.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "publisher": {
+    "name": "AGNTCY",
+    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  },
+  "skills": [
+    "natural_language_processing/natural_language_generation/text_completion",
+    "natural_language_processing/natural_language_generation/summarization",
+    "software_engineering/code_generation",
+    "software_engineering/code_completion",
+    "tool_interaction/tool_use_planning"
+  ],
+  "domains": ["technology/software_engineering"],
+  "modules": [
+    {
+      "type": "core/language_model",
+      "data": {
+        "model": "Llama 3.3 70B Instruct",
+        "description": "# Llama 3.3 70B Instruct\n\nMeta's flagship open-weight instruction-tuned model, strong at reasoning, math, and multilingual tasks. Distributed with reproducible GGUF and Ollama artifacts for local execution.\n\n## Features\n- **Long context**: 128K tokens.\n- **Tool calling**: Native function calling and parallel tool calls.\n- **Multilingual**: Trained on 8 languages.\n\n## Getting Started\n```\nollama pull llama3.3:70b-instruct-q4_K_M\nollama serve\n```\nOnce running, the model is reachable at `http://localhost:11434/v1` using the OpenAI-compatible API.",
+        "artifacts": [
+          {
+            "media_type": "application/vnd.ollama.image.model",
+            "urls": ["https://ollama.com/library/llama3.3:70b-instruct-q4_K_M"]
+          }
+        ],
+        "deployments": [
+          {
+            "mode": "local",
+            "endpoint": {
+              "url": "http://localhost:11434/v1",
+              "type": "openai",
+              "protocol": "https"
+            },
+            "env_vars": [
+              {
+                "name": "OLLAMA_HOST",
+                "description": "Host and port for the local Ollama daemon.",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "context": {
+          "max_input_tokens": 128000,
+          "max_output_tokens": 8192,
+          "max_total_tokens": 128000
+        },
+        "size": "70B",
+        "version": "3.3-70B-Instruct",
+        "revision": "sha256:aa11bb22cc33dd44ee55ff66007788990011223344556677889900aabbccddee",
+        "trained_at": "2026-01-15T00:00:00Z",
+        "supported_languages": [
+          "en-US",
+          "es-ES",
+          "fr-FR",
+          "de-DE",
+          "hi-IN",
+          "th-TH",
+          "pt-BR",
+          "it-IT"
+        ]
+      }
+    },
+    {
+      "type": "core/language_model",
+      "data": {
+        "model": "Qwen 2.5 Coder 7B Instruct",
+        "description": "# Qwen 2.5 Coder 7B Instruct\n\nCode-focused open-weight model from Alibaba; strong fill-in-the-middle and repo-level completion. Designed to run on a single consumer GPU or Apple Silicon device.\n\n## Features\n- **Code Generation**: Trained on a large multi-language code corpus.\n- **Long context**: 131K tokens.\n- **Function calling**: OpenAI-compatible tool schemas.\n\n## Getting Started\n```\nllama-server -hf Qwen/Qwen2.5-Coder-7B-Instruct-GGUF -c 32768\n```\nEndpoint: `http://localhost:8080/v1`.",
+        "artifacts": [
+          {
+            "media_type": "application/vnd.gguf.v3",
+            "urls": [
+              "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
+            ]
+          }
+        ],
+        "deployments": [
+          {
+            "mode": "local",
+            "endpoint": {
+              "url": "http://localhost:8080/v1",
+              "type": "openai",
+              "protocol": "https"
+            },
+            "env_vars": [
+              {
+                "name": "LLAMA_ARG_MODEL",
+                "description": "Path or Hugging Face id of the GGUF file to load in llama.cpp server.",
+                "required": false
+              }
+            ]
+          },
+          {
+            "mode": "local",
+            "endpoint": {
+              "url": "http://localhost:8080/v1",
+              "type": "openai",
+              "protocol": "https"
+            },
+            "env_vars": [
+              {
+                "name": "MLX_MODEL",
+                "description": "Hugging Face id of the MLX-quantized model to serve (e.g. mlx-community/Qwen2.5-Coder-7B-Instruct-4bit).",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "context": {
+          "max_input_tokens": 131072,
+          "max_output_tokens": 8192,
+          "max_total_tokens": 131072
+        },
+        "size": "7B",
+        "version": "2.5-Coder-7B-Instruct",
+        "revision": "sha256:dd44ee55ff66007788990011223344556677889900aabbccddeeff1122334455",
+        "trained_at": "2025-11-12T00:00:00Z",
+        "supported_languages": ["en-US", "zh-Hans"]
+      }
+    },
+    {
+      "type": "core/language_model",
+      "data": {
+        "model": "Mistral 7B Instruct v0.3",
+        "description": "# Mistral 7B Instruct v0.3\n\nCompact general-purpose open-weight model from Mistral AI. A solid baseline for on-device chat, RAG, and function calling.\n\n## Features\n- **Compact**: Runs on 8 GB of RAM (Q4_K_M).\n- **Function calling**: v0.3 adds native tool schemas.\n- **Multilingual**: English, French, German, Spanish, Italian.\n\n## Getting Started\n```\nollama pull mistral:7b-instruct-v0.3-q4_K_M\n```",
+        "artifacts": [
+          {
+            "media_type": "application/vnd.gguf.v3",
+            "urls": [
+              "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/mistral-7b-instruct-v0.3.Q4_K_M.gguf"
+            ]
+          }
+        ],
+        "deployments": [
+          {
+            "mode": "local",
+            "endpoint": {
+              "url": "http://localhost:11434/v1",
+              "type": "openai",
+              "protocol": "https"
+            },
+            "env_vars": [
+              {
+                "name": "OLLAMA_HOST",
+                "description": "Host and port for the local Ollama daemon.",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "context": {
+          "max_input_tokens": 32768,
+          "max_output_tokens": 8192,
+          "max_total_tokens": 32768
+        },
+        "size": "7B",
+        "version": "7B-Instruct-v0.3",
+        "revision": "sha256:112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00",
+        "trained_at": "2024-05-22T00:00:00Z",
+        "supported_languages": ["en-US", "fr-FR", "de-DE", "es-ES", "it-IT"]
+      }
+    },
+    {
+      "type": "core/evaluation",
+      "data": {
+        "evaluations": [
+          {
+            "model": "Llama 3.3 70B Instruct",
+            "benchmark": "MMLU",
+            "benchmark_url": "https://github.com/hendrycks/test",
+            "metric": "accuracy",
+            "score": 0.86,
+            "unit": "ratio",
+            "evaluator": "Meta",
+            "evaluated_at": "2026-01-10T00:00:00Z",
+            "source_url": "https://ai.meta.com/blog/llama-3-3"
+          },
+          {
+            "model": "Qwen 2.5 Coder 7B Instruct",
+            "benchmark": "HumanEval",
+            "benchmark_url": "https://github.com/openai/human-eval",
+            "metric": "pass@1",
+            "score": 0.884,
+            "unit": "ratio",
+            "evaluator": "Qwen Team",
+            "evaluated_at": "2025-11-10T00:00:00Z",
+            "source_url": "https://qwenlm.github.io/blog/qwen2.5-coder"
+          },
+          {
+            "model": "Mistral 7B Instruct v0.3",
+            "benchmark": "MT-Bench",
+            "benchmark_url": "https://github.com/lm-sys/FastChat",
+            "metric": "score",
+            "score": 7.5,
+            "unit": "1-10",
+            "evaluator": "Mistral AI",
+            "evaluated_at": "2024-05-22T00:00:00Z",
+            "source_url": "https://mistral.ai/news/announcing-mistral-7b-v0-3"
+          }
+        ]
+      }
+    },
+    {
+      "type": "core/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "local_filesystem",
+            "description": "Read/write access to the local model cache and weight files.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "gpu",
+            "description": "Access to local GPU device(s) for inference.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

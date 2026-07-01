@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0.0",
+  "name": "GitHub Copilot",
+  "annotations": {
+    "org.agntcy/logo_url": "https://www.github.com/logo.png",
+    "org.agntcy/status_page": "https://www.github.com/status",
+    "org.agntcy/terms_of_service": "https://www.github.com/terms",
+    "org.agntcy/privacy_policy": "https://www.github.com/privacy",
+    "org.agntcy/support": "https://www.github.com/support",
+    "org.agntcy/contact_email": "support@github.com"
+  },
+  "version": "v1.0.0",
+  "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  ],
+  "publisher": {
+    "name": "GitHub",
+    "urls": ["https://www.github.com"]
+  },
+  "skills": [
+    "natural_language_processing/natural_language_generation/text_completion",
+    "natural_language_processing/natural_language_generation/summarization",
+    "natural_language_processing/language_translation/multilingual_understanding",
+    "tool_interaction/tool_use_planning"
+  ],
+  "domains": [
+    "technology/software_engineering",
+    "technology/software_engineering/devops",
+    "technology/software_engineering/apis_integration"
+  ],
+  "modules": [
+    {
+      "type": "core/integrations/mcp",
+      "data": {
+        "connections": [
+          {
+            "mode": "local",
+            "type": "stdio",
+            "command": "npx @github/copilot-cli",
+            "args": ["--stdio"],
+            "env_vars": [
+              {
+                "name": "GITHUB_TOKEN",
+                "description": "GitHub personal access token for authentication.",
+                "required": true
+              }
+            ]
+          },
+          {
+            "mode": "remote",
+            "type": "streamable-http",
+            "url": "https://api.github.com/copilot",
+            "http_headers": [
+              {
+                "name": "Authorization",
+                "type": "bearer",
+                "description": "Bearer token for accessing GitHub Copilot services.",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "artifacts": [
+          {
+            "type": "application/json",
+            "urls": ["https://www.github.com/download/get_issues_schema.json"]
+          }
+        ],
+        "tools": [
+          {
+            "name": "get_issues",
+            "description": "Retrieve a list of issues from a specified GitHub repository.",
+            "examples": [
+              "Get all open issues for the 'my-repo' repository owned by 'my-org'.",
+              "Fetch closed issues for the 'my-repo' repository owned by 'my-org'."
+            ],
+            "scopes": ["external"]
+          }
+        ],
+        "requires": {
+          "binaries": ["node>=18"],
+          "network": ["api.figma.com", "mcp.figma.com"]
+        }
+      }
+    },
+    {
+      "type": "core/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "user_data",
+            "description": "Access to user data for personalization and context.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}
