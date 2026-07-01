@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Model Quantization",
+  "description": "Reduce model precision for efficiency.",
+  "extends": "model_optimization",
+  "name": "model_quantization",
+  "attributes": {}
+}

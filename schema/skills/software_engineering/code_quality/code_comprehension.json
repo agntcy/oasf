@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Code Comprehension",
+  "description": "Analyze and explain existing codebases.",
+  "extends": "code_quality",
+  "name": "code_comprehension",
+  "attributes": {}
+}

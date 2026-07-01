@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Copy Editing",
+  "description": "Edit and polish prose for clarity and quality.",
+  "extends": "content_editing",
+  "name": "copy_editing",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Video",
+  "description": "Analyzing and generating video.",
+  "extends": "computer_vision",
+  "name": "video_understanding_generation",
+  "attributes": {}
+}

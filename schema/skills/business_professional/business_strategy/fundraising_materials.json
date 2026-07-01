@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Fundraising and Investor Materials",
+  "description": "Build pitch decks and investor materials.",
+  "extends": "business_strategy",
+  "name": "fundraising_materials",
+  "attributes": {}
+}

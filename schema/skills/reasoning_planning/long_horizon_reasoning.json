@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Long-Horizon Reasoning",
+  "description": "Reason and plan over long horizons.",
+  "extends": "reasoning_planning",
+  "name": "long_horizon_reasoning",
+  "attributes": {}
+}

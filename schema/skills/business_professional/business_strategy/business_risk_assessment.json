@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Business Risk Assessment",
+  "description": "Identify and mitigate operational risks.",
+  "extends": "business_strategy",
+  "name": "business_risk_assessment",
+  "attributes": {}
+}

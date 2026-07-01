@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Data Quality",
+  "description": "Validating, profiling, and cleaning data.",
+  "extends": "data_engineering_analytics",
+  "name": "data_quality",
+  "attributes": {}
+}

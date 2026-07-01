@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Code Debugging",
+  "description": "Diagnosing and fixing defects and failures.",
+  "extends": "software_engineering",
+  "name": "code_debugging",
+  "attributes": {}
+}

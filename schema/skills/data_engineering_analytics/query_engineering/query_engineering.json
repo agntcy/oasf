@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Query Engineering",
+  "description": "Generating, optimizing, and translating queries.",
+  "extends": "data_engineering_analytics",
+  "name": "query_engineering",
+  "attributes": {}
+}

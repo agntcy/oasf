@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Natural Language Inference",
+  "description": "Determine entailment between text fragments.",
+  "extends": "text_classification",
+  "name": "natural_language_inference",
+  "attributes": {}
+}

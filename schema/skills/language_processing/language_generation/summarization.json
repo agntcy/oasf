@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Text Summarization",
+  "description": "Condense text into shorter form.",
+  "extends": "language_generation",
+  "name": "summarization",
+  "attributes": {}
+}

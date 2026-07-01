@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "LLM Tracing and Instrumentation",
+  "description": "Instrument LLM apps with traces and spans.",
+  "extends": "llm_observability",
+  "name": "llm_tracing",
+  "attributes": {}
+}

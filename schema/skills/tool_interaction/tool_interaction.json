@@ -1,8 +1,0 @@
-{
-  "uid": 14,
-  "caption": "Tool Interaction",
-  "category": true,
-  "extends": "base_skill",
-  "name": "tool_interaction",
-  "attributes": {}
-}

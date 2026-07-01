@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Named Entity Recognition",
+  "description": "Detect and label named entities in text.",
+  "extends": "language_understanding",
+  "name": "named_entity_recognition",
+  "attributes": {}
+}

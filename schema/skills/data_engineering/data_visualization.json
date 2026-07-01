@@ -1,8 +1,0 @@
-{
-  "uid": 9,
-  "caption": "Data Visualization",
-  "description": "Creating charts, dashboards, and visual representations of data.",
-  "extends": "data_engineering",
-  "name": "data_visualization",
-  "attributes": {}
-}

@@ -1,0 +1,9 @@
+{
+  "uid": 13,
+  "caption": "Research, Knowledge and Productivity",
+  "description": "Research, knowledge work, and office/collaboration productivity.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "research_knowledge_productivity",
+  "attributes": {}
+}

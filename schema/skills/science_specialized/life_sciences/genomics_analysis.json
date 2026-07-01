@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Genomics Analysis",
+  "description": "Single-cell, expression, and variant analysis.",
+  "extends": "life_sciences",
+  "name": "genomics_analysis",
+  "attributes": {}
+}

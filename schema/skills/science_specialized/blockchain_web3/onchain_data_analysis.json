@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "On-Chain Data Analysis",
+  "description": "Analyze on-chain and crypto market data.",
+  "extends": "blockchain_web3",
+  "name": "onchain_data_analysis",
+  "attributes": {}
+}

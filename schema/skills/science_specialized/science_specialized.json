@@ -1,0 +1,9 @@
+{
+  "uid": 14,
+  "caption": "Science and Specialized Domains",
+  "description": "Vertical scientific, clinical, and specialized-domain capabilities.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "science_specialized",
+  "attributes": {}
+}

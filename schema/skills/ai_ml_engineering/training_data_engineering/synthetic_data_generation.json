@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Synthetic Data Generation",
+  "description": "Generate synthetic datasets.",
+  "extends": "training_data_engineering",
+  "name": "synthetic_data_generation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Office Productivity",
+  "description": "Creating and operating office documents and communications.",
+  "extends": "research_knowledge_productivity",
+  "name": "office_productivity",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Document Conversion",
+  "description": "Convert documents between formats.",
+  "extends": "document_processing",
+  "name": "document_conversion",
+  "attributes": {}
+}

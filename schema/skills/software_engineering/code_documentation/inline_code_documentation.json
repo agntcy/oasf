@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Inline and API Documentation",
+  "description": "Write docstrings, comments, and API reference docs.",
+  "extends": "code_documentation",
+  "name": "inline_code_documentation",
+  "attributes": {}
+}

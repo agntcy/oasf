@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Serverless Function Development",
+  "description": "Build and deploy serverless functions.",
+  "extends": "serverless_edge",
+  "name": "serverless_functions",
+  "attributes": {}
+}

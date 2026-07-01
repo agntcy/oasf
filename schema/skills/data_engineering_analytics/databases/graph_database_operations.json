@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Graph Database Operations",
+  "description": "Model and query graph databases.",
+  "extends": "databases",
+  "name": "graph_database_operations",
+  "attributes": {}
+}

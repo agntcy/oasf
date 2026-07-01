@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "App Store Release",
+  "description": "Sign, submit, and release apps to stores.",
+  "extends": "mobile_development",
+  "name": "app_store_release",
+  "attributes": {}
+}

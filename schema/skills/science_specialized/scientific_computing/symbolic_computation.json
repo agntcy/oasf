@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Symbolic Computation",
+  "description": "Exact symbolic algebra and equation solving.",
+  "extends": "scientific_computing",
+  "name": "symbolic_computation",
+  "attributes": {}
+}

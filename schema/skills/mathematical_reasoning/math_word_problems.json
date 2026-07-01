@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Math Word Problems",
+  "description": "Solve mathematical word problems.",
+  "extends": "mathematical_reasoning",
+  "name": "math_word_problems",
+  "attributes": {}
+}

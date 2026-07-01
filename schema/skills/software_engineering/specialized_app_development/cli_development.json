@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "CLI and Terminal App Development",
+  "description": "Build command-line tools and TUIs.",
+  "extends": "specialized_app_development",
+  "name": "cli_development",
+  "attributes": {}
+}

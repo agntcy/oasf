@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Ad Creative Production",
+  "description": "Produce and iterate ad creative.",
+  "extends": "advertising",
+  "name": "ad_creative_production",
+  "attributes": {}
+}

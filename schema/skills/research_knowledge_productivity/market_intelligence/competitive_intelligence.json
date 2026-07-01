@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Competitive Intelligence",
+  "description": "Build competitor teardowns and battlecards.",
+  "extends": "market_intelligence",
+  "name": "competitive_intelligence",
+  "attributes": {}
+}

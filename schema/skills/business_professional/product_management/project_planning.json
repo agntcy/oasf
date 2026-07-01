@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Project Planning",
+  "description": "Plan tasks, milestones, and delivery.",
+  "extends": "product_management",
+  "name": "project_planning",
+  "attributes": {}
+}

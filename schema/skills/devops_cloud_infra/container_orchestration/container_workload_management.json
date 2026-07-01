@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Container Workload Management",
+  "description": "Schedule, deploy, and manage containerized workloads on an orchestrator.",
+  "extends": "container_orchestration",
+  "name": "container_workload_management",
+  "attributes": {}
+}

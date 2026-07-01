@@ -1,0 +1,9 @@
+{
+  "uid": 12,
+  "caption": "Business and Professional",
+  "description": "Applied business capabilities across commercial functions.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "business_professional",
+  "attributes": {}
+}

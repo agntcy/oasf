@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Third-Party Integration",
+  "description": "Integrate external SDKs, APIs, and services.",
+  "extends": "api_development",
+  "name": "third_party_integration",
+  "attributes": {}
+}

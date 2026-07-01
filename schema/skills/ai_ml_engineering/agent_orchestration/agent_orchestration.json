@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Agent Orchestration",
+  "description": "Coordinating multiple agents and workflows.",
+  "extends": "ai_ml_engineering",
+  "name": "agent_orchestration",
+  "attributes": {}
+}

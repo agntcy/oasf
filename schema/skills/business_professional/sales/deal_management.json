@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Deal Management",
+  "description": "Manage opportunities and deal cycles.",
+  "extends": "sales",
+  "name": "deal_management",
+  "attributes": {}
+}

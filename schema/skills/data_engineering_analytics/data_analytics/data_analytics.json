@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Data Analytics",
+  "description": "Exploring data and producing insights.",
+  "extends": "data_engineering_analytics",
+  "name": "data_analytics",
+  "attributes": {}
+}

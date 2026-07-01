@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Web Animation",
+  "description": "Build web animations, transitions, and motion effects.",
+  "extends": "web_development",
+  "name": "web_animation",
+  "attributes": {}
+}

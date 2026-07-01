@@ -1,8 +1,0 @@
-{
-  "uid": 15,
-  "caption": "Mobile Development",
-  "description": "Building applications for mobile platforms such as iOS and Android.",
-  "extends": "coding_skills",
-  "name": "mobile_development",
-  "attributes": {}
-}

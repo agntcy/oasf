@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Image Generation",
+  "description": "Synthesizing images.",
+  "extends": "computer_vision",
+  "name": "image_generation",
+  "attributes": {}
+}

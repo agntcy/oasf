@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Health Data Compliance",
+  "description": "Handle PHI and health-data compliance.",
+  "extends": "healthcare_clinical",
+  "name": "health_data_compliance",
+  "attributes": {}
+}

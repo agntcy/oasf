@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Financial Technology (FinTech)",
+  "description": "Technology-driven financial products, services, and infrastructure.",
+  "extends": "finance_and_business",
+  "name": "fintech",
+  "attributes": {}
+}

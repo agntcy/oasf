@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "LLM Observability",
+  "description": "Tracing, monitoring, and debugging LLM/agent apps.",
+  "extends": "ai_ml_engineering",
+  "name": "llm_observability",
+  "attributes": {}
+}

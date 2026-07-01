@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Code Review",
-  "description": "Reviewing code changes for bugs, security issues, performance problems, and adherence to best practices.",
-  "extends": "coding_skills",
-  "name": "code_review",
-  "attributes": {}
-}

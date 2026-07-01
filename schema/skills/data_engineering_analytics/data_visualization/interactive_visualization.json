@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Interactive Visualization",
+  "description": "Build interactive data visualizations.",
+  "extends": "data_visualization",
+  "name": "interactive_visualization",
+  "attributes": {}
+}

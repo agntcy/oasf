@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Quality Management Systems",
+  "description": "Design ISO 13485 QMS and audits.",
+  "extends": "medical_regulatory",
+  "name": "quality_management",
+  "attributes": {}
+}

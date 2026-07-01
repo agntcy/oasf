@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "GitOps Workflow",
+  "description": "Continuously reconcile state from Git.",
+  "extends": "gitops",
+  "name": "gitops_workflow",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "End-to-End and UI Testing",
+  "description": "Write browser and end-to-end UI tests.",
+  "extends": "software_testing",
+  "name": "end_to_end_testing",
+  "attributes": {}
+}

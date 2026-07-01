@@ -1,8 +1,0 @@
-{
-  "uid": 4,
-  "caption": "Business Intelligence",
-  "description": "Analyzing and reporting business data through dashboards, metrics, and semantic models.",
-  "extends": "data_science",
-  "name": "business_intelligence",
-  "attributes": {}
-}

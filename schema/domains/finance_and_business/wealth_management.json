@@ -1,0 +1,8 @@
+{
+  "uid": 10,
+  "caption": "Wealth Management",
+  "description": "Personal finance, investment advisory, and wealth planning.",
+  "extends": "finance_and_business",
+  "name": "wealth_management",
+  "attributes": {}
+}

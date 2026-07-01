@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Text Feature Extraction",
+  "description": "Extract features/representations from text.",
+  "extends": "language_understanding",
+  "name": "text_feature_extraction",
+  "attributes": {}
+}

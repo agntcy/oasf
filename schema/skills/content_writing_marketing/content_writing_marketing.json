@@ -1,0 +1,9 @@
+{
+  "uid": 11,
+  "caption": "Content, Writing and Marketing",
+  "description": "Producing, editing, optimizing, and distributing content for communication and marketing.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "content_writing_marketing",
+  "attributes": {}
+}

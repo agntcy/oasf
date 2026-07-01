@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Language Processing",
+  "description": "Understanding, generating, classifying, and translating natural-language text.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "language_processing",
+  "attributes": {}
+}

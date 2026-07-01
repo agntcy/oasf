@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Chain-of-Thought Structuring",
+  "description": "Structure step-by-step reasoning.",
+  "extends": "reasoning_planning",
+  "name": "chain_of_thought_structuring",
+  "attributes": {}
+}

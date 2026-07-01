@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Accounting",
+  "description": "Bookkeeping, financial reporting, and accounting operations.",
+  "extends": "finance_and_business",
+  "name": "accounting",
+  "attributes": {}
+}

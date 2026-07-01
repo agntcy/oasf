@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Vector Databases",
-  "description": "Storing and querying high-dimensional embeddings for semantic and similarity search.",
-  "extends": "data_science",
-  "name": "vector_databases",
-  "attributes": {}
-}

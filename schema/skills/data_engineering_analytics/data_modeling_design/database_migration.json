@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Database Migration",
+  "description": "Evolve schemas with versioned migrations.",
+  "extends": "data_modeling_design",
+  "name": "database_migration",
+  "attributes": {}
+}

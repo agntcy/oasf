@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Mobile Development",
+  "description": "Building native and cross-platform mobile apps.",
+  "extends": "software_engineering",
+  "name": "mobile_development",
+  "attributes": {}
+}

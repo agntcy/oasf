@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "CI/CD Configuration",
+  "description": "Author CI/CD workflows and pipelines.",
+  "extends": "ci_cd",
+  "name": "ci_cd_configuration",
+  "attributes": {}
+}

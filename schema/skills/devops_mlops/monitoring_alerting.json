@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Monitoring & Alerting",
-  "description": "Configuring and interpreting telemetry signals, thresholds, and alerts for operational health.",
-  "extends": "devops_mlops",
-  "name": "monitoring_alerting",
-  "attributes": {}
-}

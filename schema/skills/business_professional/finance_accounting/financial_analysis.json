@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Financial Analysis",
+  "description": "Analyze statements, ratios, and unit economics.",
+  "extends": "finance_accounting",
+  "name": "financial_analysis",
+  "attributes": {}
+}

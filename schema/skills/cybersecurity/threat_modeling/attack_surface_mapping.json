@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Attack Surface Mapping",
+  "description": "Map attack surface and threat paths.",
+  "extends": "threat_modeling",
+  "name": "attack_surface_mapping",
+  "attributes": {}
+}

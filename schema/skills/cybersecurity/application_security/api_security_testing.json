@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "API Security Testing",
+  "description": "Test APIs for authz gaps and injection.",
+  "extends": "application_security",
+  "name": "api_security_testing",
+  "attributes": {}
+}

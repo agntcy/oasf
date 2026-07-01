@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Bias Mitigation",
+  "description": "Detect and mitigate bias in AI systems.",
+  "extends": "governance_compliance",
+  "name": "bias_mitigation",
+  "attributes": {}
+}

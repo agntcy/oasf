@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "API Implementation",
+  "description": "Implement API endpoints and services.",
+  "extends": "api_development",
+  "name": "api_implementation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "PDF Manipulation",
+  "description": "Merge, split, fill, and generate PDFs.",
+  "extends": "document_processing",
+  "name": "pdf_manipulation",
+  "attributes": {}
+}

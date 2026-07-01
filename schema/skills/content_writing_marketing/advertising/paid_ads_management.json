@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Paid Ads Management",
+  "description": "Set up and optimize paid ad campaigns.",
+  "extends": "advertising",
+  "name": "paid_ads_management",
+  "attributes": {}
+}

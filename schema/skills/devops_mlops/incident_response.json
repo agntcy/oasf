@@ -1,8 +1,0 @@
-{
-  "uid": 10,
-  "caption": "Incident Response",
-  "description": "Triaging, diagnosing, and resolving production incidents and producing postmortems.",
-  "extends": "devops_mlops",
-  "name": "incident_response",
-  "attributes": {}
-}

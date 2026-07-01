@@ -1,8 +1,0 @@
-{
-  "uid": 10,
-  "caption": "Software Testing",
-  "description": "Designing, writing, and running unit, integration, and end-to-end tests for software.",
-  "extends": "coding_skills",
-  "name": "software_testing",
-  "attributes": {}
-}

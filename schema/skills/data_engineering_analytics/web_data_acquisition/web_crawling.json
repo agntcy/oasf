@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Web Crawling",
+  "description": "Crawl sites at scale.",
+  "extends": "web_data_acquisition",
+  "name": "web_crawling",
+  "attributes": {}
+}

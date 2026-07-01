@@ -1,9 +1,0 @@
-{
-  "uid": 7,
-  "caption": "Multi-modal",
-  "category": true,
-  "description": "Capabilities for transforming content between different modalities (text, image, audio, video, or 3D).",
-  "extends": "base_skill",
-  "name": "multi_modal",
-  "attributes": {}
-}

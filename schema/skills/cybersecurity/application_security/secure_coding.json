@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Secure Coding",
+  "description": "Apply secure-by-default coding patterns.",
+  "extends": "application_security",
+  "name": "secure_coding",
+  "attributes": {}
+}

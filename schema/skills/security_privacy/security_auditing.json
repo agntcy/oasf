@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Security Auditing",
-  "description": "Reviewing code, configurations, and systems for security weaknesses through audits and scanning.",
-  "extends": "security_privacy",
-  "name": "security_auditing",
-  "attributes": {}
-}

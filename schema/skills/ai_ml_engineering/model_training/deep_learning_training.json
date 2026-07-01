@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Deep Learning Training",
+  "description": "Train deep neural networks and transformers.",
+  "extends": "model_training",
+  "name": "deep_learning_training",
+  "attributes": {}
+}

@@ -1,8 +1,0 @@
-{
-  "uid": 6,
-  "caption": "Computer Vision",
-  "description": "Interpreting and analyzing visual information such as images and video.",
-  "extends": "artificial_intelligence",
-  "name": "computer_vision",
-  "attributes": {}
-}

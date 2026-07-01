@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Advertising",
+  "description": "Planning and managing paid advertising.",
+  "extends": "content_writing_marketing",
+  "name": "advertising",
+  "attributes": {}
+}

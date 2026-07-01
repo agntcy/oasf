@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Smart Contract Development",
+  "description": "Build and test on-chain contracts.",
+  "extends": "blockchain_web3",
+  "name": "smart_contract_development",
+  "attributes": {}
+}

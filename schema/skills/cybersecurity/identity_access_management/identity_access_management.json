@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Identity and Access Management",
+  "description": "Designing and securing identity, auth, and access.",
+  "extends": "cybersecurity",
+  "name": "identity_access_management",
+  "attributes": {}
+}

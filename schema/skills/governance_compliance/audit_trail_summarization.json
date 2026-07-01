@@ -1,7 +1,7 @@
 {
-  "uid": 3,
+  "uid": 4,
   "caption": "Audit Trail Summarization",
-  "description": "Condensing system event or transaction logs into human-readable compliance or oversight summaries.",
+  "description": "Summarize audit trails and logs.",
   "extends": "governance_compliance",
   "name": "audit_trail_summarization",
   "attributes": {}

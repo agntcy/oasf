@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Social Media Analytics",
+  "description": "Analyze social engagement and trends.",
+  "extends": "social_media_marketing",
+  "name": "social_media_analytics",
+  "attributes": {}
+}

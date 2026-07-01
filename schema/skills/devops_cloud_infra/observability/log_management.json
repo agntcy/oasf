@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Logging and Log Analysis",
+  "description": "Aggregate and analyze logs.",
+  "extends": "observability",
+  "name": "log_management",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Trace Analysis and Debugging",
+  "description": "Analyze traces to debug agent failures.",
+  "extends": "llm_observability",
+  "name": "trace_analysis",
+  "attributes": {}
+}

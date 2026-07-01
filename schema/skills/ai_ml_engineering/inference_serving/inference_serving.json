@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Inference and Serving",
+  "description": "Deploying and optimizing model inference.",
+  "extends": "ai_ml_engineering",
+  "name": "inference_serving",
+  "attributes": {}
+}

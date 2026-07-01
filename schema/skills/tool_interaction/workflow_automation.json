@@ -1,8 +1,0 @@
-{
-  "uid": 2,
-  "caption": "Workflow Automation",
-  "description": "Designing or describing automated sequences integrating multiple tools or services.",
-  "extends": "tool_interaction",
-  "name": "workflow_automation",
-  "attributes": {}
-}

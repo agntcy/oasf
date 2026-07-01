@@ -1,0 +1,9 @@
+{
+  "uid": 4,
+  "caption": "3D Generation",
+  "description": "Generating and reconstructing 3D assets and scenes.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "three_d_generation",
+  "attributes": {}
+}

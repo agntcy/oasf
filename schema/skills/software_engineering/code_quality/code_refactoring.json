@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Code Refactoring and Optimization",
+  "description": "Restructure and optimize existing code.",
+  "extends": "code_quality",
+  "name": "code_refactoring",
+  "attributes": {}
+}

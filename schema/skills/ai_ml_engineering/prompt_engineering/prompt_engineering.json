@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Prompt Engineering",
+  "description": "Designing and optimizing LLM prompts and outputs.",
+  "extends": "ai_ml_engineering",
+  "name": "prompt_engineering",
+  "attributes": {}
+}

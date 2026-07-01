@@ -1,8 +1,0 @@
-{
-  "uid": 2,
-  "caption": "Sentiment Analysis",
-  "description": "Classify the sentiment of a text, that is, a positive movie review.",
-  "extends": "text_classification",
-  "name": "sentiment_analysis",
-  "attributes": {}
-}

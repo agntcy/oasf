@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Data Quality Assessment",
+  "description": "Validate data against rules and contracts.",
+  "extends": "data_quality",
+  "name": "data_quality_assessment",
+  "attributes": {}
+}

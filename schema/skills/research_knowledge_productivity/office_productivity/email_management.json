@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Email Management",
+  "description": "Read, draft, and operate email.",
+  "extends": "office_productivity",
+  "name": "email_management",
+  "attributes": {}
+}

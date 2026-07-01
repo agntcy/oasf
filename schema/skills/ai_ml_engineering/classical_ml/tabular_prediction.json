@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Tabular Prediction",
+  "description": "Classification and regression over tabular data.",
+  "extends": "classical_ml",
+  "name": "tabular_prediction",
+  "attributes": {}
+}

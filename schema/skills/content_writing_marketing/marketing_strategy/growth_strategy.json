@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Growth Strategy",
+  "description": "Design growth loops and acquisition motions.",
+  "extends": "marketing_strategy",
+  "name": "growth_strategy",
+  "attributes": {}
+}

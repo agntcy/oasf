@@ -1,8 +1,0 @@
-{
-  "uid": 2,
-  "caption": "Search",
-  "description": "Search is the process of exploring a dataset or index to find relevant information or results based on a given query.",
-  "extends": "retrieval_of_information",
-  "name": "retrieval_of_information_search",
-  "attributes": {}
-}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Knowledge Management",
+  "description": "Capturing, organizing, and retrieving knowledge.",
+  "extends": "research_knowledge_productivity",
+  "name": "knowledge_management",
+  "attributes": {}
+}

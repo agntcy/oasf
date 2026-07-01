@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Software Testing",
+  "description": "Verifying software behavior at all levels.",
+  "extends": "software_engineering",
+  "name": "software_testing",
+  "attributes": {}
+}

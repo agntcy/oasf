@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Issue Tracking",
+  "description": "Create and manage issues and tickets.",
+  "extends": "project_task_management",
+  "name": "issue_tracking",
+  "attributes": {}
+}

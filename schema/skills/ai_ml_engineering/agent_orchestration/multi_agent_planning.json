@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Multi-Agent Planning",
+  "description": "Plan coordinated multi-agent actions.",
+  "extends": "agent_orchestration",
+  "name": "multi_agent_planning",
+  "attributes": {}
+}

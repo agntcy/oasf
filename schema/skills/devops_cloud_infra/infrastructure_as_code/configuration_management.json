@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Configuration Management",
+  "description": "Automate host and agent configuration.",
+  "extends": "infrastructure_as_code",
+  "name": "configuration_management",
+  "attributes": {}
+}

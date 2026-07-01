@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Product Analytics",
+  "description": "Analyze product/behavioral metrics.",
+  "extends": "data_analytics",
+  "name": "product_analytics",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Editing and Proofreading",
+  "description": "Improving, correcting, and refining text.",
+  "extends": "content_writing_marketing",
+  "name": "content_editing",
+  "attributes": {}
+}

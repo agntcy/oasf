@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Cloud Cost Optimization",
+  "description": "Optimize and govern cloud spend (FinOps).",
+  "extends": "cloud_platform_operations",
+  "name": "cloud_cost_optimization",
+  "attributes": {}
+}

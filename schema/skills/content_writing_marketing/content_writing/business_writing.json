@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Business and Professional Writing",
+  "description": "Write proposals, reports, and resumes.",
+  "extends": "content_writing",
+  "name": "business_writing",
+  "attributes": {}
+}

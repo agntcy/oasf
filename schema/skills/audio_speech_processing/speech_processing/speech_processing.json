@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Speech Processing",
+  "description": "Recognizing and synthesizing speech.",
+  "extends": "audio_speech_processing",
+  "name": "speech_processing",
+  "attributes": {}
+}

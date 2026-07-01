@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Anomaly Detection",
+  "description": "Detect anomalies in telemetry and data.",
+  "extends": "observability",
+  "name": "anomaly_detection",
+  "attributes": {}
+}

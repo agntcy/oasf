@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Document Processing",
+  "description": "Parsing, extracting, converting, and generating documents.",
+  "extends": "research_knowledge_productivity",
+  "name": "document_processing",
+  "attributes": {}
+}

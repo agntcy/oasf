@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Project Documentation",
+  "description": "Write READMEs, ADRs, and design docs.",
+  "extends": "code_documentation",
+  "name": "project_documentation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Warehouse Modeling",
+  "description": "Build warehouse layers and marts.",
+  "extends": "data_warehousing",
+  "name": "warehouse_modeling",
+  "attributes": {}
+}

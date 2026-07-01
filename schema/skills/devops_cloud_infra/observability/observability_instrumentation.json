@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Observability Instrumentation",
+  "description": "Instrument apps with telemetry SDKs.",
+  "extends": "observability",
+  "name": "observability_instrumentation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Sequence Analysis",
+  "description": "Analyze biological sequences and alignments.",
+  "extends": "life_sciences",
+  "name": "sequence_analysis",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Mechanistic Interpretability",
+  "description": "Inspect model internals and activations.",
+  "extends": "model_interpretability",
+  "name": "mechanistic_interpretability",
+  "attributes": {}
+}

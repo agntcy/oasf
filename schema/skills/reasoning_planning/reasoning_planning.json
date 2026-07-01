@@ -1,0 +1,9 @@
+{
+  "uid": 15,
+  "caption": "Reasoning and Planning",
+  "description": "General reasoning, problem-solving, and planning.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "reasoning_planning",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Threat Modeling Analysis",
+  "description": "Apply STRIDE/DREAD to identify threats.",
+  "extends": "threat_modeling",
+  "name": "threat_modeling_analysis",
+  "attributes": {}
+}

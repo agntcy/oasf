@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Classical Machine Learning",
+  "description": "Training non-deep ML models and predictors.",
+  "extends": "ai_ml_engineering",
+  "name": "classical_ml",
+  "attributes": {}
+}

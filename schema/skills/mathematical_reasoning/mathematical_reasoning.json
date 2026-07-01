@@ -1,0 +1,9 @@
+{
+  "uid": 16,
+  "caption": "Mathematical Reasoning",
+  "description": "Mathematical problem-solving and computation.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "mathematical_reasoning",
+  "attributes": {}
+}

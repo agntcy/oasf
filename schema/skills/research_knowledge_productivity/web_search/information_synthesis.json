@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Information Synthesis",
+  "description": "Synthesize information from many sources.",
+  "extends": "web_search",
+  "name": "information_synthesis",
+  "attributes": {}
+}

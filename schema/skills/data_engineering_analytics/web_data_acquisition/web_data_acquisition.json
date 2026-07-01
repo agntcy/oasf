@@ -1,0 +1,8 @@
+{
+  "uid": 10,
+  "caption": "Web Data Acquisition",
+  "description": "Scraping, crawling, and extracting web data.",
+  "extends": "data_engineering_analytics",
+  "name": "web_data_acquisition",
+  "attributes": {}
+}

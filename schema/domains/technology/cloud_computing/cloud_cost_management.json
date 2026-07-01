@@ -1,8 +1,0 @@
-{
-  "uid": 7,
-  "caption": "Cloud Cost Management",
-  "description": "Monitoring, forecasting, and optimizing cloud spending (FinOps).",
-  "extends": "cloud_computing",
-  "name": "cloud_cost_management",
-  "attributes": {}
-}

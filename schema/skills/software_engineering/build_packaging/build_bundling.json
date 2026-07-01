@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Build and Bundling",
+  "description": "Configure build tools and bundlers.",
+  "extends": "build_packaging",
+  "name": "build_bundling",
+  "attributes": {}
+}

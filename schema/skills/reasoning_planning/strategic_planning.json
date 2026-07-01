@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Strategic Planning",
+  "description": "Plan strategies toward goals.",
+  "extends": "reasoning_planning",
+  "name": "strategic_planning",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Financial Planning",
+  "description": "Build personal and corporate financial plans.",
+  "extends": "finance_accounting",
+  "name": "financial_planning",
+  "attributes": {}
+}

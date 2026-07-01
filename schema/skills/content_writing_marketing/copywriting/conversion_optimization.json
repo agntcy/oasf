@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Conversion Optimization",
+  "description": "Optimize copy and pages for conversion.",
+  "extends": "copywriting",
+  "name": "conversion_optimization",
+  "attributes": {}
+}

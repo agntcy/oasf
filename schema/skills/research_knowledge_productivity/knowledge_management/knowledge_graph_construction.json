@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Knowledge Graph Construction",
+  "description": "Build and query knowledge graphs.",
+  "extends": "knowledge_management",
+  "name": "knowledge_graph_construction",
+  "attributes": {}
+}

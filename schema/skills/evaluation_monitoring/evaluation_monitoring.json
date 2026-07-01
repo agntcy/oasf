@@ -1,8 +1,0 @@
-{
-  "uid": 11,
-  "caption": "Evaluation & Monitoring",
-  "category": true,
-  "extends": "base_skill",
-  "name": "evaluation_monitoring",
-  "attributes": {}
-}

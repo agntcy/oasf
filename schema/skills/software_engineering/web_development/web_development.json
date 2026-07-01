@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Web Development",
+  "description": "Building web applications, front and back.",
+  "extends": "software_engineering",
+  "name": "web_development",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Dashboard Building",
+  "description": "Build operational and KPI dashboards.",
+  "extends": "business_intelligence",
+  "name": "dashboard_building",
+  "attributes": {}
+}

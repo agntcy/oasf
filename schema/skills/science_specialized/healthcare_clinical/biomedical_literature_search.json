@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Biomedical Literature Search",
+  "description": "Search biomedical literature and trials.",
+  "extends": "healthcare_clinical",
+  "name": "biomedical_literature_search",
+  "attributes": {}
+}

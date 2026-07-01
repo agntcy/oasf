@@ -1,6 +1,7 @@
 {
-  "uid": 13,
-  "caption": "Governance & Compliance",
+  "uid": 18,
+  "caption": "Governance, Compliance and Ethics",
+  "description": "Governance, regulatory compliance, risk, and responsible-AI controls.",
   "category": true,
   "extends": "base_skill",
   "name": "governance_compliance",

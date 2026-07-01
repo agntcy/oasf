@@ -1,8 +1,0 @@
-{
-  "uid": 2,
-  "caption": "Images / Computer Vision",
-  "category": true,
-  "extends": "base_skill",
-  "name": "images_computer_vision",
-  "attributes": {}
-}

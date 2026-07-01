@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Customer Support and Success",
+  "description": "Support operations and retention.",
+  "extends": "business_professional",
+  "name": "customer_support",
+  "attributes": {}
+}

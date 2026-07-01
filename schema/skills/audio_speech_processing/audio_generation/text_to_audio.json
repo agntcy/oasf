@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text to Audio",
+  "description": "Generate music or sound from text descriptions.",
+  "extends": "audio_generation",
+  "name": "text_to_audio",
+  "attributes": {}
+}

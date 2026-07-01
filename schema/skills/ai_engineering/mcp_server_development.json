@@ -1,8 +1,0 @@
-{
-  "uid": 3,
-  "caption": "MCP Server Development",
-  "description": "Building Model Context Protocol servers and tools that expose capabilities to AI agents.",
-  "extends": "ai_engineering",
-  "name": "mcp_server_development",
-  "attributes": {}
-}

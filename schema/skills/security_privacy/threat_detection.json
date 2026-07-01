@@ -1,8 +1,0 @@
-{
-  "uid": 1,
-  "caption": "Threat Detection",
-  "description": "Identifying indicators of malicious activity, suspicious patterns, or emerging threats across logs and data sources.",
-  "extends": "security_privacy",
-  "name": "threat_detection",
-  "attributes": {}
-}

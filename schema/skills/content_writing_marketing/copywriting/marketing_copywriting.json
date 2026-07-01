@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Marketing Copywriting",
+  "description": "Write brand and marketing copy.",
+  "extends": "copywriting",
+  "name": "marketing_copywriting",
+  "attributes": {}
+}

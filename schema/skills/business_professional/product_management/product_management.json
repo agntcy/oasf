@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Product Management",
+  "description": "Requirements, roadmaps, strategy, and delivery.",
+  "extends": "business_professional",
+  "name": "product_management",
+  "attributes": {}
+}

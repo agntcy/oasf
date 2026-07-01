@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Regulatory Submissions",
+  "description": "Prepare FDA/EU MDR submissions.",
+  "extends": "medical_regulatory",
+  "name": "regulatory_submissions",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 12,
+  "caption": "Specialized Application Development",
+  "description": "Application kinds with distinct skill sets.",
+  "extends": "software_engineering",
+  "name": "specialized_app_development",
+  "attributes": {}
+}

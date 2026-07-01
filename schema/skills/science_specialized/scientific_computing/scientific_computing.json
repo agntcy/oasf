@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Scientific Computing",
+  "description": "Quantum, symbolic, and physical-science computing.",
+  "extends": "science_specialized",
+  "name": "scientific_computing",
+  "attributes": {}
+}

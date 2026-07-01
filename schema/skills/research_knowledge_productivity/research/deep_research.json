@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Deep Research",
+  "description": "Multi-source, citation-tracked research synthesis.",
+  "extends": "research",
+  "name": "deep_research",
+  "attributes": {}
+}

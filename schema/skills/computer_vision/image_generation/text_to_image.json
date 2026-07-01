@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text to Image",
+  "description": "Generate images from text prompts.",
+  "extends": "image_generation",
+  "name": "text_to_image",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Business Operations",
+  "description": "Process, supply chain, and procurement.",
+  "extends": "business_professional",
+  "name": "business_operations",
+  "attributes": {}
+}

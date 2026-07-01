@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "ORM and Data Access",
+  "description": "Access data through ORMs and query builders.",
+  "extends": "databases",
+  "name": "orm_data_access",
+  "attributes": {}
+}

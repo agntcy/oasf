@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Data Quality Assessment",
-  "description": "Evaluating datasets for completeness, validity, consistency, and timeliness.",
-  "extends": "data_engineering",
-  "name": "data_quality_assessment",
-  "attributes": {}
-}

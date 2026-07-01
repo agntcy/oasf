@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Research Ideation",
+  "description": "Generate and evaluate research ideas and hypotheses.",
+  "extends": "research",
+  "name": "research_ideation",
+  "attributes": {}
+}

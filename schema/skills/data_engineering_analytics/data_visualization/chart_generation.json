@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Chart Generation",
+  "description": "Generate charts from data.",
+  "extends": "data_visualization",
+  "name": "chart_generation",
+  "attributes": {}
+}

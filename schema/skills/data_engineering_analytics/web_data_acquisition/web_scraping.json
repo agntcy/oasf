@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Web Scraping",
+  "description": "Extract structured data from web pages.",
+  "extends": "web_data_acquisition",
+  "name": "web_scraping",
+  "attributes": {}
+}

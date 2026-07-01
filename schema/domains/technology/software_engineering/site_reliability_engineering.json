@@ -1,8 +1,0 @@
-{
-  "uid": 9,
-  "caption": "Site Reliability Engineering",
-  "description": "Applying engineering practices to operate reliable, scalable production systems.",
-  "extends": "software_engineering",
-  "name": "site_reliability_engineering",
-  "attributes": {}
-}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Feature Engineering",
+  "description": "Engineer features for ML models.",
+  "extends": "training_data_engineering",
+  "name": "feature_engineering",
+  "attributes": {}
+}

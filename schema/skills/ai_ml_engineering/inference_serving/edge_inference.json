@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Edge and On-Device Inference",
+  "description": "Run models on CPU/edge/consumer hardware.",
+  "extends": "inference_serving",
+  "name": "edge_inference",
+  "attributes": {}
+}

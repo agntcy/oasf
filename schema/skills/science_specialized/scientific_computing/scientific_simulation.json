@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Scientific Simulation",
+  "description": "Simulate physical and scientific systems.",
+  "extends": "scientific_computing",
+  "name": "scientific_simulation",
+  "attributes": {}
+}

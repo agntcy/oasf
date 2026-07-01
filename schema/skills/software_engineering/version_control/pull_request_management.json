@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Pull Request Management",
+  "description": "Create, review, and iterate on pull requests.",
+  "extends": "version_control",
+  "name": "pull_request_management",
+  "attributes": {}
+}

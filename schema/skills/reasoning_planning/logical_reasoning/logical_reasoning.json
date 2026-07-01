@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Logical Reasoning",
+  "description": "Drawing inferences and solving problems.",
+  "extends": "reasoning_planning",
+  "name": "logical_reasoning",
+  "attributes": {}
+}

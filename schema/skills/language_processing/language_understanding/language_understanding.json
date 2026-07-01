@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Language Understanding",
+  "description": "Comprehending meaning, context, and structure of text.",
+  "extends": "language_processing",
+  "name": "language_understanding",
+  "attributes": {}
+}

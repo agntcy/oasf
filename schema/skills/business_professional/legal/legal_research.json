@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Legal Research",
+  "description": "Research law, precedent, and regulation.",
+  "extends": "legal",
+  "name": "legal_research",
+  "attributes": {}
+}

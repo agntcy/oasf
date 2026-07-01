@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Stream Processing",
+  "description": "Process real-time event streams and CDC.",
+  "extends": "data_pipelines",
+  "name": "stream_processing",
+  "attributes": {}
+}

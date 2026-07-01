@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Citation Management",
+  "description": "Manage references and citations.",
+  "extends": "research",
+  "name": "citation_management",
+  "attributes": {}
+}

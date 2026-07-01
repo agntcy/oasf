@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Container Application Packaging",
+  "description": "Package, template, and version applications for container orchestration.",
+  "extends": "container_orchestration",
+  "name": "container_app_packaging",
+  "attributes": {}
+}

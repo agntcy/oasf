@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Brand Monitoring",
+  "description": "Monitor brand mentions and sentiment.",
+  "extends": "branding",
+  "name": "brand_monitoring",
+  "attributes": {}
+}

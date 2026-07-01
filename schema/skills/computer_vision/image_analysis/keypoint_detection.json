@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Keypoint Detection",
+  "description": "Detect keypoints/landmarks in images.",
+  "extends": "image_analysis",
+  "name": "keypoint_detection",
+  "attributes": {}
+}

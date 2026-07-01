@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Role Assignment",
+  "description": "Assign roles and responsibilities to agents.",
+  "extends": "agent_orchestration",
+  "name": "role_assignment",
+  "attributes": {}
+}

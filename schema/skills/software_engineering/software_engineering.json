@@ -1,0 +1,9 @@
+{
+  "uid": 6,
+  "caption": "Software Engineering",
+  "description": "Building, testing, maintaining, and architecting software.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "software_engineering",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Blockchain and Web3",
+  "description": "Smart contracts, wallets, DeFi, and on-chain data.",
+  "extends": "science_specialized",
+  "name": "blockchain_web3",
+  "attributes": {}
+}

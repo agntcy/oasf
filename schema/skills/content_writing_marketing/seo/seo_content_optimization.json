@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "SEO Content Optimization",
+  "description": "Optimize content for search ranking.",
+  "extends": "seo",
+  "name": "seo_content_optimization",
+  "attributes": {}
+}

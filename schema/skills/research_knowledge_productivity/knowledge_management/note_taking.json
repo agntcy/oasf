@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Note-Taking",
+  "description": "Create and organize personal notes.",
+  "extends": "knowledge_management",
+  "name": "note_taking",
+  "attributes": {}
+}

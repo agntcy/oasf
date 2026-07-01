@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Code Review",
+  "description": "Review code for bugs, security, and best practices.",
+  "extends": "code_quality",
+  "name": "code_review",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Geospatial and GIS",
+  "description": "Working with spatial data and geographic analysis.",
+  "extends": "science_specialized",
+  "name": "geospatial",
+  "attributes": {}
+}

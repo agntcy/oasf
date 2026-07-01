@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Branding",
+  "description": "Defining and applying brand identity and voice.",
+  "extends": "content_writing_marketing",
+  "name": "branding",
+  "attributes": {}
+}

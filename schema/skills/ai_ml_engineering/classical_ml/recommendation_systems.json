@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Recommendation Systems",
+  "description": "Build recommender and ranking models.",
+  "extends": "classical_ml",
+  "name": "recommendation_systems",
+  "attributes": {}
+}

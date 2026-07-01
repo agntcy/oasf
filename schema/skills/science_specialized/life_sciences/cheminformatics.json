@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Cheminformatics",
+  "description": "Analyze molecular structures and descriptors.",
+  "extends": "life_sciences",
+  "name": "cheminformatics",
+  "attributes": {}
+}

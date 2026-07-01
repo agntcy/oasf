@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Schema Design",
+  "description": "Design schemas, normalization, and indexes.",
+  "extends": "data_modeling_design",
+  "name": "schema_design",
+  "attributes": {}
+}

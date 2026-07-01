@@ -1,8 +1,0 @@
-{
-  "uid": 13,
-  "caption": "Frontend Development",
-  "description": "Building user-facing web interfaces and client-side application logic.",
-  "extends": "coding_skills",
-  "name": "frontend_development",
-  "attributes": {}
-}

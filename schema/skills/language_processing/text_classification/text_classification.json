@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Text Classification",
+  "description": "Assign categories, labels, or scores to text.",
+  "extends": "language_processing",
+  "name": "text_classification",
+  "attributes": {}
+}

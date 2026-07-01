@@ -1,8 +1,0 @@
-{
-  "uid": 6,
-  "caption": "Cloud Native",
-  "description": "Designing and operating applications using containers, microservices, and orchestration.",
-  "extends": "cloud_computing",
-  "name": "cloud_native",
-  "attributes": {}
-}

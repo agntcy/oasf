@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "DeFi and Crypto Trading",
+  "description": "Build DEX/trading and bridging strategies.",
+  "extends": "blockchain_web3",
+  "name": "defi_trading",
+  "attributes": {}
+}

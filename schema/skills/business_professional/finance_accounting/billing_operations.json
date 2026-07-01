@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Billing Operations",
+  "description": "Operate subscription and recurring billing.",
+  "extends": "finance_accounting",
+  "name": "billing_operations",
+  "attributes": {}
+}

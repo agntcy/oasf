@@ -1,8 +1,0 @@
-{
-  "uid": 4,
-  "caption": "Knowledge Management",
-  "description": "Capturing, organizing, and retrieving organizational knowledge, including wikis and enterprise search.",
-  "extends": "productivity_collaboration",
-  "name": "knowledge_management",
-  "attributes": {}
-}

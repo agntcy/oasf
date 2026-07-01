@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Document Chunking and Ingestion",
+  "description": "Parse and chunk documents for retrieval.",
+  "extends": "retrieval_augmented_generation",
+  "name": "document_chunking",
+  "attributes": {}
+}

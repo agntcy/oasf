@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Network Configuration",
+  "description": "Configure VPCs, networks, and connectivity.",
+  "extends": "cloud_networking",
+  "name": "network_configuration",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Bioinformatics Database Query",
+  "description": "Query gene, protein, and variant databases.",
+  "extends": "life_sciences",
+  "name": "bioinformatics_databases",
+  "attributes": {}
+}

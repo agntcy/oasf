@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Statistical Analysis",
+  "description": "Apply descriptive and inferential statistics.",
+  "extends": "data_analytics",
+  "name": "statistical_analysis",
+  "attributes": {}
+}

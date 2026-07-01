@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Authentication Implementation",
+  "description": "Implement OAuth/OIDC/JWT/session auth.",
+  "extends": "identity_access_management",
+  "name": "authentication_implementation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Image Inpainting",
+  "description": "Fill or replace masked regions of an image.",
+  "extends": "image_editing",
+  "name": "image_inpainting",
+  "attributes": {}
+}

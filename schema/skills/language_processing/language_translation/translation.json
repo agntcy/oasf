@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Translation",
+  "description": "Translate text between languages.",
+  "extends": "language_translation",
+  "name": "translation",
+  "attributes": {}
+}

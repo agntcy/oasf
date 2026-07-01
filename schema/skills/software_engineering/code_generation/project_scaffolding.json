@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Project Scaffolding",
+  "description": "Bootstrap projects, components, and modules.",
+  "extends": "code_generation",
+  "name": "project_scaffolding",
+  "attributes": {}
+}

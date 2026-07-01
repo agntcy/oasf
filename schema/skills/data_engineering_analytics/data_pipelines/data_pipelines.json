@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Data Pipelines",
+  "description": "Building, orchestrating, and scaling data movement.",
+  "extends": "data_engineering_analytics",
+  "name": "data_pipelines",
+  "attributes": {}
+}

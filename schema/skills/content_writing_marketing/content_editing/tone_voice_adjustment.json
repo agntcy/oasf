@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Tone and Voice Adjustment",
+  "description": "Adjust tone, register, and brand voice.",
+  "extends": "content_editing",
+  "name": "tone_voice_adjustment",
+  "attributes": {}
+}

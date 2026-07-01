@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Part-of-Speech Tagging",
+  "description": "Label tokens with grammatical parts of speech.",
+  "extends": "language_understanding",
+  "name": "pos_tagging",
+  "attributes": {}
+}

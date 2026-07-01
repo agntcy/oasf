@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Social Media Marketing",
+  "description": "Creating and distributing social content.",
+  "extends": "content_writing_marketing",
+  "name": "social_media_marketing",
+  "attributes": {}
+}

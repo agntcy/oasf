@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Payments",
+  "description": "Payment processing, gateways, and transaction infrastructure.",
+  "extends": "finance_and_business",
+  "name": "payments",
+  "attributes": {}
+}

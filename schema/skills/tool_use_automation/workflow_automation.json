@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Workflow Automation",
+  "description": "Automate multi-step task workflows.",
+  "extends": "tool_use_automation",
+  "name": "workflow_automation",
+  "attributes": {}
+}

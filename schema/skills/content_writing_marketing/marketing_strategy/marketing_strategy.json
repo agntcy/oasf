@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Marketing Strategy",
+  "description": "Planning marketing, content, and go-to-market activity.",
+  "extends": "content_writing_marketing",
+  "name": "marketing_strategy",
+  "attributes": {}
+}

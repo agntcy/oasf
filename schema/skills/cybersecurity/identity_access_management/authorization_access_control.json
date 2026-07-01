@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Authorization and Access Control",
+  "description": "Implement RBAC/ABAC and policies.",
+  "extends": "identity_access_management",
+  "name": "authorization_access_control",
+  "attributes": {}
+}

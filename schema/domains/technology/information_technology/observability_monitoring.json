@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Observability and Monitoring",
-  "description": "Monitoring systems through metrics, logs, and traces to understand health and behavior.",
-  "extends": "information_technology",
-  "name": "observability_monitoring",
-  "attributes": {}
-}

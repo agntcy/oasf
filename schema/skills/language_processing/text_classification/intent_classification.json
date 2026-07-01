@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Intent Classification",
+  "description": "Classify the intent behind an utterance.",
+  "extends": "text_classification",
+  "name": "intent_classification",
+  "attributes": {}
+}

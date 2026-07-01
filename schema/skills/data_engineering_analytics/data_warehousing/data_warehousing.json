@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Data Warehousing",
+  "description": "Modeling and querying warehouses and lakes.",
+  "extends": "data_engineering_analytics",
+  "name": "data_warehousing",
+  "attributes": {}
+}

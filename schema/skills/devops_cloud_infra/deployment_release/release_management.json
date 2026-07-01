@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Release Management",
+  "description": "Version, changelog, and release software.",
+  "extends": "deployment_release",
+  "name": "release_management",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Campaign Planning",
+  "description": "Plan end-to-end marketing campaigns.",
+  "extends": "marketing_strategy",
+  "name": "campaign_planning",
+  "attributes": {}
+}

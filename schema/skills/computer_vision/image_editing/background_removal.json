@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Background Removal",
+  "description": "Remove or isolate image backgrounds.",
+  "extends": "image_editing",
+  "name": "background_removal",
+  "attributes": {}
+}

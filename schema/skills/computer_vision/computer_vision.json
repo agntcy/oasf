@@ -1,0 +1,9 @@
+{
+  "uid": 2,
+  "caption": "Computer Vision",
+  "description": "Analyzing, generating, and editing images and video.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "computer_vision",
+  "attributes": {}
+}

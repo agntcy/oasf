@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Data Transformation Pipeline",
+  "description": "Transform and aggregate data in pipelines.",
+  "extends": "data_pipelines",
+  "name": "data_transformation_pipeline",
+  "attributes": {}
+}

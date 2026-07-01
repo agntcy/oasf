@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Content Writing",
+  "description": "Drafting original prose and structured content.",
+  "extends": "content_writing_marketing",
+  "name": "content_writing",
+  "attributes": {}
+}

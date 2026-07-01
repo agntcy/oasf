@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Investment and Trading",
+  "description": "Investment research, trading, and portfolio management.",
+  "extends": "business_professional",
+  "name": "investment_trading",
+  "attributes": {}
+}

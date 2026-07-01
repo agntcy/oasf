@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Content Strategy",
+  "description": "Plan editorial topics and calendars.",
+  "extends": "marketing_strategy",
+  "name": "content_strategy",
+  "attributes": {}
+}

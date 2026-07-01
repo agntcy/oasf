@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Identity Administration",
+  "description": "Manage identities, roles, and cloud IAM.",
+  "extends": "identity_access_management",
+  "name": "identity_administration",
+  "attributes": {}
+}

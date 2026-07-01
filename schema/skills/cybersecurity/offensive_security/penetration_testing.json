@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Penetration Testing",
+  "description": "Plan and execute penetration tests.",
+  "extends": "offensive_security",
+  "name": "penetration_testing",
+  "attributes": {}
+}

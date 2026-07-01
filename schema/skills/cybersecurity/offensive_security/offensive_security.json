@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Offensive Security",
+  "description": "Authorized adversary emulation and exploitation.",
+  "extends": "cybersecurity",
+  "name": "offensive_security",
+  "attributes": {}
+}

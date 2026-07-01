@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Neural 3D Reconstruction",
+  "description": "Reconstruct 3D scenes (NeRF/3DGS/photogrammetry).",
+  "extends": "three_d_generation",
+  "name": "neural_3d_reconstruction",
+  "attributes": {}
+}

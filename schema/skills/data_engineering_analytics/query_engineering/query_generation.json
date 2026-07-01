@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Query Generation",
+  "description": "Generate SQL/queries from intent or language.",
+  "extends": "query_engineering",
+  "name": "query_generation",
+  "attributes": {}
+}

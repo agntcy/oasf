@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Topic Labelling and Tagging",
+  "description": "Assign topics or tags to text.",
+  "extends": "text_classification",
+  "name": "topic_labeling",
+  "attributes": {}
+}

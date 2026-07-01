@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Drug Discovery",
+  "description": "Docking, screening, and property prediction.",
+  "extends": "life_sciences",
+  "name": "drug_discovery",
+  "attributes": {}
+}

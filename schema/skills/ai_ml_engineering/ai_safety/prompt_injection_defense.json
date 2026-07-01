@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Prompt Injection Defense",
+  "description": "Detect and neutralize prompt injection.",
+  "extends": "ai_safety",
+  "name": "prompt_injection_defense",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text to 3D",
+  "description": "Generate 3D assets from text.",
+  "extends": "three_d_generation",
+  "name": "text_to_3d",
+  "attributes": {}
+}

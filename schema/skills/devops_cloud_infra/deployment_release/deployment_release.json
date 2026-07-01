@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Deployment and Release Management",
+  "description": "Shipping releases and rollout strategies.",
+  "extends": "devops_cloud_infra",
+  "name": "deployment_release",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Language Generation",
+  "description": "Producing natural-language text.",
+  "extends": "language_processing",
+  "name": "language_generation",
+  "attributes": {}
+}

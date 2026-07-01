@@ -1,8 +1,0 @@
-{
-  "uid": 9,
-  "caption": "Observability Instrumentation",
-  "description": "Instrumenting applications with traces, metrics, and logs using frameworks such as OpenTelemetry.",
-  "extends": "devops_mlops",
-  "name": "observability_instrumentation",
-  "attributes": {}
-}

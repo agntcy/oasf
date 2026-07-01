@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Security Incident Response",
+  "description": "Contain and recover from security breaches.",
+  "extends": "security_operations",
+  "name": "security_incident_response",
+  "attributes": {}
+}

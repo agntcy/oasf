@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Candidate Materials",
+  "description": "Tailor resumes and interview prep.",
+  "extends": "human_resources",
+  "name": "candidate_materials",
+  "attributes": {}
+}

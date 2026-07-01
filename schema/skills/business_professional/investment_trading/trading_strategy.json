@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Trading Strategy",
+  "description": "Develop and backtest trading strategies.",
+  "extends": "investment_trading",
+  "name": "trading_strategy",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Lead Generation",
+  "description": "Identify, research, and enrich leads.",
+  "extends": "sales",
+  "name": "lead_generation",
+  "attributes": {}
+}

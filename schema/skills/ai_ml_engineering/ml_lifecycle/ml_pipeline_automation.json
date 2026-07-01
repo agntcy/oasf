@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "ML Pipeline Automation",
+  "description": "Automate train/validate/deploy pipelines.",
+  "extends": "ml_lifecycle",
+  "name": "ml_pipeline_automation",
+  "attributes": {}
+}

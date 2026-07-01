@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Query Optimization",
+  "description": "Optimize slow queries and indexing.",
+  "extends": "query_engineering",
+  "name": "query_optimization",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Medical Imaging Analysis",
+  "description": "Process DICOM and medical images.",
+  "extends": "healthcare_clinical",
+  "name": "medical_imaging_analysis",
+  "attributes": {}
+}

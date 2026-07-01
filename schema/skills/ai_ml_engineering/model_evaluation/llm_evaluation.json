@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "LLM Evaluation",
+  "description": "Evaluate LLM quality with benchmarks and metrics.",
+  "extends": "model_evaluation",
+  "name": "llm_evaluation",
+  "attributes": {}
+}

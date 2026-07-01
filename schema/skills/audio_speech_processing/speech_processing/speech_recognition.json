@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Automatic Speech Recognition",
+  "description": "Transcribe speech to text.",
+  "extends": "speech_processing",
+  "name": "speech_recognition",
+  "attributes": {}
+}

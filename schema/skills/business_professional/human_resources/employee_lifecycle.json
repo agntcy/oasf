@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Employee Lifecycle",
+  "description": "Automate onboarding and HR processes.",
+  "extends": "human_resources",
+  "name": "employee_lifecycle",
+  "attributes": {}
+}

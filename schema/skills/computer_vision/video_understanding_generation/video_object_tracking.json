@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Video Object Tracking",
+  "description": "Track objects across video frames.",
+  "extends": "video_understanding_generation",
+  "name": "video_object_tracking",
+  "attributes": {}
+}

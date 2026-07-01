@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Data Cleaning",
+  "description": "Clean, standardize, and deduplicate data.",
+  "extends": "data_quality",
+  "name": "data_cleaning",
+  "attributes": {}
+}

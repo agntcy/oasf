@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Language Translation",
+  "description": "Translating and operating across languages.",
+  "extends": "language_processing",
+  "name": "language_translation",
+  "attributes": {}
+}

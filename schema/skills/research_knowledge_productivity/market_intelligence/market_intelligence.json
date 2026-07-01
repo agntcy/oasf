@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Market and Competitive Intelligence",
+  "description": "Business, market, and competitor research.",
+  "extends": "research_knowledge_productivity",
+  "name": "market_intelligence",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Deployment Orchestration",
+  "description": "Coordinate deploys and rollback strategies.",
+  "extends": "deployment_release",
+  "name": "deployment_orchestration",
+  "attributes": {}
+}

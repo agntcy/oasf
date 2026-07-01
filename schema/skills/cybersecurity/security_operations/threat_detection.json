@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Threat Detection",
+  "description": "Detect malicious activity and intrusions.",
+  "extends": "security_operations",
+  "name": "threat_detection",
+  "attributes": {}
+}

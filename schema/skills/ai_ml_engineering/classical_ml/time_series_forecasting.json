@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Time Series Forecasting",
+  "description": "Forecast values from temporal data.",
+  "extends": "classical_ml",
+  "name": "time_series_forecasting",
+  "attributes": {}
+}

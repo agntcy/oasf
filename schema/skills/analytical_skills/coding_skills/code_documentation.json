@@ -1,8 +1,0 @@
-{
-  "uid": 8,
-  "caption": "Code Documentation",
-  "description": "Generating and maintaining technical documentation such as READMEs, API references, and inline comments.",
-  "extends": "coding_skills",
-  "name": "code_documentation",
-  "attributes": {}
-}

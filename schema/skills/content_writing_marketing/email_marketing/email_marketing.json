@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Email Marketing",
+  "description": "Campaign and lifecycle email content.",
+  "extends": "content_writing_marketing",
+  "name": "email_marketing",
+  "attributes": {}
+}

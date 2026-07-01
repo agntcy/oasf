@@ -1,8 +1,0 @@
-{
-  "uid": 3,
-  "caption": "Audio",
-  "category": true,
-  "extends": "base_skill",
-  "name": "audio",
-  "attributes": {}
-}

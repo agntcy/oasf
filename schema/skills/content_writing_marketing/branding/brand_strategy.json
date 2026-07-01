@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Brand Strategy",
+  "description": "Define positioning and messaging frameworks.",
+  "extends": "branding",
+  "name": "brand_strategy",
+  "attributes": {}
+}

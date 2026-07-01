@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Dependency Management",
+  "description": "Manage packages and dependency upgrades.",
+  "extends": "build_packaging",
+  "name": "dependency_management",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Structured Output Generation",
+  "description": "Constrain outputs to schemas/grammars.",
+  "extends": "prompt_engineering",
+  "name": "structured_output_generation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Frontend Development",
+  "description": "Build client-side web UIs and SPAs.",
+  "extends": "web_development",
+  "name": "frontend_development",
+  "attributes": {}
+}

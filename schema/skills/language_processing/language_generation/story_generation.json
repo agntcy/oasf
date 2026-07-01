@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Story Generation",
+  "description": "Generate narrative or story text.",
+  "extends": "language_generation",
+  "name": "story_generation",
+  "attributes": {}
+}

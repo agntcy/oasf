@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Research and Scholarship",
+  "description": "Academic, scientific, and applied research workflows.",
+  "extends": "research_knowledge_productivity",
+  "name": "research",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Creative Writing Generation",
+  "description": "Generate poetry and creative prose.",
+  "extends": "language_generation",
+  "name": "creative_writing_generation",
+  "attributes": {}
+}

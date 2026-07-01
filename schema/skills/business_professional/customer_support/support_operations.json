@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Support Operations",
+  "description": "Operate support and ticket workflows.",
+  "extends": "customer_support",
+  "name": "support_operations",
+  "attributes": {}
+}

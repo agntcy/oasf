@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Financial Reporting and Close",
+  "description": "Run month-end close and reconciliation.",
+  "extends": "finance_accounting",
+  "name": "financial_reporting",
+  "attributes": {}
+}

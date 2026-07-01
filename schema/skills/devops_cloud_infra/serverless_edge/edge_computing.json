@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Edge Computing",
+  "description": "Deploy compute and content at the edge.",
+  "extends": "serverless_edge",
+  "name": "edge_computing",
+  "attributes": {}
+}

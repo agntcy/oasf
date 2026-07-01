@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Model Serving",
-  "description": "Deploying and serving machine learning models for inference, including performance optimization.",
-  "extends": "ai_engineering",
-  "name": "model_serving",
-  "attributes": {}
-}

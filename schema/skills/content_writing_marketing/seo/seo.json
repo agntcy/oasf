@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Search Engine Optimization",
+  "description": "Optimizing content and sites for search visibility.",
+  "extends": "content_writing_marketing",
+  "name": "seo",
+  "attributes": {}
+}

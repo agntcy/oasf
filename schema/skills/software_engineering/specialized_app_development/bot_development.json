@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Bot and Chat App Development",
+  "description": "Build chat and messaging bots.",
+  "extends": "specialized_app_development",
+  "name": "bot_development",
+  "attributes": {}
+}

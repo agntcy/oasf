@@ -1,8 +1,0 @@
-{
-  "uid": 12,
-  "caption": "DevOps / MLOps",
-  "category": true,
-  "extends": "base_skill",
-  "name": "devops_mlops",
-  "attributes": {}
-}

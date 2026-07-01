@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Requirements and PRD Authoring",
+  "description": "Write PRDs, specs, and user stories.",
+  "extends": "product_management",
+  "name": "requirements_authoring",
+  "attributes": {}
+}

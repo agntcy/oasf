@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Cloud Architecture Design",
+  "description": "Design cloud and multi-cloud topologies.",
+  "extends": "cloud_platform_operations",
+  "name": "cloud_architecture_design",
+  "attributes": {}
+}

@@ -1,0 +1,9 @@
+{
+  "uid": 9,
+  "caption": "DevOps and Cloud Infrastructure",
+  "description": "Building, deploying, operating, and observing software on cloud and container infrastructure.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "devops_cloud_infra",
+  "attributes": {}
+}

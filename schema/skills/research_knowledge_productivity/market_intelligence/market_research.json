@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Market Research",
+  "description": "Research markets, industries, and consumers.",
+  "extends": "market_intelligence",
+  "name": "market_research",
+  "attributes": {}
+}

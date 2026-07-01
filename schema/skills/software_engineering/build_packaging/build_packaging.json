@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "Build, Packaging and Dev Tooling",
+  "description": "Compiling, bundling, dependencies, environments.",
+  "extends": "software_engineering",
+  "name": "build_packaging",
+  "attributes": {}
+}

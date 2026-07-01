@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Full-Stack Development",
+  "description": "Build end-to-end web applications.",
+  "extends": "web_development",
+  "name": "fullstack_development",
+  "attributes": {}
+}

@@ -1,8 +1,0 @@
-{
-  "uid": 3,
-  "caption": "Quality Evaluation",
-  "description": "Assessing outputs for accuracy, relevance, coherence, safety, and style adherence.",
-  "extends": "evaluation_monitoring",
-  "name": "quality_evaluation",
-  "attributes": {}
-}

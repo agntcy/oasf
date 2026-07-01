@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Video Editing",
+  "description": "Edit, restyle, or extend existing video.",
+  "extends": "video_understanding_generation",
+  "name": "video_editing",
+  "attributes": {}
+}

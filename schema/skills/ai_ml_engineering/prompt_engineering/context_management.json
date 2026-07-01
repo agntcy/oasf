@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Context Window Management",
+  "description": "Manage, trim, and route context.",
+  "extends": "prompt_engineering",
+  "name": "context_management",
+  "attributes": {}
+}

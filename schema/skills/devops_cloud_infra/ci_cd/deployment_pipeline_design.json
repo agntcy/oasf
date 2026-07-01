@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Deployment Pipeline Design",
+  "description": "Design multi-stage pipelines with gates.",
+  "extends": "ci_cd",
+  "name": "deployment_pipeline_design",
+  "attributes": {}
+}

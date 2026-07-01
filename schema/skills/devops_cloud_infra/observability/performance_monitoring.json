@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Performance Monitoring",
+  "description": "Monitor runtime performance and resource use.",
+  "extends": "observability",
+  "name": "performance_monitoring",
+  "attributes": {}
+}

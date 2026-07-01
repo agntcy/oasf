@@ -1,8 +1,0 @@
-{
-  "uid": 7,
-  "caption": "IT Service Management",
-  "description": "Managing IT services and processes such as incident, change, and problem management.",
-  "extends": "information_technology",
-  "name": "it_service_management",
-  "attributes": {}
-}

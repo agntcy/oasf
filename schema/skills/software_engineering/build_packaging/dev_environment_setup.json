@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Dev Environment Setup",
+  "description": "Configure reproducible development environments.",
+  "extends": "build_packaging",
+  "name": "dev_environment_setup",
+  "attributes": {}
+}

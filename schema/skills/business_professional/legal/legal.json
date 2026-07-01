@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Legal and Contracts",
+  "description": "Contract drafting, review, and compliance.",
+  "extends": "business_professional",
+  "name": "legal",
+  "attributes": {}
+}

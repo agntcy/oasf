@@ -1,8 +1,0 @@
-{
-  "uid": 6,
-  "caption": "LLM Evaluation",
-  "description": "Evaluating the quality and behavior of LLM and agent outputs, including LLM-as-judge workflows.",
-  "extends": "ai_engineering",
-  "name": "llm_evaluation",
-  "attributes": {}
-}

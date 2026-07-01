@@ -1,8 +1,0 @@
-{
-  "uid": 7,
-  "caption": "Code Migration and Modernization",
-  "description": "Porting or upgrading code across languages, frameworks, library versions, or platforms.",
-  "extends": "coding_skills",
-  "name": "code_migration",
-  "attributes": {}
-}

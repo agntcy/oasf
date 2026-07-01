@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Fact Verification",
+  "description": "Verify claims against sources.",
+  "extends": "web_search",
+  "name": "fact_verification",
+  "attributes": {}
+}

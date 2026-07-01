@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Image Classification",
+  "description": "Assign categories to images.",
+  "extends": "image_analysis",
+  "name": "image_classification",
+  "attributes": {}
+}

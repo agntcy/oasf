@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Article and Blog Writing",
+  "description": "Write articles, blog posts, and guides.",
+  "extends": "content_writing",
+  "name": "article_writing",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Project and Task Management",
+  "description": "Tracking work, tasks, and agile workflows.",
+  "extends": "research_knowledge_productivity",
+  "name": "project_task_management",
+  "attributes": {}
+}

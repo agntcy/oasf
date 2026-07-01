@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Game Development",
+  "description": "Build games and game engines.",
+  "extends": "specialized_app_development",
+  "name": "game_development",
+  "attributes": {}
+}

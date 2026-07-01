@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Collaboration and Communication",
+  "description": "Team messaging, conferencing, and workspaces.",
+  "extends": "research_knowledge_productivity",
+  "name": "collaboration",
+  "attributes": {}
+}
