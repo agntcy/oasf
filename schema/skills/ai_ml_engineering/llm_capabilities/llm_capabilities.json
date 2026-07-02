@@ -1,0 +1,8 @@
+{
+  "uid": 16,
+  "caption": "LLM Capabilities",
+  "description": "Model-level interface and interaction features an LLM exposes.",
+  "extends": "ai_ml_engineering",
+  "name": "llm_capabilities",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Response Streaming",
+  "description": "The model can stream generated output incrementally as it is produced.",
+  "extends": "llm_capabilities",
+  "name": "response_streaming",
+  "attributes": {}
+}

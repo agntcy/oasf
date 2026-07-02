@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Function Calling",
+  "description": "The model can invoke external functions or tools through structured calls.",
+  "extends": "llm_capabilities",
+  "name": "function_calling",
+  "attributes": {}
+}

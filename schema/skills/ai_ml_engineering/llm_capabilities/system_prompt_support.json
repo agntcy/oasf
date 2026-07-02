@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "System Prompt Support",
+  "description": "The model accepts system-level instructions that steer its behaviour.",
+  "extends": "llm_capabilities",
+  "name": "system_prompt_support",
+  "attributes": {}
+}
