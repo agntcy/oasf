@@ -18,13 +18,12 @@ worked examples live under [examples/](examples/).
 
 OASF describes an agentic artifact (an agent, a model, a tool collection, an
 MCP server, …) as a **record**. A record is a tree of typed **modules**; each
-module carries a **payload** whose shape is defined by a proto message.
+module carries specific set of data that define an agent or an agentic system.
 
 | Concept    | Purpose                                                                |
 | ---------- | ---------------------------------------------------------------------- |
 | **Record** | Top-level document. Identity + skills/domains taxonomy + modules tree. |
 | **Module** | Typed, composable node attached to a record or another module.         |
-| **Object** | Reusable value type inside module payloads (e.g. `Artifact`).          |
 
 ---
 
@@ -99,12 +98,6 @@ composition rules.
 | **Interface** | `interface/`  | An exposed surface (an MCP server, an A2A endpoint, …).    | Yes — `traits/*` scoped to this interface.         |
 | **Traits**    | `traits/`     | A property attached to its parent (permissions, evaluation, requirements). | No — traits are leaves.                            |
 
-> **Actors** (`actor/*`) — compound subjects such as `actor/agent`,
-> `actor/crew`, `actor/workflow` — are reserved for a follow-up round and are
-> not yet in the catalog. Actors are the only tier that will be allowed to
-> host other subject tiers (`resource/*`, `interface/*`) as children in
-> addition to `traits/*`.
-
 ### Placement rule
 
 - **Resources** and **interfaces** live under the record root (or, in future,
@@ -112,6 +105,112 @@ composition rules.
   subject.
 - **Traits** attach either at the record root (record-wide scope) or under a
   single subject (subject-scoped). Traits do **not** host other modules.
+
+### Taxonomy extension
+
+The shipped catalog covers only the shapes needed by the current examples.
+The taxonomy is designed to grow along four axes. Everything in this section
+is **directional** — none of it is on the wire yet — but the naming and
+composition rules are already fixed, so producers can anticipate the shape
+and reviewers can spot proposals that violate it.
+
+#### 1. Actors (`actor/*`) — compound subjects
+
+Actors are the only tier permitted to host other subject tiers as children
+in addition to `traits/*`. Everything else is a leaf-subject.
+
+| `type`            | Composition | Purpose                                                                            |
+| ----------------- | ----------- | ---------------------------------------------------------------------------------- |
+| `actor/agent`     | instance    | A single agent: a `resource/model/*` brain plus its skills, memory, and interfaces. |
+| `actor/crew`      | instance    | A container of peer agents that share crew-level resources and traits.             |
+| `actor/workflow`  | instance    | An ordered composition of steps that bind to other actors and resources.           |
+
+#### 2. Additional `resource/*` families
+
+The subject tier will grow to cover the standard building blocks of an agent:
+
+| `type` prefix         | Purpose                                                                       | Examples of leaves                                                       |
+| --------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `resource/model/*`    | Models the agent thinks with.                                                 | `resource/model/language` (shipped), `resource/model/embedding`, `resource/model/reranker`, `resource/model/vision` |
+| `resource/skill/*`    | Reusable units of behaviour or invocation.                                    | `resource/skill/agentskill` (shipped), `resource/skill/prompt` (shipped) |
+| `resource/memory/*`   | Memory backends the agent reads and writes.                                   | `resource/memory/vector`, `resource/memory/keyvalue`, `resource/memory/episodic`, `resource/memory/summary` |
+| `resource/knowledge/*`| Read-only knowledge sources the agent grounds on.                             | `resource/knowledge/document`, `resource/knowledge/graph`, `resource/knowledge/sql` |
+| `resource/tool/*`     | Direct, non-protocol tools the agent can call.                                | `resource/tool/http`, `resource/tool/shell`, `resource/tool/python`      |
+| `resource/policy/*`   | Behavioural policies expressed as first-class objects (not just traits).      | `resource/policy/guardrails`, `resource/policy/routing`, `resource/policy/moderation` |
+
+All `resource/*` families follow the same composition rule as the shipped
+resources: **instance**, each occurrence is a distinct thing, no merging
+across siblings.
+
+#### 3. Additional `interface/*` families
+
+Interfaces are exposed *surfaces* — the framework-specific or
+protocol-specific packaging that lets another system call the parent
+subject. Planned families:
+
+| `type` prefix          | Purpose                                                                      | Examples of leaves                                                                   |
+| ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `interface/framework/*`| Framework-native agent packagings.                                           | `interface/framework/mcp` (shipped), `interface/framework/a2a` (shipped), `interface/framework/langchain`, `interface/framework/langgraph`, `interface/framework/crewai`, `interface/framework/autogen`, `interface/framework/llamaindex` |
+| `interface/transport/*`| Raw transports independent of a framework.                                   | `interface/transport/http`, `interface/transport/grpc`, `interface/transport/websocket` |
+
+An agent can carry multiple interface children — for example, a single
+`actor/agent` might expose both `interface/framework/mcp` (for MCP clients)
+and `interface/framework/langgraph` (for LangGraph orchestration) over the
+same underlying implementation.
+
+#### 4. Additional `traits/*` families
+
+Traits attach behaviour or metadata without introducing a new subject:
+
+| `type` prefix          | Purpose                                                                  |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `traits/access/*`      | Permissions, quotas, rate limits.                                        |
+| `traits/quality/*`     | Evaluations, benchmarks, red-team results.                               |
+| `traits/runtime/*`     | Runtime prerequisites, resource limits, scheduling hints.                |
+| `traits/policy/*`      | Inline policy toggles (`pii_redaction`, `content_filter`, `max_tokens`). |
+| `traits/observability/*`| Telemetry endpoints, tracing configuration, log sinks.                  |
+| `traits/lifecycle/*`   | Deprecation, versioning, sunset dates.                                   |
+
+#### Examples
+
+*Single agent exposed as an MCP server:*
+
+```
+Record
+└── actor/agent  "web-researcher"
+    ├── resource/model/language    "Llama 3.3 70B"
+    ├── resource/skill/prompt      "system-prompt"
+    ├── resource/memory/vector     "short-term"
+    ├── resource/knowledge/document "docs-corpus"
+    ├── interface/framework/mcp    "web-researcher-mcp"
+    ├── traits/access/permissions  { network: read, docs-corpus: read }
+    └── traits/policy/guardrails   { pii_redaction: on }
+```
+
+*Crew of agents on mixed protocols:*
+
+```
+Record
+└── actor/crew  "coding-team"
+    ├── resource/memory/keyvalue    "crew-scratchpad"   ← shared
+    ├── resource/knowledge/document "repo-docs"         ← shared
+    │
+    ├── actor/agent  "planner"                          ← speaks A2A
+    │   ├── resource/model/language "OpenAI o1"
+    │   └── interface/framework/a2a "planner-a2a"
+    │
+    ├── actor/agent  "coder"                            ← exposes MCP
+    │   ├── resource/model/language "Qwen 2.5 Coder 7B"
+    │   ├── resource/memory/vector  "code-context"
+    │   ├── resource/tool/shell     "git+build"
+    │   └── interface/framework/mcp "coder-mcp"
+    │
+    ├── actor/agent  "reviewer"                         ← via LangGraph
+    │   ├── resource/model/language "Llama 3.3 70B"
+    │   └── interface/framework/langgraph "reviewer-lg"
+    │
+    └── traits/access/permissions   { repo: read_write, ci: read }
+```
 
 ---
 
@@ -176,80 +275,6 @@ permissions win entirely — the outer permissions block is not merged.
   ]
 }
 ```
-
-### Accumulating with `replace`
-
-Because traits use *replace* semantics, authors that want cumulative behaviour
-(e.g. carrying an outer set of evaluations plus a subject-specific one) must
-include the full desired list on the inner instance. The schema does not
-merge lists across levels.
-
-### Resolving the effective view
-
-Given a target module `M`, a consumer walks from the record down to `M`,
-tracking ancestors. For every module type it cares about:
-
-| Mode         | Resolution                                                                             |
-| ------------ | -------------------------------------------------------------------------------------- |
-| **instance** | `M` itself is the instance; no resolution needed.                                      |
-| **replace**  | Take the nearest ancestor's payload (deeper wins). Do not merge with outer instances.  |
-
-### Producer checklist
-
-- [ ] Every module has a `type` and a `data` object.
-- [ ] Every **instance** module (`resource/*`, `interface/*`) carries its own
-      identifying `name` (and `version` where applicable).
-- [ ] **Replace** modules (`traits/*`) appear at most once per level; override
-      by nesting, and repeat the full desired set if accumulation is intended.
-- [ ] External binaries and long payloads are referenced through `Artifact`,
-      never inlined.
-
-### Consumer checklist
-
-- [ ] Treat unknown `type` values as opaque; retain and forward.
-- [ ] Never assume module ordering; use the composition mode to reason about
-      duplicates.
-- [ ] Reject records whose `schema_version` you do not support.
-
----
-
-## Module Catalog
-
-Payload messages live under [proto/agntcy/oasf/modules/](proto/agntcy/oasf/modules/),
-grouped by tier and family.
-
-### Resource
-
-| `type`                      | Composition | Purpose                                                                       | Proto                                                                                                        |
-| --------------------------- | ----------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `resource/model/language`   | instance    | One language model: deployments, context window, training vintage, artifacts. | [language.proto](proto/agntcy/oasf/modules/resource/model/v1alpha1/language.proto)                           |
-| `resource/skill/agentskill` | instance    | One Agent Skills package: manifest, capabilities, artifact bundle.            | [agentskill.proto](proto/agntcy/oasf/modules/resource/skill/v1alpha1/agentskill.proto)                       |
-| `resource/skill/prompt`     | instance    | One reusable prompt template.                                                 | [prompt.proto](proto/agntcy/oasf/modules/resource/skill/v1alpha1/prompt.proto)                               |
-
-### Interface
-
-| `type`                    | Composition | Purpose                                                                 | Proto                                                                             |
-| ------------------------- | ----------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `interface/framework/mcp` | instance    | MCP server: transports, tools, prompts, resources, agent card artifact. | [mcp.proto](proto/agntcy/oasf/modules/interface/framework/v1alpha1/mcp.proto)     |
-| `interface/framework/a2a` | instance    | Agent exposed via the Agent-to-Agent protocol.                          | [a2a.proto](proto/agntcy/oasf/modules/interface/framework/v1alpha1/a2a.proto)     |
-
-### Traits
-
-| `type`                        | Composition | Purpose                                                          | Proto                                                                                             |
-| ----------------------------- | ----------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `traits/access/permissions`   | replace     | Resources the subtree needs, with `read` / `write` / `read_write`. | [permissions.proto](proto/agntcy/oasf/modules/traits/access/v1alpha1/permissions.proto)           |
-| `traits/quality/evaluation`   | replace     | Benchmark results attached to the parent subtree.                | [evaluation.proto](proto/agntcy/oasf/modules/traits/quality/v1alpha1/evaluation.proto)            |
-| `traits/runtime/requirements` | replace     | Runtime prerequisites (`binaries[]`, `env_vars[]`, `network[]`). | [requirements.proto](proto/agntcy/oasf/modules/traits/runtime/v1alpha1/requirements.proto)        |
-
-### Shared objects
-
-Under [proto/agntcy/oasf/objects/v1/](proto/agntcy/oasf/objects/v1/):
-
-| Object       | Fields                                                    |
-| ------------ | --------------------------------------------------------- |
-| `Artifact`   | `type`, `url`, `annotations`, `size`, `digest`, `data`            |
-| `EnvVar`     | `name`, `description`, `required`                         |
-| `HttpHeader` | `name`, `type`, `description`, `required`                 |
 
 ---
 
