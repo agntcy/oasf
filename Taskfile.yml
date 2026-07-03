@@ -113,15 +113,28 @@ tasks:
       # Check cluster status
       - '{{ .KUBECTL_BIN }} cluster-info'
 
-      # Extract images from values-test.yaml and load them into kind
+      # Extract images from values-test.yaml and load them into kind.
+      # Use a single-platform "docker save" + "kind load image-archive" rather than
+      # "kind load docker-image": with Docker's containerd image store, saving a
+      # multi-arch tag exports the full manifest list, and kind's --all-platforms
+      # import fails on platform blobs not pulled locally (e.g. amd64 on arm64 hosts).
       - |
+        set -eu
+        archive=""
+        trap 'rm -f "$archive"' EXIT
         {{- if .IMAGE_TAG }}
-        {{ .KIND_BIN }} load docker-image "{{ .IMAGE_REPO }}/oasf-server:{{ .IMAGE_TAG }}" --name {{ .KIND_CLUSTER_NAME }}
+        archive=$(mktemp "${TMPDIR:-/tmp}/oasf-image.XXXXXX")
+        docker save --platform linux/{{ ARCH }} "{{ .IMAGE_REPO }}/oasf-server:{{ .IMAGE_TAG }}" -o "$archive"
+        {{ .KIND_BIN }} load image-archive "$archive" --name {{ .KIND_CLUSTER_NAME }}
+        rm -f "$archive"
         {{- else }}
         images=$(yq eval '.image.versions[].server' {{ .HELM_VALUES_PATH }})
         echo "Images to load: $images"
-        echo "$images" | while read image; do
-          {{ .KIND_BIN }} load docker-image "{{ .IMAGE_REPO }}/oasf-server:$image" --name {{ .KIND_CLUSTER_NAME }}
+        for image in $images; do
+          archive=$(mktemp "${TMPDIR:-/tmp}/oasf-image.XXXXXX")
+          docker save --platform linux/{{ ARCH }} "{{ .IMAGE_REPO }}/oasf-server:$image" -o "$archive"
+          {{ .KIND_BIN }} load image-archive "$archive" --name {{ .KIND_CLUSTER_NAME }}
+          rm -f "$archive"
         done
         {{- end }}
 
