@@ -3,19 +3,19 @@
 
 syntax = "proto3";
 
-package agntcy.oasf.modules.core.v1alpha1;
+package agntcy.oasf.modules.resource.model.v1alpha1;
 
 import "agntcy/oasf/objects/v1/artifact.proto";
 import "agntcy/oasf/objects/v1/env_var.proto";
 import "agntcy/oasf/objects/v1/http_header.proto";
 
-// LanguageModel is the payload for a Module of type "core/language_model".
+// Language is the payload for a Module of type "resource/model/language".
 // It describes a single language model: how to deploy and reach it, its
 // context window, its training vintage, and its supported languages.
 //
 // One module carries one model. Records that expose several models use
-// several `core/language_model` submodules.
-message LanguageModel {
+// several "resource/model/language" submodules.
+message Language {
   // Human-readable model name (e.g. "OpenAI o1", "Llama 3.3 70B Instruct").
   string name = 1;
 
@@ -60,7 +60,6 @@ message LanguageModel {
   }
   repeated Deployment deployments = 5;
 
-  // Context window limits.
   // Context describes the token limits of a model.
   message Context {
     // Maximum number of input tokens the model accepts.
@@ -72,6 +71,7 @@ message LanguageModel {
     // Maximum combined input + output token budget per request.
     uint32 max_total_tokens = 3;
   }
+  // Context window limits.
   Context context = 6;
 
   // Training cutoff or release timestamp in RFC3339 format.
@@ -81,7 +81,6 @@ message LanguageModel {
   // (e.g. "en-US", "zh-Hans").
   repeated string supported_languages = 8;
 
-  // Optional pricing information.
   // Pricing describes commercial availability of a model.
   message Pricing {
     // URL of the current pricing page.
@@ -90,8 +89,10 @@ message LanguageModel {
     // Available pricing tiers (e.g. "free", "paid", "enterprise").
     repeated string tiers = 2;
   }
+  // Optional pricing information.
   Pricing pricing = 9;
 
-  // Artifacts where the model can be retrieved from (e.g. model weights, Docker images).
+  // Artifacts where the model can be retrieved from
+  // (e.g. model weights, Docker images).
   repeated agntcy.oasf.objects.v1.Artifact artifacts = 10;
 }

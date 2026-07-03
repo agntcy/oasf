@@ -1,5 +1,27 @@
 {
-  "type": "core/record",
+  "schema_version": "1.0.0",
+  "name": "org.agntcy/local-models",
+  "version": "v1.0.0",
+  "description": "Curated collection of open-weight language models packaged for local execution (on-device or self-hosted). Every member ships verifiable weights and a common OpenAI-compatible endpoint so tools can consume any model interchangeably.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "publisher": {
+    "name": "AGNTCY",
+    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  },
+  "skills": [
+    "natural_language_processing/natural_language_generation/text_completion",
+    "natural_language_processing/natural_language_generation/summarization",
+    "software_engineering/code_generation",
+    "software_engineering/code_completion",
+    "tool_interaction/tool_use_planning"
+  ],
+  "domains": ["technology/software_engineering"],
   "annotations": {
     "org.agntcy/logo": "https://agntcy.org/logo.png",
     "org.agntcy/status_page": "https://agntcy.org/status",
@@ -9,34 +31,9 @@
     "org.agntcy/support": "https://agntcy.org/support",
     "org.agntcy/contact": "info@agntcy.org"
   },
-  "data": {
-    "schema_version": "1.0.0",
-    "name": "org.agntcy/local-models",
-    "version": "v1.0.0",
-    "description": "Curated collection of open-weight language models packaged for local execution (on-device or self-hosted). Every member ships verifiable weights and a common OpenAI-compatible endpoint so tools can consume any model interchangeably.",
-    "created_at": "2026-06-30T13:06:27.754823Z",
-    "licenses": [
-      {
-        "name": "Apache-2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0"
-      }
-    ],
-    "publisher": {
-      "name": "AGNTCY",
-      "urls": ["https://agntcy.org", "https://github.com/agntcy"]
-    },
-    "skills": [
-      "natural_language_processing/natural_language_generation/text_completion",
-      "natural_language_processing/natural_language_generation/summarization",
-      "software_engineering/code_generation",
-      "software_engineering/code_completion",
-      "tool_interaction/tool_use_planning"
-    ],
-    "domains": ["technology/software_engineering"]
-  },
   "modules": [
     {
-      "type": "core/language_model",
+      "type": "resource/model/language",
       "data": {
         "name": "Llama 3.3 70B Instruct",
         "version": "3.3-70B-Instruct",
@@ -78,13 +75,13 @@
         "artifacts": [
           {
             "type": "application/vnd.ollama.image.model",
-            "urls": ["https://ollama.com/library/llama3.3:70b-instruct-q4_K_M"]
+            "url": "https://ollama.com/library/llama3.3:70b-instruct-q4_K_M"
           }
         ]
       },
       "modules": [
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -103,7 +100,7 @@
       ]
     },
     {
-      "type": "core/language_model",
+      "type": "resource/model/language",
       "data": {
         "name": "Qwen 2.5 Coder 7B Instruct",
         "version": "2.5-Coder-7B-Instruct",
@@ -151,15 +148,13 @@
         "artifacts": [
           {
             "type": "application/vnd.gguf.v3",
-            "urls": [
-              "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
-            ]
+            "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/qwen2.5-coder-7b-instruct-q4_k_m.gguf"
           }
         ]
       },
       "modules": [
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -178,11 +173,11 @@
       ]
     },
     {
-      "type": "core/language_model",
+      "type": "resource/model/language",
       "data": {
         "name": "Mistral 7B Instruct v0.3",
-        "size": "7B",
         "version": "7B-Instruct-v0.3",
+        "size": "7B",
         "description": "# Mistral 7B Instruct v0.3\n\nCompact general-purpose open-weight model from Mistral AI. A solid baseline for on-device chat, RAG, and function calling.\n\n## Features\n- **Compact**: Runs on 8 GB of RAM (Q4_K_M).\n- **Function calling**: v0.3 adds native tool schemas.\n- **Multilingual**: English, French, German, Spanish, Italian.\n\n## Getting Started\n```\nollama pull mistral:7b-instruct-v0.3-q4_K_M\n```",
         "deployments": [
           {
@@ -211,15 +206,13 @@
         "artifacts": [
           {
             "type": "application/vnd.gguf.v3",
-            "urls": [
-              "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/mistral-7b-instruct-v0.3.Q4_K_M.gguf"
-            ]
+            "url": "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/mistral-7b-instruct-v0.3.Q4_K_M.gguf"
           }
         ]
       },
       "modules": [
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -238,7 +231,7 @@
       ]
     },
     {
-      "type": "core/permissions",
+      "type": "traits/access/permissions",
       "data": {
         "resources": [
           {

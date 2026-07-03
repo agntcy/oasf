@@ -3,13 +3,13 @@
 
 syntax = "proto3";
 
-package agntcy.oasf.modules.integration.v1alpha1;
+package agntcy.oasf.modules.interface.framework.v1alpha1;
 
 import "agntcy/oasf/objects/v1/artifact.proto";
 import "agntcy/oasf/objects/v1/env_var.proto";
 import "agntcy/oasf/objects/v1/http_header.proto";
 
-// Mcp is the payload for a Module of type "integration/mcp".
+// Mcp is the payload for a Module of type "interface/framework/mcp".
 // It describes a Model Context Protocol server, including how to connect
 // to it and the tools, prompts, and resources it exposes.
 //
@@ -29,7 +29,7 @@ message Mcp {
     string mode = 1;
 
     // Transport used to talk to the server.
-    // Values: "stdio", "streamable_http", "sse"
+    // Values: "stdio", "streamable_http", "sse".
     string transport = 2;
 
     // Endpoint URL (for HTTP-based transports).
@@ -46,12 +46,12 @@ message Mcp {
     repeated agntcy.oasf.objects.v1.EnvVar env_vars = 6;
 
     // HTTP headers used for authentication and metadata (for HTTP-based
-    // transports)
+    // transports).
     repeated agntcy.oasf.objects.v1.HttpHeader http_headers = 7;
   }
   repeated Connection connections = 3;
 
-  // Tools exposed by the server.
+  // Tool exposed by the server.
   message Tool {
     // Unique tool identifier.
     string name = 1;
@@ -68,9 +68,10 @@ message Mcp {
     // Scopes describing the tool's behaviour and side effects.
     repeated string scopes = 5;
   }
+  // Tools exposed by the server.
   repeated Tool tools = 4;
 
-  // Prompts exposed by the server.
+  // Prompt exposed by the server.
   message Prompt {
     // Unique prompt identifier.
     string name = 1;
@@ -81,9 +82,10 @@ message Mcp {
     // Description of the prompt.
     string description = 3;
   }
+  // Prompts exposed by the server.
   repeated Prompt prompts = 5;
 
-  // Resources exposed by the server.
+  // Resource exposed by the server.
   message Resource {
     // Unique resource identifier.
     string name = 1;
@@ -100,11 +102,12 @@ message Mcp {
     // Media type of the resource, if known (RFC 6838).
     string media_type = 5;
   }
+  // Resources exposed by the server.
   repeated Resource resources = 6;
 
   // Examples of how to use the server, including prompts, tools, and resources.
   repeated string examples = 7;
 
-  // Link to the artifact where the full agent card can be retrieved.
+  // Link to the artifact where the full server card can be retrieved.
   agntcy.oasf.objects.v1.Artifact artifact = 8;
 }

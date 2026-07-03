@@ -3,16 +3,16 @@
 
 syntax = "proto3";
 
-package agntcy.oasf.modules.integration.v1alpha1;
+package agntcy.oasf.modules.interface.framework.v1alpha1;
 
 import "agntcy/oasf/objects/v1/artifact.proto";
 
-// A2a is the payload for a Module of type "integration/a2a".
+// A2A is the payload for a Module of type "interface/framework/a2a".
 // It describes an agent exposed via the Agent-to-Agent protocol.
 //
 // The full agent card is normally distributed as a Module artifact
-// (via Module.artifacts); this payload carries only the metadata needed
-// to identify the card version and a compact summary of the card.
+// (via `artifact`); this payload carries only the metadata needed to
+// identify the card version and a compact summary of the card.
 //
 // References: https://github.com/a2aproject/A2A
 message A2A {
@@ -31,7 +31,6 @@ message A2A {
   // Card schema version used for the card artifact.
   string schema_version = 5;
 
-  // Capabilities advertised by the agent.
   // Capability describes a single capability advertised by the agent.
   message Capability {
     // Namespaced capability name.
@@ -40,6 +39,7 @@ message A2A {
     // Free-form description of the capability.
     string description = 2;
   }
+  // Capabilities advertised by the agent.
   repeated Capability capabilities = 6;
 
   // Authentication schemes supported by the agent

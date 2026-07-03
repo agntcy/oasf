@@ -5,6 +5,8 @@ syntax = "proto3";
 
 package agntcy.oasf.objects.v1;
 
+import "google/protobuf/struct.proto";
+
 // Artifact points to a source where a module or record can be found or
 // retrieved from. For example, an artifact may reference a helm chart, an
 // OCI image, a source-code repository, or a plain URL.
@@ -29,4 +31,9 @@ message Artifact {
   // ensure that the source has not been tampered with. The digest is expected to
   // be in the format "<algorithm>:<hex>", e.g. "sha256:abcdef1234567890".
   string digest = 5;
+
+  // Optional data of the artifact, if not provided via URL.
+  // If its a JSON object, it is represented as an object.
+  // If not a JSON object, it is represented as a base64-encoded string.
+  google.protobuf.Value data = 6;
 }

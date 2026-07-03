@@ -1,5 +1,31 @@
 {
-  "type": "core/record",
+  "schema_version": "1.0.0",
+  "name": "org.agntcy/ui-dev-mcps",
+  "version": "v1.0.0",
+  "description": "Curated collection of MCP servers for UI developers: design-file inspection (Figma), image editing automation (Photoshop), React component scaffolding and analysis, and browser end-to-end testing (Playwright). Every member exposes an MCP endpoint so any MCP-compatible agent can consume them uniformly.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "publisher": {
+    "name": "AGNTCY",
+    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  },
+  "skills": [
+    "tool_interaction/tool_use_planning",
+    "tool_interaction/workflow_automation",
+    "software_engineering/frontend_development",
+    "software_engineering/ui_design",
+    "multi_modal/image_processing/image_to_text"
+  ],
+  "domains": [
+    "technology/software_engineering",
+    "technology/software_engineering/frontend",
+    "media_and_entertainment/design"
+  ],
   "annotations": {
     "org.agntcy/logo_url": "https://agntcy.org/logo.png",
     "org.agntcy/status_page": "https://agntcy.org/status",
@@ -10,38 +36,9 @@
     "org.agntcy/contact_email": "info@agntcy.org",
     "org.agntcy/collection_type": "ui-dev-mcps"
   },
-  "data": {
-    "schema_version": "1.0.0",
-    "name": "org.agntcy/ui-dev-mcps",
-    "version": "v1.0.0",
-    "description": "Curated collection of MCP servers for UI developers: design-file inspection (Figma), image editing automation (Photoshop), React component scaffolding and analysis, and browser end-to-end testing (Playwright). Every member exposes an MCP endpoint so any MCP-compatible agent can consume them uniformly.",
-    "created_at": "2026-06-30T13:06:27.754823Z",
-    "licenses": [
-      {
-        "name": "Apache-2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0"
-      }
-    ],
-    "publisher": {
-      "name": "AGNTCY",
-      "urls": ["https://agntcy.org", "https://github.com/agntcy"]
-    },
-    "skills": [
-      "tool_interaction/tool_use_planning",
-      "tool_interaction/workflow_automation",
-      "software_engineering/frontend_development",
-      "software_engineering/ui_design",
-      "multi_modal/image_processing/image_to_text"
-    ],
-    "domains": [
-      "technology/software_engineering",
-      "technology/software_engineering/frontend",
-      "media_and_entertainment/design"
-    ]
-  },
   "modules": [
     {
-      "type": "integration/mcp",
+      "type": "interface/framework/mcp",
       "data": {
         "name": "figma-mcp",
         "description": "# Figma MCP\n\nMCP server for Figma Dev Mode. Lets agents inspect design files, read variables (design tokens), and export assets so they can translate designs into code deterministically.\n\n## Features\n- **Node inspection**: Read frames, components, auto-layout, and constraints.\n- **Design tokens**: Enumerate Figma variables and modes.\n- **Asset export**: Export nodes as SVG/PNG at multiple scales.\n\n## Getting Started\n```\nnpx -y figma-developer-mcp --figma-api-key=$FIGMA_API_KEY\n```",
@@ -118,14 +115,14 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["node>=18"],
             "network": ["api.figma.com", "mcp.figma.com"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -144,7 +141,7 @@
       ]
     },
     {
-      "type": "integration/mcp",
+      "type": "interface/framework/mcp",
       "data": {
         "name": "photoshop-mcp",
         "description": "# Photoshop MCP\n\nMCP server that drives Adobe Photoshop via UXP so agents can open documents, apply actions, batch-export layers, and run non-destructive edits.\n\n## Features\n- **Document control**: Open, save, export as PSD/PNG/JPG/WebP.\n- **Layer ops**: Toggle visibility, apply masks, run smart-object updates.\n- **Actions**: Invoke saved Photoshop Actions with parameters.\n\n## Getting Started\nInstall the AGNTCY Photoshop MCP UXP plugin, then:\n```\nnpx -y @agntcy/photoshop-mcp\n```",
@@ -204,14 +201,14 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["photoshop>=25", "node>=18"],
             "env_vars": ["PHOTOSHOP_UXP_PORT"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -230,7 +227,7 @@
       ]
     },
     {
-      "type": "integration/mcp",
+      "type": "interface/framework/mcp",
       "data": {
         "name": "react-mcp",
         "description": "# React MCP\n\nMCP server for React component development. Analyzes existing components, generates new ones from prompts or Figma nodes, and inspects hook usage across a repo.\n\n## Features\n- **Static analysis**: Parse JSX/TSX, resolve props, list hooks, find dead components.\n- **Component generation**: Emit typed function components with Tailwind or CSS Modules.\n- **Story scaffolding**: Generate Storybook stories from component signatures.\n\n## Getting Started\n```\nnpx -y @agntcy/react-mcp --root ./src\n```",
@@ -293,20 +290,20 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["node>=18"],
             "env_vars": ["REACT_MCP_ROOT"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
                 "benchmark": "UI-Dev-Bench.ComponentGen",
                 "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
-                "metric": "typecheck_pass_rate",
+                "metric": "compile_pass_rate",
                 "score": 0.93,
                 "unit": "ratio",
                 "evaluator": "AGNTCY UI WG",
@@ -319,33 +316,20 @@
       ]
     },
     {
-      "type": "integration/mcp",
+      "type": "interface/framework/mcp",
       "data": {
         "name": "playwright-mcp",
-        "description": "# Playwright MCP\n\nMicrosoft's Playwright MCP server. Gives agents a controllable Chromium/Firefox/WebKit browser: navigate, snapshot the accessibility tree, click, type, evaluate JavaScript, and record traces.\n\n## Features\n- **Accessibility-tree first**: Uses ARIA-based snapshots (no screenshots required).\n- **Cross-browser**: Chromium, Firefox, WebKit.\n- **Isolated contexts**: One browser context per session by default.\n\n## Getting Started\n```\nnpx -y @playwright/mcp@latest\n```",
+        "description": "# Playwright MCP\n\nMCP server for browser end-to-end testing. Runs Playwright tests, opens interactive traces, and captures screenshots and DOM snapshots on demand.\n\n## Features\n- **Test execution**: Run a subset of tests by name, tag, or file.\n- **Trace viewer**: Return HAR + trace URLs for failed runs.\n- **Visual diffing**: Capture screenshots against golden images.\n\n## Getting Started\n```\nnpx -y @playwright/mcp\n```",
         "connections": [
           {
             "mode": "local",
             "transport": "stdio",
             "command": "npx",
-            "args": ["-y", "@playwright/mcp@latest"],
+            "args": ["-y", "@playwright/mcp"],
             "env_vars": [
               {
                 "name": "PLAYWRIGHT_BROWSERS_PATH",
-                "description": "Directory where Playwright browsers are installed.",
-                "required": false
-              }
-            ]
-          },
-          {
-            "mode": "remote",
-            "transport": "streamable_http",
-            "url": "http://localhost:8931/mcp",
-            "http_headers": [
-              {
-                "name": "Authorization",
-                "type": "bearer",
-                "description": "Bearer token for the self-hosted Playwright MCP HTTP endpoint.",
+                "description": "Directory where Playwright caches browser binaries.",
                 "required": false
               }
             ]
@@ -353,73 +337,52 @@
         ],
         "tools": [
           {
-            "name": "browser_navigate",
-            "description": "Navigate the active browser tab to a URL.",
+            "name": "run_tests",
+            "description": "Run a set of Playwright tests and return the report.",
             "examples": [
-              "Navigate to https://example.com/login",
-              "Open the staging dashboard"
+              "Run tests tagged @smoke",
+              "Run tests in e2e/checkout.spec.ts"
             ],
-            "scopes": ["external"]
+            "scopes": ["local"]
           },
           {
-            "name": "browser_snapshot",
-            "description": "Return the accessibility-tree snapshot of the current page.",
+            "name": "screenshot",
+            "description": "Open a URL in a headless browser and return a full-page screenshot.",
             "examples": [
-              "Snapshot the current page",
-              "Get the a11y tree of the checkout view"
+              "Screenshot https://example.com at 1440x900",
+              "Capture the /dashboard route after login"
             ],
-            "scopes": ["external"]
+            "scopes": ["local", "external"]
           },
           {
-            "name": "browser_click",
-            "description": "Click an element addressed by role/name from the last snapshot.",
-            "examples": [
-              "Click the button named 'Sign in'",
-              "Click the link with role 'link' and name 'Docs'"
-            ],
-            "scopes": ["external"]
-          },
-          {
-            "name": "browser_type",
-            "description": "Type text into an input identified by role/name.",
-            "examples": [
-              "Type 'user@example.com' into the 'Email' textbox",
-              "Fill the 'Search' combobox with 'playwright'"
-            ],
-            "scopes": ["external"]
-          },
-          {
-            "name": "browser_evaluate",
-            "description": "Evaluate a JavaScript expression in the page context.",
-            "examples": [
-              "Evaluate document.title",
-              "Evaluate window.performance.getEntriesByType('navigation')"
-            ],
-            "scopes": ["external"]
+            "name": "open_trace",
+            "description": "Return a trace URL for a previous failing run.",
+            "examples": ["Open the trace for run 4711"],
+            "scopes": ["local"]
           }
         ],
         "artifact": {
           "type": "application/mcp-server-card+json",
-          "url": "https://raw.githubusercontent.com/microsoft/playwright-mcp/main/tools_schema.json"
+          "url": "https://skills.agntcy.org/ui-dev/playwright-mcp/tools_schema.json"
         }
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["node>=18"],
             "network": ["*"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
                 "benchmark": "UI-Dev-Bench.E2E",
                 "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
-                "metric": "task_success_rate",
-                "score": 0.89,
+                "metric": "flake_free_rate",
+                "score": 0.97,
                 "unit": "ratio",
                 "evaluator": "AGNTCY UI WG",
                 "evaluated_at": "2026-06-20T00:00:00Z",
@@ -431,32 +394,27 @@
       ]
     },
     {
-      "type": "core/permissions",
+      "type": "traits/access/permissions",
       "data": {
         "resources": [
           {
-            "name": "local_filesystem",
-            "description": "Read/write access to the working directory for source files, exported assets, and generated components.",
-            "access_level": "read_write"
-          },
-          {
             "name": "figma_api",
-            "description": "Access to the Figma REST and MCP APIs for file/node/variable reads and asset exports.",
+            "description": "Access to the Figma REST/MCP API for reading design files.",
             "access_level": "read"
           },
           {
-            "name": "photoshop_uxp",
-            "description": "Local UXP bridge to the running Photoshop instance for document and layer operations.",
+            "name": "adobe_photoshop",
+            "description": "Control of the local Photoshop application via UXP.",
             "access_level": "read_write"
           },
           {
-            "name": "browser_control",
-            "description": "Full control of a Playwright-managed browser (Chromium, Firefox, WebKit).",
+            "name": "local_filesystem",
+            "description": "Read/write access to the React source tree and Playwright artifacts.",
             "access_level": "read_write"
           },
           {
             "name": "network",
-            "description": "Outbound HTTP(S) access to arbitrary origins for browser navigation and remote MCP endpoints.",
+            "description": "Outbound HTTPS for Playwright test targets and Figma/Adobe endpoints.",
             "access_level": "read_write"
           }
         ]

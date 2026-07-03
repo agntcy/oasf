@@ -1,5 +1,29 @@
 {
-  "type": "core/record",
+  "schema_version": "1.0.0",
+  "name": "org.agntcy/devops-tools",
+  "version": "v1.0.0",
+  "description": "Curated collection of agent skills for common DevOps workflows: container builds, Kubernetes operations, infrastructure-as-code, CI/CD, and observability. Every member ships as an OASF agent-skill artifact so any compatible agent can load them uniformly.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "publisher": {
+    "name": "AGNTCY",
+    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  },
+  "skills": [
+    "tool_interaction/tool_use_planning",
+    "tool_interaction/workflow_automation",
+    "software_engineering/devops",
+    "software_engineering/infrastructure_as_code"
+  ],
+  "domains": [
+    "technology/software_engineering",
+    "technology/software_engineering/devops"
+  ],
   "annotations": {
     "org.agntcy/logo": "https://agntcy.org/logo.png",
     "org.agntcy/status_page": "https://agntcy.org/status",
@@ -9,36 +33,9 @@
     "org.agntcy/support": "https://agntcy.org/support",
     "org.agntcy/contact": "info@agntcy.org"
   },
-  "data": {
-    "schema_version": "1.0.0",
-    "name": "org.agntcy/devops-tools",
-    "version": "v1.0.0",
-    "description": "Curated collection of agent skills for common DevOps workflows: container builds, Kubernetes operations, infrastructure-as-code, CI/CD, and observability. Every member ships as an OASF agent-skill artifact so any compatible agent can load them uniformly.",
-    "created_at": "2026-06-30T13:06:27.754823Z",
-    "licenses": [
-      {
-        "name": "Apache-2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0"
-      }
-    ],
-    "publisher": {
-      "name": "AGNTCY",
-      "urls": ["https://agntcy.org", "https://github.com/agntcy"]
-    },
-    "skills": [
-      "tool_interaction/tool_use_planning",
-      "tool_interaction/workflow_automation",
-      "software_engineering/devops",
-      "software_engineering/infrastructure_as_code"
-    ],
-    "domains": [
-      "technology/software_engineering",
-      "technology/software_engineering/devops"
-    ]
-  },
   "modules": [
     {
-      "type": "core/agent_skills",
+      "type": "resource/skill/agentskill",
       "data": {
         "name": "docker-cli",
         "version": "1.0.0",
@@ -50,13 +47,13 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["docker>=24.0"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -75,7 +72,7 @@
       ]
     },
     {
-      "type": "core/agent_skills",
+      "type": "resource/skill/agentskill",
       "data": {
         "name": "kubectl",
         "version": "1.0.0",
@@ -87,14 +84,14 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["kubectl>=1.30"],
             "env_vars": ["KUBECONFIG"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -113,7 +110,7 @@
       ]
     },
     {
-      "type": "core/agent_skills",
+      "type": "resource/skill/agentskill",
       "data": {
         "name": "terraform",
         "version": "1.0.0",
@@ -125,14 +122,14 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["terraform>=1.9"],
             "env_vars": ["AWS_PROFILE", "TF_VAR_region"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -151,7 +148,7 @@
       ]
     },
     {
-      "type": "core/agent_skills",
+      "type": "resource/skill/agentskill",
       "data": {
         "name": "github-actions",
         "version": "1.0.0",
@@ -163,7 +160,7 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "binaries": ["gh>=2.55"],
             "env_vars": ["GITHUB_TOKEN"],
@@ -171,7 +168,7 @@
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -190,7 +187,7 @@
       ]
     },
     {
-      "type": "core/agent_skills",
+      "type": "resource/skill/agentskill",
       "data": {
         "name": "prometheus-query",
         "version": "1.0.0",
@@ -202,14 +199,14 @@
       },
       "modules": [
         {
-          "type": "core/requirements",
+          "type": "traits/runtime/requirements",
           "data": {
             "env_vars": ["PROMETHEUS_URL"],
             "network": ["prometheus.internal:9090"]
           }
         },
         {
-          "type": "core/evaluation",
+          "type": "traits/quality/evaluation",
           "data": {
             "evaluations": [
               {
@@ -228,7 +225,7 @@
       ]
     },
     {
-      "type": "core/permissions",
+      "type": "traits/access/permissions",
       "data": {
         "resources": [
           {

@@ -3,12 +3,12 @@
 
 syntax = "proto3";
 
-package agntcy.oasf.modules.core.v1alpha1;
+package agntcy.oasf.modules.traits.runtime.v1alpha1;
 
-// Requirements is the payload for a Module of type "core/requirements".
+// Requirements is the payload for a Module of type "traits/runtime/requirements".
 // It declares the runtime prerequisites needed to execute the parent module.
 //
-// Composition mode: singleton. When present on both a parent and one of its
+// Composition mode: replace. When present on both a parent and one of its
 // submodules, the inner Requirements replaces the outer one for that subtree.
 message Requirements {
   // Binaries required on the host, optionally with version constraints

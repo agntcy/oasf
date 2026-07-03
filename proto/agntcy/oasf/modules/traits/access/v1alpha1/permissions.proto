@@ -3,16 +3,15 @@
 
 syntax = "proto3";
 
-package agntcy.oasf.modules.core.v1alpha1;
+package agntcy.oasf.modules.traits.access.v1alpha1;
 
-// Permissions is the payload for a Module of type "core/permissions".
+// Permissions is the payload for a Module of type "traits/access/permissions".
 // It declares the set of resources a parent module (or record) requires
 // access to, along with the level of access needed.
 //
-// Composition mode: singleton. When present on both a parent and one of its
+// Composition mode: replace. When present on both a parent and one of its
 // submodules, the inner Permissions replaces the outer one for that subtree.
 message Permissions {
-  // Resources this module needs access to.
   // Resource is a single boundary the parent module operates against.
   message Resource {
     // Namespaced, human-readable resource name
@@ -24,11 +23,11 @@ message Permissions {
     string description = 2;
 
     // Level of access required against the resource.
-    // AccessLevel enumerates the access modes a module may request against a
-    // resource. String encoding uses the lowercase form
+    // String encoding uses the lowercase form
     // ("read", "write", "read_write").
     string access_level = 3;
   }
 
+  // Resources this module needs access to.
   repeated Resource resources = 1;
 }
