@@ -1,0 +1,110 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.integration.v1alpha1;
+
+import "agntcy/oasf/objects/v1/artifact.proto";
+import "agntcy/oasf/objects/v1/env_var.proto";
+import "agntcy/oasf/objects/v1/http_header.proto";
+
+// Mcp is the payload for a Module of type "integration/mcp".
+// It describes a Model Context Protocol server, including how to connect
+// to it and the tools, prompts, and resources it exposes.
+//
+// References: https://modelcontextprotocol.io
+message Mcp {
+  // Name of the MCP server.
+  string name = 1;
+
+  // Free-form description of the server. Markdown is permitted.
+  string description = 2;
+
+  // Connection configurations for accessing the server. Multiple entries
+  // may represent alternative transports (e.g. local stdio + remote HTTP).
+  message Connection {
+    // Deployment mode of the server (local process vs remote endpoint).
+    // Values: "local", "remote".
+    string mode = 1;
+
+    // Transport used to talk to the server.
+    // Values: "stdio", "streamable_http", "sse"
+    string transport = 2;
+
+    // Endpoint URL (for HTTP-based transports).
+    string url = 3;
+
+    // Executable or runtime command (for stdio transport).
+    string command = 4;
+
+    // Command-line arguments passed to `command`.
+    repeated string args = 5;
+
+    // Environment variables the server expects (tokens, API keys,
+    // configuration, ...).
+    repeated agntcy.oasf.objects.v1.EnvVar env_vars = 6;
+
+    // HTTP headers used for authentication and metadata (for HTTP-based
+    // transports)
+    repeated agntcy.oasf.objects.v1.HttpHeader http_headers = 7;
+  }
+  repeated Connection connections = 3;
+
+  // Tools exposed by the server.
+  message Tool {
+    // Unique tool identifier.
+    string name = 1;
+
+    // Human-readable title.
+    string title = 2;
+
+    // Description of what the tool does.
+    string description = 3;
+
+    // Example prompts or invocations for the tool.
+    repeated string examples = 4;
+
+    // Scopes describing the tool's behaviour and side effects.
+    repeated string scopes = 5;
+  }
+  repeated Tool tools = 4;
+
+  // Prompts exposed by the server.
+  message Prompt {
+    // Unique prompt identifier.
+    string name = 1;
+
+    // Human-readable title.
+    string title = 2;
+
+    // Description of the prompt.
+    string description = 3;
+  }
+  repeated Prompt prompts = 5;
+
+  // Resources exposed by the server.
+  message Resource {
+    // Unique resource identifier.
+    string name = 1;
+
+    // URI template or concrete URI for the resource.
+    string uri = 2;
+
+    // Human-readable title.
+    string title = 3;
+
+    // Description of the resource.
+    string description = 4;
+
+    // Media type of the resource, if known (RFC 6838).
+    string media_type = 5;
+  }
+  repeated Resource resources = 6;
+
+  // Examples of how to use the server, including prompts, tools, and resources.
+  repeated string examples = 7;
+
+  // Link to the artifact where the full agent card can be retrieved.
+  agntcy.oasf.objects.v1.Artifact artifact = 8;
+}

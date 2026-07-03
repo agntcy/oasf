@@ -1,6 +1,5 @@
 {
-  "schema_version": "1.0.0",
-  "name": "org.agntcy/ui-dev-mcps",
+  "type": "core/record",
   "annotations": {
     "org.agntcy/logo_url": "https://agntcy.org/logo.png",
     "org.agntcy/status_page": "https://agntcy.org/status",
@@ -11,42 +10,45 @@
     "org.agntcy/contact_email": "info@agntcy.org",
     "org.agntcy/collection_type": "ui-dev-mcps"
   },
-  "version": "v1.0.0",
-  "description": "Curated collection of MCP servers for UI developers: design-file inspection (Figma), image editing automation (Photoshop), React component scaffolding and analysis, and browser end-to-end testing (Playwright). Every member exposes an MCP endpoint so any MCP-compatible agent can consume them uniformly.",
-  "created_at": "2026-06-30T13:06:27.754823Z",
-  "licenses": [
-    {
-      "name": "Apache-2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
-  "publisher": {
-    "name": "AGNTCY",
-    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  "data": {
+    "schema_version": "1.0.0",
+    "name": "org.agntcy/ui-dev-mcps",
+    "version": "v1.0.0",
+    "description": "Curated collection of MCP servers for UI developers: design-file inspection (Figma), image editing automation (Photoshop), React component scaffolding and analysis, and browser end-to-end testing (Playwright). Every member exposes an MCP endpoint so any MCP-compatible agent can consume them uniformly.",
+    "created_at": "2026-06-30T13:06:27.754823Z",
+    "licenses": [
+      {
+        "name": "Apache-2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0"
+      }
+    ],
+    "publisher": {
+      "name": "AGNTCY",
+      "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+    },
+    "skills": [
+      "tool_interaction/tool_use_planning",
+      "tool_interaction/workflow_automation",
+      "software_engineering/frontend_development",
+      "software_engineering/ui_design",
+      "multi_modal/image_processing/image_to_text"
+    ],
+    "domains": [
+      "technology/software_engineering",
+      "technology/software_engineering/frontend",
+      "media_and_entertainment/design"
+    ]
   },
-  "skills": [
-    "tool_interaction/tool_use_planning",
-    "tool_interaction/workflow_automation",
-    "software_engineering/frontend_development",
-    "software_engineering/ui_design",
-    "multi_modal/image_processing/image_to_text"
-  ],
-  "domains": [
-    "technology/software_engineering",
-    "technology/software_engineering/frontend",
-    "media_and_entertainment/design"
-  ],
   "modules": [
     {
-      "type": "core/integrations/mcp",
+      "type": "integration/mcp",
       "data": {
         "name": "figma-mcp",
-        "version": "1.0.0",
         "description": "# Figma MCP\n\nMCP server for Figma Dev Mode. Lets agents inspect design files, read variables (design tokens), and export assets so they can translate designs into code deterministically.\n\n## Features\n- **Node inspection**: Read frames, components, auto-layout, and constraints.\n- **Design tokens**: Enumerate Figma variables and modes.\n- **Asset export**: Export nodes as SVG/PNG at multiple scales.\n\n## Getting Started\n```\nnpx -y figma-developer-mcp --figma-api-key=$FIGMA_API_KEY\n```",
         "connections": [
           {
             "mode": "local",
-            "type": "stdio",
+            "transport": "stdio",
             "command": "npx",
             "args": ["-y", "figma-developer-mcp"],
             "env_vars": [
@@ -59,7 +61,7 @@
           },
           {
             "mode": "remote",
-            "type": "streamable-http",
+            "transport": "streamable_http",
             "url": "https://mcp.figma.com/mcp",
             "http_headers": [
               {
@@ -69,12 +71,6 @@
                 "required": true
               }
             ]
-          }
-        ],
-        "artifacts": [
-          {
-            "type": "application/json",
-            "urls": ["https://www.figma.com/developers/mcp/tools_schema.json"]
           }
         ],
         "tools": [
@@ -115,22 +111,47 @@
             "scopes": ["external"]
           }
         ],
-        "requires": {
-          "binaries": ["node>=18"],
-          "network": ["api.figma.com", "mcp.figma.com"]
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://www.figma.com/developers/mcp/tools_schema.json"
         }
-      }
+      },
+      "modules": [
+        {
+          "type": "core/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "network": ["api.figma.com", "mcp.figma.com"]
+          }
+        },
+        {
+          "type": "core/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.DesignToCode",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "pixel_diff_ssim",
+                "score": 0.91,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/design-to-code"
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-      "type": "core/integrations/mcp",
+      "type": "integration/mcp",
       "data": {
         "name": "photoshop-mcp",
-        "version": "1.0.0",
         "description": "# Photoshop MCP\n\nMCP server that drives Adobe Photoshop via UXP so agents can open documents, apply actions, batch-export layers, and run non-destructive edits.\n\n## Features\n- **Document control**: Open, save, export as PSD/PNG/JPG/WebP.\n- **Layer ops**: Toggle visibility, apply masks, run smart-object updates.\n- **Actions**: Invoke saved Photoshop Actions with parameters.\n\n## Getting Started\nInstall the AGNTCY Photoshop MCP UXP plugin, then:\n```\nnpx -y @agntcy/photoshop-mcp\n```",
         "connections": [
           {
             "mode": "local",
-            "type": "stdio",
+            "transport": "stdio",
             "command": "npx",
             "args": ["-y", "@agntcy/photoshop-mcp"],
             "env_vars": [
@@ -144,14 +165,6 @@
                 "description": "Adobe API client id if remote asset fetching is enabled.",
                 "required": false
               }
-            ]
-          }
-        ],
-        "artifacts": [
-          {
-            "type": "application/json",
-            "urls": [
-              "https://skills.agntcy.org/ui-dev/photoshop-mcp/tools_schema.json"
             ]
           }
         ],
@@ -184,22 +197,47 @@
             "scopes": ["local"]
           }
         ],
-        "requires": {
-          "binaries": ["photoshop>=25", "node>=18"],
-          "env_vars": ["PHOTOSHOP_UXP_PORT"]
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://skills.agntcy.org/ui-dev/photoshop-mcp/tools_schema.json"
         }
-      }
+      },
+      "modules": [
+        {
+          "type": "core/requirements",
+          "data": {
+            "binaries": ["photoshop>=25", "node>=18"],
+            "env_vars": ["PHOTOSHOP_UXP_PORT"]
+          }
+        },
+        {
+          "type": "core/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.AssetExport",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "export_success_rate",
+                "score": 0.96,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/asset-export"
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-      "type": "core/integrations/mcp",
+      "type": "integration/mcp",
       "data": {
         "name": "react-mcp",
-        "version": "1.0.0",
         "description": "# React MCP\n\nMCP server for React component development. Analyzes existing components, generates new ones from prompts or Figma nodes, and inspects hook usage across a repo.\n\n## Features\n- **Static analysis**: Parse JSX/TSX, resolve props, list hooks, find dead components.\n- **Component generation**: Emit typed function components with Tailwind or CSS Modules.\n- **Story scaffolding**: Generate Storybook stories from component signatures.\n\n## Getting Started\n```\nnpx -y @agntcy/react-mcp --root ./src\n```",
         "connections": [
           {
             "mode": "local",
-            "type": "stdio",
+            "transport": "stdio",
             "command": "npx",
             "args": ["-y", "@agntcy/react-mcp", "--root", "./src"],
             "env_vars": [
@@ -208,14 +246,6 @@
                 "description": "Root directory containing the React source tree (overrides --root).",
                 "required": false
               }
-            ]
-          }
-        ],
-        "artifacts": [
-          {
-            "type": "application/json",
-            "urls": [
-              "https://skills.agntcy.org/ui-dev/react-mcp/tools_schema.json"
             ]
           }
         ],
@@ -256,22 +286,47 @@
             "scopes": ["local"]
           }
         ],
-        "requires": {
-          "binaries": ["node>=18"],
-          "env_vars": ["REACT_MCP_ROOT"]
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://skills.agntcy.org/ui-dev/react-mcp/tools_schema.json"
         }
-      }
+      },
+      "modules": [
+        {
+          "type": "core/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "env_vars": ["REACT_MCP_ROOT"]
+          }
+        },
+        {
+          "type": "core/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.ComponentGen",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "typecheck_pass_rate",
+                "score": 0.93,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/component-gen"
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-      "type": "core/integrations/mcp",
+      "type": "integration/mcp",
       "data": {
         "name": "playwright-mcp",
-        "version": "1.0.0",
         "description": "# Playwright MCP\n\nMicrosoft's Playwright MCP server. Gives agents a controllable Chromium/Firefox/WebKit browser: navigate, snapshot the accessibility tree, click, type, evaluate JavaScript, and record traces.\n\n## Features\n- **Accessibility-tree first**: Uses ARIA-based snapshots (no screenshots required).\n- **Cross-browser**: Chromium, Firefox, WebKit.\n- **Isolated contexts**: One browser context per session by default.\n\n## Getting Started\n```\nnpx -y @playwright/mcp@latest\n```",
         "connections": [
           {
             "mode": "local",
-            "type": "stdio",
+            "transport": "stdio",
             "command": "npx",
             "args": ["-y", "@playwright/mcp@latest"],
             "env_vars": [
@@ -284,7 +339,7 @@
           },
           {
             "mode": "remote",
-            "type": "streamable-http",
+            "transport": "streamable_http",
             "url": "http://localhost:8931/mcp",
             "http_headers": [
               {
@@ -293,14 +348,6 @@
                 "description": "Bearer token for the self-hosted Playwright MCP HTTP endpoint.",
                 "required": false
               }
-            ]
-          }
-        ],
-        "artifacts": [
-          {
-            "type": "application/json",
-            "urls": [
-              "https://raw.githubusercontent.com/microsoft/playwright-mcp/main/tools_schema.json"
             ]
           }
         ],
@@ -351,62 +398,37 @@
             "scopes": ["external"]
           }
         ],
-        "requires": {
-          "binaries": ["node>=18"],
-          "network": ["*"]
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://raw.githubusercontent.com/microsoft/playwright-mcp/main/tools_schema.json"
         }
-      }
-    },
-    {
-      "type": "core/evaluation",
-      "data": {
-        "evaluations": [
-          {
-            "agent": "figma-mcp",
-            "benchmark": "UI-Dev-Bench.DesignToCode",
-            "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
-            "metric": "pixel_diff_ssim",
-            "score": 0.91,
-            "unit": "ratio",
-            "evaluator": "AGNTCY UI WG",
-            "evaluated_at": "2026-06-20T00:00:00Z",
-            "source_url": "https://agntcy.org/bench/ui-dev/design-to-code"
-          },
-          {
-            "agent": "photoshop-mcp",
-            "benchmark": "UI-Dev-Bench.AssetExport",
-            "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
-            "metric": "export_success_rate",
-            "score": 0.96,
-            "unit": "ratio",
-            "evaluator": "AGNTCY UI WG",
-            "evaluated_at": "2026-06-20T00:00:00Z",
-            "source_url": "https://agntcy.org/bench/ui-dev/asset-export"
-          },
-          {
-            "agent": "react-mcp",
-            "benchmark": "UI-Dev-Bench.ComponentGen",
-            "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
-            "metric": "typecheck_pass_rate",
-            "score": 0.93,
-            "unit": "ratio",
-            "evaluator": "AGNTCY UI WG",
-            "evaluated_at": "2026-06-20T00:00:00Z",
-            "source_url": "https://agntcy.org/bench/ui-dev/component-gen"
-          },
-          {
-            "agent": "playwright-mcp",
-            "benchmark": "UI-Dev-Bench.E2E",
-            "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
-            "metric": "task_success_rate",
-            "score": 0.89,
-            "unit": "ratio",
-            "evaluator": "AGNTCY UI WG",
-            "evaluated_at": "2026-06-20T00:00:00Z",
-            "source_url": "https://agntcy.org/bench/ui-dev/e2e"
+      },
+      "modules": [
+        {
+          "type": "core/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "network": ["*"]
           }
-        ]
-      }
+        },
+        {
+          "type": "core/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.E2E",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "task_success_rate",
+                "score": 0.89,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/e2e"
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "type": "core/permissions",

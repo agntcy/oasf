@@ -1,0 +1,34 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.core.v1alpha1;
+
+// Permissions is the payload for a Module of type "core/permissions".
+// It declares the set of resources a parent module (or record) requires
+// access to, along with the level of access needed.
+//
+// Composition mode: singleton. When present on both a parent and one of its
+// submodules, the inner Permissions replaces the outer one for that subtree.
+message Permissions {
+  // Resources this module needs access to.
+  // Resource is a single boundary the parent module operates against.
+  message Resource {
+    // Namespaced, human-readable resource name
+    // (e.g. "browser_control", "figma_api", "local_filesystem", "network").
+    string name = 1;
+
+    // Free-form description of what the resource represents and why access is
+    // required.
+    string description = 2;
+
+    // Level of access required against the resource.
+    // AccessLevel enumerates the access modes a module may request against a
+    // resource. String encoding uses the lowercase form
+    // ("read", "write", "read_write").
+    string access_level = 3;
+  }
+
+  repeated Resource resources = 1;
+}

@@ -1,6 +1,5 @@
 {
-  "schema_version": "1.0.0",
-  "name": "com.openai/OpenAI-o1",
+  "type": "core/record",
   "annotations": {
     "org.agntcy/logo_url": "https://www.openai.com/logo.png",
     "org.agntcy/status_page": "https://www.openai.com/status",
@@ -10,59 +9,42 @@
     "org.agntcy/support": "https://www.openai.com/support",
     "org.agntcy/contact_email": "support@openai.com"
   },
-  "version": "v1.0.0",
-  "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.",
-  "created_at": "2026-06-30T13:06:27.754823Z",
-  "licenses": [
-    {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
-  ],
-  "publisher": {
-    "name": "OpenAI",
-    "urls": ["https://www.openai.com", "https://www.github.com/openai"]
+  "data": {
+    "schema_version": "1.0.0",
+    "name": "com.openai/OpenAI-o1",
+    "version": "o1-2026-06-30",
+    "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.",
+    "created_at": "2026-06-30T13:06:27.754823Z",
+    "licenses": [
+      {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "publisher": {
+      "name": "OpenAI",
+      "urls": ["https://www.openai.com", "https://www.github.com/openai"]
+    },
+    "skills": [
+      "natural_language_processing/natural_language_generation/text_completion",
+      "natural_language_processing/natural_language_generation/summarization",
+      "natural_language_processing/language_translation/multilingual_understanding",
+      "multi_modal/image_processing/image_to_text",
+      "multi_modal/image_processing/text_to_image",
+      "tool_interaction/tool_use_planning"
+    ],
+    "domains": [
+      "technology/software_engineering",
+      "trust_and_safety/content_moderation"
+    ]
   },
-  "skills": [
-    "natural_language_processing/natural_language_generation/text_completion",
-    "natural_language_processing/natural_language_generation/summarization",
-    "natural_language_processing/language_translation/multilingual_understanding",
-    "multi_modal/image_processing/image_to_text",
-    "multi_modal/image_processing/text_to_image",
-    "tool_interaction/tool_use_planning"
-  ],
-  "domains": [
-    "technology/software_engineering",
-    "trust_and_safety/content_moderation"
-  ],
   "modules": [
     {
       "type": "core/language_model",
-      "artifacts": [
-        {
-          "media_type": "application/vnd.openai.model+json",
-          "urls": ["https://huggingface.co/openai/gpt-o1"]
-        }
-      ],
       "data": {
-        "name": "OpenAI o1",
+        "size": "175B",
         "description": "# OpenAI o1\n\nOpenAI o1 is a state-of-the-art language model designed for advanced reasoning and problem-solving tasks. It excels in understanding complex contexts, making it suitable for applications that require deep comprehension and agentic workflows.\n\n## Features\n- **Advanced Reasoning**: Capable of solving complex problems, including mathematical and scientific tasks.\n- **Contextual Understanding**: Maintains context over long conversations, enabling coherent and relevant responses.\n- **Multilingual Support**: Supports multiple languages, enhancing accessibility and usability across different regions.\n- **Tool Interaction**: Can interact with external tools and APIs to perform specific tasks or retrieve information.\n\n## Use Cases\n- **Content Generation**: Create high-quality written content for blogs, articles, and marketing materials.\n- **Customer Support**: Provide automated responses to customer inquiries with contextual understanding.\n- **Educational Tools**: Assist in learning by providing explanations, summaries, and translations.\n- **Research Assistance**: Aid researchers in summarizing papers, generating hypotheses, and analyzing data.\n\n## Getting Started\nTo use OpenAI o1, you can access it via the provided API endpoints or download the model artifact for local deployment. Ensure you have the necessary API key and permissions to utilize the model effectively.",
         "deployments": [
-          {
-            "mode": "local",
-            "endpoint": {
-              "url": "https://localhost:8080/v1",
-              "type": "openai",
-              "protocol": "https"
-            },
-            "env_vars": [
-              {
-                "name": "OPENAI_API_KEY",
-                "description": "API key for accessing OpenAI services.",
-                "required": true
-              }
-            ]
-          },
           {
             "mode": "remote",
             "endpoint": {
@@ -85,9 +67,6 @@
           "max_output_tokens": 2048,
           "max_total_tokens": 10240
         },
-        "size": "175B",
-        "version": "o1-2026-06-30",
-        "revision": "sha256:9a7c5b0f2e1d4c8a6b3f9e2d1c0b5a7e8d4f6c9b2a1e3d5f7c8b0a4e6d2f1c3b",
         "trained_at": "2026-06-30T13:06:27.754823Z",
         "supported_languages": ["en-US", "es-ES", "fr-FR", "de-DE", "zh-Hans"],
         "pricing": {
@@ -128,8 +107,13 @@
       "data": {
         "resources": [
           {
-            "name": "user_data",
-            "description": "Access to user data for personalization and context.",
+            "name": "local_filesystem",
+            "description": "Read/write access to the local model cache and weight files.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "gpu",
+            "description": "Access to local GPU device(s) for inference.",
             "access_level": "read_write"
           }
         ]

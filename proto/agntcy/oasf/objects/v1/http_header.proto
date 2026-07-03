@@ -1,0 +1,22 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.objects.v1;
+
+// HTTP headers used for authentication and metadata (typically for
+// remote deployments: bearer tokens, API keys, ...).
+message HttpHeader {
+  // Header name.
+  string name = 1;
+
+  // Semantic type of the header value (e.g. "bearer", "apikey").
+  string type = 2;
+
+  // Human-readable description.
+  string description = 3;
+
+  // Whether the header must be provided.
+  bool required = 4;
+}

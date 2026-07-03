@@ -1,0 +1,41 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v2alpha1;
+
+import "google/protobuf/struct.proto";
+
+// Module is the universal recursive envelope used to describe any node
+// in an OASF tree: permissions, integrations, evaluations,
+// requirements, and any future or third-party extensions.
+//
+// Module-specific fields live inside `data`. Composition happens through
+// `modules`. The envelope itself is intentionally minimal so that new
+// module classes can be added without changing this message.
+message Module {
+  // Namespaced, human-readable discriminator identifying the module class,
+  // e.g. "core/permissions", "core/integrations/mcp".
+  //
+  // The value drives class resolution (schema selection, composition rules,
+  // applicability constraints) via the OASF module registry. Custom values
+  // are supported; convention is to namespace third-party classes with a
+  // publisher prefix (e.g. "com.acme/my_module").
+  string type = 1;
+
+  // Free-form metadata attached to this module.
+  map<string, string> annotations = 2;
+
+  // Typed payload for this module. The concrete shape is defined by the
+  // module class identified by `type` and validated against the schema
+  // registered for that class.
+  //
+  // google.protobuf.Struct is used (instead of Any) to keep the wire form
+  // JSON-native, human-readable, and free of proto-specific type URLs.
+  google.protobuf.Struct data = 3;
+
+  // Recursively nested submodules. Cascade semantics are declared by the
+  // module class in OASF and DIR, not by this envelope.
+  repeated Module modules = 4;
+}

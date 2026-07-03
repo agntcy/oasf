@@ -1,0 +1,55 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.core.v1alpha1;
+
+// Record is the payload for a Module of type "core/record".
+// It describes the identity, provenance, and top-level classification of an
+// OASF document. A Record is normally the root Module of a tree.
+message Record {
+  // Version of the OASF schema this record was authored against.
+  string schema_version = 1;
+
+  // Fully-qualified, unique name of the record (e.g. "org.acme/my-agent").
+  string name = 2;
+
+  // Version of the record itself. Free-form; conventionally semver.
+  string version = 3;
+
+  // Human-readable description. Markdown is permitted.
+  string description = 4;
+
+  // Creation timestamp in RFC3339 format.
+  string created_at = 5;
+
+  // Optional authors of the record (e.g. "Author Name <author@example.com>").
+  repeated string authors = 6;
+
+  // Licenses under which the record is distributed.
+  message License {
+    // SPDX identifier or free-form license name (e.g. "Apache-2.0").
+    string name = 1;
+
+    // URL to the license text.
+    string url = 2;
+  }
+  repeated License licenses = 7;
+
+  // Publisher of the record.
+  message Publisher {
+    // Human-readable publisher name.
+    string name = 1;
+
+    // Publisher URLs (homepage, source repositories, ...).
+    repeated string urls = 2;
+  }
+  Publisher publisher = 8;
+
+  // Skill paths associated with this record (e.g. "software_engineering/frontend_development").
+  repeated string skills = 9;
+
+  // Domain paths associated with this record (e.g. "technology/software_engineering").
+  repeated string domains = 10;
+}

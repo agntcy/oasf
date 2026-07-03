@@ -885,10 +885,7 @@
       "boolean_t": {
         "caption": "Boolean",
         "description": "Boolean value. One of <code>true</code> or <code>false</code>.",
-        "values": [
-          false,
-          true
-        ]
+        "values": [false, true]
       },
       "bytestring_t": {
         "caption": "Byte String",
@@ -994,10 +991,7 @@
         "description": "The TCP/UDP port number. For example:<br><code>80</code>,<br><code>22</code>.",
         "type": "integer_t",
         "type_name": "Integer",
-        "range": [
-          0,
-          65535
-        ]
+        "range": [0, 65535]
       },
       "process_name_t": {
         "caption": "Process Name",
@@ -1038,10 +1032,7 @@
         "description": "Unit interval is defined as the closed interval, which includes all real numbers greater than or equal to 0 and less than or equal to 1.",
         "type": "float_t",
         "type_name": "Float",
-        "range": [
-          0,
-          1
-        ]
+        "range": [0, 1]
       },
       "uri_t": {
         "caption": "URI String",

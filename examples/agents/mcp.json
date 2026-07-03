@@ -1,6 +1,5 @@
 {
-  "schema_version": "1.0.0",
-  "name": "GitHub Copilot",
+  "type": "core/record",
   "annotations": {
     "org.agntcy/logo_url": "https://www.github.com/logo.png",
     "org.agntcy/status_page": "https://www.github.com/status",
@@ -9,40 +8,45 @@
     "org.agntcy/support": "https://www.github.com/support",
     "org.agntcy/contact_email": "support@github.com"
   },
-  "version": "v1.0.0",
-  "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.",
-  "created_at": "2026-06-30T13:06:27.754823Z",
-  "licenses": [
-    {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
-  ],
-  "publisher": {
-    "name": "GitHub",
-    "urls": ["https://www.github.com"]
+  "data": {
+    "schema_version": "1.0.0",
+    "name": "com.github/copilot-mcp",
+    "version": "v1.0.0",
+    "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.",
+    "created_at": "2026-06-30T13:06:27.754823Z",
+    "licenses": [
+      {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "publisher": {
+      "name": "GitHub",
+      "urls": ["https://www.github.com"]
+    },
+    "skills": [
+      "natural_language_processing/natural_language_generation/text_completion",
+      "natural_language_processing/natural_language_generation/summarization",
+      "natural_language_processing/language_translation/multilingual_understanding",
+      "tool_interaction/tool_use_planning"
+    ],
+    "domains": [
+      "technology/software_engineering",
+      "technology/software_engineering/devops",
+      "technology/software_engineering/apis_integration"
+    ]
   },
-  "skills": [
-    "natural_language_processing/natural_language_generation/text_completion",
-    "natural_language_processing/natural_language_generation/summarization",
-    "natural_language_processing/language_translation/multilingual_understanding",
-    "tool_interaction/tool_use_planning"
-  ],
-  "domains": [
-    "technology/software_engineering",
-    "technology/software_engineering/devops",
-    "technology/software_engineering/apis_integration"
-  ],
   "modules": [
     {
-      "type": "core/integrations/mcp",
+      "type": "integration/mcp",
       "data": {
+        "description": "# GitHub Copilot MCP\n\nGitHub Copilot MCP is a specialized agent skill designed to provide code completion and generation capabilities for software projects. It integrates with various development environments and version control systems to deliver intelligent code suggestions and insights.\n\n## Features\n- **Code Completion**: Provides real-time code suggestions based on the context of the code being written.\n- **Code Generation**: Generates code snippets and functions based on natural language descriptions.\n- **Integration with IDEs**: Seamlessly integrates with popular IDEs to enhance the coding experience.\n- **Support for Multiple Languages**: Compatible with a wide range of programming languages, ensuring broad applicability.\n\n## Use Cases\n- **Software Development**: Enhance productivity by providing intelligent code suggestions and completions.\n- **Learning and Education**: Assist learners in understanding coding patterns and best practices.\n- **Open Source Projects**: Provide contributors with insights into code structure and implementation.\n\n## Getting Started\nTo use GitHub Copilot MCP, you can integrate it into your existing development environment or use the provided API endpoints. Ensure you have the necessary permissions and access tokens to utilize the service effectively.",
         "connections": [
           {
             "mode": "local",
-            "type": "stdio",
-            "command": "npx @github/copilot-cli",
-            "args": ["--stdio"],
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["@github/copilot-cli", "--stdio"],
             "env_vars": [
               {
                 "name": "GITHUB_TOKEN",
@@ -53,7 +57,7 @@
           },
           {
             "mode": "remote",
-            "type": "streamable-http",
+            "transport": "streamable_http",
             "url": "https://api.github.com/copilot",
             "http_headers": [
               {
@@ -63,12 +67,6 @@
                 "required": true
               }
             ]
-          }
-        ],
-        "artifacts": [
-          {
-            "type": "application/json",
-            "urls": ["https://www.github.com/download/get_issues_schema.json"]
           }
         ],
         "tools": [
@@ -82,11 +80,20 @@
             "scopes": ["external"]
           }
         ],
-        "requires": {
-          "binaries": ["node>=18"],
-          "network": ["api.figma.com", "mcp.figma.com"]
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://www.github.com/download/get_issues_schema.json"
         }
-      }
+      },
+      "modules": [
+        {
+          "type": "core/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "network": ["api.github.com"]
+          }
+        }
+      ]
     },
     {
       "type": "core/permissions",

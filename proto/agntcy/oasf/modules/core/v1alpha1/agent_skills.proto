@@ -1,0 +1,43 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.core.v1alpha1;
+
+import "agntcy/oasf/objects/v1/artifact.proto";
+
+// AgentSkills is the payload for a Module of type "core/agent_skills".
+// It describes an Agent Skills package (SKILL.md manifest, referenced
+// artifacts, and declared capabilities).
+//
+// References: https://agentskills.io/specification/
+message AgentSkills {
+  // Human-readable skill name.
+  string name = 1;
+
+  // Skill description.
+  string description = 2;
+
+  // Skill version, if declared in the manifest.
+  string version = 3;
+
+  // Free-form tags for search and categorisation.
+  repeated string tags = 4;
+
+  // Authors of the skill (e.g. "Author Name <author@example.com>").
+  repeated string authors = 5;
+
+  // Capabilities describes the capabilities exposed by the skill.
+  message Capability {
+    // Namespaced capability name.
+    string name = 1;
+
+    // Free-form description of the capability.
+    string description = 2;
+  }
+  repeated Capability capabilities = 6;
+
+  // Artifact where the skill can be retrieved from.
+  agntcy.oasf.objects.v1.Artifact artifact = 7;
+}

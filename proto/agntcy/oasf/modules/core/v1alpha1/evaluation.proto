@@ -1,0 +1,49 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.core.v1alpha1;
+
+// Evaluation is the payload for a Module of type "core/evaluation".
+// It captures the outcome of one or more benchmarks or assessments applied
+// to the parent module.
+//
+// Composition mode: additive. Multiple Evaluation modules in a subtree
+// contribute cumulatively; the effective view is the union of their
+// referred evaluations.
+message Evaluation {
+  // Optional aggregate rating across all referred evaluations (0.0 - 1.0).
+  double overall_rating = 1;
+
+  // Optional aggregate scores keyed by metric name.
+  map<string, double> overall_scores = 2;
+
+  // ReferredEvaluation describes a single benchmark or assessment result.
+  message ReferredEvaluation {
+    // Benchmark identifier (e.g. "UI-Dev-Bench.DesignToCode").
+    string benchmark = 1;
+
+    // Optional URL where the benchmark is defined.
+    string benchmark_url = 2;
+
+    // Metric measured by the benchmark (e.g. "pixel_diff_ssim", "task_success_rate").
+    string metric = 3;
+
+    // Score reported for the metric.
+    double score = 4;
+
+    // Unit of the score (e.g. "ratio", "percent", "ms").
+    string unit = 5;
+
+    // Entity that ran the evaluation.
+    string evaluator = 6;
+
+    // Timestamp of the evaluation in RFC3339 format.
+    string evaluated_at = 7;
+
+    // Optional URL where the full evaluation report can be retrieved.
+    string source_url = 8;
+  }
+  repeated ReferredEvaluation evaluations = 3;
+}

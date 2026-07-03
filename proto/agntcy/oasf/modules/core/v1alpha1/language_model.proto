@@ -1,0 +1,97 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.core.v1alpha1;
+
+import "agntcy/oasf/objects/v1/artifact.proto";
+import "agntcy/oasf/objects/v1/env_var.proto";
+import "agntcy/oasf/objects/v1/http_header.proto";
+
+// LanguageModel is the payload for a Module of type "core/language_model".
+// It describes a single language model: how to deploy and reach it, its
+// context window, its training vintage, and its supported languages.
+//
+// One module carries one model. Records that expose several models use
+// several `core/language_model` submodules.
+message LanguageModel {
+  // Human-readable model name (e.g. "OpenAI o1", "Llama 3.3 70B Instruct").
+  string name = 1;
+
+  // Version identifier for this model (free-form; conventionally a
+  // release tag such as "o1-2026-06-30" or "3.3-70B-Instruct").
+  string version = 2;
+
+  // Parameter count, expressed as a compact string (e.g. "7B", "70B",
+  // "175B"). Free-form to accommodate mixture-of-experts and other shapes.
+  string size = 3;
+
+  // Free-form description. Markdown is permitted.
+  string description = 4;
+
+  // Deployment options for reaching the model. Multiple entries may
+  // represent alternative runtimes (e.g. hosted API + local server).
+  message Deployment {
+    // Deployment mode (e.g. "remote", "local").
+    string mode = 1;
+
+    // Endpoint describes the network location and API shape of a deployment.
+    message Endpoint {
+      // Base URL of the endpoint (e.g. "https://api.openai.com/v1",
+      // "http://localhost:11434/v1").
+      string url = 1;
+
+      // API shape exposed at `url` (e.g. "openai", "anthropic", "ollama").
+      string type = 2;
+
+      // Transport protocol (e.g. "http", "https", "grpc").
+      string protocol = 3;
+    }
+    Endpoint endpoint = 2;
+
+    // Environment variables used for authentication and metadata (typically for
+    // local deployments: model paths, daemon hosts, ...).
+    repeated agntcy.oasf.objects.v1.EnvVar env_vars = 3;
+
+    // HTTP headers used for authentication and metadata (typically for
+    // remote deployments: bearer tokens, API keys, ...).
+    repeated agntcy.oasf.objects.v1.HttpHeader http_headers = 4;
+  }
+  repeated Deployment deployments = 5;
+
+  // Context window limits.
+  // Context describes the token limits of a model.
+  message Context {
+    // Maximum number of input tokens the model accepts.
+    uint32 max_input_tokens = 1;
+
+    // Maximum number of output tokens the model produces.
+    uint32 max_output_tokens = 2;
+
+    // Maximum combined input + output token budget per request.
+    uint32 max_total_tokens = 3;
+  }
+  Context context = 6;
+
+  // Training cutoff or release timestamp in RFC3339 format.
+  string trained_at = 7;
+
+  // BCP-47 language tags the model was trained on
+  // (e.g. "en-US", "zh-Hans").
+  repeated string supported_languages = 8;
+
+  // Optional pricing information.
+  // Pricing describes commercial availability of a model.
+  message Pricing {
+    // URL of the current pricing page.
+    string url = 1;
+
+    // Available pricing tiers (e.g. "free", "paid", "enterprise").
+    repeated string tiers = 2;
+  }
+  Pricing pricing = 9;
+
+  // Artifacts where the model can be retrieved from (e.g. model weights, Docker images).
+  repeated agntcy.oasf.objects.v1.Artifact artifacts = 10;
+}

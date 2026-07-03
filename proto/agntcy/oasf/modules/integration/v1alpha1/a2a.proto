@@ -1,0 +1,51 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.integration.v1alpha1;
+
+import "agntcy/oasf/objects/v1/artifact.proto";
+
+// A2a is the payload for a Module of type "integration/a2a".
+// It describes an agent exposed via the Agent-to-Agent protocol.
+//
+// The full agent card is normally distributed as a Module artifact
+// (via Module.artifacts); this payload carries only the metadata needed
+// to identify the card version and a compact summary of the card.
+//
+// References: https://github.com/a2aproject/A2A
+message A2A {
+  // Agent name.
+  string name = 1;
+
+  // Human-readable description of the agent.
+  string description = 2;
+
+  // Base URL where the agent can be reached.
+  string url = 3;
+
+  // Version of the agent.
+  string version = 4;
+
+  // Card schema version used for the card artifact.
+  string schema_version = 5;
+
+  // Capabilities advertised by the agent.
+  // Capability describes a single capability advertised by the agent.
+  message Capability {
+    // Namespaced capability name.
+    string name = 1;
+
+    // Free-form description of the capability.
+    string description = 2;
+  }
+  repeated Capability capabilities = 6;
+
+  // Authentication schemes supported by the agent
+  // (e.g. "bearer", "oauth2", "none").
+  repeated string authentication = 7;
+
+  // Link to the artifact where the full agent card can be retrieved.
+  agntcy.oasf.objects.v1.Artifact artifact = 8;
+}

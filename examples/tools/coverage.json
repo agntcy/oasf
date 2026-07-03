@@ -1,53 +1,54 @@
 {
-  "schema_version": "1.0.0",
-  "name": "io.codecov/coverage",
+  "type": "core/record",
   "annotations": {
-    "org.agntcy/logo_url": "https://www.codecov.io/logo.png",
+    "org.agntcy/logo": "https://www.codecov.io/logo.png",
     "org.agntcy/status_page": "https://www.codecov.io/status",
     "org.agntcy/terms_of_service": "https://www.codecov.io/terms",
     "org.agntcy/privacy_policy": "https://www.codecov.io/privacy",
     "org.agntcy/support": "https://www.codecov.io/support",
-    "org.agntcy/contact_email": "support@codecov.io"
+    "org.agntcy/contact": "support@codecov.io"
   },
-  "version": "v1.0.0",
-  "description": "Focused on providing code coverage analysis and reporting for software projects. Ideal for applications that require detailed insights into test coverage and quality metrics.",
-  "created_at": "2026-06-30T13:06:27.754823Z",
-  "licenses": [
-    {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
-  ],
-  "publisher": {
-    "name": "Codecov",
-    "urls": ["https://www.codecov.io"]
+  "data": {
+    "schema_version": "1.0.0",
+    "name": "io.codecov/coverage",
+    "version": "v1.0.0",
+    "description": "Focused on providing code coverage analysis and reporting for software projects. Ideal for applications that require detailed insights into test coverage and quality metrics.",
+    "created_at": "2026-06-30T13:06:27.754823Z",
+    "licenses": [
+      {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    ],
+    "publisher": {
+      "name": "Codecov",
+      "urls": ["https://www.codecov.io"]
+    },
+    "skills": [
+      "tool_interaction/tool_use_planning",
+      "tool_interaction/workflow_automation"
+    ],
+    "domains": [
+      "technology/software_engineering",
+      "technology/software_engineering/quality_assurance"
+    ]
   },
-  "skills": [
-    "tool_interaction/tool_use_planning",
-    "tool_interaction/workflow_automation"
-  ],
-  "domains": [
-    "technology/software_engineering",
-    "technology/software_engineering/quality_assurance"
-  ],
   "modules": [
     {
-      "type": "core/language_model/agentskills",
+      "type": "core/agent_skills",
       "data": {
-        "artifacts": [
-          {
-            "type": "application/agent-skill+md",
-            "data": "# Codecov Coverage\n\nCodecov Coverage is a specialized agent skill designed to provide code coverage analysis and reporting for software projects. It integrates with various CI/CD pipelines and version control systems to deliver detailed insights into test coverage and quality metrics.\n\n## Features\n- **Code Coverage Analysis**: Analyze code coverage across different programming languages and frameworks.\n- **Detailed Reporting**: Generate comprehensive reports highlighting areas of low coverage and potential improvements.\n- **Integration with CI/CD**: Seamlessly integrate with popular CI/CD tools to automate coverage analysis during the build process.\n- **Support for Multiple Languages**: Compatible with a wide range of programming languages, ensuring broad applicability.\n\n## Use Cases\n- **Quality Assurance**: Ensure that your codebase maintains high-quality standards by monitoring test coverage.\n- **Continuous Integration**: Automate code coverage checks as part of your CI/CD pipeline to catch issues early.\n- **Open Source Projects**: Provide contributors with insights into test coverage, encouraging better testing practices.\n\n## Getting Started\nTo use Codecov Coverage, you can integrate it into your existing CI/CD pipeline or use the provided API endpoints. Ensure you have the necessary permissions and access tokens to utilize the service effectively."
-          },
-          {
-            "type": "application/agent-skill+tgz",
-            "urls": ["https://www.codecov.io/download/agent-skill.tgz"]
-          }
-        ],
-        "requires": {
-          "binaries": ["bash>=5.0"],
-          "env_vars": ["CODECOV_TOKEN"]
+        "description": "# Codecov Coverage\n\nCodecov Coverage is a specialized agent skill designed to provide code coverage analysis and reporting for software projects. It integrates with various CI/CD pipelines and version control systems to deliver detailed insights into test coverage and quality metrics.\n\n## Features\n- **Code Coverage Analysis**: Analyze code coverage across different programming languages and frameworks.\n- **Detailed Reporting**: Generate comprehensive reports highlighting areas of low coverage and potential improvements.\n- **Integration with CI/CD**: Seamlessly integrate with popular CI/CD tools to automate coverage analysis during the build process.\n- **Support for Multiple Languages**: Compatible with a wide range of programming languages, ensuring broad applicability.\n\n## Use Cases\n- **Quality Assurance**: Ensure that your codebase maintains high-quality standards by monitoring test coverage.\n- **Continuous Integration**: Automate code coverage checks as part of your CI/CD pipeline to catch issues early.\n- **Open Source Projects**: Provide contributors with insights into test coverage, encouraging better testing practices.\n\n## Getting Started\nTo use Codecov Coverage, you can integrate it into your existing CI/CD pipeline or use the provided API endpoints. Ensure you have the necessary permissions and access tokens to utilize the service effectively.",
+        "artifact": {
+          "type": "application/agent-skill+tgz",
+          "url": "https://www.codecov.io/download/agent-skill.tgz"
         }
+      }
+    },
+    {
+      "type": "core/requirements",
+      "data": {
+        "binaries": ["bash>=5.0"],
+        "env_vars": ["CODECOV_TOKEN"]
       }
     },
     {
