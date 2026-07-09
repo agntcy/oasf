@@ -1,0 +1,189 @@
+{
+  "schema_version": "v1",
+  "name": "org.agntcy/ui-dev-mcps",
+  "version": "v1.0.0",
+  "description": "A catalog of MCP agents used for UI development workflows, each independently deployable and evaluated.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "authors": ["AGNTCY"],
+  "licenses": ["Apache-2.0"],
+  "skills": [
+    "tool_interaction/tool_use_planning",
+    "natural_language_processing/natural_language_generation/text_completion"
+  ],
+  "domains": ["technology/software_engineering/apis_integration"],
+  "type": "agent/catalog",
+  "modules": [
+    {
+      "type": "agent/entry",
+      "data": {
+        "name": "filesystem-mcp",
+        "description": "Filesystem access MCP agent."
+      },
+      "modules": [
+        {
+          "type": "agent/interface/mcp",
+          "data": {
+            "schema_version": "1.0.0",
+            "tools": ["read_file", "write_file"],
+            "examples": ["Read the current file."]
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "npx",
+                "args": ["filesystem-mcp"]
+              }
+            },
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["node>=18"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.6,
+                "overall_scores": { "reliability": 0.94 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "agent/entry",
+      "data": {
+        "name": "vite-mcp",
+        "description": "Vite dev-server MCP agent."
+      },
+      "modules": [
+        {
+          "type": "agent/interface/mcp",
+          "data": {
+            "schema_version": "1.0.0",
+            "tools": ["render_component", "hot_reload"],
+            "examples": ["Render the login component."]
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "npx",
+                "args": ["vite-mcp"]
+              }
+            },
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["node>=18"], "network": ["localhost"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.4,
+                "overall_scores": { "reliability": 0.9 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "agent/entry",
+      "data": {
+        "name": "vitest-mcp",
+        "description": "Vitest test-runner MCP agent."
+      },
+      "modules": [
+        {
+          "type": "agent/interface/mcp",
+          "data": {
+            "schema_version": "1.0.0",
+            "tools": ["run_tests", "coverage_report"],
+            "examples": ["Run the unit tests."]
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "npx",
+                "args": ["vitest-mcp"]
+              }
+            },
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["node>=18"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.7,
+                "overall_scores": { "reliability": 0.95 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "agent/entry",
+      "data": {
+        "name": "eslint-mcp",
+        "description": "ESLint linting MCP agent."
+      },
+      "modules": [
+        {
+          "type": "agent/interface/mcp",
+          "data": {
+            "schema_version": "1.0.0",
+            "tools": ["lint", "format"],
+            "examples": ["Lint the project."]
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "npx",
+                "args": ["eslint-mcp"]
+              }
+            },
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["node>=18"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.5,
+                "overall_scores": { "reliability": 0.92 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "traits/usage/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "workspace_files",
+            "description": "Read/write access to the project workspace.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

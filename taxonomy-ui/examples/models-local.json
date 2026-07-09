@@ -1,0 +1,145 @@
+{
+  "schema_version": "v1",
+  "name": "org.agntcy/local-models",
+  "version": "v1.0.0",
+  "description": "A curated set of locally-runnable language models, each shipped with published evaluations.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "authors": ["AGNTCY"],
+  "licenses": ["Apache-2.0"],
+  "skills": [
+    "natural_language_processing/natural_language_generation/text_completion"
+  ],
+  "domains": ["technology/machine_learning"],
+  "type": "model/catalog",
+  "modules": [
+    {
+      "type": "model/entry",
+      "data": {
+        "name": "llama-3.1-8b",
+        "description": "Meta Llama 3.1 8B instruct model."
+      },
+      "modules": [
+        {
+          "type": "model/family/language",
+          "data": {
+            "release": "2025-07-23",
+            "size": "8B",
+            "context": 131072,
+            "trained_at": "2025-03-01",
+            "supported_languages": ["en", "de", "fr", "es"],
+            "pricing": "free"
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "ollama",
+                "args": ["run", "llama3.1:8b"]
+              }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.2,
+                "overall_scores": { "mmlu": 0.68 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "model/entry",
+      "data": {
+        "name": "mistral-7b",
+        "description": "Mistral 7B instruct model."
+      },
+      "modules": [
+        {
+          "type": "model/family/language",
+          "data": {
+            "release": "2025-05-10",
+            "size": "7B",
+            "context": 32768,
+            "trained_at": "2025-01-15",
+            "supported_languages": ["en", "fr"],
+            "pricing": "free"
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "ollama",
+                "args": ["run", "mistral:7b"]
+              }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.0,
+                "overall_scores": { "mmlu": 0.63 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "model/entry",
+      "data": {
+        "name": "qwen2.5-14b",
+        "description": "Qwen 2.5 14B instruct model."
+      },
+      "modules": [
+        {
+          "type": "model/family/language",
+          "data": {
+            "release": "2025-09-19",
+            "size": "14B",
+            "context": 131072,
+            "trained_at": "2025-06-01",
+            "supported_languages": ["en", "zh", "de"],
+            "pricing": "free"
+          },
+          "modules": [
+            {
+              "type": "traits/serving/deployment",
+              "data": {
+                "mode": "local",
+                "transport": "stdio",
+                "command": "ollama",
+                "args": ["run", "qwen2.5:14b"]
+              }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.5,
+                "overall_scores": { "mmlu": 0.74 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "traits/usage/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "local_gpu",
+            "description": "Access to a local GPU for inference.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}
