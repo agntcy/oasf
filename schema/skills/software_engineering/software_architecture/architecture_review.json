@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Architecture Review",
+  "description": "Audit structure, boundaries, and technical debt.",
+  "extends": "software_architecture",
+  "name": "architecture_review",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Contract Drafting",
+  "description": "Draft contracts and legal documents.",
+  "extends": "legal",
+  "name": "contract_drafting",
+  "attributes": {}
+}

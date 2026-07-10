@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Image to Video",
+  "description": "Animate a still image into video.",
+  "extends": "video_understanding_generation",
+  "name": "image_to_video",
+  "attributes": {}
+}

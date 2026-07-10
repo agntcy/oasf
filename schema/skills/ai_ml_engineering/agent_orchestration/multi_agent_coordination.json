@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Multi-Agent Coordination",
+  "description": "Coordinate teams of agents and handoffs.",
+  "extends": "agent_orchestration",
+  "name": "multi_agent_coordination",
+  "attributes": {}
+}

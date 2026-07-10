@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Security Operations",
+  "description": "Detecting, triaging, and responding to threats.",
+  "extends": "cybersecurity",
+  "name": "security_operations",
+  "attributes": {}
+}

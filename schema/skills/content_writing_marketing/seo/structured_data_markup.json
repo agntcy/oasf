@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Structured Data Markup",
+  "description": "Generate schema.org and metadata markup.",
+  "extends": "seo",
+  "name": "structured_data_markup",
+  "attributes": {}
+}

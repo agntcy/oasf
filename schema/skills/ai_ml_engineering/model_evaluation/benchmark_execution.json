@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Benchmark Execution",
+  "description": "Run standardized benchmark suites.",
+  "extends": "model_evaluation",
+  "name": "benchmark_execution",
+  "attributes": {}
+}

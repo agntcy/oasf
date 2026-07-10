@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Postmortem Authoring",
+  "description": "Write blameless postmortems and RCAs.",
+  "extends": "site_reliability_engineering",
+  "name": "postmortem_authoring",
+  "attributes": {}
+}

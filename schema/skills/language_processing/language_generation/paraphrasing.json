@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Text Paraphrasing",
+  "description": "Restate text while preserving meaning.",
+  "extends": "language_generation",
+  "name": "paraphrasing",
+  "attributes": {}
+}

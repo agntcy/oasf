@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Roadmapping and Prioritization",
+  "description": "Prioritize and sequence roadmaps.",
+  "extends": "product_management",
+  "name": "roadmapping",
+  "attributes": {}
+}

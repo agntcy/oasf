@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Script Integration",
+  "description": "Integrate and execute scripts.",
+  "extends": "tool_use_automation",
+  "name": "script_integration",
+  "attributes": {}
+}

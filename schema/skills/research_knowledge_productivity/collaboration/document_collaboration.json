@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Document Collaboration",
+  "description": "Operate shared workspaces and wikis.",
+  "extends": "collaboration",
+  "name": "document_collaboration",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Application Security",
+  "description": "Securing application code, APIs, and the SDLC.",
+  "extends": "cybersecurity",
+  "name": "application_security",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Clinical Documentation",
+  "description": "Generate clinical reports and notes.",
+  "extends": "healthcare_clinical",
+  "name": "clinical_documentation",
+  "attributes": {}
+}

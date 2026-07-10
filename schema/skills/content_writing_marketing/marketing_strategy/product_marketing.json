@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Product Marketing and GTM",
+  "description": "Plan positioning, ICP, and go-to-market.",
+  "extends": "marketing_strategy",
+  "name": "product_marketing",
+  "attributes": {}
+}

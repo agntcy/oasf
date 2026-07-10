@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Infrastructure as Code",
+  "description": "Declarative provisioning of infrastructure.",
+  "extends": "devops_cloud_infra",
+  "name": "infrastructure_as_code",
+  "attributes": {}
+}

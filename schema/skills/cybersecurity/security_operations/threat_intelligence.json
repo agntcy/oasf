@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Threat Intelligence",
+  "description": "Analyze IOCs and threat-actor TTPs.",
+  "extends": "security_operations",
+  "name": "threat_intelligence",
+  "attributes": {}
+}

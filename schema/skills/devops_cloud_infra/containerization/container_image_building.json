@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Container Image Building",
+  "description": "Author container image definitions and build optimized images.",
+  "extends": "containerization",
+  "name": "container_image_building",
+  "attributes": {}
+}

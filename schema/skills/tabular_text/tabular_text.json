@@ -1,8 +1,0 @@
-{
-  "uid": 4,
-  "caption": "Tabular / Text",
-  "category": true,
-  "extends": "base_skill",
-  "name": "tabular_text",
-  "attributes": {}
-}

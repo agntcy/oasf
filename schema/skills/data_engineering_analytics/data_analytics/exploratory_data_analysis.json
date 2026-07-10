@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Exploratory Data Analysis",
+  "description": "Explore datasets to find patterns.",
+  "extends": "data_analytics",
+  "name": "exploratory_data_analysis",
+  "attributes": {}
+}

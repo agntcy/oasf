@@ -1,0 +1,8 @@
+{
+  "uid": 10,
+  "caption": "Version Control and Collaboration",
+  "description": "Git workflows and code collaboration.",
+  "extends": "software_engineering",
+  "name": "version_control",
+  "attributes": {}
+}

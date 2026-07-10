@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Visual Question Answering",
+  "description": "Answer questions about images.",
+  "extends": "multimodal_processing",
+  "name": "visual_question_answering",
+  "attributes": {}
+}

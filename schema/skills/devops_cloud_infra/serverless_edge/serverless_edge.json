@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Serverless and Edge Computing",
+  "description": "Functions-as-a-service and edge compute.",
+  "extends": "devops_cloud_infra",
+  "name": "serverless_edge",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Presentation Authoring",
+  "description": "Create and edit slide decks.",
+  "extends": "office_productivity",
+  "name": "presentation_authoring",
+  "attributes": {}
+}

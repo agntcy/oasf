@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Geospatial Analysis",
+  "description": "Analyze geospatial vector and raster data.",
+  "extends": "geospatial",
+  "name": "geospatial_analysis",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 10,
+  "caption": "Model and Agent Evaluation",
+  "description": "Benchmarking and measuring model/agent quality.",
+  "extends": "ai_ml_engineering",
+  "name": "model_evaluation",
+  "attributes": {}
+}

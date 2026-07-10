@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Cloud Resource Management",
+  "description": "Provision and operate cloud resources.",
+  "extends": "cloud_platform_operations",
+  "name": "cloud_resource_management",
+  "attributes": {}
+}

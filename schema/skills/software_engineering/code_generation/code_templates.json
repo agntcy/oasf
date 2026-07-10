@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Code Template Filling",
+  "description": "Fill scaffolds and generate code from schemas.",
+  "extends": "code_generation",
+  "name": "code_templates",
+  "attributes": {}
+}

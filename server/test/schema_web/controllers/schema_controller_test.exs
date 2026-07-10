@@ -120,7 +120,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 for hierarchical name", %{conn: conn} do
-      conn = json_get(conn, "/api/skills?name=analytical_skills/mathematical_reasoning")
+      conn = json_get(conn, "/api/skills?name=language_processing/language_understanding")
       assert conn.status == 200
     end
 
@@ -273,7 +273,7 @@ defmodule SchemaWeb.SchemaControllerTest do
 
     test "returns 200 for hierarchical category name", %{conn: conn} do
       conn =
-        json_get(conn, "/api/skill_categories?name=natural_language_processing/personalization")
+        json_get(conn, "/api/skill_categories?name=language_processing/text_personalization")
 
       assert conn.status == 200
     end

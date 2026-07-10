@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Calendar and Scheduling",
+  "description": "Manage calendars and schedule meetings.",
+  "extends": "office_productivity",
+  "name": "calendar_scheduling",
+  "attributes": {}
+}

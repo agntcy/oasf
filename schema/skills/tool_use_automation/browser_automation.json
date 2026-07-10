@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Browser Automation",
+  "description": "Automate web browsers to perform tasks.",
+  "extends": "tool_use_automation",
+  "name": "browser_automation",
+  "attributes": {}
+}

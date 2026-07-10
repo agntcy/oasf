@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Reranking",
+  "description": "Rerank retrieved candidates for relevance.",
+  "extends": "retrieval_augmented_generation",
+  "name": "reranking",
+  "attributes": {}
+}

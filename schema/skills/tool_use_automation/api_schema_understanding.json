@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "API Schema Understanding",
+  "description": "Understand and use API schemas.",
+  "extends": "tool_use_automation",
+  "name": "api_schema_understanding",
+  "attributes": {}
+}

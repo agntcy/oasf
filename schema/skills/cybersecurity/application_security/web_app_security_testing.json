@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Web Application Security Testing",
+  "description": "Test running apps for OWASP-class flaws.",
+  "extends": "application_security",
+  "name": "web_app_security_testing",
+  "attributes": {}
+}

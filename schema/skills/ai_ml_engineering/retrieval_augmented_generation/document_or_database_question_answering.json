@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Document or Database Question Answering",
+  "description": "Answer questions over documents or databases.",
+  "extends": "retrieval_augmented_generation",
+  "name": "document_or_database_question_answering",
+  "attributes": {}
+}

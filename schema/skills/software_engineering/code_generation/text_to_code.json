@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text to Code",
+  "description": "Generate code from natural-language specs.",
+  "extends": "code_generation",
+  "name": "text_to_code",
+  "attributes": {}
+}

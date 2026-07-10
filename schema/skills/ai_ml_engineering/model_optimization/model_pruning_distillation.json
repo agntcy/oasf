@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Pruning and Distillation",
+  "description": "Prune or distill models for size/speed.",
+  "extends": "model_optimization",
+  "name": "model_pruning_distillation",
+  "attributes": {}
+}

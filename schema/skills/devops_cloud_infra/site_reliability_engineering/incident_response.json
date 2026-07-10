@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Incident Response",
+  "description": "Triage, diagnose, and resolve production incidents.",
+  "extends": "site_reliability_engineering",
+  "name": "incident_response",
+  "attributes": {}
+}

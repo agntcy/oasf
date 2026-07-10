@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Databases",
+  "description": "Designing, operating, and querying databases.",
+  "extends": "data_engineering_analytics",
+  "name": "databases",
+  "attributes": {}
+}

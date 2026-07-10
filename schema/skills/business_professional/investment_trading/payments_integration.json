@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Payments Integration",
+  "description": "Integrate payment gateways and billing.",
+  "extends": "investment_trading",
+  "name": "payments_integration",
+  "attributes": {}
+}

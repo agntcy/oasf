@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Image Outpainting",
+  "description": "Extend an image beyond its borders.",
+  "extends": "image_editing",
+  "name": "image_outpainting",
+  "attributes": {}
+}

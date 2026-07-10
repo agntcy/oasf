@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Ad Copywriting",
+  "description": "Write ad headlines and creative.",
+  "extends": "copywriting",
+  "name": "ad_copywriting",
+  "attributes": {}
+}

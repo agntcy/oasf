@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Sales and CRM",
+  "description": "Prospecting, pipeline, outreach, and deal execution.",
+  "extends": "business_professional",
+  "name": "sales",
+  "attributes": {}
+}

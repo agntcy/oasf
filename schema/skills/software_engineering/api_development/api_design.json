@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "API Design",
+  "description": "Design REST/GraphQL/gRPC interfaces and contracts.",
+  "extends": "api_development",
+  "name": "api_design",
+  "attributes": {}
+}

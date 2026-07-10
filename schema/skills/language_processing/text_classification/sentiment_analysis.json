@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Sentiment Analysis",
+  "description": "Classify sentiment or emotion in text.",
+  "extends": "text_classification",
+  "name": "sentiment_analysis",
+  "attributes": {}
+}

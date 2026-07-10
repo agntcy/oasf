@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "SEO Auditing",
+  "description": "Audit technical and on-page SEO.",
+  "extends": "seo",
+  "name": "seo_auditing",
+  "attributes": {}
+}

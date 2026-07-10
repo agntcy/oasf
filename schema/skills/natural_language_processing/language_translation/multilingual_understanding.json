@@ -1,8 +1,0 @@
-{
-  "uid": 2,
-  "caption": "Multilingual Understanding",
-  "description": "Recognizing and processing text in multiple languages.",
-  "extends": "language_translation",
-  "name": "multilingual_understanding",
-  "attributes": {}
-}

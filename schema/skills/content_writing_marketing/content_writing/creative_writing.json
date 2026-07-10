@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Creative and Narrative Writing",
+  "description": "Write fiction, scripts, and narratives.",
+  "extends": "content_writing",
+  "name": "creative_writing",
+  "attributes": {}
+}

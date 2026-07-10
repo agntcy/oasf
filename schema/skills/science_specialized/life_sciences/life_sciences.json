@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Life Sciences",
+  "description": "Bioinformatics, genomics, and drug discovery.",
+  "extends": "science_specialized",
+  "name": "life_sciences",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Schema Inference",
+  "description": "Infer schema and types from data.",
+  "extends": "data_modeling_design",
+  "name": "schema_inference",
+  "attributes": {}
+}

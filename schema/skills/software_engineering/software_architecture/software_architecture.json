@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Software Architecture and Design",
+  "description": "Structuring systems and making design decisions.",
+  "extends": "software_engineering",
+  "name": "software_architecture",
+  "attributes": {}
+}

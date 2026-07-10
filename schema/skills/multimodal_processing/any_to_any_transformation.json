@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Any to Any Transformation",
+  "description": "Transform content across arbitrary modalities.",
+  "extends": "multimodal_processing",
+  "name": "any_to_any_transformation",
+  "attributes": {}
+}

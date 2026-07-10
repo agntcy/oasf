@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Dialogue Generation",
+  "description": "Generate conversational responses.",
+  "extends": "language_generation",
+  "name": "dialogue_generation",
+  "attributes": {}
+}

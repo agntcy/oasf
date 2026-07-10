@@ -1,0 +1,8 @@
+{
+  "uid": 13,
+  "caption": "Quantum Computing",
+  "description": "Quantum computing hardware, algorithms, and simulation.",
+  "extends": "technology",
+  "name": "quantum_computing",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Retrieval-Augmented Generation",
+  "description": "Building knowledge-grounded retrieval and generation systems.",
+  "extends": "ai_ml_engineering",
+  "name": "retrieval_augmented_generation",
+  "attributes": {}
+}

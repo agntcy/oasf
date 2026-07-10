@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Talking Avatar Generation",
+  "description": "Generate talking-head/avatar video with lip sync.",
+  "extends": "video_understanding_generation",
+  "name": "talking_avatar_generation",
+  "attributes": {}
+}

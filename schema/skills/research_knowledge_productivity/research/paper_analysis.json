@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Paper Analysis",
+  "description": "Analyze and summarize research papers.",
+  "extends": "research",
+  "name": "paper_analysis",
+  "attributes": {}
+}

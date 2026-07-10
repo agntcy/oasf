@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Commit Authoring",
+  "description": "Author conventional commits and stage changes.",
+  "extends": "version_control",
+  "name": "commit_authoring",
+  "attributes": {}
+}

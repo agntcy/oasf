@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Text to Speech",
+  "description": "Synthesize spoken audio from text.",
+  "extends": "speech_processing",
+  "name": "text_to_speech",
+  "attributes": {}
+}

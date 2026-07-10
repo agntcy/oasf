@@ -1,0 +1,9 @@
+{
+  "uid": 3,
+  "caption": "Audio & Speech Processing",
+  "description": "Analyzing, transcribing, and generating audio, speech, and music.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "audio_speech_processing",
+  "attributes": {}
+}

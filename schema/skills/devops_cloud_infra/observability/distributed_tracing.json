@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Distributed Tracing",
+  "description": "Trace requests across services.",
+  "extends": "observability",
+  "name": "distributed_tracing",
+  "attributes": {}
+}

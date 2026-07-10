@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Agile Facilitation",
+  "description": "Facilitate sprints and ceremonies.",
+  "extends": "project_task_management",
+  "name": "agile_facilitation",
+  "attributes": {}
+}

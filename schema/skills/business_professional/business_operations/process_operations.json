@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Process Operations",
+  "description": "Document SOPs, runbooks, and processes.",
+  "extends": "business_operations",
+  "name": "process_operations",
+  "attributes": {}
+}

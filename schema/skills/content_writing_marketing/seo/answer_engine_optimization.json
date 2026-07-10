@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Answer Engine Optimization",
+  "description": "Optimize content for AI search and citations.",
+  "extends": "seo",
+  "name": "answer_engine_optimization",
+  "attributes": {}
+}

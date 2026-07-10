@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Smart Contract Security",
+  "description": "Audit contracts for vulnerabilities.",
+  "extends": "blockchain_web3",
+  "name": "smart_contract_security",
+  "attributes": {}
+}

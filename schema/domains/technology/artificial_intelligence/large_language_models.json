@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Large Language Models",
+  "description": "The development, adaptation, and application of large language models.",
+  "extends": "artificial_intelligence",
+  "name": "large_language_models",
+  "attributes": {}
+}

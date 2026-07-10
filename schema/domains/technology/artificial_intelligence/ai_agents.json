@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "AI Agents",
+  "description": "Autonomous and agentic AI systems that plan, use tools, and act toward goals.",
+  "extends": "artificial_intelligence",
+  "name": "ai_agents",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Text Completion",
+  "description": "Continue or complete given text.",
+  "extends": "language_generation",
+  "name": "text_completion",
+  "attributes": {}
+}

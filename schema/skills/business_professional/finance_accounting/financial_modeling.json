@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Financial Modeling and Valuation",
+  "description": "Build DCF, LBO, and 3-statement models.",
+  "extends": "finance_accounting",
+  "name": "financial_modeling",
+  "attributes": {}
+}

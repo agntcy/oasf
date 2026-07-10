@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Retention Management",
+  "description": "Reduce churn and manage retention.",
+  "extends": "customer_support",
+  "name": "retention_management",
+  "attributes": {}
+}

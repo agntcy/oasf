@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Audio Classification",
+  "description": "Classify or tag audio content.",
+  "extends": "audio_analysis",
+  "name": "audio_classification",
+  "attributes": {}
+}

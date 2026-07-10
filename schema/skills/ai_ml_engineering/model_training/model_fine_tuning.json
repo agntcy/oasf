@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Model Fine-Tuning",
+  "description": "Fine-tune pretrained models to tasks/domains.",
+  "extends": "model_training",
+  "name": "model_fine_tuning",
+  "attributes": {}
+}

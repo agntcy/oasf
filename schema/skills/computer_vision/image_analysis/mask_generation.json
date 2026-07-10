@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Mask Generation",
+  "description": "Generate segmentation masks.",
+  "extends": "image_analysis",
+  "name": "mask_generation",
+  "attributes": {}
+}

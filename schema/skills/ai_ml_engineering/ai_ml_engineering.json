@@ -1,0 +1,9 @@
+{
+  "uid": 7,
+  "caption": "AI/ML Engineering",
+  "description": "Building, training, tuning, serving, evaluating, and operating ML and LLM/agentic systems.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "ai_ml_engineering",
+  "attributes": {}
+}

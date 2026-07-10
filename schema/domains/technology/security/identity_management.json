@@ -1,8 +1,0 @@
-{
-  "uid": 5,
-  "caption": "Identity Management",
-  "description": "Processes and technologies for managing digital identities and controlling access to resources.",
-  "extends": "security",
-  "name": "identity_management",
-  "attributes": {}
-}

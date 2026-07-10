@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Data Modeling and Design",
+  "description": "Schema, modeling, indexing, and migrations.",
+  "extends": "data_engineering_analytics",
+  "name": "data_modeling_design",
+  "attributes": {}
+}

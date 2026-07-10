@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Data Profiling",
+  "description": "Profile shape, nulls, and distributions.",
+  "extends": "data_quality",
+  "name": "data_profiling",
+  "attributes": {}
+}

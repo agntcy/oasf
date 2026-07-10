@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Procurement",
+  "description": "Manage sourcing and procurement.",
+  "extends": "business_operations",
+  "name": "procurement",
+  "attributes": {}
+}

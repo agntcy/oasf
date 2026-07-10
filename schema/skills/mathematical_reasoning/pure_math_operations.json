@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Pure Mathematical Operations",
+  "description": "Perform symbolic and numeric math operations.",
+  "extends": "mathematical_reasoning",
+  "name": "pure_math_operations",
+  "attributes": {}
+}

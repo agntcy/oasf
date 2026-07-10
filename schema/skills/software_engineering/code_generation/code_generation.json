@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Code Generation",
+  "description": "Writing new code from intent, specs, or templates.",
+  "extends": "software_engineering",
+  "name": "code_generation",
+  "attributes": {}
+}

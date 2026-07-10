@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Monitoring and Alerting",
+  "description": "Collect metrics, dashboards, and alerts.",
+  "extends": "observability",
+  "name": "monitoring_alerting",
+  "attributes": {}
+}

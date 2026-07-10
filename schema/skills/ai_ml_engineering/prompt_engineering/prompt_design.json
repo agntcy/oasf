@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Prompt Design",
+  "description": "Design system prompts, few-shot, and CoT prompts.",
+  "extends": "prompt_engineering",
+  "name": "prompt_design",
+  "attributes": {}
+}

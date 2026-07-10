@@ -1,0 +1,8 @@
+{
+  "uid": 12,
+  "caption": "AI Safety and Guardrails",
+  "description": "Runtime safety, moderation, and adversarial testing.",
+  "extends": "ai_ml_engineering",
+  "name": "ai_safety",
+  "attributes": {}
+}

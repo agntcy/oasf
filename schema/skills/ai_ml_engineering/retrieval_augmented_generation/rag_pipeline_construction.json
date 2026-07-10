@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "RAG Pipeline Construction",
+  "description": "Build end-to-end retrieval-augmented pipelines.",
+  "extends": "retrieval_augmented_generation",
+  "name": "rag_pipeline_construction",
+  "attributes": {}
+}

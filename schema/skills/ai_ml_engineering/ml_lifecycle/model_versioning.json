@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Model Versioning",
+  "description": "Version and register models.",
+  "extends": "ml_lifecycle",
+  "name": "model_versioning",
+  "attributes": {}
+}

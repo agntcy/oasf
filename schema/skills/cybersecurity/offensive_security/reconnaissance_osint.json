@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Reconnaissance and OSINT",
+  "description": "Conduct recon and open-source intelligence.",
+  "extends": "offensive_security",
+  "name": "reconnaissance_osint",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Quantum Computing",
+  "description": "Build and run quantum circuits and simulations.",
+  "extends": "scientific_computing",
+  "name": "quantum_computing",
+  "attributes": {}
+}

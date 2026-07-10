@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Embeddings and Vector Search",
+  "description": "Generating embeddings and similarity search.",
+  "extends": "ai_ml_engineering",
+  "name": "embeddings_vector_search",
+  "attributes": {}
+}

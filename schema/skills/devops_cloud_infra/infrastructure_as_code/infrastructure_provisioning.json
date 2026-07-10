@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Infrastructure Provisioning",
+  "description": "Provision and manage live cloud resources.",
+  "extends": "infrastructure_as_code",
+  "name": "infrastructure_provisioning",
+  "attributes": {}
+}

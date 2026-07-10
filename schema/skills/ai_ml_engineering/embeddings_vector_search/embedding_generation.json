@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Embedding Generation",
+  "description": "Produce embeddings from text or other data.",
+  "extends": "embeddings_vector_search",
+  "name": "embedding_generation",
+  "attributes": {}
+}

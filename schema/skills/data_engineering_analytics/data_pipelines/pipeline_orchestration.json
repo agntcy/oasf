@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Pipeline Orchestration",
+  "description": "Author and schedule data workflows/DAGs.",
+  "extends": "data_pipelines",
+  "name": "pipeline_orchestration",
+  "attributes": {}
+}

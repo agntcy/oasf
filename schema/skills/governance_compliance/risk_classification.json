@@ -1,7 +1,7 @@
 {
-  "uid": 4,
+  "uid": 3,
   "caption": "Risk Classification",
-  "description": "Categorizing potential operational or data-related risks by impact and likelihood for prioritization.",
+  "description": "Classify and score risks.",
   "extends": "governance_compliance",
   "name": "risk_classification",
   "attributes": {}

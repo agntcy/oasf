@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Hypothesis Generation",
+  "description": "Generate hypotheses to test.",
+  "extends": "reasoning_planning",
+  "name": "hypothesis_generation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "AI Agent Development",
+  "description": "Building, harnessing, and operating LLM agents.",
+  "extends": "ai_ml_engineering",
+  "name": "agent_development",
+  "attributes": {}
+}

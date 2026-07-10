@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Negotiation and Resolution",
+  "description": "Resolve conflicts between agents.",
+  "extends": "agent_orchestration",
+  "name": "negotiation_resolution",
+  "attributes": {}
+}

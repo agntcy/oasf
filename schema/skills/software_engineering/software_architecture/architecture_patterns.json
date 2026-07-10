@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Architecture Patterns",
+  "description": "Apply architectural and design patterns.",
+  "extends": "software_architecture",
+  "name": "architecture_patterns",
+  "attributes": {}
+}

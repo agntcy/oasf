@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Security Hardening",
+  "description": "Audit and harden hosts and configurations.",
+  "extends": "security_operations",
+  "name": "security_hardening",
+  "attributes": {}
+}

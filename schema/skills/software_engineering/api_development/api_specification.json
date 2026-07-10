@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "API Specification",
+  "description": "Author OpenAPI/protobuf specs and generate code.",
+  "extends": "api_development",
+  "name": "api_specification",
+  "attributes": {}
+}

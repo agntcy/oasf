@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Semantic Similarity",
+  "description": "Measure similarity between texts or items.",
+  "extends": "embeddings_vector_search",
+  "name": "semantic_similarity",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Legal Compliance",
+  "description": "Assess regulatory and privacy compliance.",
+  "extends": "legal",
+  "name": "legal_compliance",
+  "attributes": {}
+}

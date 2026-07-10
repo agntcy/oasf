@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Static Analysis and Linting",
+  "description": "Detect issues via static analysis and linting.",
+  "extends": "code_quality",
+  "name": "static_analysis",
+  "attributes": {}
+}

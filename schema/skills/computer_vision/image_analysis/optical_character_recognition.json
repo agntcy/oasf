@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Optical Character Recognition",
+  "description": "Extract text from images and scans.",
+  "extends": "image_analysis",
+  "name": "optical_character_recognition",
+  "attributes": {}
+}

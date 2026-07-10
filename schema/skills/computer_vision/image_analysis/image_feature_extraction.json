@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Image Feature Extraction",
+  "description": "Extract feature representations from images.",
+  "extends": "image_analysis",
+  "name": "image_feature_extraction",
+  "attributes": {}
+}

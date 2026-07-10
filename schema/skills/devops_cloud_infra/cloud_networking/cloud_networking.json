@@ -1,0 +1,8 @@
+{
+  "uid": 10,
+  "caption": "Cloud Networking",
+  "description": "Cloud and edge networking, DNS, proxy, and CDN.",
+  "extends": "devops_cloud_infra",
+  "name": "cloud_networking",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "System Design",
+  "description": "Design systems, services, and data flows.",
+  "extends": "software_architecture",
+  "name": "system_design",
+  "attributes": {}
+}

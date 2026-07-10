@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Capital Markets and Trading",
+  "description": "Trading, brokerage, and capital-market operations.",
+  "extends": "finance_and_business",
+  "name": "capital_markets",
+  "attributes": {}
+}

@@ -1,0 +1,9 @@
+{
+  "uid": 10,
+  "caption": "Cybersecurity",
+  "description": "Securing software, systems, identities, and operations against threats.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "cybersecurity",
+  "attributes": {}
+}

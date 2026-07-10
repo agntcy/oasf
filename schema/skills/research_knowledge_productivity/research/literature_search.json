@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Literature Search",
+  "description": "Search scholarly literature and databases.",
+  "extends": "research",
+  "name": "literature_search",
+  "attributes": {}
+}

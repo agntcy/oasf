@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Product Strategy",
+  "description": "Define vision, OKRs, and discovery.",
+  "extends": "product_management",
+  "name": "product_strategy",
+  "attributes": {}
+}

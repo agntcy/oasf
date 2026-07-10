@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Document Understanding",
+  "description": "Understand documents combining text, layout, and images.",
+  "extends": "multimodal_processing",
+  "name": "document_understanding",
+  "attributes": {}
+}

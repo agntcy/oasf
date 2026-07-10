@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Error Handling Implementation",
+  "description": "Implement resilient error handling and recovery.",
+  "extends": "code_debugging",
+  "name": "error_handling",
+  "attributes": {}
+}

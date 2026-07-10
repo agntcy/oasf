@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Voice Cloning",
+  "description": "Synthesize speech in a cloned voice.",
+  "extends": "speech_processing",
+  "name": "voice_cloning",
+  "attributes": {}
+}

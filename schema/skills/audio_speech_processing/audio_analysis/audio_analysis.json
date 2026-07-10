@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Audio Analysis",
+  "description": "Classifying and analyzing audio signals.",
+  "extends": "audio_speech_processing",
+  "name": "audio_analysis",
+  "attributes": {}
+}

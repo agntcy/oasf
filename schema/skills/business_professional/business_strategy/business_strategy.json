@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Business Strategy",
+  "description": "Executive advisory, market analysis, and risk.",
+  "extends": "business_professional",
+  "name": "business_strategy",
+  "attributes": {}
+}

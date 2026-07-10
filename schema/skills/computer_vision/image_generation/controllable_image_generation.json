@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Controllable Image Generation",
+  "description": "Pose/edge/depth-conditioned image generation.",
+  "extends": "image_generation",
+  "name": "controllable_image_generation",
+  "attributes": {}
+}

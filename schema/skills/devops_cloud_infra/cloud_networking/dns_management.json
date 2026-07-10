@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "DNS Management",
+  "description": "Manage DNS records and resolution.",
+  "extends": "cloud_networking",
+  "name": "dns_management",
+  "attributes": {}
+}

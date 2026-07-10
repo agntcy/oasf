@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Supervised Model Training",
+  "description": "Train classifiers and regressors.",
+  "extends": "classical_ml",
+  "name": "supervised_model_training",
+  "attributes": {}
+}

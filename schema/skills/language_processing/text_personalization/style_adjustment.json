@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Tone and Style Adjustment",
+  "description": "Adjust tone and style of text.",
+  "extends": "text_personalization",
+  "name": "style_adjustment",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Sales Enablement",
+  "description": "Build battlecards and sales collateral.",
+  "extends": "sales",
+  "name": "sales_enablement",
+  "attributes": {}
+}

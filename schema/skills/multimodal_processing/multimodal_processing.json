@@ -1,0 +1,9 @@
+{
+  "uid": 5,
+  "caption": "Multimodal Processing",
+  "description": "Working across modalities, including captioning and any-to-any transformation.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "multimodal_processing",
+  "attributes": {}
+}

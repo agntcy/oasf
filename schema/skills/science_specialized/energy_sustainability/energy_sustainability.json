@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Energy and Sustainability",
+  "description": "Energy operations, procurement, and sustainability.",
+  "extends": "science_specialized",
+  "name": "energy_sustainability",
+  "attributes": {}
+}

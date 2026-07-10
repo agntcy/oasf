@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "NoSQL Database Operations",
+  "description": "Model and query document/key-value/wide-column stores.",
+  "extends": "databases",
+  "name": "nosql_database_operations",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Git Workflow",
+  "description": "Branching, rebasing, and conflict resolution.",
+  "extends": "version_control",
+  "name": "git_workflow",
+  "attributes": {}
+}

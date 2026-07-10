@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "GitOps Repository Audit",
+  "description": "Validate GitOps repositories.",
+  "extends": "gitops",
+  "name": "gitops_repo_audit",
+  "attributes": {}
+}

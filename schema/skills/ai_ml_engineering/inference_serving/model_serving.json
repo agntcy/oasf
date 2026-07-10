@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Model Serving",
+  "description": "Serve models for inference at scale.",
+  "extends": "inference_serving",
+  "name": "model_serving",
+  "attributes": {}
+}

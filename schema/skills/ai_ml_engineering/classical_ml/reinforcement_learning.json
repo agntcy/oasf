@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Reinforcement Learning",
+  "description": "Train RL agents and policies.",
+  "extends": "classical_ml",
+  "name": "reinforcement_learning",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Human Resources",
+  "description": "Recruiting and employee lifecycle.",
+  "extends": "business_professional",
+  "name": "human_resources",
+  "attributes": {}
+}

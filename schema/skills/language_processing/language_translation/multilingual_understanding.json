@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Multilingual Understanding",
+  "description": "Understand text across multiple languages.",
+  "extends": "language_translation",
+  "name": "multilingual_understanding",
+  "attributes": {}
+}

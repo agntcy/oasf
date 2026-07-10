@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Specialized Testing",
+  "description": "Mutation, property-based, contract, and fuzz testing.",
+  "extends": "software_testing",
+  "name": "specialized_testing",
+  "attributes": {}
+}

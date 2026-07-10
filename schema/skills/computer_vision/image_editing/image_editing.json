@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Image Editing",
+  "description": "Modifying and enhancing existing images.",
+  "extends": "computer_vision",
+  "name": "image_editing",
+  "attributes": {}
+}

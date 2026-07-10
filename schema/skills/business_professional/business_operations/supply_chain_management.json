@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Supply Chain Management",
+  "description": "Plan inventory, demand, and logistics.",
+  "extends": "business_operations",
+  "name": "supply_chain_management",
+  "attributes": {}
+}

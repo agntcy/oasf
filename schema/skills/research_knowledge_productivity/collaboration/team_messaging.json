@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Team Messaging",
+  "description": "Send and operate team chat messages/bots.",
+  "extends": "collaboration",
+  "name": "team_messaging",
+  "attributes": {}
+}

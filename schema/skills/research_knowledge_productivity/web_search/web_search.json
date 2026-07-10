@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Web Search",
+  "description": "Applied web search and information retrieval.",
+  "extends": "research_knowledge_productivity",
+  "name": "web_search",
+  "attributes": {}
+}

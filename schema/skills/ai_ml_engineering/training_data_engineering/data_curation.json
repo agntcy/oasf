@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Training Data Curation",
+  "description": "Filter, dedupe, and clean training corpora.",
+  "extends": "training_data_engineering",
+  "name": "data_curation",
+  "attributes": {}
+}

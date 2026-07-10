@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Technical Writing",
+  "description": "Write user-facing technical documentation and guides.",
+  "extends": "content_writing",
+  "name": "technical_writing",
+  "attributes": {}
+}

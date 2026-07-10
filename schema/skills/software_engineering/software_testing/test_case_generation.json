@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Test Case Generation",
+  "description": "Generate test cases, data, and fixtures.",
+  "extends": "software_testing",
+  "name": "test_case_generation",
+  "attributes": {}
+}

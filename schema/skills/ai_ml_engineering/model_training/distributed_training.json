@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Distributed Training",
+  "description": "Scale training across GPUs/nodes.",
+  "extends": "model_training",
+  "name": "distributed_training",
+  "attributes": {}
+}

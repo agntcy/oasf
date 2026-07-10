@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "LLM-as-Judge Evaluation",
+  "description": "Score outputs with rubric/judge models.",
+  "extends": "model_evaluation",
+  "name": "llm_judge_evaluation",
+  "attributes": {}
+}

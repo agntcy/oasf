@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Preference Alignment Training",
+  "description": "Align models via RLHF/DPO and reward modeling.",
+  "extends": "model_training",
+  "name": "preference_alignment",
+  "attributes": {}
+}

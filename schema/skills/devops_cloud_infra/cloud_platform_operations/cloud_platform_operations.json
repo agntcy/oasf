@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Cloud Platform Operations",
+  "description": "Architecting and operating managed cloud services.",
+  "extends": "devops_cloud_infra",
+  "name": "cloud_platform_operations",
+  "attributes": {}
+}

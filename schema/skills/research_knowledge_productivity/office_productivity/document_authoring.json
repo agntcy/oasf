@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Document Authoring",
+  "description": "Create and edit word-processing documents.",
+  "extends": "office_productivity",
+  "name": "document_authoring",
+  "attributes": {}
+}

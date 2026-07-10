@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Agent Evaluation",
+  "description": "Test agent behavior, capability, and reliability.",
+  "extends": "model_evaluation",
+  "name": "agent_evaluation",
+  "attributes": {}
+}

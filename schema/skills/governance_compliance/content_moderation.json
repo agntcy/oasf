@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Content Moderation",
+  "description": "Moderate content for safety and policy.",
+  "extends": "governance_compliance",
+  "name": "content_moderation",
+  "attributes": {}
+}

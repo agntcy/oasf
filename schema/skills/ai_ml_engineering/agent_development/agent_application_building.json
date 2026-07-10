@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Agent Application Building",
+  "description": "Build agents and agentic applications.",
+  "extends": "agent_development",
+  "name": "agent_application_building",
+  "attributes": {}
+}

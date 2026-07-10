@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Landing Page and Sales Copy",
+  "description": "Write high-converting landing and sales copy.",
+  "extends": "copywriting",
+  "name": "sales_copywriting",
+  "attributes": {}
+}

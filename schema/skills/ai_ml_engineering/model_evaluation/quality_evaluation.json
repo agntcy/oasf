@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Quality Evaluation",
+  "description": "Assess output quality against criteria.",
+  "extends": "model_evaluation",
+  "name": "quality_evaluation",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Semantic Understanding",
+  "description": "Interpret meaning and relationships in text.",
+  "extends": "language_understanding",
+  "name": "semantic_understanding",
+  "attributes": {}
+}

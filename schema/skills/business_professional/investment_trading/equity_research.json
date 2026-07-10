@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Equity Research",
+  "description": "Produce research and earnings analysis.",
+  "extends": "investment_trading",
+  "name": "equity_research",
+  "attributes": {}
+}

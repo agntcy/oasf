@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Task Management",
+  "description": "Track to-dos and task lists.",
+  "extends": "project_task_management",
+  "name": "task_management",
+  "attributes": {}
+}

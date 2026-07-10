@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Academic Writing",
+  "description": "Write papers, manuscripts, and grants.",
+  "extends": "research",
+  "name": "academic_writing",
+  "attributes": {}
+}

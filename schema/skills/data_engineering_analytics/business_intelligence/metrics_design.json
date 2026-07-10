@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "KPI and Metrics Design",
+  "description": "Define metrics and metric layers.",
+  "extends": "business_intelligence",
+  "name": "metrics_design",
+  "attributes": {}
+}

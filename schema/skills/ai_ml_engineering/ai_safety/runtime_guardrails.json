@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Runtime Guardrails",
+  "description": "Validate and constrain model inputs/outputs.",
+  "extends": "ai_safety",
+  "name": "runtime_guardrails",
+  "attributes": {}
+}

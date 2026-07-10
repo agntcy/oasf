@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Inference Optimization",
+  "description": "Optimize latency, throughput, and decoding.",
+  "extends": "inference_serving",
+  "name": "inference_optimization",
+  "attributes": {}
+}

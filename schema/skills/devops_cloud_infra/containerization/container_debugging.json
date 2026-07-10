@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Container Debugging",
+  "description": "Diagnose container build/runtime failures.",
+  "extends": "containerization",
+  "name": "container_debugging",
+  "attributes": {}
+}

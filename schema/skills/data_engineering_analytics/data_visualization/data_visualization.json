@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Data Visualization",
+  "description": "Producing charts and visual encodings of data.",
+  "extends": "data_engineering_analytics",
+  "name": "data_visualization",
+  "attributes": {}
+}

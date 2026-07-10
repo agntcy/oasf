@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Web Accessibility",
+  "description": "Implement and audit WCAG/ARIA accessibility.",
+  "extends": "web_development",
+  "name": "web_accessibility",
+  "attributes": {}
+}

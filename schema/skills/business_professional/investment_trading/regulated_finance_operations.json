@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Regulated Finance Operations",
+  "description": "Run KYC/AML and compliance operations.",
+  "extends": "investment_trading",
+  "name": "regulated_finance_operations",
+  "attributes": {}
+}

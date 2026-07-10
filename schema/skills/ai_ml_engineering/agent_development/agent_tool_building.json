@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Agent Tool Building",
+  "description": "Design and build tools and tool servers that expose capabilities to agents.",
+  "extends": "agent_development",
+  "name": "agent_tool_building",
+  "attributes": {}
+}

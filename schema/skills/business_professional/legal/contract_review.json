@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Contract Review",
+  "description": "Review contracts for risk and completeness.",
+  "extends": "legal",
+  "name": "contract_review",
+  "attributes": {}
+}

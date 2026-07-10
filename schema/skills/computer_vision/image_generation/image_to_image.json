@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Image to Image",
+  "description": "Generate an image conditioned on an input image.",
+  "extends": "image_generation",
+  "name": "image_to_image",
+  "attributes": {}
+}

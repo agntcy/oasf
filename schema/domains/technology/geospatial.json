@@ -1,0 +1,8 @@
+{
+  "uid": 14,
+  "caption": "Geospatial and GIS",
+  "description": "Geographic information systems and spatial data analysis.",
+  "extends": "technology",
+  "name": "geospatial",
+  "attributes": {}
+}

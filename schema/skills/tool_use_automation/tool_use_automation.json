@@ -1,0 +1,9 @@
+{
+  "uid": 17,
+  "caption": "Tool Use and Automation",
+  "description": "Using external tools, APIs, and automating workflows.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "tool_use_automation",
+  "attributes": {}
+}

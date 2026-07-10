@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Data Modeling",
+  "description": "Design conceptual and logical data models.",
+  "extends": "data_modeling_design",
+  "name": "data_modeling",
+  "attributes": {}
+}

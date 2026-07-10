@@ -1,8 +1,0 @@
-{
-  "uid": 4,
-  "caption": "Data Transformation Pipeline",
-  "description": "Designing or explaining multi-step sequences that extract, transform, and load datasets.",
-  "extends": "data_engineering",
-  "name": "data_transformation_pipeline",
-  "attributes": {}
-}

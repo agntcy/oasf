@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Observability",
+  "description": "Instrumenting and analyzing system telemetry.",
+  "extends": "devops_cloud_infra",
+  "name": "observability",
+  "attributes": {}
+}

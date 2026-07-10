@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Video Classification",
+  "description": "Classify or tag video content.",
+  "extends": "video_understanding_generation",
+  "name": "video_classification",
+  "attributes": {}
+}

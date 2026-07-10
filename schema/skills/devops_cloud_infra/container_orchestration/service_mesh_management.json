@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Service Mesh Management",
+  "description": "Manage service mesh traffic and policy.",
+  "extends": "container_orchestration",
+  "name": "service_mesh_management",
+  "attributes": {}
+}

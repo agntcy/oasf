@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Backend Development",
+  "description": "Build server-side application logic and services.",
+  "extends": "web_development",
+  "name": "backend_development",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Copywriting",
+  "description": "Persuasive, conversion-focused commercial copy.",
+  "extends": "content_writing_marketing",
+  "name": "copywriting",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Web Search Research",
+  "description": "Search the web for current information.",
+  "extends": "web_search",
+  "name": "web_search_research",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "GitOps",
+  "description": "Git-driven declarative infrastructure reconciliation.",
+  "extends": "devops_cloud_infra",
+  "name": "gitops",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Computer-Use Automation",
+  "description": "Build agents that control browsers/computers.",
+  "extends": "agent_development",
+  "name": "computer_use_automation",
+  "attributes": {}
+}

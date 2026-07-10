@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Depth Estimation",
+  "description": "Estimate depth from images.",
+  "extends": "image_analysis",
+  "name": "depth_estimation",
+  "attributes": {}
+}

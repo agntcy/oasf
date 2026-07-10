@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Static Application Security Testing",
+  "description": "Find code vulnerabilities via static analysis.",
+  "extends": "application_security",
+  "name": "sast_scanning",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 8,
+  "caption": "Business Intelligence",
+  "description": "BI tooling, KPIs, and dashboards.",
+  "extends": "data_engineering_analytics",
+  "name": "business_intelligence",
+  "attributes": {}
+}

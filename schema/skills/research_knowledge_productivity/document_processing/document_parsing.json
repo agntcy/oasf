@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Document Parsing",
+  "description": "Parse text, tables, and layout from documents.",
+  "extends": "document_processing",
+  "name": "document_parsing",
+  "attributes": {}
+}

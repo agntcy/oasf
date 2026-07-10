@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Energy Procurement",
+  "description": "Procure energy and optimize tariffs/PPAs.",
+  "extends": "energy_sustainability",
+  "name": "energy_procurement",
+  "attributes": {}
+}

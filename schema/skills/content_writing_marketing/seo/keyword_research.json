@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Keyword Research",
+  "description": "Research keywords and search intent.",
+  "extends": "seo",
+  "name": "keyword_research",
+  "attributes": {}
+}

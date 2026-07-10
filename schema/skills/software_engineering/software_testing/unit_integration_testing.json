@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Unit and Integration Testing",
+  "description": "Write unit and integration tests.",
+  "extends": "software_testing",
+  "name": "unit_integration_testing",
+  "attributes": {}
+}

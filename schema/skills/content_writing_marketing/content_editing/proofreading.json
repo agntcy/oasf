@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Proofreading",
+  "description": "Correct grammar, spelling, and mechanics.",
+  "extends": "content_editing",
+  "name": "proofreading",
+  "attributes": {}
+}

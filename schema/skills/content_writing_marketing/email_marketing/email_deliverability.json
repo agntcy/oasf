@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Email Deliverability",
+  "description": "Improve deliverability and compliance.",
+  "extends": "email_marketing",
+  "name": "email_deliverability",
+  "attributes": {}
+}

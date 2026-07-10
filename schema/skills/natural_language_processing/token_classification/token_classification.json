@@ -1,8 +1,0 @@
-{
-  "uid": 11,
-  "caption": "Token Classification",
-  "description": "Capabilities for classifying individual tokens or words within text.",
-  "extends": "natural_language_processing",
-  "name": "token_classification",
-  "attributes": {}
-}

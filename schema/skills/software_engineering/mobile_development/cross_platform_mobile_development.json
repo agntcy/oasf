@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Cross-Platform Mobile Development",
+  "description": "Build apps with Flutter, React Native, or Capacitor.",
+  "extends": "mobile_development",
+  "name": "cross_platform_mobile_development",
+  "attributes": {}
+}

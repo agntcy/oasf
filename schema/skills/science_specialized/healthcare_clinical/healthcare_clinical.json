@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Healthcare and Clinical",
+  "description": "Clinical documentation, decision support, and imaging.",
+  "extends": "science_specialized",
+  "name": "healthcare_clinical",
+  "attributes": {}
+}

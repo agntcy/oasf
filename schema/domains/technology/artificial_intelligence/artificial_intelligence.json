@@ -1,0 +1,8 @@
+{
+  "uid": 11,
+  "caption": "Artificial Intelligence",
+  "description": "Artificial intelligence and machine learning technologies and applications.",
+  "extends": "technology",
+  "name": "artificial_intelligence",
+  "attributes": {}
+}

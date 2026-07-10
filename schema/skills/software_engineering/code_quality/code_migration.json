@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Code Migration and Modernization",
+  "description": "Port and upgrade code across languages/frameworks/versions.",
+  "extends": "code_quality",
+  "name": "code_migration",
+  "attributes": {}
+}

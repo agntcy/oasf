@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "CRM Management",
+  "description": "Manage CRM records and pipelines.",
+  "extends": "sales",
+  "name": "crm_management",
+  "attributes": {}
+}

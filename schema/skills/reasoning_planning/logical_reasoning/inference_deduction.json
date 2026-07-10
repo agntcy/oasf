@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Inference and Deduction",
+  "description": "Derive conclusions from premises.",
+  "extends": "logical_reasoning",
+  "name": "inference_deduction",
+  "attributes": {}
+}

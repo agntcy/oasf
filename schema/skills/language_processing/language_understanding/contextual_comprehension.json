@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Contextual Comprehension",
+  "description": "Understand text in its broader context.",
+  "extends": "language_understanding",
+  "name": "contextual_comprehension",
+  "attributes": {}
+}

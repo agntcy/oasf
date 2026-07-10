@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "IaC Authoring",
+  "description": "Write declarative infrastructure definitions and reusable modules.",
+  "extends": "infrastructure_as_code",
+  "name": "iac_authoring",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Image Segmentation",
+  "description": "Partition images into regions/objects.",
+  "extends": "image_analysis",
+  "name": "image_segmentation",
+  "attributes": {}
+}

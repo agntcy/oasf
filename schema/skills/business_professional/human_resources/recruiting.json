@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Recruiting and Hiring",
+  "description": "Build job posts, interviews, and offers.",
+  "extends": "human_resources",
+  "name": "recruiting",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Container Orchestration",
+  "description": "Scheduling and managing containerized workloads.",
+  "extends": "devops_cloud_infra",
+  "name": "container_orchestration",
+  "attributes": {}
+}

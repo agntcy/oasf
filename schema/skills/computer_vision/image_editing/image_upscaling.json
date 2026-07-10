@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Image Upscaling",
+  "description": "Increase image resolution / super-resolution.",
+  "extends": "image_editing",
+  "name": "image_upscaling",
+  "attributes": {}
+}

@@ -1,0 +1,9 @@
+{
+  "uid": 8,
+  "caption": "Data Engineering and Analytics",
+  "description": "Building, moving, storing, querying, validating, and analyzing data.",
+  "category": true,
+  "extends": "base_skill",
+  "name": "data_engineering_analytics",
+  "attributes": {}
+}

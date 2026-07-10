@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Knowledge Base Management",
+  "description": "Maintain and query knowledge bases.",
+  "extends": "knowledge_management",
+  "name": "knowledge_base_management",
+  "attributes": {}
+}

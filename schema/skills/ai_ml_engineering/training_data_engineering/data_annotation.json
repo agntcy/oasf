@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Data Annotation and Labeling",
+  "description": "Label and annotate datasets.",
+  "extends": "training_data_engineering",
+  "name": "data_annotation",
+  "attributes": {}
+}

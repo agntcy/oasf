@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Text Style Transfer",
+  "description": "Rewrite text in a different style.",
+  "extends": "language_generation",
+  "name": "text_style_transfer",
+  "attributes": {}
+}

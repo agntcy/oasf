@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Hybrid Search",
+  "description": "Combine vector and keyword retrieval.",
+  "extends": "embeddings_vector_search",
+  "name": "hybrid_search",
+  "attributes": {}
+}

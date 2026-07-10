@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Analytical and Logical Reasoning",
+  "description": "Reason analytically over structured problems.",
+  "extends": "logical_reasoning",
+  "name": "analytical_reasoning",
+  "attributes": {}
+}

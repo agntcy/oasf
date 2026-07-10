@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Native Mobile Development",
+  "description": "Build native iOS and Android apps.",
+  "extends": "mobile_development",
+  "name": "native_mobile_development",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Face Swapping",
+  "description": "Swap or replace faces in images or video.",
+  "extends": "image_editing",
+  "name": "face_swapping",
+  "attributes": {}
+}

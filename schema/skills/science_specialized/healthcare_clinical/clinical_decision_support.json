@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Clinical Decision Support",
+  "description": "Provide clinical decision logic and checks.",
+  "extends": "healthcare_clinical",
+  "name": "clinical_decision_support",
+  "attributes": {}
+}

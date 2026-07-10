@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "LLM Red-Teaming",
+  "description": "Probe models for safety vulnerabilities.",
+  "extends": "ai_safety",
+  "name": "llm_red_teaming",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Relational Database Operations",
+  "description": "Operate and query relational databases.",
+  "extends": "databases",
+  "name": "relational_database_operations",
+  "attributes": {}
+}

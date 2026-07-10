@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Finance and Accounting",
+  "description": "Bookkeeping, reporting, modeling, and corporate finance.",
+  "extends": "business_professional",
+  "name": "finance_accounting",
+  "attributes": {}
+}

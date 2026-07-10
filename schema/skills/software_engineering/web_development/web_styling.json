@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Styling and Responsive Layout",
+  "description": "Implement CSS, theming, and responsive layouts.",
+  "extends": "web_development",
+  "name": "web_styling",
+  "attributes": {}
+}

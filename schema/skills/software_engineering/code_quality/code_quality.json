@@ -1,0 +1,8 @@
+{
+  "uid": 7,
+  "caption": "Code Quality and Maintenance",
+  "description": "Improving and assessing existing code.",
+  "extends": "software_engineering",
+  "name": "code_quality",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Model Training and Fine-Tuning",
+  "description": "Pretraining and adapting deep models and LLMs.",
+  "extends": "ai_ml_engineering",
+  "name": "model_training",
+  "attributes": {}
+}

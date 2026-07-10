@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Audio Generation",
+  "description": "Generating and transforming non-speech audio.",
+  "extends": "audio_speech_processing",
+  "name": "audio_generation",
+  "attributes": {}
+}

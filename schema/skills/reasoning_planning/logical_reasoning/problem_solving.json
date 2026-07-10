@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Problem Solving",
+  "description": "Solve novel and complex problems.",
+  "extends": "logical_reasoning",
+  "name": "problem_solving",
+  "attributes": {}
+}

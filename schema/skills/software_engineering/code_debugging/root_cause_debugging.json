@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Root-Cause Debugging",
+  "description": "Reproduce, isolate, and diagnose bugs.",
+  "extends": "code_debugging",
+  "name": "root_cause_debugging",
+  "attributes": {}
+}

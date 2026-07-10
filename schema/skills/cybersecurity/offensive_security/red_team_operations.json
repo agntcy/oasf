@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Red Team Operations",
+  "description": "Run adversary emulation and evasion.",
+  "extends": "offensive_security",
+  "name": "red_team_operations",
+  "attributes": {}
+}

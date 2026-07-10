@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Tool Use Planning",
+  "description": "Plan which tools to use and how.",
+  "extends": "tool_use_automation",
+  "name": "tool_use_planning",
+  "attributes": {}
+}

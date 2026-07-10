@@ -1,0 +1,8 @@
+{
+  "uid": 14,
+  "caption": "ML Experimentation and Lifecycle",
+  "description": "Tracking experiments and managing model lifecycle.",
+  "extends": "ai_ml_engineering",
+  "name": "ml_lifecycle",
+  "attributes": {}
+}

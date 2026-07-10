@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Task Decomposition",
+  "description": "Break goals into sub-tasks for agents.",
+  "extends": "agent_orchestration",
+  "name": "task_decomposition",
+  "attributes": {}
+}

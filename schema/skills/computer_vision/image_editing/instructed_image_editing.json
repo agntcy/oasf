@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Instructed Image Editing",
+  "description": "Edit images from natural-language instructions.",
+  "extends": "image_editing",
+  "name": "instructed_image_editing",
+  "attributes": {}
+}

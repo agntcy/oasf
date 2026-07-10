@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Data Lake Querying",
+  "description": "Query data lakes and federated catalogs.",
+  "extends": "data_warehousing",
+  "name": "data_lake_querying",
+  "attributes": {}
+}

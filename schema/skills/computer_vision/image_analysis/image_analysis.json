@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Image Analysis",
+  "description": "Extracting information and structure from images.",
+  "extends": "computer_vision",
+  "name": "image_analysis",
+  "attributes": {}
+}

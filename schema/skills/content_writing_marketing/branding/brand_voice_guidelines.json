@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Brand Voice Guidelines",
+  "description": "Build and apply brand-voice guidelines.",
+  "extends": "branding",
+  "name": "brand_voice_guidelines",
+  "attributes": {}
+}

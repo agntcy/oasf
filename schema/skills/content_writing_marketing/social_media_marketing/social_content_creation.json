@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Social Content Creation",
+  "description": "Draft platform-native social posts.",
+  "extends": "social_media_marketing",
+  "name": "social_content_creation",
+  "attributes": {}
+}

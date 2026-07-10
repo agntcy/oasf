@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Entity Recognition",
+  "description": "Identify entities referenced in text.",
+  "extends": "language_understanding",
+  "name": "entity_recognition",
+  "attributes": {}
+}

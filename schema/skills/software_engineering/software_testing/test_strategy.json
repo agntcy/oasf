@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Test Strategy and TDD",
+  "description": "Design test strategies and test-driven workflows.",
+  "extends": "software_testing",
+  "name": "test_strategy",
+  "attributes": {}
+}

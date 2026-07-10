@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Email Campaign Creation",
+  "description": "Create campaigns and nurture sequences.",
+  "extends": "email_marketing",
+  "name": "email_campaign_creation",
+  "attributes": {}
+}

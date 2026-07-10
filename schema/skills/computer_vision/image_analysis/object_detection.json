@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Object Detection",
+  "description": "Locate and classify objects in images.",
+  "extends": "image_analysis",
+  "name": "object_detection",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Strategic Advisory",
+  "description": "Provide strategy and executive decision support.",
+  "extends": "business_strategy",
+  "name": "strategic_advisory",
+  "attributes": {}
+}

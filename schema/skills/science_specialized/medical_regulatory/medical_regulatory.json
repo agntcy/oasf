@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Medical Device Regulatory and Quality",
+  "description": "Regulatory submissions and quality management.",
+  "extends": "science_specialized",
+  "name": "medical_regulatory",
+  "attributes": {}
+}

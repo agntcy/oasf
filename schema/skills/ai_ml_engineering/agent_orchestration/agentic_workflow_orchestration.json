@@ -1,0 +1,8 @@
+{
+  "uid": 6,
+  "caption": "Agentic Workflow Orchestration",
+  "description": "Orchestrate multi-step agentic workflows.",
+  "extends": "agent_orchestration",
+  "name": "agentic_workflow_orchestration",
+  "attributes": {}
+}

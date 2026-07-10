@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Spreadsheet Authoring",
+  "description": "Create and edit spreadsheets.",
+  "extends": "office_productivity",
+  "name": "spreadsheet_authoring",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Agent Memory",
+  "description": "Design persistent and searchable agent memory.",
+  "extends": "agent_development",
+  "name": "agent_memory",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Competitive Analysis",
+  "description": "Analyze competitors and market positioning.",
+  "extends": "business_strategy",
+  "name": "competitive_analysis",
+  "attributes": {}
+}

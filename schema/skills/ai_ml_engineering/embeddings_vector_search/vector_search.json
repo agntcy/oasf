@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Vector Search",
+  "description": "Store and query embeddings by similarity.",
+  "extends": "embeddings_vector_search",
+  "name": "vector_search",
+  "attributes": {}
+}

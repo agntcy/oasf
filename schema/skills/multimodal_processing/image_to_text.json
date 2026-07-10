@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Image to Text",
+  "description": "Generate text/captions from images.",
+  "extends": "multimodal_processing",
+  "name": "image_to_text",
+  "attributes": {}
+}

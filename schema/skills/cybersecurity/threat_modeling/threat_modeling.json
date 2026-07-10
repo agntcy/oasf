@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Threat Modeling",
+  "description": "Identifying threats, attack paths, and controls.",
+  "extends": "cybersecurity",
+  "name": "threat_modeling",
+  "attributes": {}
+}

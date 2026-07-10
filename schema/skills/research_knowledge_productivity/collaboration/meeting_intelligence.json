@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Meeting Intelligence",
+  "description": "Transcribe and summarize meetings.",
+  "extends": "collaboration",
+  "name": "meeting_intelligence",
+  "attributes": {}
+}

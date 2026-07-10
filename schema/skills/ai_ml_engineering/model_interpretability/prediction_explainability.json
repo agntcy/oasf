@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Prediction Explainability",
+  "description": "Explain predictions via attribution.",
+  "extends": "model_interpretability",
+  "name": "prediction_explainability",
+  "attributes": {}
+}

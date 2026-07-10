@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Sales Outreach",
+  "description": "Write outreach and prospecting sequences.",
+  "extends": "sales",
+  "name": "sales_outreach",
+  "attributes": {}
+}

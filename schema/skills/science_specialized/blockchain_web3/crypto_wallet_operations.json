@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Crypto Wallet Operations",
+  "description": "Operate wallets, balances, and transfers.",
+  "extends": "blockchain_web3",
+  "name": "crypto_wallet_operations",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Vector Database Operations",
+  "description": "Operate vector stores for embeddings.",
+  "extends": "databases",
+  "name": "vector_database_operations",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Model Optimization",
+  "description": "Compressing and accelerating models.",
+  "extends": "ai_ml_engineering",
+  "name": "model_optimization",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Code Completion",
+  "description": "Inline and contextual code completion.",
+  "extends": "code_generation",
+  "name": "code_completion",
+  "attributes": {}
+}

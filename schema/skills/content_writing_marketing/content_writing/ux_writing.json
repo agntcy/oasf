@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "UX Writing and Microcopy",
+  "description": "Write interface copy and microcopy.",
+  "extends": "content_writing",
+  "name": "ux_writing",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Text Personalization",
+  "description": "Adapting language output to users and styles.",
+  "extends": "language_processing",
+  "name": "text_personalization",
+  "attributes": {}
+}

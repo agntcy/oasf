@@ -1,0 +1,8 @@
+{
+  "uid": 13,
+  "caption": "Training Data Engineering",
+  "description": "Preparing and generating data for training.",
+  "extends": "ai_ml_engineering",
+  "name": "training_data_engineering",
+  "attributes": {}
+}

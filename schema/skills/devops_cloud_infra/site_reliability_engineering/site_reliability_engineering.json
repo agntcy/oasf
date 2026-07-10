@@ -1,0 +1,8 @@
+{
+  "uid": 9,
+  "caption": "Site Reliability Engineering",
+  "description": "Reliability, health, and incident lifecycle.",
+  "extends": "devops_cloud_infra",
+  "name": "site_reliability_engineering",
+  "attributes": {}
+}

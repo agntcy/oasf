@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "Literature Review",
+  "description": "Review and synthesize literature.",
+  "extends": "research",
+  "name": "literature_review",
+  "attributes": {}
+}

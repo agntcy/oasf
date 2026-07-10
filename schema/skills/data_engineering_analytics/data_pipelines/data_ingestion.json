@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "Data Ingestion",
+  "description": "Ingest and load data from sources.",
+  "extends": "data_pipelines",
+  "name": "data_ingestion",
+  "attributes": {}
+}

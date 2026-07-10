@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Cryptography Implementation",
+  "description": "Implement encryption and key management.",
+  "extends": "cryptography_secrets",
+  "name": "cryptography_implementation",
+  "attributes": {}
+}

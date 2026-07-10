@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Bookkeeping and Invoicing",
+  "description": "Manage invoices, receipts, and expenses.",
+  "extends": "finance_accounting",
+  "name": "bookkeeping_invoicing",
+  "attributes": {}
+}

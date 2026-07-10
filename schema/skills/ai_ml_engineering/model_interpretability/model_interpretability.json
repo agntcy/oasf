@@ -1,0 +1,8 @@
+{
+  "uid": 15,
+  "caption": "Model Interpretability",
+  "description": "Inspecting and explaining model behavior.",
+  "extends": "ai_ml_engineering",
+  "name": "model_interpretability",
+  "attributes": {}
+}

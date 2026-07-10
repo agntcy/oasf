@@ -1,0 +1,8 @@
+{
+  "uid": 5,
+  "caption": "Privacy Risk Assessment",
+  "description": "Assess privacy risks and data handling.",
+  "extends": "governance_compliance",
+  "name": "privacy_risk_assessment",
+  "attributes": {}
+}
