@@ -15,7 +15,16 @@ defmodule Schema.Validator do
 
   @spec validate(map(), list(), atom()) :: map()
   def validate(data, options, type) when is_map(data) do
-    validate_input(data, options, Schema.dictionary(), type)
+    # Per-call memo for class_type scope name-sets (see check_class_scope_error/5).
+    # Reset on entry so each validation run starts fresh and never reads a set
+    # computed against a previously-loaded schema.
+    Process.put(:class_scope_names_cache, %{})
+
+    try do
+      validate_input(data, options, Schema.dictionary(), type)
+    after
+      Process.delete(:class_scope_names_cache)
+    end
   end
 
   @spec validate_input(map(), list(), map(), atom()) :: map()
@@ -1520,6 +1529,15 @@ defmodule Schema.Validator do
               attribute_details[:family]
             )
 
+          response =
+            check_class_scope_error(
+              response,
+              class,
+              attribute_details,
+              attribute_path,
+              attribute_name
+            )
+
           {response, profiles} = validate_and_return_profiles(response, value)
 
           validate_input_against_class(
@@ -2510,6 +2528,73 @@ defmodule Schema.Validator do
       )
     else
       response
+    end
+  end
+
+  # Verify the resolved class is within the attribute's class_type taxonomy
+  # scope: the class_type node and its descendants, excluding abstract
+  # (category: true) classes. A class from another branch — or a category
+  # class used as a concrete value — is rejected.
+  #
+  # The family base class (uid 0) is skipped here: it is already reported by
+  # check_base_class_error/6 as base_class_used, so flagging it again would
+  # duplicate the error for the same value.
+  @spec check_class_scope_error(map(), map(), map(), String.t(), String.t()) :: map()
+  defp check_class_scope_error(response, %{uid: 0}, _attribute_details, _attribute_path, _attribute_name) do
+    response
+  end
+
+  defp check_class_scope_error(response, class, attribute_details, attribute_path, attribute_name) do
+    case attribute_details[:family] do
+      family when family in ["skill", "domain", "module"] ->
+        valid_names = scope_names(family, attribute_details[:class_type])
+
+        if MapSet.member?(valid_names, class[:name]) do
+          response
+        else
+          add_error(
+            response,
+            "class_out_of_scope",
+            "\"#{class[:name]}\" is not a valid option at \"#{attribute_path}\"; " <>
+              "please specify a concrete #{family} within the \"#{attribute_details[:class_type]}\" taxonomy.",
+            %{
+              attribute_path: attribute_path,
+              attribute: attribute_name,
+              value: class[:name]
+            }
+          )
+        end
+
+      _ ->
+        response
+    end
+  end
+
+  # The set of valid concrete class names for a {family, class_type} scope:
+  # the class_type node's descendants, excluding abstract (category) classes.
+  # Matched by :name (unique within a family; present on both the find_children
+  # entries and the resolved enriched class — :uid is only set after
+  # enrichment). Memoized per validation run, since `Schema.all_classes/1` is
+  # an Agent.get that copies the whole family map and the same scope is reused
+  # for every element of an array attribute.
+  @spec scope_names(String.t(), String.t() | nil) :: MapSet.t()
+  defp scope_names(family, class_type) do
+    cache = Process.get(:class_scope_names_cache, %{})
+    key = {family, class_type}
+
+    case cache do
+      %{^key => names} ->
+        names
+
+      _ ->
+        names =
+          Schema.all_classes(String.to_atom(family))
+          |> Schema.Utils.find_children(class_type)
+          |> Enum.reject(&(Map.get(&1, :category) == true))
+          |> MapSet.new(& &1[:name])
+
+        Process.put(:class_scope_names_cache, Map.put(cache, key, names))
+        names
     end
   end
 
