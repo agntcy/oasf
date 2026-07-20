@@ -100,10 +100,7 @@ defmodule Schema.Generator do
   end
 
   defp generate_classes(n, {_name, field}) do
-    valid_classes =
-      get_valid_classes(field)
-      |> Enum.shuffle()
-      |> Enum.take(n)
+    valid_classes = valid_classes_lazy(field) |> Enum.take(n)
 
     Enum.map(valid_classes, fn class ->
       generate_sample_class(class, Process.get(:profiles))
@@ -172,8 +169,9 @@ defmodule Schema.Generator do
               generate_object(field[:requirement], name, attribute, map)
 
             "class_t" ->
-              get_valid_classes(field)
-              |> Enum.random()
+              valid_classes_lazy(field)
+              |> Enum.take(1)
+              |> hd()
               |> generate_sample_class(Process.get(:profiles))
 
             nil ->
@@ -270,8 +268,9 @@ defmodule Schema.Generator do
 
       field[:type] == "class_t" ->
         generated =
-          get_valid_classes(field)
-          |> Enum.random()
+          valid_classes_lazy(field)
+          |> Enum.take(1)
+          |> hd()
           |> generate_sample_class(Process.get(:profiles))
 
         Map.put(map, name, generated)
@@ -933,32 +932,40 @@ defmodule Schema.Generator do
     end
   end
 
-  defp get_valid_classes(field) do
-    {all_classes_fn, class_fn} =
+  # Lazily yields valid sample classes for a `class_t` field.
+  #
+  # Candidate classes are selected as cheap keys from the simplified family map
+  # and materialized (via `Schema.class/2`, which enriches attributes) only as
+  # the caller pulls them.  Callers take at most a handful (`Enum.take/2`), so a
+  # single sample never enriches the entire — potentially hundreds-strong —
+  # family.  Keys are shuffled up front so `Enum.take(n)` yields a uniform
+  # random subset, matching the previous `Enum.shuffle |> Enum.take` /
+  # `Enum.random` selection.
+  defp valid_classes_lazy(field) do
+    {all_classes, class_fn} =
       case field[:family] do
         f when f in ["skill", "domain", "module"] ->
           fam_atom = String.to_atom(f)
           {Schema.all_classes(fam_atom), &Schema.class(fam_atom, &1)}
 
         _ ->
-          {[], fn _ -> nil end}
+          {%{}, fn _ -> nil end}
       end
 
     if field[:is_enum] do
-      Utils.find_children(all_classes_fn, field[:class_type])
+      # Reverse index {simplified class => key}, built once (O(n)).  Replaces the
+      # previous per-child full-map scan that made key recovery O(n^2).
+      key_by_value = Map.new(all_classes, fn {key, value} -> {value, key} end)
+
+      Utils.find_children(all_classes, field[:class_type])
       |> Enum.reject(fn child -> Map.get(child, :category) == true end)
       |> Enum.reject(& &1[:deprecated?])
-      |> Enum.map(fn child ->
-        Enum.find_value(all_classes_fn, fn {key, value} ->
-          if value == child, do: key, else: nil
-        end)
-        |> case do
-          nil -> nil
-          key -> class_fn.(key)
-        end
-      end)
+      |> Enum.map(&Map.get(key_by_value, &1))
       |> Enum.reject(&is_nil/1)
-      |> Enum.reject(&Map.has_key?(&1, :"@deprecated"))
+      |> Enum.shuffle()
+      |> Stream.map(class_fn)
+      |> Stream.reject(&is_nil/1)
+      |> Stream.reject(&Map.has_key?(&1, :"@deprecated"))
     else
       class_fn.(field[:class_type])
       |> List.wrap()

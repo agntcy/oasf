@@ -487,11 +487,26 @@ defmodule Schema.Utils do
     |> Enum.map(fn {_key, elem} -> elem end)
   end
 
-  @spec find_children(map(), String.t()) :: [map()]
+  @spec find_children(map(), String.t() | nil) :: [map()]
   def find_children(map, parent_name) do
-    find_direct_children(map, parent_name)
+    # Index children by their parent (:extends) once, so the recursive descent
+    # is O(n) overall instead of rescanning the whole map for every node.
+    # Only entries carrying an :extends key are indexed, matching the semantics
+    # of find_direct_children/2.
+    by_parent =
+      map
+      |> Enum.map(fn {_key, elem} -> elem end)
+      |> Enum.filter(&Map.has_key?(&1, :extends))
+      |> Enum.group_by(& &1[:extends])
+
+    collect_descendants(by_parent, parent_name)
+  end
+
+  defp collect_descendants(by_parent, parent_name) do
+    by_parent
+    |> Map.get(parent_name, [])
     |> Enum.flat_map(fn elem ->
-      [elem | find_children(map, elem[:name])]
+      [elem | collect_descendants(by_parent, elem[:name])]
     end)
   end
 

@@ -456,6 +456,34 @@ defmodule Schema.UtilsTest do
       map = %{leaf: %{name: "leaf", extends: "root"}}
       assert Utils.find_children(map, "leaf") == []
     end
+
+    test "returns every descendant with each ancestor before its descendants" do
+      map = %{
+        root: %{name: "root", extends: nil},
+        a: %{name: "a", extends: "root"},
+        a1: %{name: "a1", extends: "a"},
+        b: %{name: "b", extends: "root"}
+      }
+
+      names = Utils.find_children(map, "root") |> Enum.map(& &1[:name])
+      # Sibling order follows (unspecified) map iteration order, but the
+      # pre-order DFS invariant is guaranteed: a parent precedes its subtree
+      # and every descendant appears exactly once.
+      assert Enum.sort(names) == ["a", "a1", "b"]
+      assert Enum.find_index(names, &(&1 == "a")) < Enum.find_index(names, &(&1 == "a1"))
+    end
+
+    test "ignores entries without an :extends key (matching find_direct_children)" do
+      map = %{
+        no_extends: %{name: "no_extends"},
+        child: %{name: "child", extends: nil}
+      }
+
+      # find_direct_children requires the :extends key to be present, so an
+      # entry that lacks it is never treated as a child of nil.
+      names = Utils.find_children(map, nil) |> Enum.map(& &1[:name])
+      assert names == ["child"]
+    end
   end
 
   # ---------------------------------------------------------------------------
