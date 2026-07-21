@@ -290,7 +290,13 @@ defmodule Schema.Cache do
           {name, attribute}
 
         base ->
-          {name, Utils.deep_merge(base, attribute)}
+          # Drop the dictionary attribute's `_links` back-reference: it lists
+          # every class using the attribute (O(n) per attribute), so keeping it
+          # on each enriched class is O(n^2) and, since the export is deep-copied
+          # out of the Repo Agent per request, inflates memory by >100 MiB.
+          # `_links` is internal and stripped from every response anyway (the
+          # detailed `enrich_ex/5` path drops it identically).
+          {name, Utils.deep_merge(base, attribute) |> Map.delete(:_links)}
       end
     end)
     |> Utils.add_sibling_of_to_attributes()
