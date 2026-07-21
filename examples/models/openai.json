@@ -1,0 +1,119 @@
+{
+  "schema_version": "1.0.0",
+  "name": "com.openai/OpenAI-o1",
+  "version": "v1.0.0",
+  "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  ],
+  "publisher": {
+    "name": "OpenAI",
+    "urls": ["https://www.openai.com", "https://www.github.com/openai"]
+  },
+  "skills": [
+    "natural_language_processing/natural_language_generation/text_completion",
+    "natural_language_processing/natural_language_generation/summarization",
+    "natural_language_processing/language_translation/multilingual_understanding",
+    "multi_modal/image_processing/image_to_text",
+    "multi_modal/image_processing/text_to_image",
+    "tool_interaction/tool_use_planning"
+  ],
+  "domains": [
+    "technology/software_engineering",
+    "trust_and_safety/content_moderation"
+  ],
+  "annotations": {
+    "org.agntcy/logo_url": "https://www.openai.com/logo.png",
+    "org.agntcy/status_page": "https://www.openai.com/status",
+    "org.agntcy/terms_of_service": "https://www.openai.com/terms",
+    "org.agntcy/privacy_policy": "https://www.openai.com/privacy",
+    "org.agntcy/usage_policy": "https://www.openai.com/policies/usage-policies",
+    "org.agntcy/support": "https://www.openai.com/support",
+    "org.agntcy/contact_email": "support@openai.com"
+  },
+  "modules": [
+    {
+      "type": "resource/model/language",
+      "data": {
+        "name": "OpenAI o1",
+        "version": "o1-2026-06-30",
+        "size": "175B",
+        "description": "# OpenAI o1\n\nOpenAI o1 is a state-of-the-art language model designed for advanced reasoning and problem-solving tasks. It excels in understanding complex contexts, making it suitable for applications that require deep comprehension and agentic workflows.\n\n## Features\n- **Advanced Reasoning**: Capable of solving complex problems, including mathematical and scientific tasks.\n- **Contextual Understanding**: Maintains context over long conversations, enabling coherent and relevant responses.\n- **Multilingual Support**: Supports multiple languages, enhancing accessibility and usability across different regions.\n- **Tool Interaction**: Can interact with external tools and APIs to perform specific tasks or retrieve information.\n\n## Use Cases\n- **Content Generation**: Create high-quality written content for blogs, articles, and marketing materials.\n- **Customer Support**: Provide automated responses to customer inquiries with contextual understanding.\n- **Educational Tools**: Assist in learning by providing explanations, summaries, and translations.\n- **Research Assistance**: Aid researchers in summarizing papers, generating hypotheses, and analyzing data.\n\n## Getting Started\nTo use OpenAI o1, you can access it via the provided API endpoints or download the model artifact for local deployment. Ensure you have the necessary API key and permissions to utilize the model effectively.",
+        "deployments": [
+          {
+            "mode": "remote",
+            "endpoint": {
+              "url": "https://api.openai.com/v1",
+              "type": "openai",
+              "protocol": "https"
+            },
+            "http_headers": [
+              {
+                "name": "Authorization",
+                "type": "bearer",
+                "description": "Bearer token for accessing OpenAI services.",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "context": {
+          "max_input_tokens": 8192,
+          "max_output_tokens": 2048,
+          "max_total_tokens": 10240
+        },
+        "trained_at": "2026-06-30T13:06:27.754823Z",
+        "supported_languages": ["en-US", "es-ES", "fr-FR", "de-DE", "zh-Hans"],
+        "pricing": {
+          "url": "https://www.openai.com/pricing",
+          "tiers": ["free", "paid"]
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "MMLU",
+                "benchmark_url": "https://github.com/hendrycks/test",
+                "metric": "accuracy",
+                "score": 0.906,
+                "unit": "ratio",
+                "evaluator": "OpenAI",
+                "evaluated_at": "2026-06-15T00:00:00Z",
+                "source_url": "https://openai.com/research/o1-evals#mmlu"
+              },
+              {
+                "benchmark": "GPQA-Diamond",
+                "benchmark_url": "https://gpqa.github.io",
+                "metric": "accuracy",
+                "score": 0.784,
+                "unit": "ratio",
+                "evaluator": "Epoch AI",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://epochai.org/benchmarks/o1"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "traits/access/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "openai_api",
+            "description": "Outbound HTTPS to api.openai.com for inference requests.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+# OASF module taxonomy — single source of truth for the builder UI.
+#
+# The UI is fully data-driven: it reads this file and derives the palette,
+# the drag-and-drop nesting rules, and the natural-language translation from
+# the data below. Add / rename / remove entries here and the UI updates on
+# reload WITHOUT any code changes.
+#
+# Roles (drive nesting + rendering, kept generic so new types "just work"):
+#   owner       a single record subject     (e.g. agent/entry)  -> accepts interface|payload of same kind + traits
+#   collection  a set of records            (e.g. agent/catalog)-> accepts owner of same kind (members are entry-wrapped)
+#   interface   an agent contract           (e.g. .../mcp)      -> accepts traits
+#   payload     a model/resource body       (e.g. .../language) -> accepts traits
+#   trait       cross-cutting, attach-anywhere (e.g. traits/*)  -> leaf
+#
+# `kind` groups a module under agent | model | resource (traits are kind-less).
+# `phrase`  = how a part reads in the translation ("MCP protocol").
+# `attach`  = how a trait reads when attached to its parent ("deployable locally").
+
+version: 1
+
+# ---------------------------------------------------------------------------
+# Record kinds — used to phrase the top-level subject of the translation.
+# ---------------------------------------------------------------------------
+kinds:
+  agent:
+    label: Agent
+    entryPhrase: An agent record
+    catalogPhrase: A set of agents
+    memberPhrase: an agent
+    # kinds this owner may nest as sub-records (cross-kind composition)
+    contains: [model, resource]
+  model:
+    label: Model
+    entryPhrase: A model record
+    catalogPhrase: A set of models
+    memberPhrase: a model
+    contains: [resource]
+  resource:
+    label: Resource
+    entryPhrase: A resource record
+    catalogPhrase: A set of resources
+    memberPhrase: a resource
+    contains: []
+
+# ---------------------------------------------------------------------------
+# Language — connective words the translator stitches phrases together with.
+# ---------------------------------------------------------------------------
+language:
+  empty: "Empty record — drag an Agent, Model or Resource block here to begin."
+  connectors:
+    with: "with"
+    and: "and"
+    is: "is"
+    listSep: ", "
+    memberSep: "; "
+    memberJoin: "containing"
+    includes: "including"
+    recordTrait: "the record is"
+
+# ---------------------------------------------------------------------------
+# Modules — the taxonomy. Order here = order in the palette.
+# ---------------------------------------------------------------------------
+modules:
+  # --- agent -----------------------------------------------------------------
+  - type: agent/entry
+    label: Agent
+    role: owner
+    kind: agent
+    fields: [name, description]
+    hint: A single agent record.
+
+  - type: agent/catalog
+    label: Agents (set)
+    role: collection
+    kind: agent
+    fields: [name, description]
+    hint: A collection of agents.
+
+  - type: agent/interface/mcp
+    label: MCP
+    role: interface
+    kind: agent
+    fields: [schema_version, tools, prompts, resources, examples]
+    phrase: MCP protocol
+    hint: Model Context Protocol interface (what the agent speaks).
+
+  - type: agent/interface/a2a
+    label: A2A
+    role: interface
+    kind: agent
+    fields: [schema_version, capabilities, authentication]
+    phrase: A2A protocol
+    hint: Agent-to-Agent protocol interface.
+
+  - type: agent/interface/agentspec
+    label: AgentSpec
+    role: interface
+    kind: agent
+    fields: [framework, entrypoint, schema_version]
+    phrase: a native agent spec
+    hint: Native identity interface (framework + entrypoint).
+
+  # --- model -----------------------------------------------------------------
+  - type: model/entry
+    label: Model
+    role: owner
+    kind: model
+    fields: [name, description]
+    hint: A single model record.
+
+  - type: model/catalog
+    label: Models (set)
+    role: collection
+    kind: model
+    fields: [name, description]
+    hint: A collection of models.
+
+  - type: model/family/language
+    label: Language
+    role: payload
+    kind: model
+    fields: [release, size, context, trained_at, supported_languages, pricing]
+    phrase: a language model
+    hint: A language-family model.
+
+  # --- resource --------------------------------------------------------------
+  - type: resource/entry
+    label: Resource
+    role: owner
+    kind: resource
+    fields: [name, description]
+    hint: A single resource record.
+
+  - type: resource/catalog
+    label: Resources (set)
+    role: collection
+    kind: resource
+    fields: [name, description]
+    hint: A collection of resources.
+
+  - type: resource/tool/prompt
+    label: Prompt
+    role: payload
+    kind: resource
+    fields: [command]
+    phrase: a prompt
+    hint: A reusable prompt template.
+
+  - type: resource/tool/agentskill
+    label: AgentSkill
+    role: payload
+    kind: resource
+    fields: [release, tags, authors, capabilities]
+    phrase: an agent skill
+    hint: An agent-skill package.
+
+  # --- traits (cross-cutting, attach to any owner / interface / payload) ------
+  - type: traits/artifact/locator
+    label: Artifact
+    role: trait
+    fields: [url, data, digest, size, media_type]
+    attach: retrievable via artifact
+    hint: Where the module's artifact can be fetched (or its inline data).
+
+  - type: traits/serving/remote
+    label: Serving · Remote
+    role: trait
+    fields: [url, api, protocol, http_headers]
+    attach: reachable at a remote endpoint
+    hint: A hosted endpoint to reach the module.
+
+  - type: traits/serving/deployment
+    label: Serving · Deployment
+    role: trait
+    fields: [mode, transport, command, args, image, env_vars, http_headers]
+    attach: deployable locally
+    hint: A run-recipe to deploy the module yourself.
+
+  - type: traits/usage/requirements
+    label: Usage · Requirements
+    role: trait
+    fields: [binaries, network, env_vars]
+    attach: with declared runtime requirements
+    hint: Runtime prerequisites (binaries, network, env vars).
+
+  - type: traits/usage/permissions
+    label: Usage · Permissions
+    role: trait
+    fields: [resources]
+    attach: requiring resource permissions
+    hint: Resource access levels the module needs.
+
+  - type: traits/quality/evaluation
+    label: Quality · Evaluation
+    role: trait
+    fields: [overall_rating, overall_scores, evaluations]
+    attach: with published evaluations
+    hint: Measured benchmark / assessment results.

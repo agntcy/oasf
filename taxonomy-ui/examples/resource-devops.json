@@ -1,0 +1,189 @@
+{
+  "schema_version": "v1",
+  "name": "org.agntcy/devops-tools",
+  "version": "v1.0.0",
+  "description": "A catalog of DevOps resources, each an agent-tool with its own runtime requirements and published evaluations.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "authors": ["AGNTCY"],
+  "licenses": ["Apache-2.0"],
+  "skills": ["tool_interaction/tool_use_planning"],
+  "domains": ["technology/software_engineering/devops"],
+  "type": "resource/catalog",
+  "modules": [
+    {
+      "type": "resource/entry",
+      "data": {
+        "name": "terraform-tool",
+        "description": "Terraform infrastructure-as-code tool."
+      },
+      "modules": [
+        {
+          "type": "resource/tool/agentskill",
+          "data": {
+            "release": "2025-10-01",
+            "tags": ["terraform", "iac"],
+            "authors": ["AGNTCY"],
+            "capabilities": ["plan", "apply", "destroy"]
+          },
+          "modules": [
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["terraform>=1.6"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.5,
+                "overall_scores": { "reliability": 0.93 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "resource/entry",
+      "data": {
+        "name": "kubectl-tool",
+        "description": "Kubernetes deployment tool."
+      },
+      "modules": [
+        {
+          "type": "resource/tool/agentskill",
+          "data": {
+            "release": "2025-10-01",
+            "tags": ["kubernetes", "deploy"],
+            "authors": ["AGNTCY"],
+            "capabilities": ["rollout", "scale", "rollback"]
+          },
+          "modules": [
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["kubectl>=1.29"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.6,
+                "overall_scores": { "reliability": 0.94 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "resource/entry",
+      "data": {
+        "name": "docker-tool",
+        "description": "Docker build/push tool."
+      },
+      "modules": [
+        {
+          "type": "resource/tool/agentskill",
+          "data": {
+            "release": "2025-10-01",
+            "tags": ["docker", "build"],
+            "authors": ["AGNTCY"],
+            "capabilities": ["build", "push", "scan"]
+          },
+          "modules": [
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["docker>=24"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.4,
+                "overall_scores": { "reliability": 0.91 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "resource/entry",
+      "data": {
+        "name": "helm-tool",
+        "description": "Helm chart management tool."
+      },
+      "modules": [
+        {
+          "type": "resource/tool/agentskill",
+          "data": {
+            "release": "2025-10-01",
+            "tags": ["helm", "charts"],
+            "authors": ["AGNTCY"],
+            "capabilities": ["install", "upgrade", "lint"]
+          },
+          "modules": [
+            {
+              "type": "traits/usage/requirements",
+              "data": { "binaries": ["helm>=3.14"] }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.3,
+                "overall_scores": { "reliability": 0.9 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "resource/entry",
+      "data": {
+        "name": "ci-tool",
+        "description": "CI pipeline control tool."
+      },
+      "modules": [
+        {
+          "type": "resource/tool/agentskill",
+          "data": {
+            "release": "2025-10-01",
+            "tags": ["ci", "pipelines"],
+            "authors": ["AGNTCY"],
+            "capabilities": ["trigger", "status", "logs"]
+          },
+          "modules": [
+            {
+              "type": "traits/usage/requirements",
+              "data": {
+                "binaries": ["gh>=2.40"],
+                "network": ["api.github.com"]
+              }
+            },
+            {
+              "type": "traits/quality/evaluation",
+              "data": {
+                "overall_rating": 4.5,
+                "overall_scores": { "reliability": 0.92 },
+                "evaluations": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "traits/usage/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "cloud_infra",
+            "description": "Manage cloud infrastructure resources.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

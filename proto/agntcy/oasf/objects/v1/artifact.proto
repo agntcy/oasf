@@ -1,0 +1,39 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.objects.v1;
+
+import "google/protobuf/struct.proto";
+
+// Artifact points to a source where a module or record can be found or
+// retrieved from. For example, an artifact may reference a helm chart, an
+// OCI image, a source-code repository, or a plain URL.
+message Artifact {
+  // Namespaced, human-readable discriminator identifying the artifact kind,
+  // e.g. "helm_chart", "container_image", "source_code", "url". Custom
+  // values are supported; native values are enumerated by ArtifactType.
+  string type = 1;
+
+  // Location where the source can be retrieved from.
+  // Specs: https://datatracker.ietf.org/doc/html/rfc1738
+  string url = 2;
+
+  // Free-form metadata attached to this artifact.
+  map<string, string> annotations = 3;
+
+  // Size of the source in bytes, if known. This is used to validate downloads and
+  // to estimate the size of a module or record.
+  uint64 size = 4;
+
+  // Digest of the source, if known. This is used to validate downloads and to
+  // ensure that the source has not been tampered with. The digest is expected to
+  // be in the format "<algorithm>:<hex>", e.g. "sha256:abcdef1234567890".
+  string digest = 5;
+
+  // Optional data of the artifact, if not provided via URL.
+  // If its a JSON object, it is represented as an object.
+  // If not a JSON object, it is represented as a base64-encoded string.
+  google.protobuf.Value data = 6;
+}

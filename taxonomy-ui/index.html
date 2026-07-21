@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OASF Taxonomy Builder</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- YAML parser (only external dependency) -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">
+      <h1>OASF Taxonomy Builder</h1>
+      <span class="subtitle">drag blocks &rarr; compose a record &rarr; read what it means</span>
+    </div>
+    <div class="actions">
+      <select id="examples" title="Load a ready-made example (replaces the current record)">
+        <option value="">Examples&hellip;</option>
+      </select>
+      <button id="reload" title="Re-read module.taxonomy.yaml">Reload taxonomy</button>
+      <button id="clear" title="Empty the record">Clear record</button>
+      <input type="file" id="fileInput" accept=".yaml,.yml" hidden />
+    </div>
+  </header>
+
+  <div id="loadError" class="load-error" hidden>
+    Could not <code>fetch()</code> <code>module.taxonomy.yaml</code> (this happens when opening
+    the page directly via <code>file://</code>).
+    <button id="pickFile">Pick the YAML file</button>
+    or serve the folder, e.g. <code>python3 -m http.server</code> then open
+    <code>http://localhost:8000/</code>.
+  </div>
+
+  <main class="layout">
+    <!-- Palette -->
+    <aside class="palette-pane">
+      <h2>Blocks</h2>
+      <div id="palette"></div>
+    </aside>
+
+    <!-- Record canvas -->
+    <section class="record-pane">
+      <h2>Record</h2>
+      <div id="record" class="dropzone record-root" data-node-id="root" data-type="__root__">
+        <p class="placeholder">Drag an <strong>Agent</strong>, <strong>Model</strong> or
+          <strong>Resource</strong> block here.</p>
+      </div>
+
+      <h2>Meaning</h2>
+      <p id="translation" class="translation"></p>
+
+      <details class="json-details">
+        <summary>Generated record (JSON)</summary>
+        <pre id="jsonOut" class="json-out"></pre>
+      </details>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
