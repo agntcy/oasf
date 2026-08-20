@@ -13,6 +13,7 @@ import (
 )
 
 const schemaDir = ".."
+const extensionFile = "extension.json"
 
 type SchemaFile struct {
 	Path string
@@ -106,7 +107,9 @@ var _ = Describe("Metaschema validation", func() {
 			{Dir: filepath.Join(schemaDir, "modules"), Schema: filepath.Join(metaschemaDir, "class.schema.json")},
 			{Dir: filepath.Join(schemaDir, "objects"), Schema: filepath.Join(metaschemaDir, "object.schema.json")},
 			{Dir: filepath.Join(schemaDir, "profiles"), Schema: filepath.Join(metaschemaDir, "profile.schema.json")},
-			{Dir: filepath.Join(schemaDir, "extensions"), Schema: filepath.Join(metaschemaDir, "extension.schema.json")},
+			// Extensions are deliberately absent here. An extension directory holds files of
+			// several different entity types, each governed by its own metaschema, so they are
+			// validated by the "Extension metaschema validation" spec below.
 		}
 
 		for _, target := range directories {
@@ -125,6 +128,54 @@ var _ = Describe("Metaschema validation", func() {
 
 			for _, file := range filesInDir {
 				if err := ValidateDataAgainstSchema(file.Data, target.Schema, file.Path); err != nil {
+					errors = append(errors, fmt.Sprintf("File %s failed validation: %s", file.Path, err))
+				}
+			}
+		}
+
+		if len(errors) > 0 {
+			Fail("Errors found:\n" + strings.Join(errors, "\n"))
+		}
+	})
+})
+
+var _ = Describe("Extension metaschema validation", func() {
+	It("should validate extension files against the metaschema for their entity type", func() {
+		var errors []string
+
+		metaschemaDir := filepath.Join(schemaDir, "metaschema")
+		extensionsDir := filepath.Join(schemaDir, "extensions")
+
+		dirInfo, err := os.Stat(extensionsDir)
+		if err != nil || !dirInfo.IsDir() {
+			AddWarning("%s directory does not exist\n", extensionsDir)
+			return
+		}
+
+		roots, err := FindExtensionRoots(extensionsDir)
+		Expect(err).NotTo(HaveOccurred())
+
+		if len(roots) == 0 {
+			AddWarning("no extensions found in %s (an extension is a directory containing %s)", extensionsDir, extensionFile)
+			return
+		}
+
+		for _, root := range roots {
+			for _, file := range cache.Files {
+				if filepath.Ext(file.Path) != ".json" || !strings.HasPrefix(file.Path, root+string(os.PathSeparator)) {
+					continue
+				}
+
+				relPath, err := filepath.Rel(root, file.Path)
+				Expect(err).NotTo(HaveOccurred())
+
+				metaschema, known := ExtensionMetaschema(metaschemaDir, relPath)
+				if !known {
+					AddWarning("Skipping %s: no metaschema is defined for this location within an extension", file.Path)
+					continue
+				}
+
+				if err := ValidateDataAgainstSchema(file.Data, metaschema, file.Path); err != nil {
 					errors = append(errors, fmt.Sprintf("File %s failed validation: %s", file.Path, err))
 				}
 			}
@@ -456,4 +507,58 @@ func ValidateDataAgainstSchema(data []byte, schemaPath, filePath string) error {
 		return fmt.Errorf("schema validation failed for %s:\n%s", relPath, sb.String())
 	}
 	return nil
+}
+
+// FindExtensionRoots returns every directory under dir that directly contains an
+// extension.json file. This mirrors the schema server's extension discovery, which
+// registers a directory as an extension as soon as it finds extension.json and does
+// not descend any further (see server/lib/schema/json_reader.ex, find_extensions/2).
+func FindExtensionRoots(dir string) ([]string, error) {
+	var roots []string
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			return nil
+		}
+		if _, err := os.Stat(filepath.Join(path, extensionFile)); err == nil {
+			roots = append(roots, path)
+			return filepath.SkipDir
+		}
+		return nil
+	})
+	return roots, err
+}
+
+// ExtensionMetaschema maps a path relative to an extension root to the metaschema that
+// governs it. An extension mirrors the layout of the core schema directory, so each of
+// its files must be validated against the same metaschema as its core counterpart
+// rather than against extension.schema.json (see CONTRIBUTING.md). The second return
+// value reports whether a metaschema is defined for the given location.
+func ExtensionMetaschema(metaschemaDir, relPath string) (string, bool) {
+	relPath = filepath.ToSlash(relPath)
+
+	switch relPath {
+	case extensionFile:
+		return filepath.Join(metaschemaDir, "extension.schema.json"), true
+	case "dictionary.json":
+		return filepath.Join(metaschemaDir, "dictionary.schema.json"), true
+	}
+
+	top, _, nested := strings.Cut(relPath, "/")
+	if !nested {
+		return "", false
+	}
+
+	switch top {
+	case "skills", "domains", "modules":
+		return filepath.Join(metaschemaDir, "class.schema.json"), true
+	case "objects":
+		return filepath.Join(metaschemaDir, "object.schema.json"), true
+	case "profiles":
+		return filepath.Join(metaschemaDir, "profile.schema.json"), true
+	}
+
+	return "", false
 }
