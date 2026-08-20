@@ -1,0 +1,22 @@
+{
+  "caption": "Example Extension Attribute Dictionary",
+  "description": "Attributes contributed by the example extension. Extension attributes are namespaced by the extension name unless they are declared in the core dictionary.",
+  "name": "dictionary",
+  "attributes": {
+    "example_endpoint": {
+      "caption": "Example Endpoint",
+      "description": "URL of the endpoint that the example telemetry module reports to.",
+      "type": "string_t"
+    },
+    "example_sample_rate": {
+      "caption": "Example Sample Rate",
+      "description": "Percentage of events reported by the example telemetry module, from 0 to 100.",
+      "type": "integer_t"
+    },
+    "example_telemetry_data": {
+      "caption": "Data",
+      "description": "Telemetry configuration supported by the agent. Module payload objects are self-typed in the dictionary so that the module's data attribute resolves to the object rather than to a string.",
+      "type": "example_telemetry_data"
+    }
+  }
+}

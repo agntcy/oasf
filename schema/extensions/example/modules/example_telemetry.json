@@ -1,0 +1,15 @@
+{
+  "uid": 1,
+  "caption": "Example Telemetry",
+  "description": "Example module showing how an extension defines its own module payload by overriding the data attribute.",
+  "extends": "base_module",
+  "name": "example_telemetry",
+  "attributes": {
+    "data": {
+      "reference": "example_telemetry_data",
+      "caption": "Data",
+      "description": "Telemetry configuration supported by the agent.",
+      "requirement": "required"
+    }
+  }
+}
