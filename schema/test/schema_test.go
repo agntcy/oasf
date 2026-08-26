@@ -155,6 +155,16 @@ var _ = Describe("Extension metaschema validation", func() {
 		roots, err := FindExtensionRoots(extensionsDir)
 		Expect(err).NotTo(HaveOccurred())
 
+		unclaimed, err := FindUnclaimedDirs(extensionsDir, roots)
+		Expect(err).NotTo(HaveOccurred())
+
+		for _, dir := range unclaimed {
+			AddWarning(
+				"Skipping %s: it holds JSON files but no %s, so it is not an extension and nothing in it was validated",
+				dir, extensionFile,
+			)
+		}
+
 		if len(roots) == 0 {
 			AddWarning("no extensions found in %s (an extension is a directory containing %s)", extensionsDir, extensionFile)
 			return
@@ -529,6 +539,52 @@ func FindExtensionRoots(dir string) ([]string, error) {
 		return nil
 	})
 	return roots, err
+}
+
+// FindUnclaimedDirs returns every directory under dir that holds JSON files directly but
+// belongs to no extension root. That is the shape a misspelled extension.json produces: the
+// schema server does not register the directory as an extension, so nothing in it is read,
+// and this spec does not validate it either. Reporting it turns a silent omission into a
+// warning without changing what counts as an extension. Directories that merely group
+// extensions hold no JSON of their own and are not reported.
+func FindUnclaimedDirs(dir string, roots []string) ([]string, error) {
+	var unclaimed []string
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			return nil
+		}
+		for _, root := range roots {
+			if path == root || strings.HasPrefix(path, root+string(os.PathSeparator)) {
+				return filepath.SkipDir
+			}
+		}
+		hasJSON, err := DirHasJSONFile(path)
+		if err != nil {
+			return err
+		}
+		if hasJSON {
+			unclaimed = append(unclaimed, path)
+		}
+		return nil
+	})
+	return unclaimed, err
+}
+
+// DirHasJSONFile reports whether dir directly contains a .json file, ignoring subdirectories.
+func DirHasJSONFile(dir string) (bool, error) {
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return false, err
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() && filepath.Ext(entry.Name()) == ".json" {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 // ExtensionMetaschema maps a path relative to an extension root to the metaschema that
