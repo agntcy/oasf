@@ -14,7 +14,7 @@ An extension mirrors the layout of the core `schema` directory:
 | `extension.json` | Declares the extension's `name` and `uid`. A directory becomes an extension by containing this file. |
 | `dictionary.json` | New attributes contributed by the extension. |
 | `domains/` | New domain classes. A class becomes a category by setting `"category": true`. |
-| `modules/` | New module classes. A module overrides `data` with its own payload object. |
+| `modules/` | New module classes. Like domains, these are a category plus the classes that extend it; a module overrides `data` with its own payload object. |
 | `objects/` | New objects, including module payload objects, which extend `module_data`. |
 
 `skills/` and `profiles/` follow the same pattern and are omitted here for brevity.
@@ -49,6 +49,24 @@ into a record as:
 The name is the category path followed by `<extension_name>_<class_name>`. The
 identifier is derived as `(extension_uid * 100 + category_uid) * 100 + class_uid`,
 here `(998 * 100 + 1) * 100 + 1`.
+
+## Every class needs a category, modules included
+
+The same applies to modules, and it is easy to miss because a module can extend
+`base_module` directly and still load. It should not: `base_module` is not a category,
+so such a module gets no category segment, its identifier folds against category `0`,
+and it renders as a sibling of the top-level module groups rather than as a member of
+one. No core module does this — `core` and `integration` are categories, and
+`observability` and `a2a` extend them.
+
+That is why this extension defines `modules/example_modules/example_modules.json` as a
+category and has `example_telemetry` extend it, exactly as `domains/` does:
+
+```json
+{ "name": "example/example_modules/example_example_telemetry", "id": 9980101 }
+```
+
+Extending `base_module` directly instead yields `id` 9980001 with `category: null`.
 
 ## Module payloads
 

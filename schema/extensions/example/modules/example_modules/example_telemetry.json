@@ -2,7 +2,7 @@
   "uid": 1,
   "caption": "Example Telemetry",
   "description": "Example module showing how an extension defines its own module payload by overriding the data attribute.",
-  "extends": "base_module",
+  "extends": "example/example_modules",
   "name": "example_telemetry",
   "attributes": {
     "data": {
