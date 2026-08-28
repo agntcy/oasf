@@ -8,8 +8,8 @@ on:
     branches:
       - main
     tags:
-      - 'v*.*.*'
-      - 'helm/v*.*.*'
+      - "v*.*.*"
+      - "helm/v*.*.*"
   pull_request:
 
 permissions:
@@ -31,9 +31,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Taskfile
-        shell: bash
-        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      - name: Install Task
+        uses: go-task/setup-task@01a4adf9db2d14c1de7a560f09170b6e0df736aa # v2.1.0
 
       - name: Build code
         run: |
@@ -164,9 +163,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Taskfile
-        shell: bash
-        run: sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin
+      - name: Install Task
+        uses: go-task/setup-task@01a4adf9db2d14c1de7a560f09170b6e0df736aa # v2.1.0
 
       - name: Download artifacts
         uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
@@ -192,8 +190,8 @@ jobs:
       - name: Set up Elixir
         uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
         with:
-          elixir-version: '1.19'
-          otp-version: '28'
+          elixir-version: "1.19"
+          otp-version: "28"
 
       - name: Fetch Elixir deps
         run: mix deps.get
@@ -230,7 +228,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         with:
           fetch-depth: 0
 
@@ -302,7 +300,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938  # v4.2.0
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
         with:
           fetch-depth: 0
 
@@ -314,7 +312,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN  }}
 
       - name: Setup Helm
-        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814  # v4.2.0
+        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
         with:
           version: "3.12.1"
 
