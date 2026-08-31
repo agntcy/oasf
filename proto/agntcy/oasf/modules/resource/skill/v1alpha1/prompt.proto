@@ -1,0 +1,24 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.modules.resource.skill.v1alpha1;
+
+// Prompt is the payload for a Module of type "resource/skill/prompt".
+// It describes a reusable prompt template with typed variables and
+// optional example invocations.
+//
+// A Prompt module is model-agnostic. The concrete model + settings are
+// applied by the caller (typically an actor or workflow) when the prompt
+// is instantiated.
+message Prompt {
+  // Name of the prompt, used to identify it in the system.
+  string name = 1;
+
+  // A specific instruction given to a prompt to perform a task.
+  string command = 2;
+
+  // Description of the prompt, providing context and usage information.
+  string description = 3;
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": "v1",
+  "name": "io.codecov/coverage",
+  "version": "v1.0.0",
+  "description": "Codecov coverage agent-skill: uploads and analyses code-coverage reports.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "authors": ["Codecov"],
+  "licenses": ["Apache-2.0"],
+  "skills": ["tool_interaction/tool_use_planning"],
+  "domains": ["technology/software_engineering/devops"],
+  "type": "resource/entry",
+  "modules": [
+    {
+      "type": "resource/tool/agentskill",
+      "data": {
+        "release": "2025-11-02",
+        "tags": ["coverage", "testing", "ci"],
+        "authors": ["Codecov"],
+        "capabilities": ["upload_report", "analyze_diff", "post_status"]
+      },
+      "modules": [
+        {
+          "type": "traits/usage/requirements",
+          "data": {
+            "binaries": ["python>=3.9"],
+            "network": ["api.codecov.io"],
+            "env_vars": ["CODECOV_TOKEN"]
+          }
+        }
+      ]
+    },
+    {
+      "type": "traits/usage/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "codecov_api",
+            "description": "Upload and read coverage reports.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

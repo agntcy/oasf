@@ -1,0 +1,424 @@
+{
+  "schema_version": "1.0.0",
+  "name": "org.agntcy/ui-dev-mcps",
+  "version": "v1.0.0",
+  "description": "Curated collection of MCP servers for UI developers: design-file inspection (Figma), image editing automation (Photoshop), React component scaffolding and analysis, and browser end-to-end testing (Playwright). Every member exposes an MCP endpoint so any MCP-compatible agent can consume them uniformly.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "publisher": {
+    "name": "AGNTCY",
+    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  },
+  "skills": [
+    "tool_interaction/tool_use_planning",
+    "tool_interaction/workflow_automation",
+    "software_engineering/frontend_development",
+    "software_engineering/ui_design",
+    "multi_modal/image_processing/image_to_text"
+  ],
+  "domains": [
+    "technology/software_engineering",
+    "technology/software_engineering/frontend",
+    "media_and_entertainment/design"
+  ],
+  "annotations": {
+    "org.agntcy/logo_url": "https://agntcy.org/logo.png",
+    "org.agntcy/status_page": "https://agntcy.org/status",
+    "org.agntcy/terms_of_service": "https://agntcy.org/terms",
+    "org.agntcy/privacy_policy": "https://agntcy.org/privacy",
+    "org.agntcy/usage_policy": "https://agntcy.org/policies/ui-dev-mcps",
+    "org.agntcy/support": "https://agntcy.org/support",
+    "org.agntcy/contact_email": "info@agntcy.org",
+    "org.agntcy/collection_type": "ui-dev-mcps"
+  },
+  "modules": [
+    {
+      "type": "interface/framework/mcp",
+      "data": {
+        "name": "figma-mcp",
+        "description": "# Figma MCP\n\nMCP server for Figma Dev Mode. Lets agents inspect design files, read variables (design tokens), and export assets so they can translate designs into code deterministically.\n\n## Features\n- **Node inspection**: Read frames, components, auto-layout, and constraints.\n- **Design tokens**: Enumerate Figma variables and modes.\n- **Asset export**: Export nodes as SVG/PNG at multiple scales.\n\n## Getting Started\n```\nnpx -y figma-developer-mcp --figma-api-key=$FIGMA_API_KEY\n```",
+        "connections": [
+          {
+            "mode": "local",
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["-y", "figma-developer-mcp"],
+            "env_vars": [
+              {
+                "name": "FIGMA_API_KEY",
+                "description": "Figma personal access token with `file_content:read` and `file_dev_resources:read` scopes.",
+                "required": true
+              }
+            ]
+          },
+          {
+            "mode": "remote",
+            "transport": "streamable_http",
+            "url": "https://mcp.figma.com/mcp",
+            "http_headers": [
+              {
+                "name": "Authorization",
+                "type": "bearer",
+                "description": "OAuth bearer token issued by Figma for the MCP endpoint.",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "name": "get_file",
+            "description": "Fetch the tree of a Figma file by URL or key.",
+            "examples": [
+              "Get the layout of https://figma.com/file/ABC123/Marketing",
+              "List top-level frames in file key ABC123"
+            ],
+            "scopes": ["external"]
+          },
+          {
+            "name": "get_node",
+            "description": "Return properties for a specific node (frame, component, instance).",
+            "examples": [
+              "Get the styles for node 12:345 in file ABC123",
+              "Show auto-layout settings for the primary button component"
+            ],
+            "scopes": ["external"]
+          },
+          {
+            "name": "list_variables",
+            "description": "Enumerate design tokens (variables) and their modes.",
+            "examples": [
+              "List all color variables in the 'Brand' collection",
+              "Get the light/dark mode values for spacing tokens"
+            ],
+            "scopes": ["external"]
+          },
+          {
+            "name": "export_asset",
+            "description": "Export a node as SVG or PNG at one or more scales.",
+            "examples": [
+              "Export node 12:345 as SVG",
+              "Export the logo as PNG at 1x, 2x, 3x"
+            ],
+            "scopes": ["external"]
+          }
+        ],
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://www.figma.com/developers/mcp/tools_schema.json"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "network": ["api.figma.com", "mcp.figma.com"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.DesignToCode",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "pixel_diff_ssim",
+                "score": 0.91,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/design-to-code"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "interface/framework/mcp",
+      "data": {
+        "name": "photoshop-mcp",
+        "description": "# Photoshop MCP\n\nMCP server that drives Adobe Photoshop via UXP so agents can open documents, apply actions, batch-export layers, and run non-destructive edits.\n\n## Features\n- **Document control**: Open, save, export as PSD/PNG/JPG/WebP.\n- **Layer ops**: Toggle visibility, apply masks, run smart-object updates.\n- **Actions**: Invoke saved Photoshop Actions with parameters.\n\n## Getting Started\nInstall the AGNTCY Photoshop MCP UXP plugin, then:\n```\nnpx -y @agntcy/photoshop-mcp\n```",
+        "connections": [
+          {
+            "mode": "local",
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["-y", "@agntcy/photoshop-mcp"],
+            "env_vars": [
+              {
+                "name": "PHOTOSHOP_UXP_PORT",
+                "description": "Local port the Photoshop UXP host listens on (default 8087).",
+                "required": false
+              },
+              {
+                "name": "ADOBE_CLIENT_ID",
+                "description": "Adobe API client id if remote asset fetching is enabled.",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "name": "open_document",
+            "description": "Open a PSD from a local path or URL and return its layer tree.",
+            "examples": [
+              "Open /Users/me/design.psd",
+              "Open the PSD at https://cdn.example.com/hero.psd"
+            ],
+            "scopes": ["local", "external"]
+          },
+          {
+            "name": "export_layer",
+            "description": "Export one or more layers as PNG/JPG/WebP at a target size.",
+            "examples": [
+              "Export the 'Hero' group as 1920x1080 WebP",
+              "Batch-export all layers whose name starts with 'icon/'"
+            ],
+            "scopes": ["local"]
+          },
+          {
+            "name": "apply_action",
+            "description": "Run a named Photoshop Action against the active document.",
+            "examples": [
+              "Apply the 'Optimize for Web' action",
+              "Run action 'Add Watermark' on all open documents"
+            ],
+            "scopes": ["local"]
+          }
+        ],
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://skills.agntcy.org/ui-dev/photoshop-mcp/tools_schema.json"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["photoshop>=25", "node>=18"],
+            "env_vars": ["PHOTOSHOP_UXP_PORT"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.AssetExport",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "export_success_rate",
+                "score": 0.96,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/asset-export"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "interface/framework/mcp",
+      "data": {
+        "name": "react-mcp",
+        "description": "# React MCP\n\nMCP server for React component development. Analyzes existing components, generates new ones from prompts or Figma nodes, and inspects hook usage across a repo.\n\n## Features\n- **Static analysis**: Parse JSX/TSX, resolve props, list hooks, find dead components.\n- **Component generation**: Emit typed function components with Tailwind or CSS Modules.\n- **Story scaffolding**: Generate Storybook stories from component signatures.\n\n## Getting Started\n```\nnpx -y @agntcy/react-mcp --root ./src\n```",
+        "connections": [
+          {
+            "mode": "local",
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["-y", "@agntcy/react-mcp", "--root", "./src"],
+            "env_vars": [
+              {
+                "name": "REACT_MCP_ROOT",
+                "description": "Root directory containing the React source tree (overrides --root).",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "name": "analyze_component",
+            "description": "Return props, hooks, imports, and child components for a given .tsx/.jsx file.",
+            "examples": [
+              "Analyze src/components/Button.tsx",
+              "List every hook used by src/pages/Dashboard.tsx"
+            ],
+            "scopes": ["local"]
+          },
+          {
+            "name": "generate_component",
+            "description": "Generate a typed React component from a natural-language spec or a Figma node id.",
+            "examples": [
+              "Generate a <PricingCard title price cta /> in TypeScript with Tailwind",
+              "Generate a component from Figma node 12:345 into src/components/Hero.tsx"
+            ],
+            "scopes": ["local"]
+          },
+          {
+            "name": "list_hooks",
+            "description": "Enumerate custom hooks defined in the repo and their call sites.",
+            "examples": [
+              "List custom hooks and their callers",
+              "Find all files using useAuth()"
+            ],
+            "scopes": ["local"]
+          },
+          {
+            "name": "generate_story",
+            "description": "Scaffold a Storybook CSF3 story for a component.",
+            "examples": [
+              "Generate a story for src/components/Button.tsx with primary and disabled variants"
+            ],
+            "scopes": ["local"]
+          }
+        ],
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://skills.agntcy.org/ui-dev/react-mcp/tools_schema.json"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "env_vars": ["REACT_MCP_ROOT"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.ComponentGen",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "compile_pass_rate",
+                "score": 0.93,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/component-gen"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "interface/framework/mcp",
+      "data": {
+        "name": "playwright-mcp",
+        "description": "# Playwright MCP\n\nMCP server for browser end-to-end testing. Runs Playwright tests, opens interactive traces, and captures screenshots and DOM snapshots on demand.\n\n## Features\n- **Test execution**: Run a subset of tests by name, tag, or file.\n- **Trace viewer**: Return HAR + trace URLs for failed runs.\n- **Visual diffing**: Capture screenshots against golden images.\n\n## Getting Started\n```\nnpx -y @playwright/mcp\n```",
+        "connections": [
+          {
+            "mode": "local",
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["-y", "@playwright/mcp"],
+            "env_vars": [
+              {
+                "name": "PLAYWRIGHT_BROWSERS_PATH",
+                "description": "Directory where Playwright caches browser binaries.",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "tools": [
+          {
+            "name": "run_tests",
+            "description": "Run a set of Playwright tests and return the report.",
+            "examples": [
+              "Run tests tagged @smoke",
+              "Run tests in e2e/checkout.spec.ts"
+            ],
+            "scopes": ["local"]
+          },
+          {
+            "name": "screenshot",
+            "description": "Open a URL in a headless browser and return a full-page screenshot.",
+            "examples": [
+              "Screenshot https://example.com at 1440x900",
+              "Capture the /dashboard route after login"
+            ],
+            "scopes": ["local", "external"]
+          },
+          {
+            "name": "open_trace",
+            "description": "Return a trace URL for a previous failing run.",
+            "examples": ["Open the trace for run 4711"],
+            "scopes": ["local"]
+          }
+        ],
+        "artifact": {
+          "type": "application/mcp-server-card+json",
+          "url": "https://skills.agntcy.org/ui-dev/playwright-mcp/tools_schema.json"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "network": ["*"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "UI-Dev-Bench.E2E",
+                "benchmark_url": "https://github.com/agntcy/ui-dev-bench",
+                "metric": "flake_free_rate",
+                "score": 0.97,
+                "unit": "ratio",
+                "evaluator": "AGNTCY UI WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/ui-dev/e2e"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "traits/access/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "figma_api",
+            "description": "Access to the Figma REST/MCP API for reading design files.",
+            "access_level": "read"
+          },
+          {
+            "name": "adobe_photoshop",
+            "description": "Control of the local Photoshop application via UXP.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "local_filesystem",
+            "description": "Read/write access to the React source tree and Playwright artifacts.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "network",
+            "description": "Outbound HTTPS for Playwright test targets and Figma/Adobe endpoints.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

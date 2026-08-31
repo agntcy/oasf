@@ -61,6 +61,17 @@ tasks:
     cmds:
       - docker buildx bake -f docker-bake.hcl oasf-server {{.BAKE_OPTS}}
 
+  ui:builder:
+    desc: Serve the taxonomy-ui with a local HTTP server
+    dir: '{{ .ROOT_DIR }}/taxonomy-ui'
+    vars:
+      UI_PORT: '{{ .UI_PORT | default "8123" }}'
+    preconditions:
+      - which python3
+    cmds:
+      - cmd: echo "Serving taxonomy-ui at http://localhost:{{.UI_PORT}}"
+      - cmd: python3 -m http.server {{.UI_PORT}}
+
   up:
     desc: Deploy services in an ephemeral kind cluster
     preconditions:

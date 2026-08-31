@@ -1,0 +1,19 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.objects.v1;
+
+// Environment variables consumed by the runtime (typically for local
+// deployments: model paths, daemon hosts, ...).
+message EnvVar {
+  // Name of the variable.
+  string name = 1;
+
+  // Human-readable description of the variable's purpose.
+  string description = 2;
+
+  // Whether the variable must be set for the deployment to run.
+  bool required = 3;
+}

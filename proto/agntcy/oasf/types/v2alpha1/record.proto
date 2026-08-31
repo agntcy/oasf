@@ -1,0 +1,82 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v2alpha1;
+
+import "agntcy/oasf/types/v2alpha1/module.proto";
+
+// Record is the top-level document of an OASF publication.
+//
+// A Record carries identity, provenance, and taxonomy fields directly on
+// itself. Every other piece of content hangs off the record as a tree of
+// `Module` envelopes referenced through `modules`.
+//
+// Records are stored in a content-addressable store and referenced by a
+// globally-unique content identifier (CID).
+// Specs: https://github.com/multiformats/cid
+//
+// Max size: 4 MB (or to fully fit in a single request).
+message Record {
+  // Version of the OASF schema this record was authored against
+  // (e.g. "1.0.0").
+  string schema_version = 1;
+
+  // Fully-qualified, unique name of the record
+  // (e.g. "org.acme/my-agent").
+  string name = 2;
+
+  // Version of the record itself. Free-form; conventionally semver.
+  string version = 3;
+
+  // Human-readable description of the record. Markdown is permitted.
+  string description = 4;
+
+  // Creation timestamp in RFC3339 format.
+  // Specs: https://www.rfc-editor.org/rfc/rfc3339.html
+  string created_at = 5;
+
+  // Free-form metadata attached to the record.
+  map<string, string> annotations = 6;
+
+  // Optional authors of the record
+  // (e.g. "Author Name <author@example.com>").
+  repeated string authors = 7;
+
+  // License under which a record is distributed.
+  message License {
+    // SPDX identifier or free-form license name (e.g. "Apache-2.0").
+    string name = 1;
+
+    // URL to the license text.
+    string url = 2;
+  }
+
+  // Licenses under which the record is distributed.
+  repeated License licenses = 8;
+
+  // Publisher of the record.
+  message Publisher {
+    // Human-readable publisher name.
+    string name = 1;
+
+    // Publisher URLs (homepage, source repositories, ...).
+    repeated string urls = 2;
+  }
+
+  // Publisher of the record.
+  Publisher publisher = 9;
+
+  // Skill paths associated with this record
+  // (e.g. "software_engineering/frontend_development").
+  repeated string skills = 10;
+
+  // Domain paths associated with this record
+  // (e.g. "technology/software_engineering").
+  repeated string domains = 11;
+
+  // Tree of module envelopes carrying the record's payload.
+  // Composition rules are declared by each module class, not by this envelope.
+  repeated Module modules = 12;
+}

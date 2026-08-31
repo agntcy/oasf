@@ -1,0 +1,10 @@
+{
+  "examples": [
+    { "label": "Agent · Copilot MCP", "file": "agent-mcp.json" },
+    { "label": "Agent · UI-dev MCP set", "file": "agent-ui-dev.json" },
+    { "label": "Models · Local set", "file": "models-local.json" },
+    { "label": "Model · OpenAI o1", "file": "model-openai.json" },
+    { "label": "Resource · Coverage skill", "file": "resource-coverage.json" },
+    { "label": "Resource · DevOps tools", "file": "resource-devops.json" }
+  ]
+}

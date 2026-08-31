@@ -1,0 +1,99 @@
+{
+  "schema_version": "v1",
+  "name": "com.github/copilot-mcp",
+  "version": "v1.0.0",
+  "description": "GitHub Copilot MCP server. Exposes GitHub repository operations (issues, pull requests, code search) to any MCP-compatible agent, with both local stdio and hosted streamable-HTTP transports.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "authors": ["GitHub"],
+  "licenses": ["MIT"],
+  "skills": [
+    "natural_language_processing/natural_language_generation/text_completion",
+    "tool_interaction/tool_use_planning"
+  ],
+  "domains": [
+    "technology/software_engineering/devops",
+    "technology/software_engineering/apis_integration"
+  ],
+  "type": "agent/entry",
+  "modules": [
+    {
+      "type": "agent/interface/mcp",
+      "data": {
+        "schema_version": "1.0.0",
+        "tools": ["get_issues", "get_pull_requests", "search_code"],
+        "prompts": [],
+        "resources": [],
+        "examples": [
+          "Get all open issues for the 'my-repo' repository owned by 'my-org'.",
+          "Fetch closed issues for the 'my-repo' repository owned by 'my-org'."
+        ]
+      },
+      "modules": [
+        {
+          "type": "traits/serving/deployment",
+          "data": {
+            "mode": "local",
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["@github/copilot-cli", "--stdio"],
+            "env_vars": [
+              {
+                "name": "GITHUB_TOKEN",
+                "description": "GitHub personal access token.",
+                "required": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "traits/serving/remote",
+          "data": {
+            "url": "https://api.github.com/copilot",
+            "api": "mcp",
+            "protocol": "streamable_http",
+            "http_headers": [
+              {
+                "name": "Authorization",
+                "type": "bearer",
+                "description": "Bearer token.",
+                "required": true
+              }
+            ]
+          }
+        },
+        {
+          "type": "traits/artifact/locator",
+          "data": {
+            "url": "https://www.github.com/download/get_issues_schema.json",
+            "media_type": "application/mcp-server-card+json"
+          }
+        },
+        {
+          "type": "traits/usage/requirements",
+          "data": {
+            "binaries": ["node>=18"],
+            "network": ["api.github.com"],
+            "env_vars": ["GITHUB_TOKEN"]
+          }
+        }
+      ]
+    },
+    {
+      "type": "traits/usage/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "github_api",
+            "description": "Access to the GitHub REST/GraphQL APIs.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "user_data",
+            "description": "Access to user data for personalization.",
+            "access_level": "read_write"
+          }
+        ]
+      }
+    }
+  ]
+}

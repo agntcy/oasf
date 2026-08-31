@@ -1,0 +1,265 @@
+{
+  "schema_version": "1.0.0",
+  "name": "org.agntcy/devops-tools",
+  "version": "v1.0.0",
+  "description": "Curated collection of agent skills for common DevOps workflows: container builds, Kubernetes operations, infrastructure-as-code, CI/CD, and observability. Every member ships as an OASF agent-skill artifact so any compatible agent can load them uniformly.",
+  "created_at": "2026-06-30T13:06:27.754823Z",
+  "licenses": [
+    {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "publisher": {
+    "name": "AGNTCY",
+    "urls": ["https://agntcy.org", "https://github.com/agntcy"]
+  },
+  "skills": [
+    "tool_interaction/tool_use_planning",
+    "tool_interaction/workflow_automation",
+    "software_engineering/devops",
+    "software_engineering/infrastructure_as_code"
+  ],
+  "domains": [
+    "technology/software_engineering",
+    "technology/software_engineering/devops"
+  ],
+  "annotations": {
+    "org.agntcy/logo": "https://agntcy.org/logo.png",
+    "org.agntcy/status_page": "https://agntcy.org/status",
+    "org.agntcy/terms_of_service": "https://agntcy.org/terms",
+    "org.agntcy/privacy_policy": "https://agntcy.org/privacy",
+    "org.agntcy/usage_policy": "https://agntcy.org/policies/devops-tools",
+    "org.agntcy/support": "https://agntcy.org/support",
+    "org.agntcy/contact": "info@agntcy.org"
+  },
+  "modules": [
+    {
+      "type": "resource/skill/agentskill",
+      "data": {
+        "name": "docker-cli",
+        "version": "1.0.0",
+        "description": "# Docker CLI\n\nAgent skill for building, running, and publishing OCI container images with the Docker CLI. Wraps `docker build`, `docker run`, `docker push`, `docker compose`, and `docker buildx` with schema-checked arguments and safe defaults.\n\n## Features\n- **Reproducible builds**: Enforces `--pull`, `--sha256` locking, and BuildKit.\n- **Multi-arch**: Uses `buildx` for `linux/amd64,linux/arm64` by default.\n- **Registry auth**: Reads credentials from `DOCKER_CONFIG` or environment.\n\n## Getting Started\n```\nagent load docker-cli\nagent invoke docker-cli.build --context . --tag ghcr.io/org/app:v1\n```",
+        "artifact": {
+          "type": "application/agent-skill+tgz",
+          "url": "https://skills.agntcy.org/devops/docker-cli/docker-cli-v1.0.0.tgz"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["docker>=24.0"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "DevOps-Bench.Container",
+                "benchmark_url": "https://github.com/agntcy/devops-bench",
+                "metric": "task_success_rate",
+                "score": 0.94,
+                "unit": "ratio",
+                "evaluator": "AGNTCY DevOps WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/devops/container"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "resource/skill/agentskill",
+      "data": {
+        "name": "kubectl",
+        "version": "1.0.0",
+        "description": "# kubectl\n\nAgent skill for interacting with Kubernetes clusters. Provides typed wrappers over `kubectl get`, `apply`, `rollout`, `logs`, `port-forward`, plus safe defaults (namespace pinning, dry-run first, RBAC checks).\n\n## Features\n- **Namespace isolation**: All operations require an explicit namespace.\n- **Dry-run first**: Every mutating call runs `--dry-run=server` before applying.\n- **Context switching**: Uses `KUBECONFIG` contexts, never modifies them.\n\n## Getting Started\n```\nagent load kubectl\nagent invoke kubectl.apply --file deploy.yaml --namespace prod\n```",
+        "artifact": {
+          "type": "application/agent-skill+tgz",
+          "url": "https://skills.agntcy.org/devops/kubectl/kubectl-v1.0.0.tgz"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["kubectl>=1.30"],
+            "env_vars": ["KUBECONFIG"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "DevOps-Bench.K8s",
+                "benchmark_url": "https://github.com/agntcy/devops-bench",
+                "metric": "task_success_rate",
+                "score": 0.89,
+                "unit": "ratio",
+                "evaluator": "AGNTCY DevOps WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/devops/k8s"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "resource/skill/agentskill",
+      "data": {
+        "name": "terraform",
+        "version": "1.0.0",
+        "description": "# Terraform\n\nAgent skill for HashiCorp Terraform: `init`, `plan`, `apply`, `destroy`, and workspace management. Enforces plan review before apply and locks state via the configured backend.\n\n## Features\n- **Plan-then-apply**: `apply` requires an approved plan file.\n- **State locking**: Never runs unlocked operations.\n- **Provider pinning**: Fails if `.terraform.lock.hcl` is missing.\n\n## Getting Started\n```\nagent load terraform\nagent invoke terraform.plan --dir infra/ --out tfplan\nagent invoke terraform.apply --plan tfplan\n```",
+        "artifact": {
+          "type": "application/agent-skill+md",
+          "url": "https://skills.agntcy.org/devops/terraform/terraform-v1.0.0.md"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["terraform>=1.9"],
+            "env_vars": ["AWS_PROFILE", "TF_VAR_region"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "DevOps-Bench.IaC",
+                "benchmark_url": "https://github.com/agntcy/devops-bench",
+                "metric": "plan_apply_parity",
+                "score": 0.97,
+                "unit": "ratio",
+                "evaluator": "AGNTCY DevOps WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/devops/iac"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "resource/skill/agentskill",
+      "data": {
+        "name": "github-actions",
+        "version": "1.0.0",
+        "description": "# GitHub Actions\n\nAgent skill for authoring, triggering, and inspecting GitHub Actions workflows. Uses the GitHub REST/GraphQL APIs with fine-grained tokens.\n\n## Features\n- **Workflow linting**: Runs `actionlint` before commit.\n- **Re-run failed jobs**: Targets specific failed jobs, not the whole run.\n- **Secret-safe**: Never echoes secret values to logs.\n\n## Getting Started\n```\nagent load github-actions\nagent invoke github-actions.trigger --repo org/app --workflow release.yml --ref main\n```",
+        "artifact": {
+          "type": "application/agent-skill+md",
+          "url": "https://skills.agntcy.org/devops/github-actions/github-actions-v1.0.0.md"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "binaries": ["gh>=2.55"],
+            "env_vars": ["GITHUB_TOKEN"],
+            "network": ["api.github.com"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "DevOps-Bench.CI",
+                "benchmark_url": "https://github.com/agntcy/devops-bench",
+                "metric": "workflow_success_rate",
+                "score": 0.92,
+                "unit": "ratio",
+                "evaluator": "AGNTCY DevOps WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/devops/ci"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "resource/skill/agentskill",
+      "data": {
+        "name": "prometheus-query",
+        "version": "1.0.0",
+        "description": "# Prometheus Query\n\nAgent skill for querying Prometheus and Alertmanager. Wraps PromQL execution, alert-rule inspection, and target scraping status.\n\n## Features\n- **Range vs instant**: Auto-selects based on the requested time window.\n- **Query timeouts**: Enforces a per-call timeout to protect the server.\n- **Read-only**: No admin API calls; no rule mutations.\n\n## Getting Started\n```\nagent load prometheus-query\nagent invoke prometheus-query.instant --query 'up{job=\"api\"}'\n```",
+        "artifact": {
+          "type": "application/agent-skill+md",
+          "url": "https://skills.agntcy.org/devops/prometheus-query/prometheus-query-v1.0.0.md"
+        }
+      },
+      "modules": [
+        {
+          "type": "traits/runtime/requirements",
+          "data": {
+            "env_vars": ["PROMETHEUS_URL"],
+            "network": ["prometheus.internal:9090"]
+          }
+        },
+        {
+          "type": "traits/quality/evaluation",
+          "data": {
+            "evaluations": [
+              {
+                "benchmark": "DevOps-Bench.Observability",
+                "benchmark_url": "https://github.com/agntcy/devops-bench",
+                "metric": "answer_accuracy",
+                "score": 0.88,
+                "unit": "ratio",
+                "evaluator": "AGNTCY DevOps WG",
+                "evaluated_at": "2026-06-20T00:00:00Z",
+                "source_url": "https://agntcy.org/bench/devops/observability"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "type": "traits/access/permissions",
+      "data": {
+        "resources": [
+          {
+            "name": "local_filesystem",
+            "description": "Read/write access to the working directory for source files, plans, and manifests.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "docker_daemon",
+            "description": "Access to the local Docker daemon socket for build/run/push operations.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "kubernetes_api",
+            "description": "Access to the Kubernetes API server via KUBECONFIG contexts.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "cloud_provider_api",
+            "description": "Access to cloud provider APIs (AWS, GCP, Azure) for Terraform runs.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "github_api",
+            "description": "Access to the GitHub API for workflow inspection and triggering.",
+            "access_level": "read_write"
+          },
+          {
+            "name": "prometheus_api",
+            "description": "Read-only access to the Prometheus HTTP API.",
+            "access_level": "read"
+          }
+        ]
+      }
+    }
+  ]
+}
