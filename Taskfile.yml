@@ -204,6 +204,7 @@ tasks:
       - task: test:schema
       - task: test:proto
       - task: test:server
+      - task: test:server:extensions
 
   test:e2e:
     desc: Deploy to an ephemeral kind cluster and verify the server starts healthy
@@ -237,6 +238,18 @@ tasks:
     dir: '{{ .ROOT_DIR }}/server'
     cmds:
       - cmd: echo "Running OASF server test suite..."
+      - cmd: mix test
+
+  test:server:extensions:
+    desc: Test server code with the in-tree extensions loaded
+    preconditions:
+      - which mix
+    dir: '{{ .ROOT_DIR }}/server'
+    env:
+      SCHEMA_DIR: '{{ .ROOT_DIR }}/schema'
+      SCHEMA_EXTENSION: extensions
+    cmds:
+      - cmd: echo "Running OASF server test suite with extensions loaded..."
       - cmd: mix test
 
   lint:

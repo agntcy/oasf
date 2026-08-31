@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "Cold Chain Logistics",
+  "description": "Temperature-controlled storage and transport of perishable goods.",
+  "extends": "example/example_verticals",
+  "name": "cold_chain_logistics",
+  "attributes": {}
+}

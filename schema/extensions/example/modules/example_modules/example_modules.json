@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Example Modules",
+  "description": "Example module category showing how an extension contributes a new branch to the module taxonomy.",
+  "extends": "base_module",
+  "name": "example_modules",
+  "category": true,
+  "attributes": {}
+}

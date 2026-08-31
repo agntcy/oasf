@@ -1,0 +1,7 @@
+{
+  "caption": "Example",
+  "description": "A minimal reference extension demonstrating how to extend OASF without modifying the core schema.",
+  "name": "example",
+  "uid": 998,
+  "version": "0.1.0"
+}
