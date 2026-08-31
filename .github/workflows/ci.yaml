@@ -206,6 +206,9 @@ jobs:
       - name: OASF Server Validation
         run: task test:server
 
+      - name: OASF Server Validation with extensions loaded
+        run: task test:server:extensions
+
       - name: Generate OASF server coverage report
         working-directory: server
         run: mix coveralls.json

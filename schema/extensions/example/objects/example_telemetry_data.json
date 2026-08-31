@@ -1,0 +1,14 @@
+{
+  "caption": "Example Telemetry Data",
+  "description": "Payload of the example telemetry module. Module payload objects extend module_data.",
+  "extends": "module_data",
+  "name": "example_telemetry_data",
+  "attributes": {
+    "example_endpoint": {
+      "requirement": "required"
+    },
+    "example_sample_rate": {
+      "requirement": "optional"
+    }
+  }
+}

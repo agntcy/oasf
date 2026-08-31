@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Example Verticals",
+  "description": "Example category showing how an extension contributes a new branch to the domain taxonomy.",
+  "extends": "base_domain",
+  "name": "example_verticals",
+  "category": true,
+  "attributes": {}
+}
