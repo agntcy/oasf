@@ -40,7 +40,27 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   defp test_skill_category_name, do: test_class_category_name(:skill)
   defp test_domain_category_name, do: test_class_category_name(:domain)
-  defp test_module_category_name, do: test_class_category_name(:module)
+
+  # Concrete classes of a family that carry a resolvable uid, in schema order.
+  # Derived rather than hard-coded so the tests survive taxonomy renumbering.
+  defp test_classes_with_ids(family) do
+    Schema.all_classes(family)
+    |> Enum.reject(fn {_k, v} -> v[:category] == true end)
+    |> Enum.map(fn {k, _v} -> Schema.class(family, Atom.to_string(k)) end)
+    |> Enum.filter(fn c -> is_map(c) and is_integer(c[:uid]) and c[:uid] > 0 end)
+  end
+
+  defp test_class_id(family) do
+    [c | _] = test_classes_with_ids(family)
+    c[:uid]
+  end
+
+  # An {id, name} pair that deliberately refers to two different classes, for
+  # exercising the "id and name disagree" branch.
+  defp test_mismatched_id_and_name(family) do
+    [first, second | _] = test_classes_with_ids(family)
+    {first[:uid], second[:name]}
+  end
 
   defp test_object_name do
     {name, _} = Schema.all_objects() |> Enum.find(fn {_k, _v} -> true end)
@@ -146,7 +166,8 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/skills?id=601&name=#{test_skill_name()}")
+      {id, name} = test_mismatched_id_and_name(:skill)
+      conn = json_get(conn, "/api/skills?id=#{id}&name=#{name}")
       assert conn.status == 400
       body = json_response_body(conn)
       assert Map.has_key?(body, "error")
@@ -207,12 +228,7 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 200 by id", %{conn: conn} do
-      conn = json_get(conn, "/api/modules?id=101")
-      assert conn.status == 200
-    end
-
-    test "returns 200 for hierarchical name", %{conn: conn} do
-      conn = json_get(conn, "/api/modules?name=core/language_model/prompt")
+      conn = json_get(conn, "/api/modules?id=#{test_class_id(:module)}")
       assert conn.status == 200
     end
 
@@ -232,7 +248,8 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/modules?id=103&name=#{test_module_name()}")
+      {id, name} = test_mismatched_id_and_name(:module)
+      conn = json_get(conn, "/api/modules?id=#{id}&name=#{name}")
       assert conn.status == 400
     end
   end
@@ -311,11 +328,6 @@ defmodule SchemaWeb.SchemaControllerTest do
   describe "GET /api/module_categories" do
     test "returns 200", %{conn: conn} do
       conn = json_get(conn, "/api/module_categories")
-      assert conn.status == 200
-    end
-
-    test "returns 200 by name", %{conn: conn} do
-      conn = json_get(conn, "/api/module_categories?name=#{test_module_category_name()}")
       assert conn.status == 200
     end
 
@@ -671,24 +683,16 @@ defmodule SchemaWeb.SchemaControllerTest do
   # ---------------------------------------------------------------------------
 
   describe "API object response content" do
-    test "GET /api/objects?name=record returns expected fields", %{conn: conn} do
-      conn = json_get(conn, "/api/objects?name=record")
+    test "GET /api/objects?name=discovery returns expected fields", %{conn: conn} do
+      conn = json_get(conn, "/api/objects?name=discovery")
       assert conn.status == 200
       body = json_response_body(conn)
-      assert body["name"] == "record"
+      assert body["name"] == "discovery"
       assert is_map(body["attributes"])
-      assert Map.has_key?(body["attributes"], "name")
-      assert Map.has_key?(body["attributes"], "version")
-      assert Map.has_key?(body["attributes"], "schema_version")
-    end
 
-    test "GET /api/objects?name=locator returns expected fields", %{conn: conn} do
-      conn = json_get(conn, "/api/objects?name=locator")
-      assert conn.status == 200
-      body = json_response_body(conn)
-      assert body["name"] == "locator"
-      assert is_map(body["attributes"])
-      assert Map.has_key?(body["attributes"], "type")
+      for attr <- ~w(schema_version skills domains formats distributions) do
+        assert Map.has_key?(body["attributes"], attr)
+      end
     end
   end
 

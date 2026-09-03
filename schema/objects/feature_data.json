@@ -1,7 +1,0 @@
-{
-  "caption": "Module Data",
-  "description": "Data associated with a module.",
-  "name": "module_data",
-  "extends": "object",
-  "attributes": {}
-}

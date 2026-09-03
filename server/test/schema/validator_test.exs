@@ -21,11 +21,48 @@ defmodule Schema.ValidatorTest do
   # not the simple name atom key. Using the uid is the safest approach.
   @test_skill_uid 10101
   @test_domain_uid 101
-  @test_module_uid 101
 
   # Short names used for lookups via Schema.class(family, name) (accepted by Repo lookups)
   @test_skill_name "contextual_comprehension"
   @test_domain_name "internet_of_things"
+
+  # Format uids are category-scoped and shift when the vocabulary changes;
+  # derive one rather than pinning a literal.
+  defp first_format_uid do
+    Schema.all_classes(:module)
+    |> Enum.reject(fn {_k, v} -> v[:category] == true end)
+    |> Enum.map(fn {k, _v} -> Schema.class(:module, Atom.to_string(k)) end)
+    |> Enum.find_value(fn c ->
+      is_map(c) and is_integer(c[:uid]) and c[:uid] > 0 and c[:uid]
+    end)
+  end
+
+  # A category class uid. Categories organise the taxonomy and are not usable
+  # as a concrete value, which is what class_out_of_scope reports.
+  defp first_category_uid(family) do
+    {name, _} =
+      Schema.all_classes(family)
+      |> Enum.find(fn {_k, v} -> v[:category] == true end)
+
+    [{_key, %{id: uid}} | _] =
+      Schema.taxonomy(family, nil, Atom.to_string(name)) |> Enum.to_list()
+
+    uid
+  end
+
+  # A payload that satisfies every required attribute of discovery.
+  defp valid_discovery do
+    %{
+      "schema_version" => "1.0.0",
+      "skills" => [%{"id" => @test_skill_uid}],
+      "domains" => [%{"id" => @test_domain_uid}],
+      "formats" => [%{"id" => first_format_uid()}]
+    }
+  end
+
+  defp validate_metadata(data) do
+    Schema.Validator.validate(data, [name: "discovery"], :object)
+  end
 
   defp first_skill_name do
     # Return the full hierarchical name as stored in the name attribute enum
@@ -155,20 +192,13 @@ defmodule Schema.ValidatorTest do
   # ---------------------------------------------------------------------------
 
   describe "validate module — happy path" do
-    test "module identified by id is resolved (missing required fields are reported)" do
-      # Non-category modules all require a `data` field, so we cannot produce a zero-error
-      # result without providing deeply-nested object data. Instead, test that the module
-      # is correctly identified (no name_unknown / id_unknown errors) and that any errors
-      # are exclusively about missing required attributes.
-      uid = @test_module_uid
-      result = validate(%{"id" => uid}, :module)
+    test "format identified by id validates cleanly" do
+      # A format is a name/id vocabulary entry with no payload of its own,
+      # so identifying it by uid is enough to validate with no errors at all.
+      result = validate(%{"id" => first_format_uid()}, :module)
 
-      non_required_errors =
-        errors(result)
-        |> Enum.reject(fn e -> e[:error] == "attribute_required_missing" end)
-
-      assert non_required_errors == [],
-             "Expected only required-attribute errors, got extra: #{inspect(non_required_errors)}"
+      assert errors(result) == [],
+             "Expected no errors, got: #{inspect(errors(result))}"
     end
   end
 
@@ -184,37 +214,21 @@ defmodule Schema.ValidatorTest do
   # ---------------------------------------------------------------------------
 
   describe "validate object — happy path" do
-    test "valid locator object by type value has no errors" do
-      result =
-        Schema.Validator.validate(
-          %{"type" => "container_image", "urls" => ["https://example.com/image:latest"]},
-          [],
-          :object
-        )
+    test "valid discovery object with required fields has no errors" do
+      # Use UIDs for the vocabularies to avoid enum name format issues.
+      # Use "1.0.0" as schema_version: the current schema is a prerelease, so
+      # passing an earlier released version yields only a warning, not an error.
+      result = validate_metadata(valid_discovery())
 
-      # Without object name option, we get attribute_required_missing for object_name
-      assert is_map(result)
+      assert result[:error_count] == 0,
+             "Expected 0 errors, got: #{inspect(result[:errors])}"
     end
 
-    test "valid record object with required fields has no errors" do
-      # Use UIDs for skills and domains to avoid enum name format issues.
-      # Use "1.0.0" as schema_version: the current schema is "1.1.0-dev" (prerelease),
-      # so passing an earlier released version yields only a warning, not an error.
+    test "distributions accepts a known distribution form" do
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => "test_agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => ["author@example.com"],
-            "created_at" => "2024-01-01T00:00:00Z",
-            "schema_version" => "1.0.0",
-            "skills" => [%{"id" => @test_skill_uid}],
-            "domains" => [%{"id" => @test_domain_uid}]
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("distributions", ["live_service", "container_image"])
+        |> validate_metadata()
 
       assert result[:error_count] == 0,
              "Expected 0 errors, got: #{inspect(result[:errors])}"
@@ -241,17 +255,11 @@ defmodule Schema.ValidatorTest do
       result =
         Schema.Validator.validate(
           %{
-            "name" => "test_agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => ["author@example.com"],
-            "created_at" => "2024-01-01T00:00:00Z",
             "schema_version" => "1.0.0",
             "skills" => [%{"id" => @test_skill_uid}],
-            "domains" => [%{"id" => @test_domain_uid}],
-            "modules" => [%{"id" => 1}]
+            "formats" => [%{"id" => first_category_uid(:module)}]
           },
-          [name: "record"],
+          [name: "discovery"],
           :object
         )
 
@@ -259,116 +267,60 @@ defmodule Schema.ValidatorTest do
              "Expected class_out_of_scope, got: #{inspect(error_types(result))}"
 
       scope_error = Enum.find(errors(result), &(&1[:error] == "class_out_of_scope"))
-      assert scope_error[:attribute] == "modules"
+      assert scope_error[:attribute] == "formats"
     end
 
     test "base class is reported once as base_class_used, not also class_out_of_scope" do
-      # uid 0 is the abstract base module. base_class_used already covers it;
-      # the scope check must not add a duplicate class_out_of_scope for the
-      # same value.
+      # uid 0 is the abstract base of the vocabulary. base_class_used already
+      # covers it; the scope check must not add a duplicate class_out_of_scope
+      # for the same value.
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => "test_agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => ["author@example.com"],
-            "created_at" => "2024-01-01T00:00:00Z",
-            "schema_version" => "1.0.0",
-            "skills" => [%{"id" => @test_skill_uid}],
-            "domains" => [%{"id" => @test_domain_uid}],
-            "modules" => [%{"id" => 0}]
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("formats", [%{"id" => 0}])
+        |> validate_metadata()
 
       assert "base_class_used" in error_types(result)
       refute "class_out_of_scope" in error_types(result)
     end
 
     test "missing required attribute returns attribute_required_missing" do
-      result =
-        Schema.Validator.validate(
-          %{},
-          [name: "record"],
-          :object
-        )
+      result = validate_metadata(%{})
 
       assert "attribute_required_missing" in error_types(result)
     end
 
     test "unknown attribute returns attribute_unknown" do
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => "test_agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => ["author@example.com"],
-            "created_at" => "2024-01-01T00:00:00Z",
-            "skills" => [%{"id" => @test_skill_uid}],
-            "domains" => [%{"id" => @test_domain_uid}],
-            "this_attribute_does_not_exist" => "bad"
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("this_attribute_does_not_exist", "bad")
+        |> validate_metadata()
 
       assert "attribute_unknown" in error_types(result)
     end
 
     test "required array that is empty returns attribute_required_empty" do
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => "test_agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => [],
-            "created_at" => "2024-01-01T00:00:00Z",
-            "skills" => [%{"id" => @test_skill_uid}],
-            "domains" => [%{"id" => @test_domain_uid}]
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("skills", [])
+        |> validate_metadata()
 
       assert "attribute_required_empty" in error_types(result)
     end
 
     test "wrong type for a string field returns attribute_wrong_type" do
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => 12345,
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => ["author@example.com"],
-            "created_at" => "2024-01-01T00:00:00Z",
-            "skills" => [%{"id" => @test_skill_uid}]
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("schema_version", 12345)
+        |> validate_metadata()
 
       assert "attribute_wrong_type" in error_types(result)
     end
 
     test "array type passed as scalar returns attribute_wrong_type" do
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => "agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => "not_an_array",
-            "created_at" => "2024-01-01T00:00:00Z",
-            "skills" => [%{"id" => @test_skill_uid}]
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("skills", "not_an_array")
+        |> validate_metadata()
 
       assert "attribute_wrong_type" in error_types(result)
     end
@@ -378,27 +330,27 @@ defmodule Schema.ValidatorTest do
   # Enum validation
   # ---------------------------------------------------------------------------
 
-  describe "validate enum — locator type" do
-    test "unknown enum value returns attribute_enum_value_unknown" do
+  describe "validate enum — distribution" do
+    test "unknown enum value returns attribute_enum_array_value_unknown" do
       result =
-        Schema.Validator.validate(
-          %{"type" => "UNKNOWN_LOCATOR_TYPE", "urls" => ["https://example.com"]},
-          [name: "locator"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("distributions", ["UNKNOWN_LOCATOR_TYPE"])
+        |> validate_metadata()
 
-      assert "attribute_enum_value_unknown" in error_types(result)
+      assert "attribute_enum_array_value_unknown" in error_types(result)
     end
 
     test "valid enum value returns no enum errors" do
       result =
-        Schema.Validator.validate(
-          %{"type" => "container_image", "urls" => ["https://example.com/image:latest"]},
-          [name: "locator"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("distributions", ["container_image"])
+        |> validate_metadata()
 
-      enum_errors = Enum.filter(errors(result), &(&1[:error] == "attribute_enum_value_unknown"))
+      enum_errors =
+        Enum.filter(errors(result), fn e ->
+          String.starts_with?(e[:error] || "", "attribute_enum_")
+        end)
+
       assert enum_errors == []
     end
   end
@@ -530,21 +482,9 @@ defmodule Schema.ValidatorTest do
   describe "duplicate array items" do
     test "duplicate skills in array returns attribute_array_duplicate" do
       result =
-        Schema.Validator.validate(
-          %{
-            "name" => "test_agent",
-            "version" => "1.0.0",
-            "description" => "test",
-            "authors" => ["author@example.com"],
-            "created_at" => "2024-01-01T00:00:00Z",
-            "skills" => [
-              %{"id" => @test_skill_uid},
-              %{"id" => @test_skill_uid}
-            ]
-          },
-          [name: "record"],
-          :object
-        )
+        valid_discovery()
+        |> Map.put("skills", [%{"id" => @test_skill_uid}, %{"id" => @test_skill_uid}])
+        |> validate_metadata()
 
       assert "attribute_array_duplicate" in error_types(result)
     end

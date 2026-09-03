@@ -18,7 +18,7 @@ The design passed through several shapes first. They are recorded so that later 
 | Considered | Why it was set aside |
 | --- | --- |
 | A single fat `record` extension carrying skills, domains, locators, and authors | Forces one version across unrelated concerns, and a consumer wanting only skills has to accept the whole blob. Replaced by focused concerns, then narrowed further once routing became the stated purpose. |
-| A taxonomy-only extension, dropping everything else | The right instinct but incomplete: once the purpose was stated as DHT routing, media types and locator types turned out to be routed on as well. |
+| A taxonomy-only extension, dropping everything else | The right instinct but incomplete: once the purpose was stated as DHT routing, formats and distributions turned out to be routed on as well. |
 | Independent majors per extension in the key — `taxonomy.v1` beside `security.v2` | Incompatible with OASF versioning the whole schema at once. See *Why it needs a different home*. |
 | Full semver in the key — `taxonomy.v1_1_0` | Every minor release mints new keys. Since consumers match keys exactly and must ignore unknown ones silently, each release would quietly blind existing consumers instead of erroring. |
 | A URN key — `urn:agntcy:oasf:discovery` | Echoes the spec's own `urn:air:` identifier style, but is neither of the two permitted key forms. |
@@ -26,6 +26,7 @@ The design passed through several shapes first. They are recorded so that later 
 | Several extensions hosted inside OASF with versionless keys, discriminating breaking changes via `schema_version` in each payload | Dominated. Its only purpose was hosting more than one extension, but OASF cannot version them independently — so the moment that is needed we meet Step 2's trigger and leave anyway. Choosing it would mean paying Step 2's costs later while giving up Step 1's clear scope now. |
 | Modelling the AI Catalog entry itself in OASF | Puts us on the hook for tracking an external spec's evolution. Revisited under *One-pass validation*, where the conclusion is to contribute a schema upstream instead. |
 | Deleting `proto/` | Correct while the payload was open-ended JSON; reversed once Step 1 made it a small closed structure of numeric enums. |
+| Keeping the name `record` for the reduced object | The referent inverts while the word stays: the old record *was* the container, the new object is a fragment attached to someone else's. It would also collide with the thing that took over that role, since "the record" would be ambiguous between a catalog entry and our payload. And a rename makes the break loud — `objects/record.json` disappearing fails a consumer immediately, where a same-named object with nine of ten attributes gone fails at runtime. Named `discovery` instead. |
 
 ## Extension identity — two ways to make it stable
 
@@ -113,18 +114,18 @@ Independent of which step we are on:
 
 The spec constrains almost nothing: keys "MUST be a valid URL or a reverse-DNS string", unrecognised keys "MUST be ignored without throwing an error", and there is **no** extension versioning mechanism, registry, or schema-validation requirement.
 
-## Step 1 — the discovery metadata extension
+## Step 1 — the discovery extension
 
 OASF keeps its framework, server, and browser, but its *purpose* narrows. It becomes the curator of the **closed vocabularies that Directory's DHT routing indexes on**. Free-text fields cannot be routing keys; fixed enums can. That is a sharper reason to exist than "we maintain a schema framework," and it is what makes the validator matter rather than being ceremony: every field must resolve against a known vocabulary or the entry is not routable.
 
-`objects/record.json` is reduced and renamed — `discovery_metadata` — and becomes the single extension payload. Four fields, each a closed vocabulary:
+`objects/record.json` is reduced and renamed — `discovery` — and becomes the single extension payload. Four fields, each a closed vocabulary:
 
 | Field | Was | Shape | Answers |
 | --- | --- | --- | --- |
 | `skills` | `skills` | name + uid, hierarchical class family | what it can do |
 | `domains` | `domains` | name + uid, hierarchical class family | where it applies |
-| `media_types` | `modules` | name + uid, flat class family | which artifact formats Directory accepts |
-| `locator_types` | `locator.type` | flat enum | how it is distributed |
+| `formats` | `modules` | name + uid, one category | which specifications its artifact conforms to |
+| `distributions` | `locator.type` | flat enum | what form it is distributed in |
 
 ```json
 {
@@ -140,8 +141,8 @@ OASF keeps its framework, server, and browser, but its *purpose* narrows. It bec
           "schema_version": "2.0.0",
           "skills":        [{"name": "software_engineering/code_debugging/error_handling", "id": 60101}],
           "domains":       [{"name": "technology/networking/network_security", "id": 60401}],
-          "media_types":   [{"name": "a2a", "id": 3}],
-          "locator_types": ["live_service", "container_image"]
+          "formats":       [{"name": "a2a", "id": 101}],
+          "distributions": ["live_service", "container_image"]
         }
       }
     }
@@ -157,23 +158,31 @@ Everything the catalog entry already covers — name, description, version, publ
 
 ### What this deletes
 
-`schema/objects/` goes from 56 files to about three. Every module payload object disappears — `a2a_data`, the six `mcp_*`, the nine `acp_*`, five `agentspec_*`, four `agentskills_*`, `language_model*`, `prompt`, `evaluation*`, `observability*`, the three `*_deployment` objects, `env_var*`, the framework configs, `metric`, `overall_scores` — because the actual A2A card or MCP manifest lives in the catalog entry's `data` or behind its `url`, not in OASF. `descriptor`, `publisher`, and `locator` go too. Only the base `object`, the renamed `discovery_metadata`, and possibly `key_value_object` survive.
+`schema/objects/` goes from 56 files to about three. Every module payload object disappears — `a2a_data`, the six `mcp_*`, the nine `acp_*`, five `agentspec_*`, four `agentskills_*`, `language_model*`, `prompt`, `evaluation*`, `observability*`, the three `*_deployment` objects, `env_var*`, the framework configs, `metric`, `overall_scores` — because the actual A2A card or MCP manifest lives in the catalog entry's `data` or behind its `url`, not in OASF. `descriptor`, `publisher`, and `locator` go too. Only the base `object`, the renamed `discovery`, and possibly `key_value_object` survive.
 
 The module *classes* survive as the media-type vocabulary, stripped to name and uid — no `data`, no `artifact`, no `annotations`, exactly like a skill or a domain. `base_module` collapses into the same shape as `base_skill`.
 
 `proto/` is retained. A small, closed structure of numeric enums is close to ideal for proto codegen, and Directory routes in Go.
 
-### `media_types` is not redundant with the entry's `type`
+### `formats` is not the entry's `type`
 
-The spec says `type` is "an open text format, so any string value is accepted" — it describes what an artifact *is*, informationally. `media_types` is a closed set describing what Directory will *accept and route on*. One is documentation, the other is enforceable. They coexist without overlap.
+The spec says `type` is "an open text format, so any string value is accepted" — it describes what an artifact *is*, informationally. `formats` is a closed set describing what Directory will *accept and route on*. One is documentation, the other is enforceable.
 
-The vocabulary is `a2a`, `mcp`, `agentskills`, and `agentspec`. `acp` (`modules/integration/acp.json`, uid 1) is **dropped** — the protocol is discontinued, so it is not a format Directory should route on. Its uid is retired with it rather than reused.
+An earlier draft called this attribute `media_types`, which was a poor name twice over: the values are slugs (`a2a`), not media types (`application/a2a-agent-card+json`), and class names are constrained to `^[a-z0-9_]*$` so they can never be the latter; and sharing a name with the entry's `type` field invited exactly the confusion this section had to talk readers out of.
 
-### `locator_types` carries no location
+The vocabulary is `a2a`, `mcp`, `agentskills`, and `agentspec`, grouped under a single `core` category. `acp` is **dropped** — the protocol is discontinued, so it is not a format Directory should route on.
+
+Retaining one category rather than flattening keeps the family structurally identical to skills and domains, which matters in two concrete ways. The browser's top-level cards then mean the same thing in every family — a category to drill into, rather than a concrete value in one family and a category in the others. And a category class is not usable as a value, which is what `class_out_of_scope` reports: flattening removes the only way that error can arise for `formats`, silently dropping validator coverage that skills and domains keep.
+
+Uids are renumbered regardless of the choice, since the old values were scoped to the previous `core`/`integration` split (`category_uid * 100 + class_uid`). Under one category they are 101–104, so there is no uid worth reserving for the dropped `acp`.
+
+### `distributions` carry no location
 
 The existing enum in `objects/locator.json` is `unspecified`, `helm_chart`, `container_image`, `package`, `source_code`, `binary`, `url`. Step 1 keeps those and adds the A2A cases — a live service versus a static JSON document. The `urls` and `annotations` attributes are dropped; location comes from the catalog entry.
 
-**Known limitation:** `locator_types` is a set, but an entry has exactly one `url`. So a payload can say "available as a container image *and* a helm chart" without saying which URL is which. For routing that is sufficient — it is a search facet, and the consumer fetches the entry afterwards. For fidelity it is lossy. Genuinely multi-distribution artifacts would need either one entry per distribution or a nested catalog (`application/ai-catalog+json`), which the spec explicitly supports.
+The attribute is named `distributions` rather than carrying `locator` forward, because once the URL moves to the catalog entry nothing about it locates anything: it answers what form the artifact is obtained in. Retaining `locator_types` would have described the one thing the attribute no longer does.
+
+**Known limitation:** `distributions` is a set, but an entry has exactly one `url`. So a payload can say "available as a container image *and* a helm chart" without saying which URL is which. For routing that is sufficient — it is a search facet, and the consumer fetches the entry afterwards. For fidelity it is lossy. Genuinely multi-distribution artifacts would need either one entry per distribution or a nested catalog (`application/ai-catalog+json`), which the spec explicitly supports.
 
 ### Why one extension fits OASF as it is
 
@@ -194,7 +203,7 @@ Metrics and security data are not routing metadata, so under Step 1 they are **n
 
 - Still a breaking change to `record`, so `dir` and `oasf-sdk` must move together; there is no release in which both shapes validate.
 - Closed vocabularies mean every new media type or locator type requires an OASF release.
-- The `locator_types`-without-URL limitation above.
+- The `distributions`-without-URL limitation above.
 - Ties OASF's scope tightly to Directory's routing needs. Another consumer wanting these vocabularies for a different purpose reopens the scope argument.
 - Deleting ~50 objects discards modelling work some consumers may already depend on.
 
@@ -268,13 +277,12 @@ Two projects have already produced divergent models of the same format — exact
 ## Open questions
 
 1. **Extension identity: w3id.org URL or reverse-DNS resolved in `oasf-sdk`?** Turns on whether we expect third parties to consume AGNTCY extensions without AGNTCY tooling. Both give a permanent key; only the resolver differs.
-2. **Is "Open Agentic Schema *Framework*" still the right name?** After Step 1, `schema/objects/` drops from 56 files to about three, and what remains is three vocabularies (`skills`, `domains`, `media_types`), one flat enum (`locator_types`), and one payload object. The metaschema, dictionary, categories, `extends` inheritance, and uid arithmetic all survive — but they survive *in service of curating a taxonomy*, not as a general-purpose schema-definition system in the way OCSF's do. The test that matters: could a third party use OASF to define a schema of their own? Today yes, via schema extensions; after Step 1 that capability has nothing left to extend, and contributing a skill is participating in a taxonomy rather than using a framework. So "Framework" becomes the weak letter — "Open", "Agentic", and arguably "Schema" all still hold. Options: rename (costly — `agntcy/oasf`, `schema.oasf.outshift.com`, the `agntcy.oasf.types.v1` proto packages, `oasf-sdk`, the Helm chart, and links from `docs.agntcy.org` all carry it), or keep the letters and stop expanding them into a claim, as plenty of projects do once they outgrow their acronym. **This gates key minting** unless the key omits the project name — see *Keep the project name out of the key*.
-3. Does `dir` confirm that skills, domains, media types, and locator types are the complete set of fields DHT routing indexes on? If it routes on something else, that field belongs in the payload; if it does not route on one of these, that field should not be there. **This is the question that most shapes Step 1.**
+2. **Is "Open Agentic Schema *Framework*" still the right name?** After Step 1, `schema/objects/` drops from 56 files to about three, and what remains is three vocabularies (`skills`, `domains`, `formats`), one flat enum (`distributions`), and one payload object. The metaschema, dictionary, categories, `extends` inheritance, and uid arithmetic all survive — but they survive *in service of curating a taxonomy*, not as a general-purpose schema-definition system in the way OCSF's do. The test that matters: could a third party use OASF to define a schema of their own? Today yes, via schema extensions; after Step 1 that capability has nothing left to extend, and contributing a skill is participating in a taxonomy rather than using a framework. So "Framework" becomes the weak letter — "Open", "Agentic", and arguably "Schema" all still hold. Options: rename (costly — `agntcy/oasf`, `schema.oasf.outshift.com`, the `agntcy.oasf.types.v1` proto packages, `oasf-sdk`, the Helm chart, and links from `docs.agntcy.org` all carry it), or keep the letters and stop expanding them into a claim, as plenty of projects do once they outgrow their acronym. **This gates key minting** unless the key omits the project name — see *Keep the project name out of the key*.
+3. Does `dir` confirm that skills, domains, formats, and distributions are the complete set of fields DHT routing indexes on? If it routes on something else, that field belongs in the payload; if it does not route on one of these, that field should not be there. **This is the question that most shapes Step 1.**
 4. Is one entry per distribution acceptable for multi-distribution artifacts, or do we need nested catalogs?
 5. Do we contribute an entry schema upstream, vendor one, or accept two-step validation? Has our SDK team already built something contributable?
 6. Sequencing with `agntcy/dir` and `oasf-sdk`, both of which consume the record today.
 7. Do module categories still mean anything once the payload objects are gone? Overlaps with [#478](https://github.com/agntcy/oasf/issues/478).
-8. What is the final name — `discovery_metadata`, or something shorter that reads well as a key segment?
 
 ## Next steps
 

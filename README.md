@@ -5,7 +5,7 @@
 [![Coverage](https://codecov.io/gh/agntcy/oasf/branch/main/graph/badge.svg)](https://codecov.io/gh/agntcy/oasf)
 [![License](https://img.shields.io/github/license/agntcy/oasf)](./LICENSE.md)
 
-The [Open Agentic Schema Framework (OASF)](https://schema.oasf.outshift.com/) is a standardized schema system for
+The [Open Agentic Schema Framework (OASF)](https://schema.oasf.outshift.com/) is a standardized schema system for
 defining and managing AI agent capabilities, interactions, and metadata.
 It provides a structured way to describe agent attributes, capabilities, and relationships using attribute-based
 taxonomies.
@@ -14,7 +14,7 @@ all managed through a Taskfile-based workflow and containerized development envi
 OASF serves as the foundation for interoperable AI agent systems, enabling consistent definition and discovery of agent
 capabilities across distributed systems.
 
-OASF is highly inspired from [OCSF (Open Cybersecurity Schema Framework)](https://ocsf.io/) in terms of data modeling
+OASF is highly inspired from [OCSF (Open Cybersecurity Schema Framework)](https://ocsf.io/) in terms of data modeling
 philosophy but also in terms of implementation.
 The server is a derivative work of OCSF schema server and the schema update workflows reproduce those developed by OCSF.
 
@@ -28,28 +28,41 @@ OASF defines a set of standards for agentic AI content representation that aims 
 
 ## Key Concepts
 
-At the core of OASF is the [record object](./schema/objects/record.json), which serves as the primary data structure for
-representing collections of information and metadata relevant to agentic AI applications.
+Agentic AI artifacts are described by the [AI Catalog](https://ai-catalog.io/spec) format, which carries an artifact's
+identity, type, version, publisher, and location. OASF supplies what that format deliberately leaves open: the
+**closed vocabularies** that announcement and discovery index on.
 
-OASF records can be annotated with **skills** and **domains** to enable effective announcement and discovery across
-agentic systems.
-Additionally, **modules** provide a flexible mechanism to extend records with additional information in a modular and
-composable way, supporting a wide range of agentic use cases.
+At the core of OASF is the [discovery object](./schema/objects/discovery.json), published as an
+[AI Catalog extension](https://ai-catalog.io/spec/#extensions). It has four attributes, each drawn from a vocabulary
+curated here:
+
+| Attribute | Answers |
+| --- | --- |
+| **skills** | what the workload can do |
+| **domains** | which fields it applies to |
+| **formats** | which specifications its artifact conforms to |
+| **distributions** | what form it is distributed in |
+
+Because every value must resolve against a known vocabulary, discovery metadata is routable: free-text fields cannot
+serve as routing keys, whereas a fixed vocabulary can. Everything else about the artifact — including the artifact
+itself — stays in the catalog entry.
+
+See [docs/design](./docs/design) for the design that introduced this model.
 
 ## Schema Expansion and Contributions
 
 The Open Agentic Schema Framework (OASF) is designed with extensibility in mind and is expected to evolve to capture new
 use cases and capabilities.
-A key area of anticipated expansion includes the definition and management of **Skills**, **Domains** and **Modules**
-for AI agentic records.
+A key area of anticipated expansion includes the definition and management of **Skills**, **Domains** and
+**Media Types** used for agent discovery.
 
 We welcome contributions from the community to help shape the future of OASF.
 For detailed guidelines on how to contribute, including information on proposing new features, reporting bugs, and
-submitting code, please refer to our [contributing guide](CONTRIBUTING.md).
+submitting code, please refer to our [contributing guide](CONTRIBUTING.md).
 
 OASF can be extended with private schema extensions, allowing you to leverage all features of the framework, such as
 validation.
-See the relevant section in the [contributing guide](./CONTRIBUTING.md#oasf-extensions) for instructions on adding an
+See the relevant section in the [contributing guide](./CONTRIBUTING.md#oasf-extensions) for instructions on adding an
 extension to the schema.
 An OASF instance with schema extensions can be hosted, allowing you to use your own schema server for record validation.
 
@@ -65,20 +78,20 @@ versions, while allowing the framework to evolve and improve over time through n
 ## Useful Links
 
 A convenient way to browse and use the OASF schema is through the
-[Open Agentic Schema Framework Server](https://schema.oasf.outshift.com) hosted by Outshift by Cisco.
+[Open Agentic Schema Framework Server](https://schema.oasf.outshift.com) hosted by Outshift by Cisco.
 
-To deploy the server either locally or as a hosted service, see the [server's guide](oasf-server.md) for more
+To deploy the server either locally or as a hosted service, see the [server's guide](oasf-server.md) for more
 information.
 
-See [Creating an Agent Record](https://docs.agntcy.org/how-to-guides/agent-record-guide/) for more information on the
+See [Creating an Agent Record](https://docs.agntcy.org/how-to-guides/agent-record-guide/) for more information on the
 Agent Record.
 
 The current skill set taxonomy is described in
-[Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/skill_categories).
+[Taxonomy of AI Agent Skills](https://schema.oasf.outshift.com/skill_categories).
 
 ## Creating Valid OASF Records with MCP Server
 
-The [Directory MCP Server](https://github.com/agntcy/dir/tree/main/mcp) provides powerful capabilities to help create
+The [Directory MCP Server](https://github.com/agntcy/dir/tree/main/mcp) provides powerful capabilities to help create
 valid OASF agent records when configured with an LLM (such as in Cursor or other MCP-compatible IDEs).
 The MCP server exposes tools and prompts that enable LLMs to generate, validate, and refine OASF records with
 schema-aware assistance.
@@ -98,7 +111,7 @@ schema-aware assistance.
 
 To use the MCP server with an LLM for creating OASF records:
 
-1. **Install the Directory MCP Server** - See the [MCP Server README](https://github.com/agntcy/dir/tree/main/mcp) for
+1. **Install the Directory MCP Server** - See the [MCP Server README](https://github.com/agntcy/dir/tree/main/mcp) for
    installation instructions
 2. **Configure your IDE** - Add the MCP server to your IDE's MCP configuration (e.g., `~/.cursor/mcp.json`)
 3. **Start Creating Records** - Use natural language to ask the LLM to create, validate, or refine OASF records
@@ -177,7 +190,7 @@ LOG_LEVEL=debug task up
 **Note:** Any changes made to the server backend itself will require running `task up` again.
 
 To set your own local OASF server using Elixir tooling, follow
-[these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
+[these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
 
 ### Hot Reload
 
@@ -225,7 +238,7 @@ task down
 
 ### Artifacts
 
-See [AGNTCY Github Registry](https://github.com/orgs/agntcy/packages?repo_name=oasf).
+See [AGNTCY Github Registry](https://github.com/orgs/agntcy/packages?repo_name=oasf).
 
 ### Protocol Buffer Definitions
 
@@ -235,7 +248,7 @@ The full proto module, generated language stubs and it's versions are hosted at 
 
 ## Copyright Notice
 
-[Copyright Notice and License](./LICENSE.md)
+[Copyright Notice and License](./LICENSE.md)
 
 Distributed under Apache 2.0 License.
 See LICENSE for more information.
