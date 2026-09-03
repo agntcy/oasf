@@ -16,22 +16,30 @@ defmodule SchemaWeb.SchemaControllerTest do
 
   # Names are derived at runtime from the live schema so the tests remain
   # robust against future taxonomy changes.  Each helper picks the first
-  # suitable entry from the loaded schema rather than hard-coding a name.
+  # suitable entry in sorted order rather than hard-coding a name.
+  #
+  # Sorting matters: the schema is held in a map, so iteration order is not
+  # stable across environments, and picking an arbitrary entry makes these
+  # tests pass or fail by luck. Extension entities are excluded because their
+  # keys are scoped as `<extension>/<name>`, which the single-segment
+  # `/api/{translate,validate}/object/:name` routes cannot address.
+
+  defp first_unscoped(entries, suitable?) do
+    entries
+    |> Enum.filter(fn {k, v} ->
+      suitable?.(v) and not String.contains?(Atom.to_string(k), "/")
+    end)
+    |> Enum.map(fn {k, _v} -> Atom.to_string(k) end)
+    |> Enum.sort()
+    |> List.first()
+  end
 
   defp test_class_name(family) do
-    {name, _} =
-      Schema.all_classes(family)
-      |> Enum.find(fn {_k, v} -> v[:category] != true end)
-
-    Atom.to_string(name)
+    first_unscoped(Schema.all_classes(family), &(&1[:category] != true))
   end
 
   defp test_class_category_name(family) do
-    {name, _} =
-      Schema.all_classes(family)
-      |> Enum.find(fn {_k, v} -> v[:category] == true end)
-
-    Atom.to_string(name)
+    first_unscoped(Schema.all_classes(family), &(&1[:category] == true))
   end
 
   defp test_skill_name, do: test_class_name(:skill)
@@ -43,8 +51,7 @@ defmodule SchemaWeb.SchemaControllerTest do
   defp test_module_category_name, do: test_class_category_name(:module)
 
   defp test_object_name do
-    {name, _} = Schema.all_objects() |> Enum.find(fn {_k, _v} -> true end)
-    Atom.to_string(name)
+    first_unscoped(Schema.all_objects(), fn _ -> true end)
   end
 
   # ---------------------------------------------------------------------------
