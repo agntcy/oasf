@@ -35,9 +35,9 @@
         },
         "uid": {
           "type": "integer",
-          "description": "A unique identifier for this class, must be unique within the category and class level.",
+          "description": "A unique identifier for this class, must be unique within the category and class level. Identifiers are packed two decimal digits per level, so this must stay below 100 -- a larger value overflows into the neighbouring category.",
           "minimum": 0,
-          "maximum": 999
+          "maximum": 99
         }
       },
       "additionalProperties": false
