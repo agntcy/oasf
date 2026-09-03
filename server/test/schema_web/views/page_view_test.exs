@@ -164,8 +164,8 @@ defmodule SchemaWeb.PageViewTest do
     end
 
     test "a category class links to the category page" do
-      assert PageView.class_t_path(@endpoint, "module", "integration") ==
-               "/module_categories/integration"
+      assert PageView.class_t_path(@endpoint, "skill", "cybersecurity") ==
+               "/skill_categories/cybersecurity"
     end
 
     test "a concrete leaf class links to the class page" do

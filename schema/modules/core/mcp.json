@@ -1,0 +1,8 @@
+{
+  "uid": 2,
+  "caption": "MCP",
+  "description": "Server manifest published for use with the Model Context Protocol.",
+  "extends": "core",
+  "name": "mcp",
+  "attributes": {}
+}
