@@ -10,14 +10,14 @@ on:
 
 permissions:
   contents: read
-  security-events: write # for uploading SARIF
-  actions: read
-  issues: write # create issues for critical CVEs
 
 jobs:
   trivy-scan:
     name: Trivy Image Scan (Pull from GHCR)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # for uploading SARIF
     strategy:
       fail-fast: false
       matrix:
@@ -72,6 +72,10 @@ jobs:
     needs: [trivy-scan]
     runs-on: ubuntu-latest
     if: always()
+    permissions:
+      contents: read
+      actions: read # for downloading artifacts from this run
+      issues: write # create issues for critical CVEs
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
