@@ -1,7 +1,7 @@
 {
   "uid": 1,
   "caption": "Core",
-  "description": "Modules that provide essential functionalities and services.",
+  "description": "Formats for the artifact specifications OASF curates directly.",
   "extends": "base_module",
   "name": "core",
   "category": true,

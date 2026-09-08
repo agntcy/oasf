@@ -1,0 +1,33 @@
+{
+  "caption": "Discovery",
+  "description": "Discovery information is published as an extension of an <a target='_blank' href='https://ai-catalog.io/spec'>AI Catalog</a> entry. It carries only the closed vocabularies that agent discovery indexes on: what a workload can do, the fields it applies to, the artifact formats it is published in, and how it is distributed. Everything else about the artifact — its name, description, version, publisher, and location — is carried by the catalog entry itself.",
+  "extends": "object",
+  "name": "discovery",
+  "attributes": {
+    "schema_version": {
+      "caption": "Schema Version",
+      "description": "Version of the OASF schema that this metadata conforms to. Consumers use it to select the vocabularies the remaining attributes are validated against.",
+      "requirement": "required"
+    },
+    "skills": {
+      "caption": "Skills",
+      "description": "List of skills this workload is capable of performing.",
+      "requirement": "required"
+    },
+    "domains": {
+      "caption": "Domains",
+      "description": "List of domains this workload operates in.",
+      "requirement": "recommended"
+    },
+    "formats": {
+      "caption": "Formats",
+      "description": "List of specifications this workload's artifact conforms to.",
+      "requirement": "required"
+    },
+    "distributions": {
+      "caption": "Distributions",
+      "description": "List of forms this workload is distributed in. The locations themselves are carried by the catalog entry.",
+      "requirement": "recommended"
+    }
+  }
+}

@@ -5,7 +5,7 @@ defmodule Schema.GeneratorTest do
   @moduledoc """
   Tests for sample data generation.
 
-  The `record` object references the `skill`, `domain`, and `module` class
+  The `discovery` object references the `skill`, `domain`, and `module` class
   families through `class_t` enum attributes.  Generating a sample must only
   materialize the handful of classes it actually samples — never the entire
   family — otherwise per-request memory scales with the taxonomy size and the
@@ -45,12 +45,12 @@ defmodule Schema.GeneratorTest do
     end
   end
 
-  describe "generate_object/2 for the record object" do
+  describe "generate_object/2 for the discovery object" do
     test "produces valid, bounded skill/domain samples" do
-      record = Schema.object(nil, "record")
-      assert record, "record object must exist in the loaded schema"
+      metadata = Schema.object(nil, "discovery")
+      assert metadata, "discovery object must exist in the loaded schema"
 
-      sample = Schema.generate_object(record, nil)
+      sample = Schema.generate_object(metadata, nil)
 
       skills = Map.get(sample, :skills) || Map.get(sample, "skills") || []
       assert is_list(skills)
@@ -63,15 +63,15 @@ defmodule Schema.GeneratorTest do
     end
 
     test "does not materialize the entire class family per sample" do
-      record = Schema.object(nil, "record")
+      metadata = Schema.object(nil, "discovery")
 
-      red = reductions(fn -> Schema.generate_object(record, nil) end)
+      red = reductions(fn -> Schema.generate_object(metadata, nil) end)
 
-      # Before the fix, generating one record sample materialized every skill
+      # Before the fix, generating one sample materialized every skill
       # (~500) and domain (~180) via an O(n^2) reverse lookup, costing ~7-8M
       # reductions.  Selecting candidates lazily keeps it well under this bound.
       assert red < 2_000_000,
-             "record sample used #{red} reductions; expected < 2_000_000 " <>
+             "sample used #{red} reductions; expected < 2_000_000 " <>
                "(the whole class family is being materialized per sample)"
     end
   end

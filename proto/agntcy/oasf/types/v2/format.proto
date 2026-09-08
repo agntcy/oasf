@@ -1,0 +1,21 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v2;
+
+// A format identifies a specification that a workload's artifact conforms to.
+// It is a closed vocabulary curated by OASF: unlike the AI Catalog entry's
+// open "type" member, only a known format is routable.
+message Format {
+  // Metadata associated with the format.
+  // Annotations with "agntcy." prefix are reserved for system use.
+  map<string, string> annotations = 1;
+
+  // Unique name of the format.
+  string name = 2;
+
+  // Unique identifier of the format.
+  uint32 id = 3;
+}

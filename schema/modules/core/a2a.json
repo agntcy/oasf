@@ -1,0 +1,8 @@
+{
+  "uid": 1,
+  "caption": "A2A",
+  "description": "Agent card published for use with the A2A protocol.",
+  "extends": "core",
+  "name": "a2a",
+  "attributes": {}
+}

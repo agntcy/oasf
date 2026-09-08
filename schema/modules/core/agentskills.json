@@ -1,0 +1,8 @@
+{
+  "uid": 4,
+  "caption": "Agent Skills",
+  "description": "Skill package published in the Agent Skills format.",
+  "extends": "core",
+  "name": "agentskills",
+  "attributes": {}
+}

@@ -1,0 +1,8 @@
+{
+  "uid": 3,
+  "caption": "AgentSpec",
+  "description": "Manifest published in the AgentSpec format.",
+  "extends": "core",
+  "name": "agentspec",
+  "attributes": {}
+}

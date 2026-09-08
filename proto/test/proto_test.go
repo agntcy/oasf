@@ -143,7 +143,10 @@ func compareSchemas(jsonSchema JsonSchema, protoMessage ProtoMessage) ([]string,
 	var warnings []string
 
 	caser := cases.Title(language.English)
-	expectedProtoName := caser.String(jsonSchema.Caption)
+	// A multi-word caption title-cases to a name containing a space, which is
+	// not a legal proto message name; the convention is to concatenate the
+	// words.
+	expectedProtoName := strings.ReplaceAll(caser.String(jsonSchema.Caption), " ", "")
 	if protoMessage.Name != expectedProtoName {
 		errors = append(errors, fmt.Sprintf("Message name mismatch: JSON '%s' vs Proto '%s'. Expected Proto to be '%s'.", jsonSchema.Caption, protoMessage.Name, expectedProtoName))
 	}
@@ -170,7 +173,10 @@ func compareSchemas(jsonSchema JsonSchema, protoMessage ProtoMessage) ([]string,
 
 var _ = Describe("JsonSchema and Proto synchronization", func() {
 	schemaRoot := "../../schema/"
-	protoRoot := "../agntcy/oasf/types/v1/"
+	// The current schema is mirrored by the newest proto package. Earlier
+	// packages (v1, v1alpha*) are frozen for existing consumers and are
+	// deliberately not checked against the current schema.
+	protoRoot := "../agntcy/oasf/types/v2/"
 
 	type testCase struct {
 		entityType string
@@ -179,11 +185,10 @@ var _ = Describe("JsonSchema and Proto synchronization", func() {
 	}
 
 	cases := []testCase{
-		{"objects", "record.json", filepath.Join(protoRoot, "record.proto")},
-		{"objects", "locator.json", filepath.Join(protoRoot, "locator.proto")},
+		{"objects", "discovery.json", filepath.Join(protoRoot, "discovery.proto")},
 		{"skills", "base_skill.json", filepath.Join(protoRoot, "skill.proto")},
 		{"domains", "base_domain.json", filepath.Join(protoRoot, "domain.proto")},
-		{"modules", "base_module.json", filepath.Join(protoRoot, "module.proto")},
+		{"modules", "base_module.json", filepath.Join(protoRoot, "format.proto")},
 	}
 
 	for _, tc := range cases {

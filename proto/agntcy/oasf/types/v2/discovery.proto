@@ -1,0 +1,55 @@
+// Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.oasf.types.v2;
+
+import "agntcy/oasf/types/v2/domain.proto";
+import "agntcy/oasf/types/v2/format.proto";
+import "agntcy/oasf/types/v2/skill.proto";
+
+// The form a workload is distributed in. This describes how the artifact is
+// obtained, not where: the location is carried by the AI Catalog entry's url
+// or data members.
+enum DistributionType {
+  DISTRIBUTION_TYPE_UNSPECIFIED = 0;
+
+  // Reachable running endpoint, such as a hosted A2A agent or MCP server.
+  DISTRIBUTION_TYPE_LIVE_SERVICE = 1;
+
+  // Static JSON document, such as an agent card served as a file.
+  DISTRIBUTION_TYPE_JSON_DOCUMENT = 2;
+
+  DISTRIBUTION_TYPE_CONTAINER_IMAGE = 3;
+  DISTRIBUTION_TYPE_HELM_CHART = 4;
+  DISTRIBUTION_TYPE_PACKAGE = 5;
+  DISTRIBUTION_TYPE_BINARY = 6;
+  DISTRIBUTION_TYPE_SOURCE_CODE = 7;
+}
+
+// Discovery information is published as an extension of an AI Catalog entry
+// (https://ai-catalog.io/spec). It carries only the closed vocabularies that
+// agent discovery indexes on. Everything else about the artifact — its name,
+// description, version, publisher, and location — is carried by the catalog
+// entry itself.
+//
+// This replaces the Record message of agntcy.oasf.types.v1, which is retained
+// unchanged for existing consumers.
+message Discovery {
+  // Version of the OASF schema that this metadata conforms to. Consumers use
+  // it to select the vocabularies the remaining fields are validated against.
+  string schema_version = 1;
+
+  // Skills this workload is capable of performing.
+  repeated Skill skills = 2;
+
+  // Domains this workload operates in.
+  repeated Domain domains = 3;
+
+  // Specifications this workload's artifact conforms to.
+  repeated Format formats = 4;
+
+  // Forms this workload is distributed in.
+  repeated DistributionType distributions = 5;
+}
