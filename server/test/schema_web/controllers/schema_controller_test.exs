@@ -42,8 +42,14 @@ defmodule SchemaWeb.SchemaControllerTest do
   defp test_domain_category_name, do: test_class_category_name(:domain)
   defp test_module_category_name, do: test_class_category_name(:module)
 
+  # Only picks objects without an extension prefix (e.g. "example/foo"), since
+  # the /api/translate/object/:name and /api/validate/object/:name endpoints
+  # take a single path segment and have no :extension/:name variant.
   defp test_object_name do
-    {name, _} = Schema.all_objects() |> Enum.find(fn {_k, _v} -> true end)
+    {name, _} =
+      Schema.all_objects()
+      |> Enum.find(fn {name, _v} -> not String.contains?(Atom.to_string(name), "/") end)
+
     Atom.to_string(name)
   end
 
