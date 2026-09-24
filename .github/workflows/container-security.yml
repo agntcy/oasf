@@ -106,14 +106,14 @@ jobs:
           if [ "${found}" != "0" ]; then
             echo "Critical vulnerabilities detected. (Gate currently informational.)" >&2
           fi
+      - name: Install issue creation dependencies
+        if: ${{ github.event_name != 'pull_request' }}
+        working-directory: .github/workflows/scripts/security
+        run: npm ci --omit=dev --ignore-scripts
+
       - name: Create GitHub issues for critical CVEs
         if: ${{ github.event_name != 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          echo "Installing dependencies for issue creation script";
-          npm init -y >/dev/null 2>&1 || true
-          npm install @octokit/rest@21 glob >/dev/null 2>&1
-          node .github/workflows/scripts/security/create_critical_cve_issues.js
+        run: node .github/workflows/scripts/security/create_critical_cve_issues.js

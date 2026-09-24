@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ARG elixir_image=elixir:1.19-alpine
-ARG runtime_image=alpine:3.23.3
+ARG elixir_image=elixir:1.19-alpine@sha256:1497af89cdb3f3921936f114d7451aeb7431437de380f89f821438646589d93b
+ARG runtime_image=alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
 
 FROM ${elixir_image} AS builder
 
