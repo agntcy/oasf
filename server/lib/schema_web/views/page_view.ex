@@ -539,7 +539,7 @@ defmodule SchemaWeb.PageView do
     |> Enum.intersperse(" ← ")
   end
 
-  @spec format_range([nil | number | Decimal.t(), ...]) :: nonempty_binary
+  @spec format_range([number, ...]) :: nonempty_binary
   def format_range([min, max]) do
     format_number(min) <> "-" <> format_number(max)
   end
@@ -1719,7 +1719,10 @@ defmodule SchemaWeb.PageView do
   end
 
   defp format_number(n) do
-    Number.Delimit.number_to_delimited(n, precision: 0)
+    n
+    |> round()
+    |> Integer.to_string()
+    |> String.replace(~r/(\d)(?=(\d{3})+$)/, "\\1,")
   end
 
   def description(map) do
