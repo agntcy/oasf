@@ -22,13 +22,16 @@ env:
   images: oasf-server
 
 permissions:
-  packages: write
+  contents: read
 
 jobs:
   dispatch:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     name: Cleanup stale container images
+    permissions:
+      # Needed to delete stale container images from GHCR.
+      packages: write
     steps:
       - name: Remove stale images
         uses: snok/container-retention-policy@4f22ef80902ad409ed55a99dc5133cc1250a0d03 # v3.0.0
