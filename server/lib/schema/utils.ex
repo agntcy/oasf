@@ -52,6 +52,38 @@ defmodule Schema.Utils do
     make_path(extension, name) |> to_uid()
   end
 
+  @doc """
+  Like `to_uid/1`, but never creates a new atom.
+
+  Lookup keys derived from user input must not go through `String.to_atom/1`:
+  atoms are never garbage collected, so unknown names arriving from the HTTP API
+  would grow the atom table until the VM aborts. Every name that can resolve to a
+  schema entity already exists as an atom, created while the schema was loaded,
+  so an atom that does not exist means the entity does not exist either, and
+  `nil` is returned.
+  """
+  @spec to_existing_uid(binary() | atom() | nil) :: atom() | nil
+  def to_existing_uid(nil), do: nil
+
+  def to_existing_uid(name) when is_atom(name), do: name
+
+  def to_existing_uid(name) when is_binary(name) do
+    String.to_existing_atom(name)
+  rescue
+    ArgumentError -> nil
+  end
+
+  @spec to_existing_uid(binary() | nil, binary() | atom() | nil) :: atom() | nil
+  def to_existing_uid(nil, name) when is_atom(name), do: name
+
+  def to_existing_uid(extension, name) when is_atom(name) and not is_nil(name) do
+    to_existing_uid(extension, Atom.to_string(name))
+  end
+
+  def to_existing_uid(extension, name) do
+    make_path(extension, name) |> to_existing_uid()
+  end
+
   @spec make_path(binary() | nil, binary()) :: binary()
   def make_path(nil, name), do: name
   def make_path(extension, name), do: Path.join(extension, name)

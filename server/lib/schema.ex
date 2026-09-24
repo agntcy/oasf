@@ -127,18 +127,19 @@ defmodule Schema do
 
   @doc """
   Returns a single class of the given `family` by key.  The `id` can be either
-  an atom or a string and is normalized via `Schema.Utils.to_uid/1`.
+  an atom or a string and is normalized via `Schema.Utils.to_existing_uid/1`,
+  which never creates new atoms from caller-supplied names.
 
   Category classes are excluded from the result.
   """
   @spec class(class_family(), atom() | String.t()) :: nil | Cache.class_t()
-  def class(family, id), do: Repo.class(family, Utils.to_uid(id))
+  def class(family, id), do: Repo.class(family, Utils.to_existing_uid(id))
 
   @doc """
   Returns a single class of the given `family` scoped by an optional `extension`.
   """
   @spec class(class_family(), nil | String.t(), String.t()) :: nil | map()
-  def class(family, extension, id), do: Repo.class(family, Utils.to_uid(extension, id))
+  def class(family, extension, id), do: Repo.class(family, Utils.to_existing_uid(extension, id))
 
   @doc """
   Returns a single class of the given `family` with its attributes filtered by
@@ -193,16 +194,16 @@ defmodule Schema do
   """
   @spec object(atom | String.t()) :: nil | Cache.object_t()
   def object(id),
-    do: Repo.object(Utils.to_uid(id))
+    do: Repo.object(Utils.to_existing_uid(id))
 
   @spec object(nil | String.t(), String.t()) :: nil | map()
   def object(extension, id) when is_binary(id) do
-    Repo.object(Utils.to_uid(extension, id))
+    Repo.object(Utils.to_existing_uid(extension, id))
   end
 
   @spec object(Repo.extensions_t(), String.t(), String.t()) :: nil | map()
   def object(extensions, extension, id) when is_binary(id) do
-    Repo.object(extensions, Utils.to_uid(extension, id))
+    Repo.object(extensions, Utils.to_existing_uid(extension, id))
   end
 
   @spec object(Repo.extensions_t(), String.t(), String.t(), Repo.profiles_t() | nil) ::
@@ -227,11 +228,11 @@ defmodule Schema do
   """
   @spec entity_ex(atom, atom | String.t()) :: nil | map()
   def entity_ex(type, id),
-    do: Repo.entity_ex(type, Utils.to_uid(id))
+    do: Repo.entity_ex(type, Utils.to_existing_uid(id))
 
   @spec entity_ex(nil | String.t(), atom, String.t()) :: nil | map()
   def entity_ex(extension, type, id) when is_binary(id) and is_atom(type) do
-    Repo.entity_ex(type, Utils.to_uid(extension, id))
+    Repo.entity_ex(type, Utils.to_existing_uid(extension, id))
   end
 
   @spec entity_ex(String.t() | nil, atom, String.t(), Repo.profiles_t() | nil) :: nil | map()
@@ -240,7 +241,7 @@ defmodule Schema do
 
   @spec entity_ex(Repo.extensions_t(), String.t(), atom, String.t()) :: nil | map()
   def entity_ex(extensions, extension, type, id) when is_binary(id) and is_atom(type) do
-    Repo.entity_ex(extensions, type, Utils.to_uid(extension, id))
+    Repo.entity_ex(extensions, type, Utils.to_existing_uid(extension, id))
   end
 
   @spec entity_ex(String.t(), atom, String.t(), Repo.profiles_t() | nil) ::
