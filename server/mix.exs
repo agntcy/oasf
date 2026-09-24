@@ -70,6 +70,7 @@ defmodule Schema.MixProject do
       {:logger_file_backend, "~> 0.0.13"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+      {:stream_data, "~> 1.4", only: [:dev, :test]},
       {:excoveralls, "~> 0.18", only: :test}
     ]
   end
