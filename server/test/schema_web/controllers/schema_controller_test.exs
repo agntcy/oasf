@@ -42,9 +42,8 @@ defmodule SchemaWeb.SchemaControllerTest do
   defp test_domain_category_name, do: test_class_category_name(:domain)
   defp test_module_category_name, do: test_class_category_name(:module)
 
-  # Only picks objects without an extension prefix (e.g. "example/foo"), since
-  # the /api/translate/object/:name and /api/validate/object/:name endpoints
-  # take a single path segment and have no :extension/:name variant.
+  # Keep these tests on unscoped objects. Scoped-object behavior is covered by
+  # ScopedObjectControllerTest.
   defp test_object_name do
     {name, _} =
       Schema.all_objects()
