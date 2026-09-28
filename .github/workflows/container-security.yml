@@ -22,9 +22,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # Scan the image built from main, not the last release. `latest`
+          # only moves on a v* tag, so scanning it reports the state of a
+          # release rather than of the code that has since been fixed.
           - image: oasf-server
             repo: ghcr.io/agntcy/oasf-server
-            version: latest
+            version: main
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
