@@ -56,7 +56,7 @@ defmodule Schema.Utils do
   def make_path(nil, name), do: name
   def make_path(extension, name), do: Path.join(extension, name)
 
-  @spec descope(atom() | String.t()) :: String.t()
+  @spec descope(term()) :: term()
   def descope(name) when is_binary(name) do
     descoped = Path.basename(name)
     extensions = Map.keys(Schema.extensions())
@@ -73,6 +73,13 @@ defmodule Schema.Utils do
   def descope(name) when is_atom(name) do
     descope(Atom.to_string(name))
   end
+
+  # Names reaching the validator and translator come straight from a request
+  # body, so they are whatever JSON allowed -- a list, a number, an object.
+  # Those are type errors the callers already report, but only if descoping
+  # returns rather than raising, so anything that is not a name is passed
+  # through untouched.
+  def descope(name), do: name
 
   @spec descope_to_uid(atom() | String.t()) :: atom()
   def descope_to_uid(name) when is_binary(name) do
