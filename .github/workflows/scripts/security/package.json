@@ -1,0 +1,11 @@
+{
+  "name": "oasf-security-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Helper scripts for the Container Security Scan workflow.",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "glob": "^11.0.3"
+  }
+}
