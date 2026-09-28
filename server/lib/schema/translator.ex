@@ -23,15 +23,23 @@ defmodule Schema.Translator do
       case type do
         family when family in [:skill, :domain, :module] ->
           case Map.get(data, "id") do
-            nil ->
-              if name = Map.get(data, "name") do
-                Logger.debug("translate #{family} class: #{name}")
-                Schema.class(family, Schema.Utils.descope(name))
-              end
-
-            class_uid ->
+            class_uid when is_integer(class_uid) ->
               Logger.debug("translate #{family} class: #{class_uid}")
               Schema.find_class(family, class_uid)
+
+            nil ->
+              if name = Map.get(data, "name") do
+                if is_binary(name) or is_atom(name) do
+                  Logger.debug("translate #{family} class: #{name}")
+                  Schema.class(family, Schema.Utils.descope(name))
+                end
+              end
+
+            # "id" present but not an integer: no entity, same as not found.
+            # `find_class/2` is `when is_integer(uid)`, so passing anything else
+            # through would raise instead of being reported as a type error.
+            _ ->
+              nil
           end
 
         :object ->
@@ -103,14 +111,23 @@ defmodule Schema.Translator do
   end
 
   defp sibling(name, attributes, options, _verbose) do
-    case attributes[String.to_atom(name)] do
+    case attributes[to_atom(name)] do
       nil -> nil
       attr -> attr[:caption] |> to_text(options)
     end
   end
 
+  # Attribute and enum lookups only ever match atoms that already exist in the
+  # loaded schema, so a key with no existing atom simply has no match. Creating
+  # one would let arbitrary request content grow the atom table, which the VM
+  # never reclaims.
   defp to_atom(key) when is_atom(key), do: key
-  defp to_atom(key), do: String.to_atom(key)
+
+  defp to_atom(key) do
+    String.to_existing_atom(to_string(key))
+  rescue
+    ArgumentError -> nil
+  end
 
   defp translate_attribute("integer_t", name, attribute, value, options) do
     translate_integer(attribute[:enum], name, attribute, value, options)
@@ -163,7 +180,7 @@ defmodule Schema.Translator do
 
   # Translate a single enum value
   defp translate_integer(enum, name, attribute, value, options) when is_integer(value) do
-    item = Integer.to_string(value) |> String.to_atom()
+    item = Integer.to_string(value) |> to_atom()
 
     translated =
       case enum[item] do
@@ -180,7 +197,7 @@ defmodule Schema.Translator do
 
     translated =
       Enum.map(value, fn n ->
-        item = Integer.to_string(n) |> String.to_atom()
+        item = Integer.to_string(n) |> to_atom()
 
         case enum[item] do
           nil -> n

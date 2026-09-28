@@ -10,14 +10,14 @@ on:
 
 permissions:
   contents: read
-  security-events: write # for uploading SARIF
-  actions: read
-  issues: write # create issues for critical CVEs
 
 jobs:
   trivy-scan:
     name: Trivy Image Scan (Pull from GHCR)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # for uploading SARIF
     strategy:
       fail-fast: false
       matrix:
@@ -72,6 +72,10 @@ jobs:
     needs: [trivy-scan]
     runs-on: ubuntu-latest
     if: always()
+    permissions:
+      contents: read
+      actions: read # for downloading artifacts from this run
+      issues: write # create issues for critical CVEs
     steps:
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -102,14 +106,14 @@ jobs:
           if [ "${found}" != "0" ]; then
             echo "Critical vulnerabilities detected. (Gate currently informational.)" >&2
           fi
+      - name: Install issue creation dependencies
+        if: ${{ github.event_name != 'pull_request' }}
+        working-directory: .github/workflows/scripts/security
+        run: npm ci --omit=dev --ignore-scripts
+
       - name: Create GitHub issues for critical CVEs
         if: ${{ github.event_name != 'pull_request' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: |
-          set -euo pipefail
-          echo "Installing dependencies for issue creation script";
-          npm init -y >/dev/null 2>&1 || true
-          npm install @octokit/rest@21 glob >/dev/null 2>&1
-          node .github/workflows/scripts/security/create_critical_cve_issues.js
+        run: node .github/workflows/scripts/security/create_critical_cve_issues.js

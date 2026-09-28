@@ -63,13 +63,13 @@ defmodule Schema.MixProject do
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_reload, "~> 1.5", only: :dev},
       {:jason, "~> 1.4"},
-      {:plug_cowboy, "~> 2.7"},
-      {:number, "~> 1.0"},
+      {:plug_cowboy, "~> 2.9"},
       {:elixir_uuid, "~> 1.6", hex: :uuid_utils},
-      {:phoenix_swagger, "~> 0.8"},
+      {:phoenix_swagger, "~> 0.8.5"},
       {:logger_file_backend, "~> 0.0.13"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.13", only: [:dev, :test], runtime: false},
+      {:stream_data, "~> 1.4", only: [:dev, :test]},
       {:excoveralls, "~> 0.18", only: :test}
     ]
   end

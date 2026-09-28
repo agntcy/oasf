@@ -13,9 +13,8 @@ on:
   pull_request:
 
 permissions:
-  contents: write
-  packages: write
-  id-token: write
+  contents: read
+  packages: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -77,16 +76,20 @@ jobs:
 
       - name: Resolve build details
         id: resolve
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMIT_SHA: ${{ github.sha }}
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
             # For push from PR, resolve to <PR number>-<commit sha>
-            image_tag="${{ format('pr{0}-{1}', github.event.pull_request.number, github.sha) }}"
+            image_tag="pr${PR_NUMBER}-${COMMIT_SHA}"
           elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             # For server release tags, use the tag itself as image tag.
             image_tag="${GITHUB_REF#refs/tags/}"
           else
             # For push, resolve to <commit sha>
-            image_tag="${{ format('{0}', github.sha) }}"
+            image_tag="${COMMIT_SHA}"
           fi
 
           # Calculate helm_release_tag using bash parameter expansion
@@ -229,6 +232,14 @@ jobs:
       - build
       - test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      # cosign signs keylessly: it exchanges this OIDC token with Sigstore's
+      # Fulcio CA for a short-lived certificate, so there is no private key.
+      id-token: write
+      # actions/attest-build-provenance records how the image was built.
+      attestations: write
     steps:
       - name: Checkout code
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
@@ -270,6 +281,7 @@ jobs:
             type=raw,value=latest
 
       - name: Build and push multi-arch image
+        id: bake
         uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
         with:
           source: .
@@ -282,6 +294,39 @@ jobs:
           set: |
             *.platform=linux/amd64,linux/arm64
             *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
+
+      # Sign and attest the digest, never a tag: tags are mutable, so a
+      # signature bound to one says nothing about the bytes pulled later.
+      - name: Resolve pushed image digest
+        id: digest
+        env:
+          METADATA: ${{ steps.bake.outputs.metadata }}
+        run: |
+          set -euo pipefail
+          digest=$(jq -er '."oasf-server"."containerimage.digest"' <<< "$METADATA")
+          echo "digest=${digest}" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/agntcy/oasf-server" >> "$GITHUB_OUTPUT"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign the image
+        env:
+          IMAGE: ${{ steps.digest.outputs.image }}
+          DIGEST: ${{ steps.digest.outputs.digest }}
+        run: |
+          set -euo pipefail
+          cosign sign --yes "${IMAGE}@${DIGEST}"
+
+      # The signature says who published the image; the attestation says how it
+      # was built. Scorecard scores those separately, and only provenance
+      # answers the second.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-name: ${{ steps.digest.outputs.image }}
+          subject-digest: ${{ steps.digest.outputs.digest }}
+          push-to-registry: true
 
       - name: Create Release
         id: create_release
@@ -301,6 +346,9 @@ jobs:
       - prepare
       - verify
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - name: Checkout code
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
