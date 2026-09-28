@@ -28,7 +28,7 @@ defmodule SchemaWeb.PageController do
   defp class_graph(family, conn, name, params) do
     case SchemaController.class_ex(family, name, params) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
+        not_found(conn, name)
 
       class ->
         data =
@@ -47,7 +47,7 @@ defmodule SchemaWeb.PageController do
   def object_graph(conn, %{"name" => name} = params) do
     case SchemaController.object_ex(name, params) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
+        not_found(conn, name)
 
       obj ->
         data = Schema.Graph.build(obj)
@@ -93,7 +93,7 @@ defmodule SchemaWeb.PageController do
 
     case Schema.profile(profiles, full_name) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{full_name}")
+        not_found(conn, full_name)
 
       profile ->
         render(conn, "profile.html",
@@ -156,7 +156,7 @@ defmodule SchemaWeb.PageController do
     taxonomy = SchemaController.taxonomy(family, taxonomy_params)
 
     if map_size(taxonomy) == 0 do
-      send_resp(conn, 404, "Not Found: #{name}")
+      not_found(conn, name)
     else
       {_category_key, category_data} = Enum.at(taxonomy, 0)
 
@@ -221,7 +221,7 @@ defmodule SchemaWeb.PageController do
 
     case SchemaController.class(family, extension, name, profiles) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
+        not_found(conn, name)
 
       data ->
         children =
@@ -276,7 +276,7 @@ defmodule SchemaWeb.PageController do
 
     case SchemaController.object(extensions, extension, name, profiles) do
       nil ->
-        send_resp(conn, 404, "Not Found: #{name}")
+        not_found(conn, name)
 
       data ->
         children =
@@ -355,5 +355,16 @@ defmodule SchemaWeb.PageController do
     Enum.sort(map, fn {k1, _}, {k2, _} ->
       Schema.Utils.descope(k1) <= Schema.Utils.descope(k2)
     end)
+  end
+
+  # The name comes from the URL and is echoed back, so escape it and state the
+  # content type. Today the response carries no content type and
+  # put_secure_browser_headers sets nosniff, so a browser will not render it as
+  # HTML -- but that is one put_resp_content_type away from being reflected XSS,
+  # and nothing about this response needs to be HTML.
+  defp not_found(conn, name) do
+    conn
+    |> put_resp_content_type("text/plain")
+    |> send_resp(404, "Not Found: #{Plug.HTML.html_escape(to_string(name))}")
   end
 end
