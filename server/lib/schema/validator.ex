@@ -701,10 +701,7 @@ defmodule Schema.Validator do
                          Map.has_key?(input_item, Atom.to_string(attr_name)) do
                       input_val = input_item[Atom.to_string(attr_name)]
 
-                      input_val_atom =
-                        if is_atom(input_val),
-                          do: input_val,
-                          else: String.to_atom(to_string(input_val))
+                      input_val_atom = existing_atom(input_val)
 
                       input_val_str = to_string(input_val)
 
@@ -868,9 +865,22 @@ defmodule Schema.Validator do
     end
   end
 
+  # Attribute names and enum values coming from the request are only ever
+  # compared against atoms that already exist in the loaded schema, so a value
+  # with no existing atom cannot match. Creating one would let arbitrary request
+  # content grow the atom table, which the VM never reclaims.
+  @spec existing_atom(term()) :: atom() | nil
+  defp existing_atom(value) when is_atom(value), do: value
+
+  defp existing_atom(value) do
+    String.to_existing_atom(to_string(value))
+  rescue
+    ArgumentError -> nil
+  end
+
   @spec has_attribute?(list(tuple()), String.t()) :: boolean()
   defp has_attribute?(attributes, name) do
-    key = String.to_atom(name)
+    key = existing_atom(name)
     Enum.any?(attributes, fn {attribute_key, _} -> attribute_key == key end)
   end
 
@@ -897,7 +907,7 @@ defmodule Schema.Validator do
                         value
 
                       is_binary(value) or is_integer(value) or is_float(value) ->
-                        String.to_atom(to_string(value))
+                        existing_atom(value)
 
                       true ->
                         nil
@@ -961,7 +971,7 @@ defmodule Schema.Validator do
                   value
 
                 is_binary(value) or is_integer(value) or is_float(value) ->
-                  String.to_atom(to_string(value))
+                  existing_atom(value)
 
                 true ->
                   nil
@@ -2540,7 +2550,13 @@ defmodule Schema.Validator do
   # check_base_class_error/6 as base_class_used, so flagging it again would
   # duplicate the error for the same value.
   @spec check_class_scope_error(map(), map(), map(), String.t(), String.t()) :: map()
-  defp check_class_scope_error(response, %{uid: 0}, _attribute_details, _attribute_path, _attribute_name) do
+  defp check_class_scope_error(
+         response,
+         %{uid: 0},
+         _attribute_details,
+         _attribute_path,
+         _attribute_name
+       ) do
     response
   end
 
