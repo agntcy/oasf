@@ -5,6 +5,7 @@
 [![Coverage](https://codecov.io/gh/agntcy/oasf/branch/main/graph/badge.svg)](https://codecov.io/gh/agntcy/oasf)
 [![License](https://img.shields.io/github/license/agntcy/oasf)](./LICENSE.md)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/agntcy/oasf/badge)](https://scorecard.dev/viewer/?uri=github.com/agntcy/oasf)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14994/badge)](https://www.bestpractices.dev/projects/14994)
 
 The [Open Agentic Schema Framework (OASF)](https://schema.oasf.outshift.com/) is a standardized schema system for
 defining and managing AI agent capabilities, interactions, and metadata.
