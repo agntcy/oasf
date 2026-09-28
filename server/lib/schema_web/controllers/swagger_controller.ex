@@ -191,7 +191,12 @@ defmodule SchemaWeb.SwaggerController do
   defp generate_swagger_ui_html(swagger_json) do
     # Embed swagger.json in HTML and configure Swagger UI
     # Use a script tag with type="application/json" for safe embedding
-    swagger_json_str = Jason.encode!(swagger_json)
+    # The version comes from the URL and is interpolated into the paths below,
+    # and this JSON is embedded directly inside a <script> block in an HTML
+    # response. Without :html_safe, a version containing "</script>" closes the
+    # block and everything after it is parsed as markup. :html_safe escapes
+    # < > & as \uXXXX, which JSON.parse still reads back unchanged.
+    swagger_json_str = Jason.encode!(swagger_json, escape: :html_safe)
 
     """
     <!DOCTYPE html>
