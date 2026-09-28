@@ -229,8 +229,11 @@ jobs:
   # working on any more. Publish every merge to main as `main` so there is an
   # image that reflects the current code, and point the scan at it.
   #
-  # `latest` is deliberately left alone: it means "latest release", which is
-  # what an untagged `docker pull` returns.
+  # `latest` tracks main, so an untagged `docker pull` returns the current
+  # code rather than whatever was tagged last. Releases carry their version
+  # tag only. Exactly one job may push a floating tag, or the two overwrite
+  # each other depending on which ran most recently, so server_release no
+  # longer pushes `latest`.
   publish_main:
     name: Publish main image
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
@@ -273,6 +276,7 @@ jobs:
             ghcr.io/agntcy/oasf-server,enable=true
           tags: |
             type=raw,value=main
+            type=raw,value=latest
             type=raw,value=${{ needs.prepare.outputs.image_tag }}
 
       - name: Build and push multi-arch image
@@ -372,7 +376,6 @@ jobs:
             ghcr.io/agntcy/oasf-server,enable=true
           tags: |
             type=raw,value=${{ needs.prepare.outputs.image_tag }}
-            type=raw,value=latest
 
       - name: Build and push multi-arch image
         id: bake
