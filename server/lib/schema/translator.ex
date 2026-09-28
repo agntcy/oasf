@@ -23,15 +23,23 @@ defmodule Schema.Translator do
       case type do
         family when family in [:skill, :domain, :module] ->
           case Map.get(data, "id") do
-            nil ->
-              if name = Map.get(data, "name") do
-                Logger.debug("translate #{family} class: #{name}")
-                Schema.class(family, Schema.Utils.descope(name))
-              end
-
-            class_uid ->
+            class_uid when is_integer(class_uid) ->
               Logger.debug("translate #{family} class: #{class_uid}")
               Schema.find_class(family, class_uid)
+
+            nil ->
+              if name = Map.get(data, "name") do
+                if is_binary(name) or is_atom(name) do
+                  Logger.debug("translate #{family} class: #{name}")
+                  Schema.class(family, Schema.Utils.descope(name))
+                end
+              end
+
+            # "id" present but not an integer: no entity, same as not found.
+            # `find_class/2` is `when is_integer(uid)`, so passing anything else
+            # through would raise instead of being reported as a type error.
+            _ ->
+              nil
           end
 
         :object ->
