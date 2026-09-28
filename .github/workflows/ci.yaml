@@ -76,16 +76,20 @@ jobs:
 
       - name: Resolve build details
         id: resolve
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMIT_SHA: ${{ github.sha }}
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
             # For push from PR, resolve to <PR number>-<commit sha>
-            image_tag="${{ format('pr{0}-{1}', github.event.pull_request.number, github.sha) }}"
+            image_tag="pr${PR_NUMBER}-${COMMIT_SHA}"
           elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             # For server release tags, use the tag itself as image tag.
             image_tag="${GITHUB_REF#refs/tags/}"
           else
             # For push, resolve to <commit sha>
-            image_tag="${{ format('{0}', github.sha) }}"
+            image_tag="${COMMIT_SHA}"
           fi
 
           # Calculate helm_release_tag using bash parameter expansion
