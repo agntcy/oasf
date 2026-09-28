@@ -46,12 +46,22 @@ jobs:
         working-directory: server
         run: mix compile
 
-      # XSS.Raw crashes on this codebase (Protocol.UndefinedError in
-      # Sobelow.XSS.Raw.run/4), which would abort the whole run, so it is
-      # skipped until that is resolved upstream. Every other module runs.
+      # --skip honours the `# sobelow_skip` annotations in the source. Each one
+      # sits above the function it applies to with the reason it is safe, so
+      # the justification is reviewable in a diff and a newly introduced
+      # unsafe call in the same file is still reported.
+      #
+      # Two whole modules are turned off instead:
+      #   XSS.Raw       crashes on this codebase (Protocol.UndefinedError in
+      #                 Sobelow.XSS.Raw.run/4) and aborts the entire run.
+      #   Config.HTTPS  wants force_ssl in the endpoint, but TLS terminates at
+      #                 the ingress and the app serves plain HTTP behind it;
+      #                 enabling it would cause redirect loops.
+      #
+      # Config.CSP is deliberately NOT ignored: it is a real gap.
       - name: Run Sobelow
         working-directory: server
-        run: mix sobelow --format sarif -i XSS.Raw > ../sobelow.sarif
+        run: mix sobelow --format sarif --skip -i XSS.Raw,Config.HTTPS > ../sobelow.sarif
 
       - name: Check the report is valid SARIF
         run: python3 -c "import json,sys; json.load(open('sobelow.sarif'))"
