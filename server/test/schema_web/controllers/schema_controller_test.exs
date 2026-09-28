@@ -34,6 +34,30 @@ defmodule SchemaWeb.SchemaControllerTest do
     Atom.to_string(name)
   end
 
+  # Returns the uid of some class in `family` other than the one `name` resolves
+  # to, so an id/name mismatch can be requested deterministically.
+  #
+  # The id cannot be hardcoded: `Schema.all_classes/1` returns an atom-keyed map,
+  # and Erlang does not guarantee map iteration order. It shifts when the set of
+  # loaded atoms changes, so `test_class_name/1` returns a different class from
+  # one dependency set to the next -- and a hardcoded id silently starts naming
+  # the very class under test.
+  defp mismatched_id(family, name) do
+    target_uid = Schema.class(family, nil, name, [])[:uid]
+
+    Schema.all_classes(family)
+    |> Enum.find_value(fn {key, value} ->
+      other = Atom.to_string(key)
+
+      if value[:category] != true and other != name do
+        case Schema.class(family, nil, other, []) do
+          %{uid: uid} when uid != nil and uid != target_uid -> uid
+          _ -> nil
+        end
+      end
+    end)
+  end
+
   defp test_skill_name, do: test_class_name(:skill)
   defp test_domain_name, do: test_class_name(:domain)
   defp test_module_name, do: test_class_name(:module)
@@ -152,7 +176,8 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/skills?id=601&name=#{test_skill_name()}")
+      name = test_skill_name()
+      conn = json_get(conn, "/api/skills?id=#{mismatched_id(:skill, name)}&name=#{name}")
       assert conn.status == 400
       body = json_response_body(conn)
       assert Map.has_key?(body, "error")
@@ -196,7 +221,8 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/domains?id=2005&name=#{test_domain_name()}")
+      name = test_domain_name()
+      conn = json_get(conn, "/api/domains?id=#{mismatched_id(:domain, name)}&name=#{name}")
       assert conn.status == 400
     end
   end
@@ -238,7 +264,8 @@ defmodule SchemaWeb.SchemaControllerTest do
     end
 
     test "returns 400 for mismatched id and name", %{conn: conn} do
-      conn = json_get(conn, "/api/modules?id=103&name=#{test_module_name()}")
+      name = test_module_name()
+      conn = json_get(conn, "/api/modules?id=#{mismatched_id(:module, name)}&name=#{name}")
       assert conn.status == 400
     end
   end
