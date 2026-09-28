@@ -20,11 +20,13 @@ jobs:
       contents: read
       security-events: write
 
-    # Elixir is not (yet) supported by CodeQL, so we limit to Go and JavaScript for now.
+    # CodeQL has no Elixir analyzer, and Elixir is ~88% of this repository.
+    # Sobelow covers it instead, in sobelow.yml. 'actions' scans the workflows
+    # themselves for injection and related issues.
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'go', 'javascript' ]
+        language: [ 'go', 'javascript', 'actions' ]
 
     steps:
     - name: Checkout repository

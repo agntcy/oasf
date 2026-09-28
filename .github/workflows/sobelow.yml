@@ -1,0 +1,63 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+# CodeQL has no Elixir analyzer, so the language making up most of this
+# repository had no static security analysis. Sobelow fills that gap and
+# reports into the same code-scanning dashboard.
+name: Sobelow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '33 10 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze Elixir
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
+        with:
+          elixir-version: "1.19"
+          otp-version: "28"
+
+      - name: Fetch Elixir deps
+        working-directory: server
+        run: mix deps.get
+
+      # Compile first. Sobelow writes its report to stdout, and any build or
+      # lock-mismatch output mix emits on the same stream would be redirected
+      # into the file and corrupt the SARIF.
+      - name: Compile
+        working-directory: server
+        run: mix compile
+
+      # XSS.Raw crashes on this codebase (Protocol.UndefinedError in
+      # Sobelow.XSS.Raw.run/4), which would abort the whole run, so it is
+      # skipped until that is resolved upstream. Every other module runs.
+      - name: Run Sobelow
+        working-directory: server
+        run: mix sobelow --format sarif -i XSS.Raw > ../sobelow.sarif
+
+      - name: Check the report is valid SARIF
+        run: python3 -c "import json,sys; json.load(open('sobelow.sarif'))"
+
+      - name: Upload to code scanning
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          sarif_file: sobelow.sarif
+          category: sobelow
