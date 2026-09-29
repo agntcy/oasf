@@ -227,6 +227,10 @@ defmodule Schema.JsonReader do
     end)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp read_schema_dir(acc, home, path) do
     if File.dir?(path) do
       Logger.info("[] read files: #{path}")
@@ -250,6 +254,9 @@ defmodule Schema.JsonReader do
     end
   end
 
+  # Path is built from Application.app_dir/2 or the schema home plus module
+  # constants. No request input reaches it.
+  # sobelow_skip ["Traversal.FileModule"]
   defp read_json_file(file) do
     case File.read(file) do
       {:ok, data} ->
@@ -488,6 +495,10 @@ defmodule Schema.JsonReader do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp put_profile(name, profile, ext, file) do
     profiles = get_profiles()
 

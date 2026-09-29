@@ -1277,6 +1277,10 @@ defmodule Schema.Validator do
           list(),
           map()
         ) :: map()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_attribute(
          response,
          value,
@@ -1476,6 +1480,10 @@ defmodule Schema.Validator do
           list(),
           map()
         ) :: map()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_value(
          response,
          value,
@@ -1647,6 +1655,10 @@ defmodule Schema.Validator do
           map(),
           map()
         ) :: map()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_value_against_dictionary_type(
          response,
          value,
@@ -1901,6 +1913,10 @@ defmodule Schema.Validator do
           atom(),
           map()
         ) :: map()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_type_values(
          response,
          value,
@@ -1980,6 +1996,10 @@ defmodule Schema.Validator do
           atom(),
           map()
         ) :: map()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_number_range(
          response,
          value,
@@ -2059,6 +2079,10 @@ defmodule Schema.Validator do
           atom(),
           map()
         ) :: map()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_string_max_len(
          response,
          value,
@@ -2132,6 +2156,10 @@ defmodule Schema.Validator do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp validate_string_regex(
          response,
          value,
@@ -2594,6 +2622,10 @@ defmodule Schema.Validator do
   # an Agent.get that copies the whole family map and the same scope is reused
   # for every element of an array attribute.
   @spec scope_names(String.t(), String.t() | nil) :: MapSet.t()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp scope_names(family, class_type) do
     cache = Process.get(:class_scope_names_cache, %{})
     key = {family, class_type}
@@ -2793,6 +2825,10 @@ defmodule Schema.Validator do
 
   # Resolve a class reference (by id or name) to its UID
   @spec resolve_class_uid(map(), map()) :: nil | integer()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp resolve_class_uid(element, attribute_details) when is_map(element) do
     family = attribute_details[:family]
 

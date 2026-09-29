@@ -325,6 +325,10 @@ defmodule Schema.Repo do
   end
 
   # Build a map of parent -> [children] based on extends relationships
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp build_children_map(all_classes, base_class_key) do
     Enum.reduce(all_classes, %{}, fn {class_key, class}, acc ->
       extends = class[:extends]
@@ -352,6 +356,10 @@ defmodule Schema.Repo do
   # 1. Items with no extends
   # 2. Items that extend base_class_key
   # 3. Items whose parent is not in all_classes (was filtered out)
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp find_top_level_items(all_classes, base_class_key) do
     Enum.filter(all_classes, fn {_class_key, class} ->
       extends = class[:extends]

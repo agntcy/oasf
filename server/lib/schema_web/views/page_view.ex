@@ -451,6 +451,10 @@ defmodule SchemaWeb.PageView do
   end
 
   @spec format_class_attribute_source(atom(), map(), String.t()) :: String.t()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def format_class_attribute_source(class_key, field, class_type) do
     all_classes = Schema.all_classes(String.to_atom(class_type))
 
@@ -1163,6 +1167,10 @@ defmodule SchemaWeb.PageView do
 
   @spec dictionary_links_class_to_html(any, String.t(), list(Schema.Utils.link_t()), String.t()) ::
           <<>> | list()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp dictionary_links_class_to_html(conn, attribute_name, linked_classes, family) do
     # Strip profiles parameter to get classes with proper source attribution
     params_without_profiles = Map.delete(conn.params, "profiles")
