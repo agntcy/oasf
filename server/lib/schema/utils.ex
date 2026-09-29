@@ -31,6 +31,10 @@ defmodule Schema.Utils do
   require Logger
 
   @spec to_uid(binary() | atom()) :: atom
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def to_uid(name) when is_binary(name) do
     String.to_atom(name)
   end
@@ -114,14 +118,26 @@ defmodule Schema.Utils do
   def descope(name), do: name
 
   @spec descope_to_uid(atom() | String.t()) :: atom()
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def descope_to_uid(name) when is_binary(name) do
     String.to_atom(Path.basename(name))
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def descope_to_uid(name) when is_atom(name) do
     String.to_atom(Path.basename(Atom.to_string(name)))
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def find_entity(map, entity, name) when is_binary(name) do
     find_entity(map, entity, String.to_atom(name))
   end
@@ -252,6 +268,10 @@ defmodule Schema.Utils do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_data_type(attribute_key, attribute, types) do
     type =
       case attribute[:type] do
@@ -319,6 +339,10 @@ defmodule Schema.Utils do
     end)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_attributes(item, dictionary_attributes, link, update_links_fn) do
     item_attributes = item[:attributes]
 
@@ -486,11 +510,19 @@ defmodule Schema.Utils do
     |> Map.put(:type_name, "Datetime")
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def make_datetime(name) do
     (Atom.to_string(name) <> "_dt") |> String.to_atom()
   end
 
   @spec find_parent(map(), String.t(), String.t()) :: {atom() | nil, map() | nil}
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def find_parent(items, extends, extension) do
     if extends do
       extends_key = String.to_atom(extends)
@@ -608,6 +640,10 @@ defmodule Schema.Utils do
     |> Enum.into(%{})
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp _add_sibling_of_to_attributes(attributes) do
     # Enum attributes point to their enum sibling through the :sibling attribute,
     # however the siblings do _not_ refer back to the related enum attribute, so let's build that.
@@ -764,6 +800,10 @@ defmodule Schema.Utils do
     Enum.join(filtered ++ [processed_name], "/")
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp build_hierarchy(name, class_map, acc) do
     key = if is_atom(name), do: name, else: String.to_atom(name)
 

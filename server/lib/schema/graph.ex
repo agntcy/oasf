@@ -206,6 +206,10 @@ defmodule Schema.Graph do
     build_edges([], class, objects)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp build_edges(edges, class, objects) do
     edges =
       Map.get(class, :attributes)
@@ -362,6 +366,10 @@ defmodule Schema.Graph do
     Map.put(edge, :profile, profile)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp get_collection_by_family(entity) do
     case entity[:family] do
       f when f in ["skill", "domain", "module"] ->

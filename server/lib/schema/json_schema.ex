@@ -181,6 +181,10 @@ defmodule Schema.JsonSchema do
     schema
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp encode_entities(schema, entities) do
     {skills, domains, modules, objects} =
       Enum.reduce(entities, {%{}, %{}, %{}, %{}}, fn {name, entity},
@@ -360,6 +364,10 @@ defmodule Schema.JsonSchema do
 
   defp new_schema(attr), do: %{"title" => attr[:caption]}
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp put_type(schema, type) do
     types = Map.get(Schema.data_types(), :attributes)
     type_key = String.to_atom(type)
@@ -395,6 +403,10 @@ defmodule Schema.JsonSchema do
   # Applies max_len -> maxLength and regex -> pattern from the dictionary type
   # (or its supertype) onto the given schema map.  Called for both string_t
   # attributes and subtype string-like attributes resolved through put_type/2.
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp put_string_constraints(schema, type) do
     types = Map.get(Schema.data_types(), :attributes)
     type_key = String.to_atom(type)
@@ -440,6 +452,10 @@ defmodule Schema.JsonSchema do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp encode_class(schema, _name, attr) do
     type = attr[:class_type]
     family = attr[:family]

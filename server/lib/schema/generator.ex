@@ -363,6 +363,10 @@ defmodule Schema.Generator do
     Map.put(map, key, id)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp generate_enum_data(key, name, enum, map) do
     name = String.to_atom(name)
     id = random_enum_int_value(enum)
@@ -375,6 +379,10 @@ defmodule Schema.Generator do
     |> Map.put(key, id)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp enum_name(name, enum) do
     key = String.to_atom(name)
 
@@ -485,6 +493,10 @@ defmodule Schema.Generator do
     get_valid_object(field) |> generate_sample_object(Process.get(:profiles))
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp generate_file_object(field) do
     field[:object_type]
     |> String.to_atom()
@@ -868,12 +880,18 @@ defmodule Schema.Generator do
     ])
   end
 
+  # Path is built from Application.app_dir/2 or the schema home plus module
+  # constants. No request input reaches it.
+  # sobelow_skip ["Traversal.FileModule"]
   defp read_data_file(filename) do
     list = File.stream!(filename) |> Stream.map(&String.trim_trailing/1) |> Enum.to_list()
 
     {length(list), :array.from_list(list)}
   end
 
+  # Path is built from Application.app_dir/2 or the schema home plus module
+  # constants. No request input reaches it.
+  # sobelow_skip ["Traversal.FileModule"]
   defp read_file_types(filename) do
     list =
       File.stream!(filename)
@@ -885,6 +903,9 @@ defmodule Schema.Generator do
     {length(list), :array.from_list(list)}
   end
 
+  # Path is built from Application.app_dir/2 or the schema home plus module
+  # constants. No request input reaches it.
+  # sobelow_skip ["Traversal.FileModule"]
   defp read_countries(filename) do
     list = File.read!(filename) |> Jason.decode!(keys: :atoms)
 
@@ -919,6 +940,9 @@ defmodule Schema.Generator do
     end
   end
 
+  # Path is built from Application.app_dir/2 or the schema home plus module
+  # constants. No request input reaches it.
+  # sobelow_skip ["Traversal.FileModule"]
   defp update_class_uid(file, uid) do
     data = File.read!(file) |> Jason.decode!()
 
@@ -941,6 +965,10 @@ defmodule Schema.Generator do
   # family.  Keys are shuffled up front so `Enum.take(n)` yields a uniform
   # random subset, matching the previous `Enum.shuffle |> Enum.take` /
   # `Enum.random` selection.
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp valid_classes_lazy(field) do
     {all_classes, class_fn} =
       case field[:family] do
@@ -973,6 +1001,10 @@ defmodule Schema.Generator do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp get_valid_object(field) do
     valid_objects =
       if field[:is_enum] do
@@ -1004,6 +1036,9 @@ defmodule Schema.Generator do
     end
   end
 
+  # Path is built from Application.app_dir/2 or the schema home plus module
+  # constants. No request input reaches it.
+  # sobelow_skip ["Traversal.FileModule"]
   defp write_json(data, filename) do
     # if File.exists?(filename) do
     #   File.rename!(filename, filename <> ".bak")

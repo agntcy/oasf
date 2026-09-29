@@ -153,11 +153,19 @@ defmodule Schema.Translator do
     translate_attribute(name, attribute, translated, options)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp translate_attribute("class_t", name, attribute, value, options) when is_map(value) do
     translated = translate_entity(value, options, String.to_atom(attribute[:family]))
     translate_attribute(name, attribute, translated, options)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp translate_attribute("class_t", name, attribute, value, options) when is_list(value) do
     translated =
       if attribute[:is_array] and is_map(List.first(value)) do

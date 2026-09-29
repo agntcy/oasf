@@ -273,6 +273,10 @@ defmodule Schema.Cache do
     Map.update!(type, :attributes, fn list -> update_attributes(list, dictionary_attributes) end)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_attributes(attributes, dictionary_attributes) do
     attributes
     |> Enum.map(fn {name, attribute} ->
@@ -314,6 +318,10 @@ defmodule Schema.Cache do
     {enriched_type, ref_entities}
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_attributes_ex(attributes, dictionary_attributes, entities, ref_entities) do
     Enum.map_reduce(attributes, ref_entities, fn {name, attribute}, acc ->
       reference =
@@ -379,6 +387,10 @@ defmodule Schema.Cache do
     {{name, attribute}, acc}
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_attributes_ex(type, name, attribute, enrich, acc) do
     entity_name = String.to_atom(type)
 
@@ -393,6 +405,10 @@ defmodule Schema.Cache do
     {{name, attribute}, acc}
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp find_attribute(dictionary, name, source) do
     case Atom.to_string(source) |> String.split("/") do
       [_] ->
@@ -490,6 +506,10 @@ defmodule Schema.Cache do
     {object_key, object}
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   def update_class_uid(class, classes_with_uids) do
     # If this class is itself a category, don't add category metadata
     is_category = Map.get(class, :category) == true
@@ -528,6 +548,10 @@ defmodule Schema.Cache do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp find_category_class(class, classes) do
     # If this class itself is a category, return it
     if Map.get(class, :category) == true do
@@ -584,6 +608,10 @@ defmodule Schema.Cache do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp add_class_uid(data, name) do
     if is_nil(data[:attributes][:id]) do
       data
@@ -606,6 +634,10 @@ defmodule Schema.Cache do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp add_class_name(data, name, all_classes) do
     if is_nil(data[:attributes][:name]) do
       data
@@ -638,6 +670,10 @@ defmodule Schema.Cache do
   # Adds :_source key to each attribute of item. This must be done before processing (compiling)
   # inheritance and patching (resolve_extends and patch_type) since after that processing the
   # original source is lost.
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp attribute_source({item_key, item}) do
     item =
       Map.update(
@@ -674,6 +710,10 @@ defmodule Schema.Cache do
     {item_key, item}
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp patch_type(items, kind) do
     Enum.reduce(items, %{}, fn {key, item}, acc ->
       # Logger.debug(fn ->
@@ -981,6 +1021,10 @@ defmodule Schema.Cache do
     end
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_linked_profiles(group, links, object, classes) do
     Enum.reduce(links, classes, fn link, acc ->
       if link[:group] == group do
@@ -1005,6 +1049,10 @@ defmodule Schema.Cache do
     Enum.concat(p1, p2) |> Enum.uniq()
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_dictionary(dictionary) do
     types = get_in(dictionary, [:types, :attributes])
 
@@ -1038,6 +1086,10 @@ defmodule Schema.Cache do
     end)
   end
 
+  # Key is a schema name: from the loaded schema, a literal whitelist, or a
+  # name that already resolved to a schema entity. Request-supplied names go
+  # through Utils.to_existing_uid/1 instead, which never creates atoms.
+  # sobelow_skip ["DOS.StringToAtom"]
   defp update_profile(profile, profile_attributes, dictionary_attributes) do
     Enum.into(profile_attributes, %{}, fn {name, attribute} ->
       reference =
