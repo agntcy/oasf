@@ -121,7 +121,10 @@ defmodule SchemaWeb.Router do
     post "/validate/module", SchemaController, :validate_module
 
     post "/translate/object/:name", SchemaController, :translate_object
+    post "/translate/object/:extension/:name", SchemaController, :translate_object
+
     post "/validate/object/:name", SchemaController, :validate_object
+    post "/validate/object/:extension/:name", SchemaController, :validate_object
   end
 
   scope "/schema", SchemaWeb do
