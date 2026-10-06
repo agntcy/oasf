@@ -1087,6 +1087,8 @@ defmodule SchemaWeb.SchemaController do
 
   @doc """
   Translate object data. A single class is encoded as a JSON object and multiple classes are encoded as JSON array of objects.
+  post /api/translate/object/:name
+  post /api/translate/object/:extension/:name
   """
   swagger_path :translate_object do
     post("/api/translate/object/{name}")
@@ -1095,14 +1097,21 @@ defmodule SchemaWeb.SchemaController do
     description(
       "The purpose of this API is to translate the provided object data using the OASF schema." <>
         " Each class is represented as a JSON object, while multiple classes are encoded as a" <>
-        "  JSON array of objects."
+        "  JSON array of objects." <>
+        " The object name may contain a schema extension name, for example" <>
+        " \"example/example_telemetry_data\"."
     )
 
     produces("application/json")
     tag("Translation")
 
     parameters do
-      name(:path, :string, "Object name", required: true)
+      name(
+        :path,
+        :string,
+        "Object name, optionally prefixed with a schema extension (extension/name)",
+        required: true
+      )
 
       _mode(
         :query,
@@ -1148,9 +1157,9 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec translate_object(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def translate_object(conn, %{"name" => name} = params) do
+  def translate_object(conn, params) do
     options = [
-      name: name,
+      name: Schema.Utils.make_path(extension(conn.path_params), conn.path_params["name"]),
       spaces: conn.query_params[@spaces],
       verbose: verbose(conn.query_params[@verbose])
     ]
@@ -1329,7 +1338,8 @@ defmodule SchemaWeb.SchemaController do
 
   @doc """
   Validate object data. Validates a single class.
-  post /api/validate/object
+  post /api/validate/object/:name
+  post /api/validate/object/:extension/:name
   """
   swagger_path :validate_object do
     post("/api/validate/object/{name}")
@@ -1337,14 +1347,21 @@ defmodule SchemaWeb.SchemaController do
 
     description(
       "This API validates the provided object data against the OASF schema, returning a response" <>
-        " containing validation errors and warnings."
+        " containing validation errors and warnings." <>
+        " The object name may contain a schema extension name, for example" <>
+        " \"example/example_telemetry_data\"."
     )
 
     produces("application/json")
     tag("Validation")
 
     parameters do
-      name(:path, :string, "Object name", required: true)
+      name(
+        :path,
+        :string,
+        "Object name, optionally prefixed with a schema extension (extension/name)",
+        required: true
+      )
 
       missing_recommended(
         :query,
@@ -1364,9 +1381,9 @@ defmodule SchemaWeb.SchemaController do
   end
 
   @spec validate_object(Plug.Conn.t(), map()) :: Plug.Conn.t()
-  def validate_object(conn, %{"name" => name} = params) do
+  def validate_object(conn, params) do
     options = [
-      name: name,
+      name: Schema.Utils.make_path(extension(conn.path_params), conn.path_params["name"]),
       warn_on_missing_recommended:
         case conn.query_params[@missing_recommended] do
           "true" -> true
