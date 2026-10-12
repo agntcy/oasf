@@ -35,6 +35,8 @@ representing collections of information and metadata relevant to agentic AI appl
 
 OASF records can be annotated with **skills** and **domains** to enable effective announcement and discovery across
 agentic systems.
+Formats other than OASF records, such as A2A Agent Cards and AI Catalog entries, can carry the same skills and domains
+through the [discovery extension](https://docs.agntcy.org/oasf/discovery-extension/).
 Additionally, **modules** provide a flexible mechanism to extend records with additional information in a modular and
 composable way, supporting a wide range of agentic use cases.
 

@@ -1,0 +1,23 @@
+{
+  "caption": "Discovery",
+  "description": "The OASF skills and domains of an artifact, without the record around them, so that other formats can embed them as an extension. The payload is carried under the extension key <code>org.agntcy.discovery.v1</code>: as the <code>params</code> of an A2A <code>AgentExtension</code> whose <code>uri</code> is the key, or as the value of the key in an AI Catalog <code>extensions</code> map.",
+  "extends": "object",
+  "name": "discovery",
+  "attributes": {
+    "schema_version": {
+      "caption": "Schema Version",
+      "description": "The version of the OASF schema the payload conforms to.",
+      "requirement": "required"
+    },
+    "skills": {
+      "caption": "Skills",
+      "description": "List of skills associated with the artifact.",
+      "requirement": "required"
+    },
+    "domains": {
+      "caption": "Domains",
+      "description": "List of domains associated with the artifact.",
+      "requirement": "recommended"
+    }
+  }
+}
