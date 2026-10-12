@@ -1,6 +1,6 @@
 {
   "caption": "Discovery",
-  "description": "The OASF skills and domains of an artifact, without the record around them, so that other formats can embed them as an extension. In an A2A Agent Card, the payload is the <code>params</code> of an <code>AgentExtension</code> whose <code>uri</code> is <code>&lt;schema_url&gt;/&lt;version&gt;/objects/discovery</code> on the schema server the payload validates against, for example <code>https://schema.oasf.outshift.com/1.2.0/objects/discovery</code>. In an AI Catalog entry, it is the value of the <code>org.agntcy.oasf.discovery.v1</code> key in the entry's <code>extensions</code> map. The <code>schema_version</code> in the payload is the version that counts; a version in the A2A URI is informational.",
+  "description": "The OASF skills and domains of an artifact, without the record around them, so that other formats can embed them as an extension. In an A2A Agent Card, the payload is the <code>params</code> of an <code>AgentExtension</code> whose <code>uri</code> is <code>&lt;schema_url&gt;/&lt;version&gt;/objects/discovery</code> on the schema server the payload validates against, for example <code>https://schema.oasf.outshift.com/1.1.0/objects/discovery</code>. In an AI Catalog entry, it is the value of the <code>org.agntcy.oasf.discovery.v1</code> key in the entry's <code>extensions</code> map. The <code>schema_version</code> in the payload is the version that counts; a version in the A2A URI is informational.",
   "extends": "object",
   "name": "discovery",
   "attributes": {
