@@ -1,6 +1,6 @@
 {
   "caption": "Discovery",
-  "description": "The OASF skills and domains of an artifact, without the record around them, so that other formats can embed them as an extension. The payload is carried under the extension key <code>org.agntcy.discovery.v1</code>: as the <code>params</code> of an A2A <code>AgentExtension</code> whose <code>uri</code> is the key, or as the value of the key in an AI Catalog <code>extensions</code> map.",
+  "description": "The OASF skills and domains of an artifact, without the record around them, so that other formats can embed them as an extension. In an A2A Agent Card, the payload is the <code>params</code> of an <code>AgentExtension</code> whose <code>uri</code> is <code>https://schema.oasf.outshift.com/objects/discovery</code>. In an AI Catalog entry, it is the value of the <code>org.agntcy.discovery.v1</code> key in the entry's <code>extensions</code> map.",
   "extends": "object",
   "name": "discovery",
   "attributes": {
