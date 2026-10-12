@@ -524,6 +524,96 @@ defmodule Schema.ValidatorTest do
   end
 
   # ---------------------------------------------------------------------------
+  # discovery object
+  # ---------------------------------------------------------------------------
+
+  describe "validate object — discovery" do
+    defp validate_discovery(data), do: validate(data, [name: "discovery"], :object)
+
+    defp valid_record(overrides) do
+      Map.merge(
+        %{
+          "name" => "test_agent",
+          "version" => "1.0.0",
+          "description" => "test",
+          "authors" => ["author@example.com"],
+          "created_at" => "2024-01-01T00:00:00Z",
+          "schema_version" => "1.0.0",
+          "skills" => [%{"id" => @test_skill_uid}],
+          "domains" => [%{"id" => @test_domain_uid}]
+        },
+        overrides
+      )
+    end
+
+    defp error_keys(result), do: Enum.map(errors(result), &{&1[:error], &1[:attribute_path]})
+
+    test "a payload with skills, domains and schema_version has no errors" do
+      result =
+        validate_discovery(%{
+          "schema_version" => "1.0.0",
+          "skills" => [%{"id" => @test_skill_uid, "name" => first_skill_name()}],
+          "domains" => [%{"id" => @test_domain_uid, "name" => first_domain_name()}]
+        })
+
+      assert result[:error_count] == 0,
+             "Expected 0 errors, got: #{inspect(result[:errors])}"
+    end
+
+    test "skills and schema_version are required" do
+      result = validate_discovery(%{})
+
+      missing =
+        errors(result)
+        |> Enum.filter(&(&1[:error] == "attribute_required_missing"))
+        |> Enum.map(& &1[:attribute])
+
+      assert "skills" in missing
+      assert "schema_version" in missing
+      refute "domains" in missing
+    end
+
+    test "record-only attributes are rejected" do
+      result =
+        validate_discovery(%{
+          "schema_version" => "1.0.0",
+          "skills" => [%{"id" => @test_skill_uid}],
+          "name" => "test_agent"
+        })
+
+      assert "attribute_unknown" in error_types(result)
+    end
+
+    test "an unknown skill fails with the same error as inside a record" do
+      skills = [%{"id" => 999_999_999}]
+
+      discovery =
+        validate_discovery(%{"schema_version" => "1.0.0", "skills" => skills})
+
+      record = validate(valid_record(%{"skills" => skills}), [name: "record"], :object)
+
+      assert "id_unknown" in error_types(discovery)
+      assert error_keys(discovery) == error_keys(record)
+    end
+
+    test "an unknown domain fails with the same error as inside a record" do
+      domains = [%{"name" => "this_domain_does_not_exist_xyz"}]
+
+      discovery =
+        validate_discovery(%{
+          "schema_version" => "1.0.0",
+          "skills" => [%{"id" => @test_skill_uid}],
+          "domains" => domains
+        })
+
+      record = validate(valid_record(%{"domains" => domains}), [name: "record"], :object)
+
+      assert "name_unknown" in error_types(discovery)
+      assert error_keys(discovery) == error_keys(record)
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # Duplicate array items
   # ---------------------------------------------------------------------------
 
