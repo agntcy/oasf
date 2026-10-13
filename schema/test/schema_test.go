@@ -145,13 +145,19 @@ var _ = Describe("Extension metaschema validation", func() {
 
 		metaschemaDir := filepath.Join(schemaDir, "metaschema")
 
-		// The shipped extensions live in extensions/; the example extension used by the
-		// server tests and local development lives in test/extensions/ so that it is
-		// not loaded by the released image.
-		for _, extensionsDir := range []string{
-			filepath.Join(schemaDir, "extensions"),
-			filepath.Join(schemaDir, "test", "extensions"),
+		// The shipped extensions live in extensions/, which may be empty. The example
+		// extension used by the server tests and local development lives in
+		// test/extensions/ so that the released image does not load it, and is expected
+		// to be there.
+		for _, target := range []struct {
+			dir           string
+			expectEntries bool
+		}{
+			{dir: filepath.Join(schemaDir, "extensions"), expectEntries: false},
+			{dir: filepath.Join(schemaDir, "test", "extensions"), expectEntries: true},
 		} {
+			extensionsDir := target.dir
+
 			dirInfo, err := os.Stat(extensionsDir)
 			if err != nil || !dirInfo.IsDir() {
 				AddWarning("%s directory does not exist\n", extensionsDir)
@@ -172,6 +178,9 @@ var _ = Describe("Extension metaschema validation", func() {
 			}
 
 			if len(roots) == 0 {
+				if !target.expectEntries {
+					continue
+				}
 				AddWarning("no extensions found in %s (an extension is a directory containing %s)", extensionsDir, extensionFile)
 				continue
 			}
