@@ -85,8 +85,9 @@ ENV PHX_SERVER=true
 # Only copy the final release from the build stage
 COPY --from=builder --chown=app:app /app/_build/${MIX_ENV}/rel/schema_server ./
 
-# Copy the things that need to be displayed
-COPY --from=schema --chown=app:app . /app/schema
+# Copy the things that need to be displayed. schema/test holds the schema test
+# suite and the example extension, which the released image must not serve.
+COPY --from=schema --chown=app:app --exclude=test . /app/schema
 
 USER app
 
