@@ -15,11 +15,7 @@ defmodule Schema.Application do
     schema_dir = Keyword.get(env, :home)
     schema_versions = Keyword.get(env, :schema_versions)
 
-    extensions =
-      case Keyword.get(env, :extension) do
-        nil -> []
-        ext -> String.split(ext, ",")
-      end
+    extensions = parse_extensions(Keyword.get(env, :extension))
 
     # List all child processes to be supervised
     children = [
@@ -44,5 +40,18 @@ defmodule Schema.Application do
   def config_change(changed, _new, removed) do
     SchemaWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  # A blank SCHEMA_EXTENSION means no extensions. Passing "" through would resolve to
+  # SCHEMA_DIR itself and load every extension found anywhere under it.
+  @doc false
+  @spec parse_extensions(String.t() | nil) :: [String.t()]
+  def parse_extensions(nil), do: []
+
+  def parse_extensions(ext) do
+    ext
+    |> String.split(",")
+    |> Enum.map(&String.trim/1)
+    |> Enum.reject(&(&1 == ""))
   end
 end
