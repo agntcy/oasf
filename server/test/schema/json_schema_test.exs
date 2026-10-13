@@ -321,6 +321,58 @@ defmodule Schema.JsonSchemaTest do
       assert ["x"] in required_sets
       assert ["y"] in required_sets
     end
+
+    test "required just_one members are left out of the required array" do
+      type = %{
+        name: "test_object",
+        caption: "Test",
+        attributes: %{
+          a: %{caption: "A", type: "string_t", requirement: "required"},
+          b: %{caption: "B", type: "string_t", requirement: "required"},
+          c: %{caption: "C", type: "string_t", requirement: "required"}
+        },
+        constraints: %{just_one: ["a", "b"]}
+      }
+
+      encoded = JsonSchema.encode(type, [])
+      assert encoded["required"] == ["c"]
+      assert length(encoded["oneOf"]) == 2
+    end
+
+    test "required at_least_one members are left out of the required array" do
+      type = %{
+        name: "test_object",
+        caption: "Test",
+        attributes: %{
+          x: %{caption: "X", type: "string_t", requirement: "required"},
+          y: %{caption: "Y", type: "string_t", requirement: "required"}
+        },
+        constraints: %{at_least_one: ["x", "y"]}
+      }
+
+      encoded = JsonSchema.encode(type, [])
+      refute Map.has_key?(encoded, "required")
+      assert length(encoded["anyOf"]) == 2
+    end
+
+    test "attributes in both just_one and at_least_one emit both constraints" do
+      type = %{
+        name: "test_object",
+        caption: "Test",
+        attributes: %{
+          urls: %{caption: "URLs", type: "string_t", requirement: "optional"},
+          data: %{caption: "Data", type: "string_t", requirement: "optional"},
+          json: %{caption: "JSON", type: "string_t", requirement: "optional"}
+        },
+        constraints: %{at_least_one: ["urls", "data", "json"], just_one: ["data", "json"]}
+      }
+
+      encoded = JsonSchema.encode(type, [])
+      assert Enum.sort(Enum.map(encoded["oneOf"], & &1["required"])) == [["data"], ["json"]]
+
+      assert Enum.sort(Enum.map(encoded["anyOf"], & &1["required"])) ==
+               [["data"], ["json"], ["urls"]]
+    end
   end
 
   # ---------------------------------------------------------------------------
