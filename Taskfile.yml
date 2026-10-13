@@ -208,10 +208,29 @@ tasks:
 
   test:e2e:
     desc: Deploy to an ephemeral kind cluster and verify the server starts healthy
+    deps:
+      - deps:kubectl
     cmds:
       - defer: {task: down}
       - task: up
       - cmd: curl --retry 10 --retry-delay 3 --retry-connrefused --fail --silent http://localhost:8080/ > /dev/null
+      # The image must not ship or serve the example extension from schema/test.
+      - cmd: |
+          set -eu
+          extensions=$(curl --fail --silent http://localhost:8080/api/extensions)
+          if [ "$extensions" != "{}" ]; then
+            echo "Error: expected no extensions to be loaded, got: $extensions"
+            exit 1
+          fi
+      - cmd: |
+          set -eu
+          pod=$({{ .KUBECTL_BIN }} get pod -l default-schema=true -o name | head -n 1)
+          # Guard against a false pass if exec itself fails.
+          {{ .KUBECTL_BIN }} exec "$pod" -- test -d /app/schema
+          if {{ .KUBECTL_BIN }} exec "$pod" -- test -e /app/schema/test; then
+            echo "Error: /app/schema/test must not be present in the image"
+            exit 1
+          fi
 
   test:schema:
     desc: Validate schema JSON files against their metaschemas
@@ -241,15 +260,15 @@ tasks:
       - cmd: mix test
 
   test:server:extensions:
-    desc: Test server code with the in-tree extensions loaded
+    desc: Test server code with the example extension loaded
     preconditions:
       - which mix
     dir: '{{ .ROOT_DIR }}/server'
     env:
       SCHEMA_DIR: '{{ .ROOT_DIR }}/schema'
-      SCHEMA_EXTENSION: extensions
+      SCHEMA_EXTENSION: test/extensions
     cmds:
-      - cmd: echo "Running OASF server test suite with extensions loaded..."
+      - cmd: echo "Running OASF server test suite with the example extension loaded..."
       - cmd: mix test
 
   lint:

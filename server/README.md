@@ -48,7 +48,7 @@ For example, to ensure the JSON files are correct or the attributes are defined,
 with this command:
 
 ```shell
-SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions mix test
+SCHEMA_DIR=../schema SCHEMA_EXTENSION=test/extensions mix test
 ```
 
 If everything is correct, then you should not see any errors or warnings.
@@ -59,8 +59,12 @@ You can use the Elixir's interactive shell,
 [IEx](https://hexdocs.pm/iex/IEx.html), to start the schema server use:
 
 ```shell
-SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
+iex -S mix phx.server
 ```
+
+In the `dev` environment `SCHEMA_DIR` defaults to `../schema` and `SCHEMA_EXTENSION`
+defaults to `test/extensions`, which holds the [example extension](../schema/test/extensions/example).
+Set `SCHEMA_EXTENSION=""` to run without extensions, or point it at your own extensions.
 
 Now you can access the Schema server at
 [`localhost:8080`](http://localhost:8080).
@@ -84,7 +88,7 @@ Reload the schema only with the `example` extension (note that the folder is rel
 to the `SCHEMA_DIR` folder):
 
 ```elixir
-Schema.reload(["extensions/example"])
+Schema.reload(["test/extensions/example"])
 ```
 
 Reload the schema with all extensions defined in the `extensions` folder (note that
@@ -110,7 +114,7 @@ The schema server uses a number of environment variables.
 | HTTP_PORT        | The server HTTP port number, default: `8080`                                              |
 | LOG_LEVEL        | Logger level (`debug`, `info`, `warning`, `error`), default: `warning`                    |
 | SCHEMA_DIR       | The directory containing the schema, default: `../schema`                                 |
-| SCHEMA_EXTENSION | The directory containing the schema extensions, relative to SCHEMA_DIR or absolute path   |
+| SCHEMA_EXTENSION | Comma-separated extension directories, relative to SCHEMA_DIR or absolute; blank for none |
 | RELEASE_NODE     | The Erlang node name. Set it if you want to run more than one server on the same computer |
 
 ```shell

@@ -144,49 +144,65 @@ var _ = Describe("Extension metaschema validation", func() {
 		var errors []string
 
 		metaschemaDir := filepath.Join(schemaDir, "metaschema")
-		extensionsDir := filepath.Join(schemaDir, "extensions")
 
-		dirInfo, err := os.Stat(extensionsDir)
-		if err != nil || !dirInfo.IsDir() {
-			AddWarning("%s directory does not exist\n", extensionsDir)
-			return
-		}
+		// The shipped extensions live in extensions/, which may be empty. The example
+		// extension used by the server tests and local development lives in
+		// test/extensions/ so that the released image does not load it, and is expected
+		// to be there.
+		for _, target := range []struct {
+			dir           string
+			expectEntries bool
+		}{
+			{dir: filepath.Join(schemaDir, "extensions"), expectEntries: false},
+			{dir: filepath.Join(schemaDir, "test", "extensions"), expectEntries: true},
+		} {
+			extensionsDir := target.dir
 
-		roots, err := FindExtensionRoots(extensionsDir)
-		Expect(err).NotTo(HaveOccurred())
+			dirInfo, err := os.Stat(extensionsDir)
+			if err != nil || !dirInfo.IsDir() {
+				AddWarning("%s directory does not exist\n", extensionsDir)
+				continue
+			}
 
-		unclaimed, err := FindUnclaimedDirs(extensionsDir, roots)
-		Expect(err).NotTo(HaveOccurred())
+			roots, err := FindExtensionRoots(extensionsDir)
+			Expect(err).NotTo(HaveOccurred())
 
-		for _, dir := range unclaimed {
-			AddWarning(
-				"Skipping %s: it holds JSON files but no %s, so it is not an extension and nothing in it was validated",
-				dir, extensionFile,
-			)
-		}
+			unclaimed, err := FindUnclaimedDirs(extensionsDir, roots)
+			Expect(err).NotTo(HaveOccurred())
 
-		if len(roots) == 0 {
-			AddWarning("no extensions found in %s (an extension is a directory containing %s)", extensionsDir, extensionFile)
-			return
-		}
+			for _, dir := range unclaimed {
+				AddWarning(
+					"Skipping %s: it holds JSON files but no %s, so it is not an extension and nothing in it was validated",
+					dir, extensionFile,
+				)
+			}
 
-		for _, root := range roots {
-			for _, file := range cache.Files {
-				if filepath.Ext(file.Path) != ".json" || !strings.HasPrefix(file.Path, root+string(os.PathSeparator)) {
+			if len(roots) == 0 {
+				if !target.expectEntries {
 					continue
 				}
+				AddWarning("no extensions found in %s (an extension is a directory containing %s)", extensionsDir, extensionFile)
+				continue
+			}
 
-				relPath, err := filepath.Rel(root, file.Path)
-				Expect(err).NotTo(HaveOccurred())
+			for _, root := range roots {
+				for _, file := range cache.Files {
+					if filepath.Ext(file.Path) != ".json" || !strings.HasPrefix(file.Path, root+string(os.PathSeparator)) {
+						continue
+					}
 
-				metaschema, known := ExtensionMetaschema(metaschemaDir, relPath)
-				if !known {
-					AddWarning("Skipping %s: no metaschema is defined for this location within an extension", file.Path)
-					continue
-				}
+					relPath, err := filepath.Rel(root, file.Path)
+					Expect(err).NotTo(HaveOccurred())
 
-				if err := ValidateDataAgainstSchema(file.Data, metaschema, file.Path); err != nil {
-					errors = append(errors, fmt.Sprintf("File %s failed validation: %s", file.Path, err))
+					metaschema, known := ExtensionMetaschema(metaschemaDir, relPath)
+					if !known {
+						AddWarning("Skipping %s: no metaschema is defined for this location within an extension", file.Path)
+						continue
+					}
+
+					if err := ValidateDataAgainstSchema(file.Data, metaschema, file.Path); err != nil {
+						errors = append(errors, fmt.Sprintf("File %s failed validation: %s", file.Path, err))
+					}
 				}
 			}
 		}

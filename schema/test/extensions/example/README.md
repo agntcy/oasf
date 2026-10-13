@@ -1,9 +1,12 @@
 # Example Extension
 
 A minimal, working reference extension. It exists so that the extension mechanism
-documented in [`CONTRIBUTING.md`](../../../CONTRIBUTING.md) and
-[`server/README.md`](../../../server/README.md) has a concrete example to point at,
+documented in [`CONTRIBUTING.md`](../../../../CONTRIBUTING.md) and
+[`server/README.md`](../../../../server/README.md) has a concrete example to point at,
 and so that the schema test suite exercises the extension validation path.
+
+It lives under `schema/test/extensions` rather than `schema/extensions` so that the
+released server image, which loads `extensions`, does not serve it.
 
 ## Layout
 
@@ -22,13 +25,14 @@ An extension mirrors the layout of the core `schema` directory:
 ## Loading it
 
 ```shell
-SCHEMA_DIR=../schema SCHEMA_EXTENSION=extensions iex -S mix phx.server
+iex -S mix phx.server
 ```
 
-Then, from the `iex` prompt:
+The `dev` environment loads `test/extensions` by default. To reload just this
+extension from the `iex` prompt:
 
 ```elixir
-Schema.reload(["extensions/example"])
+Schema.reload(["test/extensions/example"])
 ```
 
 ## Naming
@@ -79,5 +83,5 @@ fails to compile.
 ## Reserving a UID
 
 Before publishing an extension, reserve its name and `uid` in
-[`schema/extensions.md`](../../extensions.md) to avoid collisions with the core
+[`schema/extensions.md`](../../../extensions.md) to avoid collisions with the core
 schema and with other extensions.
