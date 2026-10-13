@@ -241,15 +241,15 @@ tasks:
       - cmd: mix test
 
   test:server:extensions:
-    desc: Test server code with the in-tree extensions loaded
+    desc: Test server code with the example extension loaded
     preconditions:
       - which mix
     dir: '{{ .ROOT_DIR }}/server'
     env:
       SCHEMA_DIR: '{{ .ROOT_DIR }}/schema'
-      SCHEMA_EXTENSION: extensions
+      SCHEMA_EXTENSION: test/extensions
     cmds:
-      - cmd: echo "Running OASF server test suite with extensions loaded..."
+      - cmd: echo "Running OASF server test suite with the example extension loaded..."
       - cmd: mix test
 
   lint:

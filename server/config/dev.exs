@@ -15,6 +15,13 @@ config :schema_server, SchemaWeb.Endpoint,
   check_origin: false,
   watchers: []
 
+# Load the in-tree example extension by default during local development. The
+# release image does not use this file: it reads SCHEMA_EXTENSION at runtime and
+# defaults to `extensions`, which does not contain the example. Set
+# SCHEMA_EXTENSION to an empty string to run without extensions.
+config :schema_server, Schema.Application,
+  extension: System.get_env("SCHEMA_EXTENSION", "test/extensions")
+
 # Watch static and templates for browser reloading.
 config :schema_server, SchemaWeb.Endpoint,
   live_reload: [
