@@ -160,6 +160,16 @@ task deps
 task build
 ```
 
+### Schema Image
+
+Each schema release is also published as `ghcr.io/agntcy/oasf-schema:<tag>`, a data-only
+image with the schema under `/schema`, for [oasf-server](https://github.com/agntcy/oasf-server)
+deployments to mount. To build one from the local `schema/` directory:
+
+```shell
+task build:schema SCHEMA_IMAGE_TAG=dev
+```
+
 ### Deploy Locally
 
 This step will create an ephemeral Kind cluster and deploy OASF services via Helm chart.

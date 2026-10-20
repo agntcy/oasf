@@ -61,6 +61,13 @@ tasks:
     cmds:
       - docker buildx bake -f docker-bake.hcl oasf-server {{.BAKE_OPTS}}
 
+  build:schema:
+    desc: Build the OASF schema image from the local schema/ directory
+    vars:
+      SCHEMA_IMAGE_TAG: '{{ .SCHEMA_IMAGE_TAG | default "dev" }}'
+    cmds:
+      - docker build -f schema.Dockerfile -t {{ .IMAGE_REPO }}/oasf-schema:{{ .SCHEMA_IMAGE_TAG }} schema
+
   up:
     desc: Deploy services in an ephemeral kind cluster
     preconditions:
