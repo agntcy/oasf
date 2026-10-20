@@ -281,8 +281,11 @@ defmodule Schema.JsonSchema do
         just_one_list = List.wrap(constraints[:just_one])
         at_least_one_list = List.wrap(constraints[:at_least_one])
 
+        # Constraint members are expressed through oneOf/anyOf; listing them in
+        # "required" too would demand all of them and break just_one.
         required =
-          if attribute[:requirement] == "required" do
+          if attribute[:requirement] == "required" and name not in just_one_list and
+               name not in at_least_one_list do
             [name | required]
           else
             required
