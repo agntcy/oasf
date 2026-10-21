@@ -27,6 +27,7 @@ omitted. Security fixes appear under **Fixed** or **Dependencies**.
 
 - **ci:** add openssf scoreboard ([#497](https://github.com/agntcy/oasf/pull/497))
 - **schema:** add a reference example extension ([#489](https://github.com/agntcy/oasf/pull/489))
+- **schema:** publish each schema as a data-only `ghcr.io/agntcy/oasf-schema` image for oasf-server to mount ([#544](https://github.com/agntcy/oasf/issues/544))
 
 ### Fixed
 

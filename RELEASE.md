@@ -17,6 +17,7 @@ The major and minor versions always reflect the schema version, while server and
 2. Push a commit to that branch that updates `schema/version.json` to the new schema version.
    Also bump the server version in `server/mix.exs` to the same version number.
 3. Tag that commit with the new version tag (for example, `v0.6.0`) and push it so the CI pipeline can create packages.
+   The schema is also published as `ghcr.io/agntcy/oasf-schema:0.6.0`, tagged with the schema version, so a later `v0.6.1` moves that tag to the new content. A release branch only triggers that workflow if it has `.github/workflows/schema-image.yaml`; otherwise run the **Schema Image** workflow from `main` with the tag as `ref`.
 4. Generate release notes on GitHub and publish the new release.
 5. **Do not delete the release branch** after the release.
 
