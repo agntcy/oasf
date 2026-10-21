@@ -2,13 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Publishes ghcr.io/agntcy/oasf-schema, a data-only image holding one schema under
-# /schema, which oasf-server deployments mount. Schema content changed inside
-# some patch lines, so images are keyed by git tag:
+# /schema, which oasf-server deployments mount. Release images are tagged with
+# the schema version from schema/version.json, which is what oasf-server
+# deployments list:
 #
-# - a vX.Y.Z tag publishes vX.Y.Z and X.Y.Z,
+# - a vX.Y.Z tag publishes <schema version>, so v1.1.3 publishes 1.1.0 and each
+#   patch release moves its line's tag to the latest schema content,
 # - a push to main publishes main and <sha>,
 # - workflow_dispatch publishes any ref, for backfills: a vX.Y.Z tag gets the
-#   same tags as a tag push, any other ref only <sha>.
+#   same tag as a tag push, any other ref only <sha>. Backfill only the latest
+#   patch of each line, or the line's tag moves back to older content.
 #
 # Tags pushed on a release branch only trigger this workflow if the branch has
 # it; otherwise publish them with workflow_dispatch from main.
@@ -82,10 +85,13 @@ jobs:
             ref="${GITHUB_REF#refs/tags/}"
           fi
 
+          schema_version=$(jq -er .version src/schema/version.json)
+          version="${schema_version}"
           if [[ "${EVENT_NAME}" == "pull_request" ]]; then
             tags=()
           elif [[ "${ref}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] && [[ "${EVENT_NAME}" == "workflow_dispatch" || "${GITHUB_REF}" == refs/tags/* ]]; then
-            tags=("${ref}" "${ref#v}")
+            tags=("${schema_version}")
+            version="${ref}"
           elif [[ "${EVENT_NAME}" == "push" && "${GITHUB_REF}" == "refs/heads/main" ]]; then
             tags=(main "${sha}")
           else
@@ -94,7 +100,8 @@ jobs:
 
           {
             echo "sha=${sha}"
-            echo "schema_version=$(jq -er .version src/schema/version.json)"
+            echo "schema_version=${schema_version}"
+            echo "version=${version}"
             echo "tags<<EOF"
             for tag in ${tags[@]+"${tags[@]}"}; do echo "${IMAGE}:${tag}"; done
             echo "EOF"
@@ -151,7 +158,7 @@ jobs:
           labels: |
             org.opencontainers.image.source=https://github.com/agntcy/oasf
             org.opencontainers.image.revision=${{ steps.resolve.outputs.sha }}
-            org.opencontainers.image.version=${{ steps.resolve.outputs.schema_version }}
+            org.opencontainers.image.version=${{ steps.resolve.outputs.version }}
             org.opencontainers.image.title=oasf-schema
             org.opencontainers.image.description=OASF schema ${{ steps.resolve.outputs.schema_version }} for oasf-server, under /schema
             org.opencontainers.image.licenses=Apache-2.0
