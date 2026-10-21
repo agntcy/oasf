@@ -62,8 +62,9 @@ contribute to the development of OASF Schemas and the framework itself.
 4. In case of a `module` class, make sure to overwrite the `data` attribute with
    a new object containing all the module-specific attributes →
    [Defining an `object`](#defining-an-object).
-5. Finally, verify the changes are working as expected in your local
-   [oasf/server](https://github.com/agntcy/oasf/tree/main/server).
+5. Finally, verify the changes are working as expected with a local
+   [OASF server](https://github.com/agntcy/oasf-server), started with
+   `task server:up`.
 
 ### Adding or Modifying an `attribute`
 
@@ -134,7 +135,8 @@ For example:
    1. All the available data_types can be accessed
       [here](https://schema.oasf.outshift.com/data_types).
    2. They are also accessible in your
-      [local instance of the OASF server](http://localhost:8080/data_types).
+      [local instance of the OASF server](http://localhost:8080/data_types)
+      started with `task server:up`.
 4. `is_array` → This a boolean key:value pair that you would need to add if the
    field you are defining is an array.
    - e.g. `"is_array":
@@ -360,12 +362,11 @@ method to run the test suite:
 task test
 ```
 
-To test and verify changes with a local instance of the
-[oasf/server](https://github.com/agntcy/oasf/tree/main/server), follow the
-[instructions here](https://github.com/agntcy/oasf/blob/main/README.md#deploy-locally)
-to deploy in a local Kind cluster, or
-[here](https://github.com/agntcy/oasf/blob/main/server/README.md) to set your
-own local OASF server using Elixir tooling.
+This loads the schema with the [OASF server](https://github.com/agntcy/oasf-server)
+release pinned in `.oasf-server-version` and runs its test suite, so it needs
+Elixir. To browse the changes, run `task server:up` and open
+[localhost:8080](http://localhost:8080); `task server:reload` picks up further
+edits. See [Preview Schema Changes](README.md#preview-schema-changes).
 
 Address the errors before submitting the changes, your server run should be
 completely error free.

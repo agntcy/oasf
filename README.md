@@ -2,7 +2,6 @@
 
 ![GitHub Release (latest by date)](https://img.shields.io/github/v/release/agntcy/oasf)
 [![CI](https://github.com/agntcy/oasf/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/agntcy/oasf/actions/workflows/ci.yaml)
-[![Coverage](https://codecov.io/gh/agntcy/oasf/branch/main/graph/badge.svg)](https://codecov.io/gh/agntcy/oasf)
 [![License](https://img.shields.io/github/license/agntcy/oasf)](./LICENSE.md)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/agntcy/oasf/badge)](https://scorecard.dev/viewer/?uri=github.com/agntcy/oasf)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14994/badge)](https://www.bestpractices.dev/projects/14994)
@@ -12,13 +11,14 @@ defining and managing AI agent capabilities, interactions, and metadata.
 It provides a structured way to describe agent attributes, capabilities, and relationships using attribute-based
 taxonomies.
 The framework includes development tools, schema validation, and hot-reload capabilities for rapid schema development,
-all managed through a Taskfile-based workflow and containerized development environment.
+all managed through a Taskfile-based workflow.
 OASF serves as the foundation for interoperable AI agent systems, enabling consistent definition and discovery of agent
 capabilities across distributed systems.
 
 OASF is highly inspired from [OCSF (Open Cybersecurity Schema Framework)](https://ocsf.io/) in terms of data modeling
 philosophy but also in terms of implementation.
-The server is a derivative work of OCSF schema server and the schema update workflows reproduce those developed by OCSF.
+The schema update workflows reproduce those developed by OCSF, and the [OASF server](https://github.com/agntcy/oasf-server) is a
+derivative work of the OCSF schema server.
 
 ## Features
 
@@ -117,32 +117,26 @@ Once configured, you can interact with the LLM using natural language:
 
 ## Open Agentic Schema Framework Server
 
-The `server/` directory contains the Open Agentic Schema Framework (OASF) Schema Server source code.
-The schema server is an HTTP server that provides a convenient way to browse and use the OASF schema.
-The server provides also schema validation capabilities to be used during development.
+The OASF schema server, an HTTP server to browse the schema and validate records against it, lives in
+[agntcy/oasf-server](https://github.com/agntcy/oasf-server), along with its Helm chart.
+It does not bundle a schema: deployments mount one, usually from the `ghcr.io/agntcy/oasf-schema` image this
+repository publishes for every release.
 
 You can access the OASF schema server, which is running the latest released schema, at
 [schema.oasf.outshift.com](https://schema.oasf.outshift.com).
 
-The schema server can also be used locally.
-
 ## Development
 
-Use `Taskfile` for all related development operations such as testing, validating, deploying, and working with the
-project.
-
-Check the [example.env](example.env) to see the configuration for the operations below.
+Use `Taskfile` for all related development operations such as testing, validating and previewing the schema.
 
 ### Prerequisites
 
 - [Taskfile](https://taskfile.dev/)
 - [Docker](https://www.docker.com/)
 - [Go](https://go.dev/)
-- [yq](https://github.com/mikefarah/yq)
+- [jq](https://jqlang.org/)
 - [curl](https://curl.se/)
-- [tar](https://www.gnu.org/software/tar/)
-
-Make sure Docker is installed with Buildx.
+- [Elixir](https://elixir-lang.org/install.html), only for `task test:server`
 
 ### Clone the Repository
 
@@ -150,15 +144,29 @@ Make sure Docker is installed with Buildx.
 git clone https://github.com/agntcy/oasf.git
 ```
 
-### Build Artifacts
+### Preview Schema Changes
 
-This step will fetch all project dependencies and subsequently build all project artifacts such as helm charts and
-Docker images.
+`task server:up` serves the local `schema/` directory with the oasf-server release pinned in
+[`.oasf-server-version`](.oasf-server-version), at [`localhost:8080`](http://localhost:8080):
 
 ```shell
-task deps
-task build
+task server:up
 ```
+
+Then run `task server:reload` in another terminal. It reloads the schema in the running server whenever a file under
+`schema/` changes. Set `LOG_LEVEL` (`debug`, `info`, `warning`, `error`) or `SCHEMA_EXTENSION` when running
+`task server:up` to change the log level or load extensions, and `OASF_SERVER_VERSION` to try another server release.
+`task server:down` stops the server.
+
+### Test Schema Changes
+
+```shell
+task test
+```
+
+runs the metaschema and proto checks, the pinned oasf-server's test suite against `schema/` (with and without the
+example extension), and a smoke test of the server image serving `schema/`. CI runs the same checks, so a schema change
+that the server cannot load fails the pull request.
 
 ### Schema Image
 
@@ -168,71 +176,6 @@ deployments to mount. To build one from the local `schema/` directory:
 
 ```shell
 task build:schema SCHEMA_IMAGE_TAG=dev
-```
-
-### Deploy Locally
-
-This step will create an ephemeral Kind cluster and deploy OASF services via Helm chart.
-It also sets up port forwarding so that the services can be accessed locally.
-
-```shell
-IMAGE_TAG=latest task build:server
-task up
-```
-
-To access the schema server, open [`localhost:8080`](http://localhost:8080) in your browser.
-
-To increase log verbosity for a run, set `LOG_LEVEL` (supported values: `debug`, `info`, `warning`, `error`):
-
-```shell
-LOG_LEVEL=debug task up
-```
-
-**Note:** Any changes made to the server backend itself will require running `task up` again.
-
-To set your own local OASF server using Elixir tooling, follow
-[these instructions](https://github.com/agntcy/oasf/blob/main/server/README.md).
-
-### Hot Reload
-
-In order to run the server in hot-reload mode, you must first deploy the services, and run another command to signal
-that the schema will be actively updated.
-
-This can be achieved by starting an interactive reload session via:
-
-```shell
-task reload
-```
-
-**Note:** This will only perform hot-reload for schema changes.
-Reloading backend changes still requires re-running `task build && task up`.
-
-### Deploy Locally with Multiple Versions
-
-Trying out OASF locally with multiple versions is also possible, with updating the
-`install/charts/oasf/values-test-versions.yaml` file with the required versions and deploying OASF services on the
-ephemeral Kind cluster with those values.
-
-Set `env.LOG_LEVEL` in that values file (for example `debug` or `info`) to control runtime logging verbosity for the
-dockerized server, or pass `LOG_LEVEL` directly when running `task up`.
-
-```shell
-HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
-```
-
-You can combine both:
-
-```shell
-LOG_LEVEL=debug HELM_VALUES_PATH=./install/charts/oasf/values-test-versions.yaml task up
-```
-
-### Cleanup
-
-This step will handle cleanup procedure by removing resources from previous steps, including ephemeral Kind clusters and
-Docker containers.
-
-```shell
-task down
 ```
 
 ## Distribution
