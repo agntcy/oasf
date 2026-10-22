@@ -6,17 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Versioning
 
-OASF does **not** follow semantic versioning. As described in [RELEASE.md](./RELEASE.md):
+As described in [RELEASE.md](./RELEASE.md), every release is a new schema version, tagged
+`vX.Y.0` on `main`: the minor version is bumped for any schema change and the major version for
+breaking ones. Fixes ship in the next schema version. The server moved to
+[agntcy/oasf-server](https://github.com/agntcy/oasf-server), which keeps its own changelog.
 
-- the **major and minor** version track the *schema* version;
-- the **patch** version counted *server and API* changes up to `v1.1.x`. From now on it counts
-  schema-content fixes only, since the server moved to
-  [agntcy/oasf-server](https://github.com/agntcy/oasf-server), which keeps its own changelog.
-
-Releases are cut from long-lived release branches (`v0.7.x`, `v1.1.x`, and so on) rather than
-from `main`, and server fixes used to be cherry-picked back onto older schema lines. Two
-consequences for this file: versions are grouped by release line rather than strictly by date,
-and the same change may appear under more than one version.
+Up to `v1.1.x`, releases were cut from long-lived release branches (`v0.7.x`, `v1.1.x`, and so
+on), the patch version counted *server and API* changes, and server fixes were cherry-picked back
+onto older schema lines. That is why older versions are grouped by release line rather than
+strictly by date, and why the same change may appear under more than one version. Those branches
+get no new releases.
 
 Entries are derived from the commit history. Purely internal `chore` and `style` commits are
 omitted. Security fixes appear under **Fixed** or **Dependencies**.
