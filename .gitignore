@@ -13,3 +13,6 @@ bin/
 
 # Node
 node_modules/
+
+# oasf-server checkout used by task test:server
+.oasf-server/

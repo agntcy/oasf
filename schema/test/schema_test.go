@@ -538,7 +538,7 @@ func ValidateDataAgainstSchema(data []byte, schemaPath, filePath string) error {
 // FindExtensionRoots returns every directory under dir that directly contains an
 // extension.json file. This mirrors the schema server's extension discovery, which
 // registers a directory as an extension as soon as it finds extension.json and does
-// not descend any further (see server/lib/schema/json_reader.ex, find_extensions/2).
+// not descend any further (see lib/schema/json_reader.ex, find_extensions/2, in agntcy/oasf-server).
 func FindExtensionRoots(dir string) ([]string, error) {
 	var roots []string
 	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
