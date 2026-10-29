@@ -1,0 +1,7 @@
+{
+  "caption": "Agent Evidence",
+  "description": "Lets an OASF record point at signed evidence statements about the agent, by predicate type, statement digest and location, without changing the core schema.",
+  "name": "agent_evidence",
+  "uid": 100,
+  "version": "0.1.0"
+}

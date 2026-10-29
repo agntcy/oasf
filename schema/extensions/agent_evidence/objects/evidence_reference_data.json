@@ -1,0 +1,20 @@
+{
+  "caption": "Evidence Reference Data",
+  "description": "Payload of the evidence reference module. Module payload objects extend module_data.",
+  "extends": "module_data",
+  "name": "evidence_reference_data",
+  "attributes": {
+    "agent_evidence_predicate_type": {
+      "requirement": "required"
+    },
+    "agent_evidence_statement_digest": {
+      "requirement": "required"
+    },
+    "agent_evidence_locations": {
+      "requirement": "optional"
+    },
+    "agent_evidence_conformance_corpus": {
+      "requirement": "optional"
+    }
+  }
+}
