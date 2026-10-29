@@ -21,7 +21,7 @@
     },
     "agent_evidence_conformance_corpus": {
       "caption": "Conformance Corpus",
-      "description": "Name and version of the public conformance corpus the producer's verifier was run against, for example <code>agent-evidence-vectors==0.31.0</code>.",
+      "description": "Name and version of the public conformance corpus the producer's verifier was run against, for example <code>agent-evidence-vectors==0.29.3</code>.",
       "type": "string_t"
     },
     "evidence_reference_data": {

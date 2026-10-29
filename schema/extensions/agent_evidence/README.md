@@ -11,7 +11,7 @@ A record carries the module as
     "agent_evidence_predicate_type": "https://probityai.github.io/agent-evidence-vectors/predicate/v1/agent-audit-record",
     "agent_evidence_statement_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
     "agent_evidence_locations": ["https://example.org/statements/run-1.json"],
-    "agent_evidence_conformance_corpus": "agent-evidence-vectors==0.31.0"
+    "agent_evidence_conformance_corpus": "agent-evidence-vectors==0.29.3"
   }
 }
 ```
