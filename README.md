@@ -121,6 +121,7 @@ The OASF schema server, an HTTP server to browse the schema and validate records
 [agntcy/oasf-server](https://github.com/agntcy/oasf-server), along with its Helm chart.
 It does not bundle a schema: deployments mount one, usually from the `ghcr.io/agntcy/oasf-schema` image this
 repository publishes for every release.
+See the [announcement](https://github.com/agntcy/oasf/discussions/560) for what the split changed and how to upgrade.
 
 You can access the OASF schema server, which is running the latest released schema, at
 [schema.oasf.outshift.com](https://schema.oasf.outshift.com).
