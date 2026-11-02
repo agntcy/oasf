@@ -1,35 +1,71 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "enabledManagers": ["dockerfile", "github-actions", "mix", "gomod"],
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "dockerfile",
+    "github-actions",
+    "gomod",
+    "custom.regex"
+  ],
   "packageRules": [
     {
-      "matchManagers": ["mix"],
-      "matchUpdateTypes": ["patch"],
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchManagers": ["gomod"],
-      "matchUpdateTypes": ["patch"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchManagers": ["dockerfile"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
-    },
-    {
-      "matchCategories": ["vulnerability"],
+      "matchCategories": [
+        "vulnerability"
+      ],
       "enabled": true,
       "automerge": true,
-      "addLabels": ["security"]
+      "addLabels": [
+        "security"
+      ]
     }
   ],
   "semanticCommits": "enabled",
-  "labels": ["dependencies"]
+  "labels": [
+    "dependencies"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "oasf-server release used to test and preview the schema",
+      "managerFilePatterns": [
+        "/^\\.oasf-server-version$/"
+      ],
+      "matchStrings": [
+        "^(?<currentValue>v\\d+\\.\\d+\\.\\d+)\\s*$"
+      ],
+      "depNameTemplate": "agntcy/oasf-server",
+      "datasourceTemplate": "github-releases"
+    }
+  ]
 }

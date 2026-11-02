@@ -6,15 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Versioning
 
-OASF does **not** follow semantic versioning. As described in [RELEASE.md](./RELEASE.md):
+As described in [RELEASE.md](./RELEASE.md), every release is a new schema version, tagged
+`vX.Y.0` on `main`: the minor version is bumped for any schema change and the major version for
+breaking ones. Fixes ship in the next schema version. The server moved to
+[agntcy/oasf-server](https://github.com/agntcy/oasf-server), which keeps its own changelog.
 
-- the **major and minor** version track the *schema* version;
-- the **patch** version covers *server and API* changes only — including breaking API changes.
-
-Releases are cut from long-lived release branches (`v0.7.x`, `v1.1.x`, and so on) rather than
-from `main`, and server fixes are routinely cherry-picked back onto older schema lines. Two
-consequences for this file: versions are grouped by release line rather than strictly by date,
-and the same change may appear under more than one version.
+Up to `v1.1.x`, releases were cut from long-lived release branches (`v0.7.x`, `v1.1.x`, and so
+on), the patch version counted *server and API* changes, and server fixes were cherry-picked back
+onto older schema lines. That is why older versions are grouped by release line rather than
+strictly by date, and why the same change may appear under more than one version. Those branches
+get no new releases.
 
 Entries are derived from the commit history. Purely internal `chore` and `style` commits are
 omitted. Security fixes appear under **Fixed** or **Dependencies**.
@@ -22,6 +23,10 @@ omitted. Security fixes appear under **Fixed** or **Dependencies**.
 ## Unreleased
 
 [Compare with v1.1.1](https://github.com/agntcy/oasf/compare/v1.1.1...main)
+
+### Removed
+
+- **server:** the OASF server and its Helm chart moved to [agntcy/oasf-server](https://github.com/agntcy/oasf-server). This repository now holds the schema, proto definitions and docs. `task server:up` previews `schema/` with the pinned server release, and CI loads every schema change with it ([#546](https://github.com/agntcy/oasf/issues/546))
 
 ### Added
 
