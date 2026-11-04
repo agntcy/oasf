@@ -1,0 +1,9 @@
+{
+  "uid": 1,
+  "caption": "Agent Evidence",
+  "description": "Module category for records that point at evidence statements about the agent.",
+  "extends": "base_module",
+  "name": "agent_evidence",
+  "category": true,
+  "attributes": {}
+}

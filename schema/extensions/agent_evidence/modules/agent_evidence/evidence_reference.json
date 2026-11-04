@@ -1,0 +1,15 @@
+{
+  "uid": 1,
+  "caption": "Evidence Reference",
+  "description": "Points at a signed evidence statement about the agent: its predicate type, the digest of its bytes and where to fetch it. The record does not contain the statement and does not vouch for it.",
+  "extends": "agent_evidence/agent_evidence",
+  "name": "evidence_reference",
+  "attributes": {
+    "data": {
+      "reference": "evidence_reference_data",
+      "caption": "Data",
+      "description": "The evidence statement this record points at.",
+      "requirement": "required"
+    }
+  }
+}

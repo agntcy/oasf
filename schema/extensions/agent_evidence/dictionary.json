@@ -1,0 +1,33 @@
+{
+  "caption": "Agent Evidence Attribute Dictionary",
+  "description": "Attributes contributed by the agent_evidence extension.",
+  "name": "dictionary",
+  "attributes": {
+    "agent_evidence_predicate_type": {
+      "caption": "Predicate Type",
+      "description": "The predicateType URI of the evidence statement, for example <code>https://probityai.github.io/agent-evidence-vectors/predicate/v1/agent-audit-record</code>. The URI names the record format the statement carries; a consumer picks the verifier by it.",
+      "type": "uri_t"
+    },
+    "agent_evidence_statement_digest": {
+      "caption": "Statement Digest",
+      "description": "SHA-256 of the evidence statement's bytes, written as <code>sha256:</code> followed by 64 lowercase hexadecimal digits. A consumer fetches the statement from the locations listed and rejects it when its digest differs.",
+      "type": "string_t"
+    },
+    "agent_evidence_locations": {
+      "caption": "Statement Locations",
+      "description": "URLs from which the evidence statement can be fetched.",
+      "type": "url_t",
+      "is_array": true
+    },
+    "agent_evidence_conformance_corpus": {
+      "caption": "Conformance Corpus",
+      "description": "Name and version of the public conformance corpus the producer's verifier was run against, for example <code>agent-evidence-vectors==0.29.3</code>.",
+      "type": "string_t"
+    },
+    "evidence_reference_data": {
+      "caption": "Data",
+      "description": "Payload of the evidence reference module. Module payload objects are self-typed in the dictionary so that the module's data attribute resolves to the object rather than to a string.",
+      "type": "evidence_reference_data"
+    }
+  }
+}
