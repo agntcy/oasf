@@ -26,7 +26,7 @@ omitted. Security fixes appear under **Fixed** or **Dependencies**.
 
 ### Removed
 
-- **server:** the OASF server and its Helm chart moved to [agntcy/oasf-server](https://github.com/agntcy/oasf-server). This repository now holds the schema, proto definitions and docs. `task server:up` previews `schema/` with the pinned server release, and CI loads every schema change with it ([#546](https://github.com/agntcy/oasf/issues/546))
+- **server:** the OASF server and its Helm chart moved to [agntcy/oasf-server](https://github.com/agntcy/oasf-server). This repository now holds the schema, proto definitions and docs. `task server:up` previews `schema/` with the pinned server release, and CI loads every schema change with it. See the [announcement](https://github.com/agntcy/oasf/discussions/560) ([#546](https://github.com/agntcy/oasf/issues/546))
 
 ### Added
 
