@@ -26,8 +26,8 @@
     },
     "uid": {
       "type": "integer",
-      "minimum": 0,
-      "description": "The unique identifier for this extension."
+      "minimum": 100,
+      "description": "The unique identifier for this extension. Must be at least 100: an extension's class identifiers are computed as (uid * 100 + category_uid) * 100 + class_uid, so a lower uid would produce identifiers that collide with core classes. See schema/extensions.md."
     },
     "version": {
       "description": "The version of this extension",
