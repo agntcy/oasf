@@ -1,0 +1,29 @@
+{
+    "caption": "Behavior Profile",
+    "description": "Declarative runtime operational boundaries and remediation policies enforced by an Authoritative Monitor.",
+    "extends": "base_module",
+    "name": "behavior_profile",
+    "attributes": {
+      "expected_semantic_domain": {
+        "requirement": "optional"
+      },
+      "allowed_tools": {
+        "is_array": true,
+        "requirement": "recommended"
+      },
+      "remediation_policy": {
+        "requirement": "recommended",
+        "enum": {
+          "QUARANTINE": {
+            "caption": "Quarantine",
+            "description": "Restricts execution to read-only telemetry observation while gating external tool mutations."
+          },
+          "EVICT_FROM_CHANNELS": {
+            "caption": "Evict from Channels",
+            "description": "Triggers a signed DeleteParticipant request via SLIM Channel Manager to force an MLS session epoch re-key."
+          }
+        }
+      }
+    }
+  }
+  
