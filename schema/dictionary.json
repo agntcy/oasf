@@ -876,6 +876,21 @@
       "caption": "Version",
       "description": "The version that pertains to the class or object. See specific usage.",
       "type": "string_t"
+    },
+    "expected_semantic_domain": {
+      "caption": "Expected Semantic Domain",
+      "description": "OASF domain taxonomy path used by guardrail classifiers to detect contextual or semantic drift.",
+      "type": "string_t"
+    },
+    "allowed_tools": {
+      "caption": "Allowed Tools",
+      "description": "Explicit allowlist of Model Context Protocol (MCP) tool names authorized for execution under this identity.",
+      "type": "string_t"
+    },
+    "remediation_policy": {
+      "caption": "Remediation Policy",
+      "description": "Automated control-plane containment action executed when runtime behavioral drift is confirmed.",
+      "type": "string_t"
     }
   },
   "types": {
