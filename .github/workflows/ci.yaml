@@ -9,12 +9,10 @@ on:
       - main
     tags:
       - "v*.*.*"
-      - "helm/v*.*.*"
   pull_request:
 
 permissions:
   contents: read
-  packages: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,27 +25,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
 
       - name: Install Task
         uses: go-task/setup-task@01a4adf9db2d14c1de7a560f09170b6e0df736aa # v2.1.0
 
-      - name: Build code
-        run: |
-          # NOTE: We are only interested in codebase, don't build images here
-          task build:charts
-
-      - name: Check code changes
-        run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            echo "There are uncommitted changes after running 'task build'. Please commit these changes."
-            exit 1
-          fi
-
       - name: Formatting
-        run: |
-          task fmt
+        run: task fmt
 
       - name: Check code changes
         run: |
@@ -60,145 +43,15 @@ jobs:
       - name: Linting
         run: task lint
 
-  prepare:
-    name: Prepare
-    needs:
-      - verify
-    outputs:
-      image_tag: ${{ steps.resolve.outputs.image_tag }}
-      helm_release_tag: ${{ steps.resolve.outputs.helm_release_tag }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
-
-      - name: Resolve build details
-        id: resolve
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          COMMIT_SHA: ${{ github.sha }}
-        run: |
-          if [[ "${EVENT_NAME}" == "pull_request" ]]; then
-            # For push from PR, resolve to <PR number>-<commit sha>
-            image_tag="pr${PR_NUMBER}-${COMMIT_SHA}"
-          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            # For server release tags, use the tag itself as image tag.
-            image_tag="${GITHUB_REF#refs/tags/}"
-          else
-            # For push, resolve to <commit sha>
-            image_tag="${COMMIT_SHA}"
-          fi
-
-          # Calculate helm_release_tag using bash parameter expansion
-          # This removes the "helm/" prefix if it exists
-          HELM_RELEASE_TAG="${GITHUB_REF#refs/tags/}"
-          HELM_RELEASE_TAG="${HELM_RELEASE_TAG#helm/}"
-
-          # Export vars
-          echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
-          echo "helm_release_tag=$HELM_RELEASE_TAG" >> "$GITHUB_OUTPUT"
-
-  build:
-    name: Build
-    if: ${{ !startsWith(github.ref, 'refs/tags/helm/') }}
-    needs:
-      - prepare
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
-      - name: Build amd64 image artifact
-        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
-        with:
-          source: .
-          files: ./docker-bake.hcl
-          targets: oasf-server
-          provenance: false
-          allow: fs.write=/tmp
-          set: |
-            *.platform=linux/amd64
-            *.cache-to=type=local,dest=/tmp/.buildx-cache
-            *.cache-from=type=local,src=/tmp/.buildx-cache
-            *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
-            *.tags=ghcr.io/agntcy/oasf-server:${{ needs.prepare.outputs.image_tag }}
-            *.output=type=docker,dest=/tmp/oasf-server-amd64.tar
-
-      - name: Upload image artifact
-        id: upload-artifacts
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
-        with:
-          name: artifacts-${{ needs.prepare.outputs.image_tag }}
-          path: /tmp/oasf-server-amd64.tar
-          if-no-files-found: error
-          retention-days: 1
-          compression-level: 0
-          overwrite: true
-
   test:
     name: Test
-    if: ${{ !startsWith(github.ref, 'refs/tags/helm/') }}
-    needs:
-      - prepare
-      - build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
 
       - name: Install Task
         uses: go-task/setup-task@01a4adf9db2d14c1de7a560f09170b6e0df736aa # v2.1.0
-
-      - name: Download artifacts
-        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
-        with:
-          name: artifacts-${{ needs.prepare.outputs.image_tag }}
-          path: artifacts
-          pattern: "*.tar"
-          merge-multiple: true
-
-      - name: Load images to local Docker registry
-        run: |
-          ls -la artifacts
-          docker load --input artifacts/oasf-server-amd64.tar
-          docker images
-
-      - name: Run e2e tests
-        env:
-          IMAGE_REPO: ghcr.io/agntcy
-          IMAGE_TAG: ${{ needs.prepare.outputs.image_tag }}
-        run: |
-          task test:e2e
-
-      - name: Set up Elixir
-        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
-        with:
-          elixir-version: "1.19"
-          otp-version: "28"
-
-      - name: Fetch Elixir deps
-        run: mix deps.get
-        working-directory: server
 
       - name: Validate schema files against metaschemas
         run: task test:schema
@@ -206,298 +59,32 @@ jobs:
       - name: Checking consistency between json and proto files
         run: task test:proto
 
-      - name: OASF Server Validation
+  # Loads the schema with the oasf-server release pinned in .oasf-server-version,
+  # so a schema change that the server cannot load fails here.
+  server:
+    name: Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+
+      - name: Install Task
+        uses: go-task/setup-task@01a4adf9db2d14c1de7a560f09170b6e0df736aa # v2.1.0
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@8251c48667b97e88a0a24ec512f5b72a039fcea7 # v1
+        with:
+          elixir-version: "1.19"
+          otp-version: "28"
+
+      - name: Schema integrity and API tests
         run: task test:server
 
-      - name: OASF Server Validation with extensions loaded
+      - name: Schema integrity and API tests with the example extension
         run: task test:server:extensions
 
-      - name: Generate OASF server coverage report
-        working-directory: server
-        run: mix coveralls.json
-
-      - name: Upload OASF server coverage to Codecov
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
-        with:
-          files: server/cover/excoveralls.json
-          flags: server
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
-
-  # The released image is only rebuilt on a v* tag, so ghcr `latest` can sit
-  # months behind main and the nightly Trivy scan reports a state nobody is
-  # working on any more. Publish every merge to main as `main` so there is an
-  # image that reflects the current code, and point the scan at it.
-  #
-  # `latest` tracks main, so an untagged `docker pull` returns the current
-  # code rather than whatever was tagged last. Releases carry their version
-  # tag only. Exactly one job may push a floating tag, or the two overwrite
-  # each other depending on which ran most recently, so server_release no
-  # longer pushes `latest`.
-  publish_main:
-    name: Publish main image
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-    needs:
-      - prepare
-      - build
-      - test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      # Same keyless signing as server_release; an image published from main
-      # should be verifiable the same way a released one is.
-      id-token: write
-      attestations: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
-      - name: Docker metadata
-        id: metadata
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
-        with:
-          images: |
-            ghcr.io/agntcy/oasf-server,enable=true
-          tags: |
-            type=raw,value=main
-            type=raw,value=latest
-            type=raw,value=${{ needs.prepare.outputs.image_tag }}
-
-      - name: Build and push multi-arch image
-        id: bake
-        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
-        with:
-          source: .
-          files: |
-            ./docker-bake.hcl
-            ${{ steps.metadata.outputs.bake-file }}
-          targets: oasf-server
-          provenance: false
-          push: true
-          set: |
-            *.platform=linux/amd64,linux/arm64
-            *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
-
-      - name: Resolve pushed image digest
-        id: digest
-        env:
-          METADATA: ${{ steps.bake.outputs.metadata }}
-        run: |
-          set -euo pipefail
-          digest=$(jq -er '."oasf-server"."containerimage.digest"' <<< "$METADATA")
-          echo "digest=${digest}" >> "$GITHUB_OUTPUT"
-          echo "image=ghcr.io/agntcy/oasf-server" >> "$GITHUB_OUTPUT"
-
-      - name: Install cosign
-        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
-
-      - name: Sign the image
-        env:
-          IMAGE: ${{ steps.digest.outputs.image }}
-          DIGEST: ${{ steps.digest.outputs.digest }}
-        run: |
-          set -euo pipefail
-          cosign sign --yes "${IMAGE}@${DIGEST}"
-
-      - name: Attest build provenance
-        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
-        with:
-          subject-name: ${{ steps.digest.outputs.image }}
-          subject-digest: ${{ steps.digest.outputs.digest }}
-          push-to-registry: true
-
-  server_release:
-    name: Server Release
-    if: ${{ startsWith(github.ref, 'refs/tags/v') && !startsWith(github.ref, 'refs/tags/helm/') }}
-    needs:
-      - prepare
-      - build
-      - test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-      # cosign signs keylessly: it exchanges this OIDC token with Sigstore's
-      # Fulcio CA for a short-lived certificate, so there is no private key.
-      id-token: write
-      # actions/attest-build-provenance records how the image was built.
-      attestations: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
-
-      - name: Setup QEMU
-        uses: docker/setup-qemu-action@49b3bc8e6bdd4a60e6116a5414239cba5943d3cf # v3.2.0
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
-
-      - name: Cache Docker layers
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4.2.0
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-oasf-server-buildx-${{ github.ref }}
-          restore-keys: |
-            ${{ runner.os }}-oasf-server-buildx-
-
-      - name: Create cache directory
-        run: mkdir -p /tmp/.buildx-cache
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
-      - name: Docker metadata
-        id: metadata
-        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
-        with:
-          images: |
-            ghcr.io/agntcy/oasf-server,enable=true
-          tags: |
-            type=raw,value=${{ needs.prepare.outputs.image_tag }}
-
-      - name: Build and push multi-arch image
-        id: bake
-        uses: docker/bake-action@5be5f02ff8819ecd3092ea6b2e6261c31774f2b4 # v6.10.0
-        with:
-          source: .
-          files: |
-            ./docker-bake.hcl
-            ${{ steps.metadata.outputs.bake-file }}
-          targets: oasf-server
-          provenance: false
-          push: true
-          set: |
-            *.platform=linux/amd64,linux/arm64
-            *.cache-from=type=registry,ref=ghcr.io/agntcy/oasf-server
-
-      # Sign and attest the digest, never a tag: tags are mutable, so a
-      # signature bound to one says nothing about the bytes pulled later.
-      - name: Resolve pushed image digest
-        id: digest
-        env:
-          METADATA: ${{ steps.bake.outputs.metadata }}
-        run: |
-          set -euo pipefail
-          digest=$(jq -er '."oasf-server"."containerimage.digest"' <<< "$METADATA")
-          echo "digest=${digest}" >> "$GITHUB_OUTPUT"
-          echo "image=ghcr.io/agntcy/oasf-server" >> "$GITHUB_OUTPUT"
-
-      - name: Install cosign
-        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
-
-      - name: Sign the image
-        env:
-          IMAGE: ${{ steps.digest.outputs.image }}
-          DIGEST: ${{ steps.digest.outputs.digest }}
-        run: |
-          set -euo pipefail
-          cosign sign --yes "${IMAGE}@${DIGEST}"
-
-      # The signature says who published the image; the attestation says how it
-      # was built. Scorecard scores those separately, and only provenance
-      # answers the second.
-      - name: Attest build provenance
-        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
-        with:
-          subject-name: ${{ steps.digest.outputs.image }}
-          subject-digest: ${{ steps.digest.outputs.digest }}
-          push-to-registry: true
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-        with:
-          tag_name: ${{ needs.prepare.outputs.image_tag }}
-          release_name: Release ${{ needs.prepare.outputs.image_tag }}
-          draft: true
-          prerelease: false
-
-  helm_release:
-    name: Helm Chart Release
-    if: ${{ startsWith(github.ref, 'refs/tags/helm/') }}
-    needs:
-      - prepare
-      - verify
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
-        with:
-          fetch-depth: 0
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
-        with:
-          registry: ghcr.io
-          username: notused
-          password: ${{ secrets.GITHUB_TOKEN  }}
-
-      - name: Setup Helm
-        uses: azure/setup-helm@fe7b79cd5ee1e45176fcad797de68ecaf3ca4814 # v4.2.0
-        with:
-          version: "3.12.1"
-
-      - name: Helm update dependencies
-        shell: bash
-        run: helm dependency update install/charts/oasf
-
-      - name: Helm lint
-        shell: bash
-        run: helm lint install/charts/oasf --with-subcharts
-
-      - name: Set chart name
-        id: chart-name
-        shell: bash
-        run: echo "value=${{ github.event.repository.name }}" >> "$GITHUB_OUTPUT"
-
-      - name: Helm package
-        shell: bash
-        run: |
-          helm package install/charts/oasf --dependency-update --version ${{ needs.prepare.outputs.helm_release_tag }}
-
-      - name: Helm push to GHCR OCI registry
-        shell: bash
-        run: |
-          echo "🚧 Pushing ${{ needs.prepare.outputs.helm_release_tag }} to GHCR OCI registry"
-          helm push ${{ steps.chart-name.outputs.value }}-${{ needs.prepare.outputs.helm_release_tag }}.tgz oci://ghcr.io/agntcy/oasf/helm-charts
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e # v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: Release ${{ github.ref_name }}
-          draft: true
-          prerelease: false
+      - name: Smoke-test the server image with this schema
+        run: task test:server:smoke
 
   success:
     name: Success
@@ -505,12 +92,9 @@ jobs:
     # https://github.com/actions/toolkit/issues/581
     if: ${{ !cancelled() && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure') }}
     needs:
-      - prepare
-      - build
+      - verify
       - test
-      - publish_main
-      - server_release
-      - helm_release
+      - server
     runs-on: ubuntu-latest
     steps:
       - name: Echo Success

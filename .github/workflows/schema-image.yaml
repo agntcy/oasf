@@ -6,15 +6,13 @@
 # the schema version from schema/version.json, which is what oasf-server
 # deployments list:
 #
-# - a vX.Y.Z tag publishes <schema version>, so v1.1.3 publishes 1.1.0 and each
-#   patch release moves its line's tag to the latest schema content,
+# - a vX.Y.Z tag publishes <schema version>, so v1.2.0 publishes 1.2.0 (and the
+#   older patch tags, such as v1.1.3, publish 1.1.0),
 # - a push to main publishes main and <sha>,
-# - workflow_dispatch publishes any ref, for backfills: a vX.Y.Z tag gets the
-#   same tag as a tag push, any other ref only <sha>. Backfill only the latest
-#   patch of each line, or the line's tag moves back to older content.
-#
-# Tags pushed on a release branch only trigger this workflow if the branch has
-# it; otherwise publish them with workflow_dispatch from main.
+# - workflow_dispatch publishes any ref, to republish a release: a vX.Y.Z tag
+#   gets the same tag as a tag push, any other ref only <sha>. For the old patch
+#   tags, republish only the latest patch of each line, or the line's tag moves
+#   back to older content.
 name: Schema Image
 
 on:

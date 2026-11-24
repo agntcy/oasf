@@ -11,16 +11,19 @@ dotenv:
 vars:
   ## Image config
   IMAGE_REPO: '{{ .IMAGE_REPO | default "ghcr.io/agntcy" }}'
-  IMAGE_TAG: '{{ .IMAGE_TAG }}'
+
+  ## oasf-server release used to preview and test the schema. Renovate bumps
+  ## .oasf-server-version; set OASF_SERVER_VERSION to try another one.
+  OASF_SERVER_VERSION:
+    sh: 'echo "${OASF_SERVER_VERSION:-$(cat "{{ .ROOT_DIR }}/.oasf-server-version")}"'
+  OASF_SERVER_IMAGE: '{{ .OASF_SERVER_IMAGE | default (printf "%s/oasf-server:%s" .IMAGE_REPO .OASF_SERVER_VERSION) }}'
+  ## Checkout of agntcy/oasf-server at that version, for its test suite
+  OASF_SERVER_DIR: '{{ .ROOT_DIR }}/.oasf-server'
+  SERVER_CONTAINER: '{{ .SERVER_CONTAINER | default "oasf-server" }}'
+  SERVER_PORT: '{{ .SERVER_PORT | default "8080" }}'
 
   ## Dependency config
   BIN_DIR: '{{ .ROOT_DIR }}/bin'
-  HELM_VERSION: '3.16.3'
-  HELM_BIN: '{{ .BIN_DIR }}/helm-{{.HELM_VERSION}}'
-  KUBECTL_VERSION: '1.31.3'
-  KUBECTL_BIN: '{{ .BIN_DIR }}/kubectl-{{.KUBECTL_VERSION}}'
-  KIND_VERSION: '0.25.0'
-  KIND_BIN: '{{ .BIN_DIR }}/kind-{{.KIND_VERSION}}'
   PROTOC_VERSION: '27.1'
   PROTOC_BIN: '{{ .BIN_DIR }}/protoc-{{.PROTOC_VERSION}}'
   BUFBUILD_VERSION: '1.50.1'
@@ -40,26 +43,7 @@ tasks:
   build:
     desc: Build project artifacts
     cmds:
-      - task: build:charts
-      - task: build:server
-
-  build:charts:
-    desc: Build helm charts
-    deps:
-      - deps:helm
-    vars:
-      HELM_ALL_CHART_PATHS:
-        sh: find . -name Chart.yaml -exec dirname {} \;
-    cmds:
-      - for: {var: HELM_ALL_CHART_PATHS}
-        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} dependency update'
-
-  build:server:
-    desc: Build OASF server container image
-    vars:
-      BAKE_OPTS: '{{ .BAKE_OPTS | default (printf "--set *.platform=linux/%s" ARCH) }}'
-    cmds:
-      - docker buildx bake -f docker-bake.hcl oasf-server {{.BAKE_OPTS}}
+      - task: build:schema
 
   build:schema:
     desc: Build the OASF schema image from the local schema/ directory
@@ -68,143 +52,53 @@ tasks:
     cmds:
       - docker build -f schema.Dockerfile -t {{ .IMAGE_REPO }}/oasf-schema:{{ .SCHEMA_IMAGE_TAG }} schema
 
-  up:
-    desc: Deploy services in an ephemeral kind cluster
+  ##
+  ## Schema preview
+  ##
+  server:up:
+    desc: Serve the local schema/ with the pinned oasf-server image at localhost:8080
     preconditions:
-      - which yq
-    deps:
-      - deps:helm
-      - deps:kubectl
-      - deps:kind
-    vars:
-      # Kind args
-      KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
-      KIND_CREATE_OPTS: '{{ .KIND_CREATE_OPTS | default "" }}'
-      KIND_CONFIG_PATH: '/tmp/{{.KIND_CLUSTER_NAME}}'
-      # Deployment args
-      HELM_NAMESPACE: '{{ .HELM_NAMESPACE | default "default" }}'
-      HELM_CHART_PATH: '{{ .ROOT_DIR }}/install/charts/oasf'
-      HELM_VALUES_PATH: '{{ .HELM_VALUES_PATH | default (printf "%s/install/charts/oasf/values-test.yaml" .ROOT_DIR) }}'
-      LOG_LEVEL: '{{ .LOG_LEVEL | default "" }}'
-      RELEASE_NAME: 'oasf'
+      - which docker curl
     cmds:
-      # Clean up previous deployment
-      - task: down
-
-      # Create volume config to share between Kind and host
+      - task: server:down
+        vars: {SERVER_CONTAINER: '{{ .SERVER_CONTAINER }}'}
       - |
-        cat <<EOF > {{.KIND_CONFIG_PATH}}
-        apiVersion: kind.x-k8s.io/v1alpha4
-        kind: Cluster
-        nodes:
-          - role: control-plane
-            extraMounts:
-              - hostPath: {{ .ROOT_DIR }}/schema
-                containerPath: /schema
-            kubeadmConfigPatches:
-            - |
-              kind: InitConfiguration
-              nodeRegistration:
-                kubeletExtraArgs:
-                  node-labels: "ingress-ready=true"
-            extraPortMappings:
-            - containerPort: 30080
-              hostPort: 8080
-              protocol: TCP
-        EOF
-
-      # Create ephemeral cluster
-      - '{{ .KIND_BIN }} create cluster {{ .KIND_CREATE_OPTS }} --name {{ .KIND_CLUSTER_NAME }} --config {{.KIND_CONFIG_PATH}}'
-      - '{{ .KIND_BIN }} export kubeconfig --name {{ .KIND_CLUSTER_NAME }}'
-
-      # Check cluster status
-      - '{{ .KUBECTL_BIN }} cluster-info'
-
-      # Extract images from values-test.yaml and load them into kind.
-      # Use a single-platform "docker save" + "kind load image-archive" rather than
-      # "kind load docker-image": with Docker's containerd image store, saving a
-      # multi-arch tag exports the full manifest list, and kind's --all-platforms
-      # import fails on platform blobs not pulled locally (e.g. amd64 on arm64 hosts).
-      - |
-        set -eu
-        archive=""
-        trap 'rm -f "$archive"' EXIT
-        {{- if .IMAGE_TAG }}
-        archive=$(mktemp "${TMPDIR:-/tmp}/oasf-image.XXXXXX")
-        docker save --platform linux/{{ ARCH }} "{{ .IMAGE_REPO }}/oasf-server:{{ .IMAGE_TAG }}" -o "$archive"
-        {{ .KIND_BIN }} load image-archive "$archive" --name {{ .KIND_CLUSTER_NAME }}
-        rm -f "$archive"
-        {{- else }}
-        images=$(yq eval '.image.versions[].server' {{ .HELM_VALUES_PATH }})
-        echo "Images to load: $images"
-        for image in $images; do
-          archive=$(mktemp "${TMPDIR:-/tmp}/oasf-image.XXXXXX")
-          docker save --platform linux/{{ ARCH }} "{{ .IMAGE_REPO }}/oasf-server:$image" -o "$archive"
-          {{ .KIND_BIN }} load image-archive "$archive" --name {{ .KIND_CLUSTER_NAME }}
-          rm -f "$archive"
-        done
-        {{- end }}
-
-      # Deploy chart
-      - |
-        {{ .HELM_BIN }} upgrade {{.RELEASE_NAME}} \
-          {{ .HELM_CHART_PATH }} \
-          -f {{ .HELM_VALUES_PATH }} \
-          --set image.repository="{{ .IMAGE_REPO }}/oasf-server" \
+        docker run --detach --name {{ .SERVER_CONTAINER }} -p {{ .SERVER_PORT }}:8080 \
+          -v "{{ .ROOT_DIR }}/schema:/app/schema:ro" \
           {{- if .LOG_LEVEL }}
-          --set env.LOG_LEVEL={{.LOG_LEVEL}} \
+          -e LOG_LEVEL={{ .LOG_LEVEL }} \
           {{- end }}
-          {{- if .IMAGE_TAG }}
-          --set image.versions[0].server={{.IMAGE_TAG}} \
+          {{- if .SCHEMA_EXTENSION }}
+          -e SCHEMA_EXTENSION={{ .SCHEMA_EXTENSION }} \
           {{- end }}
-          --namespace {{ .HELM_NAMESPACE }} \
-          --create-namespace \
-          --install \
-          --wait \
-          --wait-for-jobs \
-          --timeout "15m"
-
-      # Wait for the ingress controller deployment to be available
+          {{ .OASF_SERVER_IMAGE }} > /dev/null
       - |
-        echo "Waiting for Deployment {{.RELEASE_NAME}}-ingress-controller in namespace {{.HELM_NAMESPACE}} to become available..."
-        if ! {{ .KUBECTL_BIN }} wait deployment/{{.RELEASE_NAME}}-ingress-controller \
-            --for=condition=Available \
-            -n {{ .HELM_NAMESPACE }} \
-            --timeout=120s; then
-          echo "Error: Deployment {{.RELEASE_NAME}}-ingress-controller did not become available within 120 seconds."
+        if ! curl --silent --fail --retry 30 --retry-delay 1 --retry-all-errors --output /dev/null http://localhost:{{ .SERVER_PORT }}/api/version; then
+          docker logs {{ .SERVER_CONTAINER }}
           exit 1
         fi
-        echo
-        echo "Deployment is available at http://localhost:8080."
+      - echo "oasf-server {{ .OASF_SERVER_VERSION }} is serving schema/ at http://localhost:{{ .SERVER_PORT }}. Run task server:reload to pick up changes."
 
-  reload:
-    desc: Hot reload schema changes after deployment
+  server:reload:
+    desc: Reload the schema in the server started by server:up whenever schema/ changes
     watch: true
-    deps:
-      - deps:kubectl
     sources:
-      - 'schema/**/*'
-    vars:
-      LABEL_SELECTOR: 'default-schema=true'
+      - schema/**/*
     preconditions:
-      - '{{ .KUBECTL_BIN }} get po -l {{.LABEL_SELECTOR}}'
+      - sh: docker inspect {{ .SERVER_CONTAINER }} > /dev/null 2>&1
+        msg: Start the server with task server:up first.
     cmds:
-      - |
-        POD_NAME=$({{ .KUBECTL_BIN }} get pods -l {{.LABEL_SELECTOR}} -o jsonpath="{.items[0].metadata.name}")
-        {{.KUBECTL_BIN}} exec $POD_NAME -- ./bin/schema_server rpc "Schema.reload()"
-
+      - docker exec {{ .SERVER_CONTAINER }} /app/bin/schema_server rpc "Schema.reload()"
       - echo "Reloaded schema! Use CTRL + C to exit."
 
-  down:
-    desc: Stop services and remove ephemeral kind cluster
-    deps:
-      - deps:kind
-    vars:
-      # Kind args
-      KIND_CLUSTER_NAME: '{{ .KIND_CLUSTER_NAME | default "test-oasf-cluster" }}'
+  server:down:
+    desc: Stop the server started by server:up
     cmds:
-      - '{{ .KIND_BIN }} delete cluster --name {{ .KIND_CLUSTER_NAME }}'
+      - docker rm --force {{ .SERVER_CONTAINER }} > /dev/null 2>&1 || true
 
+  ##
+  ## Tests
+  ##
   test:
     desc: Run all test suites
     cmds:
@@ -212,32 +106,7 @@ tasks:
       - task: test:proto
       - task: test:server
       - task: test:server:extensions
-
-  test:e2e:
-    desc: Deploy to an ephemeral kind cluster and verify the server starts healthy
-    deps:
-      - deps:kubectl
-    cmds:
-      - defer: {task: down}
-      - task: up
-      - cmd: curl --retry 10 --retry-delay 3 --retry-connrefused --fail --silent http://localhost:8080/ > /dev/null
-      # The image must not ship or serve the example extension from schema/test.
-      - cmd: |
-          set -eu
-          extensions=$(curl --fail --silent http://localhost:8080/api/extensions)
-          if [ "$extensions" != "{}" ]; then
-            echo "Error: expected no extensions to be loaded, got: $extensions"
-            exit 1
-          fi
-      - cmd: |
-          set -eu
-          pod=$({{ .KUBECTL_BIN }} get pod -l default-schema=true -o name | head -n 1)
-          # Guard against a false pass if exec itself fails.
-          {{ .KUBECTL_BIN }} exec "$pod" -- test -d /app/schema
-          if {{ .KUBECTL_BIN }} exec "$pod" -- test -e /app/schema/test; then
-            echo "Error: /app/schema/test must not be present in the image"
-            exit 1
-          fi
+      - task: test:server:smoke
 
   test:schema:
     desc: Validate schema JSON files against their metaschemas
@@ -257,32 +126,69 @@ tasks:
       - cmd: echo "Checking proto ↔ JSON schema sync..."
       - cmd: go test -v -count=1 ./...
 
+  server:checkout:
+    desc: Check out agntcy/oasf-server at the pinned version into .oasf-server
+    internal: true
+    status:
+      - test "$(git -C '{{ .OASF_SERVER_DIR }}' describe --tags --exact-match 2>/dev/null)" = '{{ .OASF_SERVER_VERSION }}'
+    cmds:
+      - rm -rf '{{ .OASF_SERVER_DIR }}'
+      - git clone --quiet --depth 1 --branch '{{ .OASF_SERVER_VERSION }}' https://github.com/agntcy/oasf-server.git '{{ .OASF_SERVER_DIR }}'
+
   test:server:
-    desc: Test server code (includes schema integrity, API, and unit tests)
+    desc: Load schema/ with the pinned oasf-server's test suite (schema integrity, API and unit tests)
     preconditions:
       - which mix
-    dir: '{{ .ROOT_DIR }}/server'
+    deps:
+      - server:checkout
+    dir: '{{ .OASF_SERVER_DIR }}'
+    env:
+      SCHEMA_DIR: '{{ .ROOT_DIR }}/schema'
     cmds:
-      - cmd: echo "Running OASF server test suite..."
-      - cmd: mix test
+      - mix deps.get
+      - mix test
 
   test:server:extensions:
-    desc: Test server code with the example extension loaded
+    desc: Same as test:server, with the example extension loaded
     preconditions:
       - which mix
-    dir: '{{ .ROOT_DIR }}/server'
+    deps:
+      - server:checkout
+    dir: '{{ .OASF_SERVER_DIR }}'
     env:
       SCHEMA_DIR: '{{ .ROOT_DIR }}/schema'
       SCHEMA_EXTENSION: test/extensions
     cmds:
-      - cmd: echo "Running OASF server test suite with the example extension loaded..."
-      - cmd: mix test
+      - mix deps.get
+      - mix test
 
+  test:server:smoke:
+    desc: Serve schema/ with the pinned oasf-server image and smoke-test its pages and endpoints
+    preconditions:
+      - which docker curl jq
+    deps:
+      - server:checkout
+    vars:
+      SMOKE_PORT: '{{ .SMOKE_PORT | default "18080" }}'
+      SCHEMA_VERSION:
+        sh: jq -r .version '{{ .ROOT_DIR }}/schema/version.json'
+    cmds:
+      - defer:
+          task: server:down
+          vars: {SERVER_CONTAINER: oasf-server-smoke}
+      - task: server:up
+        vars:
+          SERVER_CONTAINER: oasf-server-smoke
+          SERVER_PORT: '{{ .SMOKE_PORT }}'
+      - '{{ .OASF_SERVER_DIR }}/scripts/smoke-test.sh http://localhost:{{ .SMOKE_PORT }} {{ .SCHEMA_VERSION }}'
+
+  ##
+  ## Lint and format
+  ##
   lint:
     desc: Run all linters
     cmds:
       - task: lint:proto
-      - task: lint:charts
 
   lint:proto:
     desc: Run Proto linters
@@ -295,23 +201,11 @@ tasks:
       - '{{.BUFBUILD_BIN}} format --diff --exit-code'
       - '{{.BUFBUILD_BIN}} lint'
 
-  lint:charts:
-    desc: Run Helm linters
-    deps:
-      - deps:helm
-    vars:
-      HELM_ALL_CHART_PATHS:
-        sh: find . -name Chart.yaml -exec dirname {} \;
-    cmds:
-      - for: {var: HELM_ALL_CHART_PATHS}
-        cmd: 'cd {{ .ITEM }} && {{ .HELM_BIN }} lint'
-
   fmt:
     desc: Run formatters
     cmds:
       - task: fmt:proto
       - task: fmt:schema
-      - task: fmt:elixir
 
   fmt:proto:
     desc: Run Proto formatters
@@ -340,26 +234,12 @@ tasks:
           jq '.attributes |= (to_entries | sort_by(.key) | from_entries) | .types.attributes |= (to_entries | sort_by(.key) | from_entries)' dictionary.json > sorted.dictionary.json
           mv sorted.dictionary.json dictionary.json
 
-  fmt:elixir:
-    desc: Run Elixir formatter on server/
-    dir: ./server
-    cmds:
-      - |
-        if ! command -v mix >/dev/null 2>&1; then
-          echo "mix not found, skipping Elixir formatting."
-          exit 0
-        fi
-        mix format
-
   ##
   ## Dependencies
   ##
   deps:
     desc: Install project dependencies
     cmds:
-      - task: deps:helm
-      - task: deps:kubectl
-      - task: deps:kind
       - task: deps:protoc
       - task: deps:bufbuild
 
@@ -370,49 +250,6 @@ tasks:
     cmd: mkdir -p {{.BIN_DIR}}
     status:
       - test -d {{.BIN_DIR}}
-
-  deps:helm:
-    desc: Ensure supported Helm version is installed
-    internal: true
-    deps:
-      - deps:bin-dir
-    preconditions:
-      - which curl
-      - which tar
-    cmds:
-      - cmd: echo "Downloading Helm v{{.HELM_VERSION}}..."
-      - cmd: curl -sSfL 'https://get.helm.sh/helm-v{{.HELM_VERSION}}-{{OS}}-{{ARCH}}.tar.gz' --output - | tar xzvOf - '{{OS}}-{{ARCH}}/helm' > {{.HELM_BIN}}
-      - cmd: chmod +x {{.HELM_BIN}}
-    status:
-      - test -x {{.HELM_BIN}}
-
-  deps:kubectl:
-    desc: Ensure supported kubectl version is installed
-    internal: true
-    deps:
-      - deps:bin-dir
-    preconditions:
-      - which curl
-    cmds:
-      - cmd: echo "Downloading Kubectl v{{.KUBECTL_VERSION}}..."
-      - cmd: curl -L "https://dl.k8s.io/release/v{{.KUBECTL_VERSION}}/bin/{{OS}}/{{ARCH}}/kubectl" -o {{.KUBECTL_BIN}}
-      - cmd: chmod +x {{.KUBECTL_BIN}}
-    status:
-      - test -x {{.KUBECTL_BIN}}
-
-  deps:kind:
-    desc: Ensure supported kind version is installed
-    internal: true
-    deps:
-      - deps:bin-dir
-    preconditions:
-      - which go
-    cmds:
-      - cmd: echo "Downloading Kind v{{.KIND_VERSION}}..."
-      - cmd: GOBIN={{.BIN_DIR}} go install sigs.k8s.io/kind@v{{.KIND_VERSION}}
-      - cmd: mv {{.BIN_DIR}}/kind {{.KIND_BIN}}
-    status:
-      - test -x {{.KIND_BIN}}
 
   deps:protoc:
     desc: Ensure supported Protoc version and plugins are installed

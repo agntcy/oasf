@@ -1,12 +1,13 @@
 # Example Extension
 
 A minimal, working reference extension. It exists so that the extension mechanism
-documented in [`CONTRIBUTING.md`](../../../../CONTRIBUTING.md) and
-[`server/README.md`](../../../../server/README.md) has a concrete example to point at,
+documented in [`CONTRIBUTING.md`](../../../../CONTRIBUTING.md) and the
+[oasf-server README](https://github.com/agntcy/oasf-server#reloading-the-schema) has a concrete example to point at,
 and so that the schema test suite exercises the extension validation path.
 
-It lives under `schema/test/extensions` rather than `schema/extensions` so that the
-released server image, which loads `extensions`, does not serve it.
+It lives under `schema/test/extensions` rather than `schema/extensions` so that
+servers, which load `extensions` by default, do not serve it. The `oasf-schema`
+image leaves out `schema/test` entirely.
 
 ## Layout
 
@@ -25,11 +26,12 @@ An extension mirrors the layout of the core `schema` directory:
 ## Loading it
 
 ```shell
-iex -S mix phx.server
+task server:up SCHEMA_EXTENSION=test/extensions
 ```
 
-The `dev` environment loads `test/extensions` by default. To reload just this
-extension from the `iex` prompt:
+Or, from an [oasf-server](https://github.com/agntcy/oasf-server) checkout, whose
+`dev` environment loads `test/extensions` by default, run `iex -S mix phx.server`
+and reload just this extension from the `iex` prompt:
 
 ```elixir
 Schema.reload(["test/extensions/example"])
