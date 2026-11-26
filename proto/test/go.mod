@@ -2,13 +2,13 @@ module proto
 
 go 1.26.0
 
-toolchain go1.26.8
+toolchain go1.26.9
 
 require (
 	github.com/emicklei/proto v1.14.2
 	github.com/onsi/ginkgo/v2 v2.25.3
 	github.com/onsi/gomega v1.38.2
-	golang.org/x/text v0.42.0
+	golang.org/x/text v0.43.0
 )
 
 require (
@@ -19,7 +19,7 @@ require (
 	github.com/google/pprof v0.0.0-20250403155104-27863c87afa6 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/net v0.59.0 // indirect
-	golang.org/x/sys v0.48.0 // indirect
-	golang.org/x/tools v0.49.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/tools v0.51.0 // indirect
 )
