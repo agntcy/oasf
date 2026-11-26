@@ -395,6 +395,22 @@
         }
       }
     },
+    "ai_catalog_data": {
+      "caption": "AI Catalog Data",
+      "description": "Data supported by the agent for an AI Catalog.",
+      "type": "ai_catalog_data",
+      "references": [
+        {
+          "description": "AI Catalog Specification",
+          "url": "https://ai-catalog.io/spec/"
+        }
+      ]
+    },
+    "ai_catalog_spec_version": {
+      "caption": "Spec Version",
+      "description": "Version of the AI Catalog specification the document conforms to. For example: <code>1.0</code>.",
+      "type": "string_t"
+    },
     "annotations": {
       "caption": "Annotations",
       "description": "Provides additional metadata associated with the object. See specific usage.",
