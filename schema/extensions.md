@@ -18,3 +18,4 @@ The floor of 100 is therefore a reciprocal commitment: extensions stay at or abo
 | ----------- | ------- | ------- | ---------------------------------------------------- | --------------------------------------------- |
 | Development | dev     | **999** | The development (TODO) schema extensions             |                                               |
 | Example     | example | **998** | Reference extension demonstrating the mechanism      | [schema/test/extensions/example](test/extensions/example/) |
+| Probity AI  | probityai | **997** | Pointers from a record to signed evidence statements | [probityai/agent-evidence-vectors](https://github.com/probityai/agent-evidence-vectors/tree/main/integrations/oasf/probityai) |
