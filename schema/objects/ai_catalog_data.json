@@ -1,0 +1,20 @@
+{
+  "caption": "AI Catalog Data",
+  "description": "Data for the AI Catalog record module.",
+  "extends": "module_data",
+  "name": "ai_catalog_data",
+  "attributes": {
+    "spec_version": {
+      "reference": "ai_catalog_spec_version",
+      "caption": "Spec Version",
+      "description": "Version of the AI Catalog specification the document conforms to. For example: <code>1.0</code>.",
+      "requirement": "required"
+    }
+  },
+  "references": [
+    {
+      "description": "AI Catalog Specification",
+      "url": "https://ai-catalog.io/spec/"
+    }
+  ]
+}

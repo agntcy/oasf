@@ -1,0 +1,26 @@
+{
+  "uid": 5,
+  "caption": "AI Catalog",
+  "description": "Describes an AI Catalog document associated with the record, for discovery and sharing of its artifacts.",
+  "extends": "integration",
+  "name": "ai_catalog",
+  "attributes": {
+    "data": {
+      "reference": "ai_catalog_data",
+      "caption": "Data",
+      "description": "Data supported by the agent for an AI Catalog.",
+      "requirement": "required"
+    },
+    "artifact": {
+      "caption": "Artifact",
+      "description": "The AI Catalog document. <code>media_type</code> is <code>application/ai-catalog+json</code>. A remote document goes in <code>artifact.urls</code>; an embedded one goes in <code>artifact.data</code> or <code>artifact.json</code>.",
+      "requirement": "required"
+    }
+  },
+  "references": [
+    {
+      "description": "AI Catalog Specification",
+      "url": "https://ai-catalog.io/spec/"
+    }
+  ]
+}
